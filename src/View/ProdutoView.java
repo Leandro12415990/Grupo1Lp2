@@ -1,5 +1,6 @@
 package View;
 
+import Controller.ProdutoController;
 import Utils.Tools;
 public class ProdutoView {
 
@@ -36,5 +37,13 @@ public class ProdutoView {
         } while (opcao != 0);
     }
 
+    public void criarProduto() {
+        System.out.println("Insira o nome do produto: ");
+        String nome = Tools.scanner.nextLine();
+        System.out.println("Insira uma descrição do produto: ");
+        String descricao = Tools.scanner.nextLine();
+
+        ProdutoController.criarProduto(nome, descricao);
+    }
 
 }
