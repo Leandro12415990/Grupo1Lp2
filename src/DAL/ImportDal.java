@@ -83,7 +83,7 @@ public class ImportDal {
                 String password = dados[5];
                 LocalDate dataRegisto = Tools.parseDate(dados[6]);
                 LocalDate ultimoLogin = dados[7].isEmpty() ? null : Tools.parseDate(dados[7]);
-                String tipoUtilizador = dados[8];
+                int tipoUtilizador = Integer.parseInt(dados[8]);
                 String estado = dados[9];
 
                 Utilizador utilizador = new Utilizador(id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto, ultimoLogin, tipoUtilizador, estado);

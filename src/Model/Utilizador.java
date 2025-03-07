@@ -11,11 +11,11 @@ public class Utilizador {
     private String password;
     private LocalDate dataRegisto;
     private LocalDate ultimoLogin;
-    private String tipoUtilizador;
+    private int tipoUtilizador;
     private String estado;
 
     public Utilizador(int id, String nomeUtilizador, String email, LocalDate dataNascimento, String morada, String password,
-                      LocalDate dataRegisto, LocalDate ultimoLogin, String tipoUtilizador, String estado) {
+                      LocalDate dataRegisto, LocalDate ultimoLogin, int tipoUtilizador, String estado) {
         this.id = id;
         this.nomeUtilizador = nomeUtilizador;
         this.email = email;
@@ -86,11 +86,11 @@ public class Utilizador {
         this.ultimoLogin = ultimoLogin;
     }
 
-    public String getTipoUtilizador() {
+    public int getTipoUtilizador() {
         return tipoUtilizador;
     }
 
-    public void setTipoUtilizador(String tipoUtilizador) {
+    public void setTipoUtilizador(int tipoUtilizador) {
         this.tipoUtilizador = tipoUtilizador;
     }
 
