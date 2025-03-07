@@ -23,7 +23,7 @@ public class ProdutoBLL {
     }
 
     public static boolean produtoExiste(String nome) {
-        try (BufferedReader br = new BufferedReader(new FileReader("produtos.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("data\\Produto.csv"))) {
             String linha;
             boolean primeiraLinha = true;
 
