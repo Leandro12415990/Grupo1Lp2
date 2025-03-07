@@ -15,7 +15,7 @@ public class ImportBll {
     public static void listarLeilao() {
         List<Leilao> leiloes = obterTodosLeiloes();
         for (Leilao leilao : leiloes) {
-            System.out.println("ID: " + leilao.getId() + " - Produto: " + leilao.getNomeProduto());
+            System.out.println("ID: " + leilao.getId() + " - Produto: " + leilao.getNomeProduto() + " - Estado: " + leilao.getEstado());
         }
     }
 
@@ -26,7 +26,7 @@ public class ImportBll {
     public static void listarUtilizador() {
         List<Utilizador> utilizadors = obterTodosUtilizadores();
         for (Utilizador utilizador : utilizadors) {
-            System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador());
+            System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
         }
     }
 
