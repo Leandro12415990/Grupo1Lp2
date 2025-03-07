@@ -1,6 +1,7 @@
 package DAL;
 
 import Model.Leilao;
+import Model.Produto;
 import Model.Utilizador;
 
 import java.io.*;
@@ -12,6 +13,7 @@ import java.util.List;
 public class ImportDal {
     private static final String CSV_FILE = "data\\Leilao.csv";
     private static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
+    private static final String CSV_FILE_PRODUTO = "data\\Produto.csv"; // Caminho do arquivo CSV
 
     public static List<Leilao> carregarLeilao() {
         List<Leilao> leiloes = new ArrayList<>();
@@ -94,6 +96,39 @@ public class ImportDal {
         return utilizadores;
     }
 
+    public static List<Produto> carregarProdutos() {
+        List<Produto> produtos = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_PRODUTO))) {
+            String linha;
+            boolean primeiraLinha = true;
+
+            while ((linha = br.readLine()) != null) {
+                if (primeiraLinha) {
+                    primeiraLinha = false;
+                    continue;
+                }
+
+                String[] dados = linha.split(";", -1);
+
+                if (dados.length < 2) {
+                    System.err.println("Linha inválida no CSV: " + linha);
+                    continue;
+                }
+
+                String nome = dados[0];
+                String descricao = dados[1];
+
+                Produto produto = new Produto(nome, descricao);
+                produtos.add(produto);
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
+        }
+
+        return produtos;
+    }
+
     public static void gravarLeilao(List<Leilao> leiloes) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE))) {
             bw.write("ID;PRODUTO;DESCRICAO;TIPO LEILAO;DATA INICIO;DATA FIM;VALOR MINIMO;VALOR MAXIMO;MULTIPLO BID");
@@ -143,6 +178,16 @@ public class ImportDal {
 
         } catch (IOException e) {
             System.err.println("Erro ao gravar o ficheiro CSV Utilizadores: " + e.getMessage());
+        }
+    }
+
+    public static void gravarProdutos(Produto produto) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_PRODUTO, true))) {
+            bw.write(produto.getNome() + ";" + produto.getDescricao());
+            bw.newLine();
+            System.out.println("Produto adicionado ao CSV: " + produto.getNome());
+        } catch (IOException e) {
+            System.err.println("Erro ao gravar o produto no CSV: " + e.getMessage());
         }
     }
 }

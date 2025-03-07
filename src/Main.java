@@ -1,14 +1,19 @@
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import Controller.ProdutoController;
 import View.ImportView;
+import View.ProdutoView;
+import Model.Produto;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
         while (true) {
             System.out.println("=== MENU ===");
             System.out.println("1. Mostrar Leilões");
             System.out.println("2. Mostrar Utilizadores");
+            System.out.println("3. Mostrar Utilizadores");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -20,6 +25,9 @@ public class Main {
                     break;
                 case 2:
                     ImportView.mostrarUtilizador();
+                    break;
+                case 3:
+                    ProdutoView.exibirProduto();
                     break;
                 case 0:
                     System.out.println("A sair...");

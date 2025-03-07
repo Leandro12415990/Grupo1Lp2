@@ -2,10 +2,12 @@ package View;
 
 import Controller.ProdutoController;
 import Utils.Tools;
+
+import java.util.ArrayList;
+
 public class ProdutoView {
 
-
-    public void exibirProduto() {
+    public static void exibirProduto() {
         int opcao;
 
         do {
@@ -21,12 +23,14 @@ public class ProdutoView {
 
             switch (opcao) {
                 case 1:
+                    criarProduto();
                     break;
                 case 2:
                     break;
                 case 3:
                     break;
                 case 4:
+                    listarProduto();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -37,13 +41,17 @@ public class ProdutoView {
         } while (opcao != 0);
     }
 
-    public void criarProduto() {
+    public static void criarProduto() {
         System.out.println("Insira o nome do produto: ");
         String nome = Tools.scanner.nextLine();
         System.out.println("Insira uma descrição do produto: ");
         String descricao = Tools.scanner.nextLine();
 
         ProdutoController.criarProduto(nome, descricao);
+    }
+
+    public static void listarProduto() {
+        ProdutoController.listarProduto();
     }
 
 }
