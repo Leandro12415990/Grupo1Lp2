@@ -1,10 +1,12 @@
 package Utils;
 
+import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Tools {
+    public static Scanner scanner = new Scanner(System.in);
 
     public static String separador(){
         return ";";
