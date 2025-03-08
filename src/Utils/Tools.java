@@ -12,7 +12,7 @@ public class Tools {
         return ";";
     }
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static LocalDate parseDate(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) {

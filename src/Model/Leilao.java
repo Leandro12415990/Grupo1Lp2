@@ -32,6 +32,10 @@ public class Leilao {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getNomeProduto() {
         return nomeProduto;
     }

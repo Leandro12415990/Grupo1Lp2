@@ -1,13 +1,14 @@
 import java.util.Scanner;
 import View.ImportView;
+import View.LeiloesView;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("=== MENU ===");
-            System.out.println("1. Mostrar Leilões");
+            System.out.println("\n"+"=".repeat(5) + " LEILOEIRA " + "=".repeat(5));
+            System.out.println("1. Leilões");
             System.out.println("2. Mostrar Utilizadores");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
@@ -16,7 +17,7 @@ public class Main {
             scanner.nextLine();
             switch (opcao) {
                 case 1:
-                    ImportView.mostrarLeilao();
+                    LeiloesView.exibirMenuLeiloes();
                     break;
                 case 2:
                     ImportView.mostrarUtilizador();

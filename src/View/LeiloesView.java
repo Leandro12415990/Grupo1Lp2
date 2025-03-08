@@ -1,20 +1,24 @@
 package View;
 
+import Model.Leilao;
 import Utils.Tools;
 import Controller.LeilosController;
+
 import java.time.LocalDate;
+import java.util.List;
 
 public class LeiloesView {
     public static void exibirMenuLeiloes() {
         int opc;
         do {
-            System.out.println("\nMenu Leiloes\n");
+            System.out.println("\n"+"=".repeat(5) + " MENU LEILÕES " + "=".repeat(5));
             System.out.println("1. Adicionar Leilão");
             System.out.println("2. Editar Leilão");
             System.out.println("3. Consultar Leilão");
             System.out.println("4. Eliminar Leilão");
             System.out.println("5. Listar Leilão");
             System.out.println("0. Voltar ao menu principal...");
+            System.out.print("Escolha uma opção: ");
             opc = Tools.scanner.nextInt();
             switch (opc) {
                 case 1:
@@ -30,7 +34,7 @@ public class LeiloesView {
                     /*eliminarLeilao();*/
                     break;
                 case 5:
-                    /*listaLeiloes();*/
+                    listaLeiloes();
                     break;
                 case 0:
                     System.out.println("\nSair...");
@@ -42,51 +46,96 @@ public class LeiloesView {
     }
 
     private static void criarLeilao() {
-        System.out.println("\nCriação de um Leilão\n");
-        System.out.println("Insira o produto que pretende leiloar: ");
+        System.out.println("\nCRIAÇÃO DE UM LEILÃO\n");
+        System.out.print("Insira o produto que pretende leiloar: ");
         String produto = Tools.scanner.next();
-        System.out.println("Insira a descrição do leilão: ");
+        System.out.print("Insira a descrição do leilão: ");
         String descricao = Tools.scanner.next();
 
-        int tipoLeilao;
+        String tipoLeilao = null;
+        int opc;
         do {
-            System.out.println("Escolha o tipo de leilão: ");
-            System.out.println("\t1. Leilão Eletrónico");
-            System.out.println("\t2. Leilão Carta Fechada");
-            System.out.println("\t3. Leilão Venda Direta");
-            tipoLeilao = Tools.scanner.nextInt();
-            if (tipoLeilao < 1 || tipoLeilao > 3) {
-                System.out.println("Opção inválida. Tente novamente...");
+            System.out.println("\n1. Leilão Eletrónico");
+            System.out.println("2. Leilão Carta Fechada");
+            System.out.println("3. Leilão Venda Direta");
+            System.out.print("Escolha o tipo de leilão: ");
+            opc = Tools.scanner.nextInt();
+            switch (opc) {
+                case 1:
+                    tipoLeilao = "ELETRONICO";
+                    break;
+                case 2:
+                    tipoLeilao = "CARTA FECHADA";
+                    break;
+                case 3:
+                    tipoLeilao = "VENDA DIRETA";
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente...");
             }
-        } while (tipoLeilao < 1 || tipoLeilao > 3);
 
-        System.out.println("Insira a data de início do leilão (yyyy-MM-dd): ");
+        } while (opc < 1 || opc > 3);
+
+        System.out.print("Insira a data de início do leilão (dd/MM/yyyy): ");
         String dataInicioStr = Tools.scanner.next();
         LocalDate dataInicio = Tools.parseDate(dataInicioStr);
 
-        System.out.println("Insira a data de fim do leilão (yyyy-MM-dd) ou pressione ENTER para não definir: ");
-        String dataFimStr = Tools.scanner.next();
+        System.out.print("Insira a data de fim do leilão (dd/MM/yyyy) ou pressione ENTER para não definir: ");
+        Tools.scanner.nextLine();
+        String dataFimStr = Tools.scanner.nextLine();
         LocalDate dataFim = dataFimStr.isEmpty() ? null : Tools.parseDate(dataFimStr);
 
-        System.out.println("Insira o valor mínimo:");
+        System.out.print("Insira o valor mínimo: ");
         double valorMin = Tools.scanner.nextDouble();
 
-        System.out.println("Insira o valor máximo (ou -1 se não quiser definir): ");
+        System.out.print("Insira o valor máximo (ou -1 se não quiser definir): ");
         double valorMax = Tools.scanner.nextDouble();
 
         double multiploLance = 0;
-        if (tipoLeilao == 1) {
-            System.out.println("Insira o múltiplo de lance:");
+        if (opc == 1) {
+            System.out.print("Insira o múltiplo de lance: ");
             multiploLance = Tools.scanner.nextDouble();
         }
 
+        String estado = null;
+        if (dataFim != null && dataFim.isBefore(LocalDate.now())) {
+            estado = "Fechado";
+        } else {
+            estado = "Ativo";
+        }
         // Chamada ao método criarLeiloes()
-        boolean criado = LeilosController.criarLeiloes(produto, descricao, tipoLeilao, dataInicio, dataFim, valorMax, valorMin, multiploLance);
+        boolean criado = LeilosController.criarLeiloes(0, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
 
         if (criado) {
             System.out.println("Leilão criado com sucesso!");
         } else {
             System.out.println("Erro ao criar leilão. Verifique os dados inseridos.");
+        }
+    }
+
+    private static void listaLeiloes() {
+        LeilosController.listarLeiloes();  // O Controller chama a BLL
+    }
+
+    public static void exibirLeiloes(List<Leilao> leiloes) {
+        // Método de exibição dos leilões (anteriormente no Controller)
+        System.out.println("\n" + "=".repeat(5) + " LISTAGEM DE LEILÕES " + "=".repeat(5));
+        System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s\n",
+                "Id", "Produto", "Descrição", "TipoLeilão", "Data Início", "Data Fim", "Valor Minimo", "Valor Maximo", "Multiplo de Lance", "Estado");
+        System.out.println("-".repeat(260));
+
+        for (Leilao leilao : leiloes) {
+            System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s\n",
+                    leilao.getId(),
+                    leilao.getNomeProduto(),
+                    leilao.getDescricao(),
+                    leilao.getTipoLeilao(),
+                    leilao.getDataInicio() != null ? Tools.FORMATTER.format(leilao.getDataInicio()) : "N/A",
+                    leilao.getDataFim() != null ? Tools.FORMATTER.format(leilao.getDataFim()) : "N/A",
+                    leilao.getValorMinimo(),
+                    leilao.getValorMaximo() != null && leilao.getValorMaximo() != -1.0 ? leilao.getValorMaximo() : "N/A",
+                    leilao.getMultiploLance() != null && leilao.getMultiploLance() != 0 ? leilao.getMultiploLance() : "N/A",
+                    leilao.getEstado());
         }
     }
 }
