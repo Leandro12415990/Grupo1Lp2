@@ -42,4 +42,15 @@ public class LeilaoController {
         }
         return null;
     }
+
+    public static boolean eliminarLeilao(int Id) {
+        if (Id > 0) {
+            Leilao leilao = procurarLeilaoPorId(Id);
+            if (leilao != null) {
+                LeilaoBLL.eliminarLeilao(leilao);
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -44,4 +44,9 @@ public class LeilaoBLL {
         }
         return null;
     }
+
+    public static void eliminarLeilao(Leilao leilao) {
+        leiloes.remove(leilao);
+        ImportDal.gravarLeilao(leiloes);
+    }
 }

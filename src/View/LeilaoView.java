@@ -32,8 +32,7 @@ public class LeilaoView {
                     procurarLeilao();
                     break;
                 case 4:
-                    /*eliminarLeilao();*/
-                    System.out.println("Funcionalidade em desenvolvimento");
+                    eliminarLeilao();
                     break;
                 case 5:
                     listaLeiloes();
@@ -154,7 +153,7 @@ public class LeilaoView {
         }
     }
 
-    public static void exibirLeilaoDetalhado(Leilao leilao) {
+    private static void exibirLeilaoDetalhado(Leilao leilao) {
         System.out.println("\nDETALHES DO LEILÃO COM O ID " + leilao.getId());
         System.out.println("Produto: " + leilao.getNomeProduto());
         System.out.println("Descrição: " + leilao.getDescricao());
@@ -165,5 +164,19 @@ public class LeilaoView {
         System.out.println("Valor Máximo: " + (leilao.getValorMaximo() != null && leilao.getValorMaximo() != -1.0 ? leilao.getValorMaximo() : "N/A"));
         System.out.println("Múltiplo de Lance: " + (leilao.getMultiploLance() != null && leilao.getMultiploLance() != 0 ? leilao.getMultiploLance() : "N/A"));
         System.out.println("Estado: " + leilao.getEstado());
+    }
+
+    private static void eliminarLeilao() {
+        System.out.println("\nELIMINAÇÃO DE UM LEILÃO");
+        System.out.print("Introduza o Id do Leilao: ");
+        int id = Tools.scanner.nextInt();
+
+        boolean sucesso = LeilaoController.eliminarLeilao(id);
+        if (sucesso) {
+            System.out.println("Leilão eliminado com sucesso.");
+        } else {
+            System.out.println("Erro ao eliminar leilão.");
+        }
+
     }
 }
