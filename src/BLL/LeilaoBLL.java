@@ -2,14 +2,11 @@ package BLL;
 
 import Model.Leilao;
 import DAL.ImportDal;
-import Utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static Utils.Tools.FORMATTER;
-
-public class LeiloesBLL {
+public class LeilaoBLL {
     private static List<Leilao> leiloes = new ArrayList<>();
 
     public static List<Leilao> carregarLeiloes() {
@@ -34,12 +31,17 @@ public class LeiloesBLL {
         return ultimoId;
     }
 
-    private static List<Leilao> obterTodosLeiloes() {
-        return ImportDal.carregarLeilao();
+    public static List<Leilao> listarLeiloes() {
+        return carregarLeiloes();
     }
 
-    // Retorna os dados para a Controller manipular e exibir na View
-    public static List<Leilao> listarLeiloes() {
-        return obterTodosLeiloes();
+    public static Leilao procurarLeilaoPorId(int Id) {
+        carregarLeiloes();
+        for (Leilao leilao : leiloes) {
+            if (leilao.getId() == Id) {
+                return leilao;
+            }
+        }
+        return null;
     }
 }

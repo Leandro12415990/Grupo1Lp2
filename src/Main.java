@@ -1,6 +1,6 @@
 import java.util.Scanner;
 import View.ImportView;
-import View.LeiloesView;
+import View.LeilaoView;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,7 +17,7 @@ public class Main {
             scanner.nextLine();
             switch (opcao) {
                 case 1:
-                    LeiloesView.exibirMenuLeiloes();
+                    LeilaoView.exibirMenuLeiloes();
                     break;
                 case 2:
                     ImportView.mostrarUtilizador();

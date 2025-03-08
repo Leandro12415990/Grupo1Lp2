@@ -2,12 +2,12 @@ package View;
 
 import Model.Leilao;
 import Utils.Tools;
-import Controller.LeilosController;
+import Controller.LeilaoController;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class LeiloesView {
+public class LeilaoView {
     public static void exibirMenuLeiloes() {
         int opc;
         do {
@@ -26,12 +26,14 @@ public class LeiloesView {
                     break;
                 case 2:
                     /*editLeilao();*/
+                    System.out.println("Funcionalidade em desenvolvimento");
                     break;
                 case 3:
-                    /*procurarLeilao();*/
+                    procurarLeilao();
                     break;
                 case 4:
                     /*eliminarLeilao();*/
+                    System.out.println("Funcionalidade em desenvolvimento");
                     break;
                 case 5:
                     listaLeiloes();
@@ -104,7 +106,7 @@ public class LeiloesView {
             estado = "Ativo";
         }
         // Chamada ao método criarLeiloes()
-        boolean criado = LeilosController.criarLeiloes(0, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
+        boolean criado = LeilaoController.criarLeiloes(0, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
 
         if (criado) {
             System.out.println("Leilão criado com sucesso!");
@@ -114,11 +116,10 @@ public class LeiloesView {
     }
 
     private static void listaLeiloes() {
-        LeilosController.listarLeiloes();  // O Controller chama a BLL
+        LeilaoController.listarLeiloes();  // O Controller chama a BLL
     }
 
     public static void exibirLeiloes(List<Leilao> leiloes) {
-        // Método de exibição dos leilões (anteriormente no Controller)
         System.out.println("\n" + "=".repeat(5) + " LISTAGEM DE LEILÕES " + "=".repeat(5));
         System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s\n",
                 "Id", "Produto", "Descrição", "TipoLeilão", "Data Início", "Data Fim", "Valor Minimo", "Valor Maximo", "Multiplo de Lance", "Estado");
@@ -137,5 +138,32 @@ public class LeiloesView {
                     leilao.getMultiploLance() != null && leilao.getMultiploLance() != 0 ? leilao.getMultiploLance() : "N/A",
                     leilao.getEstado());
         }
+    }
+
+    private static void procurarLeilao() {
+        System.out.println("\nPROCURAR UM LEILÃO");
+        System.out.print("Introduza o Id do Leilão: ");
+        int id = Tools.scanner.nextInt();
+
+        Leilao leilao = LeilaoController.procurarLeilaoPorId(id);
+
+        if (leilao != null) {
+            exibirLeilaoDetalhado(leilao);
+        } else {
+            System.out.println("O Leilão com o Id " + id + " não foi encontrado.");
+        }
+    }
+
+    public static void exibirLeilaoDetalhado(Leilao leilao) {
+        System.out.println("\nDETALHES DO LEILÃO COM O ID " + leilao.getId());
+        System.out.println("Produto: " + leilao.getNomeProduto());
+        System.out.println("Descrição: " + leilao.getDescricao());
+        System.out.println("Tipo Leilão: " + leilao.getTipoLeilao());
+        System.out.println("Data Início: " + Tools.FORMATTER.format(leilao.getDataInicio()));
+        System.out.println("Data Fim: " + (leilao.getDataFim() != null ? Tools.FORMATTER.format(leilao.getDataFim()) : "N/A"));
+        System.out.println("Valor Minímo: " + leilao.getValorMinimo());
+        System.out.println("Valor Máximo: " + (leilao.getValorMaximo() != null && leilao.getValorMaximo() != -1.0 ? leilao.getValorMaximo() : "N/A"));
+        System.out.println("Múltiplo de Lance: " + (leilao.getMultiploLance() != null && leilao.getMultiploLance() != 0 ? leilao.getMultiploLance() : "N/A"));
+        System.out.println("Estado: " + leilao.getEstado());
     }
 }
