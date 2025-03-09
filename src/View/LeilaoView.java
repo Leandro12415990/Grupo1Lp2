@@ -11,7 +11,7 @@ public class LeilaoView {
     public static void exibirMenuLeiloes() {
         int opc;
         do {
-            System.out.println("\n"+"=".repeat(5) + " MENU LEILÕES " + "=".repeat(5));
+            System.out.println("\n" + "=".repeat(5) + " MENU LEILÕES " + "=".repeat(5));
             System.out.println("1. Adicionar Leilão");
             System.out.println("2. Editar Leilão");
             System.out.println("3. Consultar Leilão");
@@ -25,7 +25,7 @@ public class LeilaoView {
                     criarLeilao();
                     break;
                 case 2:
-                    /*editLeilao();*/
+                    editarLeilao();
                     System.out.println("Funcionalidade em desenvolvimento");
                     break;
                 case 3:
@@ -115,7 +115,7 @@ public class LeilaoView {
     }
 
     private static void listaLeiloes() {
-        LeilaoController.listarLeiloes();  // O Controller chama a BLL
+        LeilaoController.listarLeiloes();
     }
 
     public static void exibirLeiloes(List<Leilao> leiloes) {
@@ -168,7 +168,7 @@ public class LeilaoView {
 
     private static void eliminarLeilao() {
         System.out.println("\nELIMINAÇÃO DE UM LEILÃO");
-        System.out.print("Introduza o Id do Leilao: ");
+        System.out.print("Introduza o Id do Leilão: ");
         int id = Tools.scanner.nextInt();
 
         boolean sucesso = LeilaoController.eliminarLeilao(id);
@@ -178,5 +178,99 @@ public class LeilaoView {
             System.out.println("Erro ao eliminar leilão.");
         }
 
+    }
+
+    private static void editarLeilao() {
+        System.out.println("\nEDIÇÃO DE UM LEILÃO");
+        System.out.print("Introduza o Id do Leilão: ");
+        int id = Tools.scanner.nextInt();
+
+        Leilao leilao = LeilaoController.procurarLeilaoPorId(id);
+        if (leilao != null) {
+            System.out.println("Introduza os novos dados:");
+            System.out.print("Novo produto que pretende leiloar (ou pressione ENTER para não alterar): ");
+            Tools.scanner.nextLine();
+            String produto = Tools.scanner.nextLine();
+            if (produto.isEmpty()){
+                produto = leilao.getNomeProduto();
+            }
+            System.out.print("Nova a descrição do leilão (ou pressione ENTER para não alterar): ");
+            Tools.scanner.nextLine();
+            String descricao = Tools.scanner.nextLine();
+            if (descricao.isEmpty()) {
+                descricao = leilao.getDescricao();
+            }
+
+            String tipoLeilao = null;
+            int opc;
+            do {
+                System.out.println("\n1. Leilão Eletrónico");
+                System.out.println("2. Leilão Carta Fechada");
+                System.out.println("3. Leilão Venda Direta");
+                System.out.println("0. Não alterar o tipo de leilão");
+                System.out.print("Escolha novo tipo de leilão: ");
+                Tools.scanner.nextLine();
+                opc = Tools.scanner.nextInt();
+                switch (opc) {
+                    case 1:
+                        tipoLeilao = "ELETRONICO";
+                        break;
+                    case 2:
+                        tipoLeilao = "CARTA FECHADA";
+                        break;
+                    case 3:
+                        tipoLeilao = "VENDA DIRETA";
+                        break;
+                    case 0:
+                        tipoLeilao = leilao.getTipoLeilao();
+                        break;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente...");
+                }
+
+            } while (opc < 0 || opc > 3);
+
+            System.out.print("Nova a data de início do leilão (dd/MM/yyyy) ou pressione ENTER para não alterar: ");
+            Tools.scanner.nextLine();
+            String dataInicioStr = Tools.scanner.nextLine();
+            LocalDate dataInicio = dataInicioStr.isEmpty() ? leilao.getDataInicio() : Tools.parseDate(dataInicioStr);
+
+            System.out.print("Nova a data de fim do leilão (dd/MM/yyyy) ou pressione ENTER para não alterar: ");
+            Tools.scanner.nextLine();
+            String dataFimStr = Tools.scanner.nextLine();
+            LocalDate dataFim = dataFimStr.isEmpty() ? leilao.getDataFim() : Tools.parseDate(dataFimStr);
+
+            System.out.print("Novo o valor mínimo (ou -1 se não quiser alterar): ");
+            double valorMin = Tools.scanner.nextDouble();
+            if (valorMin == -1) {
+                valorMin = leilao.getValorMinimo();
+            }
+
+            System.out.print("Novo o valor máximo (ou -1 se não quiser alterar): ");
+            double valorMax = Tools.scanner.nextDouble();
+            if (valorMax == -1) {
+                valorMax = leilao.getValorMaximo();
+            }
+
+            double multiploLance = 0;
+            if (opc == 1) {
+                System.out.print("Novo o múltiplo de lance (ou -1 se não quiser alterar): ");
+                multiploLance = Tools.scanner.nextDouble();
+                if (multiploLance == -1) {
+                    multiploLance = leilao.getMultiploLance();
+                }
+            }
+
+            String estado = null;
+            if (dataFim != null && dataFim.isBefore(LocalDate.now())) {
+                estado = "Fechado";
+            } else {
+                estado = "Ativo";
+            }
+
+            // LeilaoController.editarLeilao(id, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance);
+        } else {
+            System.out.println("Leilão não encontrado.");
+        }
     }
 }
