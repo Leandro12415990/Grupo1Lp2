@@ -99,7 +99,6 @@ public class ImportDal {
 
     public static List<Produto> carregarProdutos() {
         List<Produto> produtos = new ArrayList<>();
-        int maiorId = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_PRODUTO))) {
             String linha;
@@ -126,9 +125,6 @@ public class ImportDal {
                     Produto produto = new Produto(id, nome, descricao);
                     produtos.add(produto);
 
-                    if (id > maiorId) {
-                        maiorId = id;
-                    }
                 } catch (NumberFormatException e) {
                     System.err.println("[ERRO] ID inválido no CSV: " + dados[0]);
                 }
@@ -136,8 +132,6 @@ public class ImportDal {
         } catch (IOException e) {
             System.err.println("[ERRO] Problema ao ler o ficheiro CSV: " + e.getMessage());
         }
-
-        Produto.atualizarContador(maiorId);
 
         return produtos;
     }
@@ -200,13 +194,28 @@ public class ImportDal {
         }
     }
 
-    public static void gravarProdutos(Produto produto) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_PRODUTO, true))) {
+    public static void gravarProdutos(List<Produto> produtos) {
+        /*try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_PRODUTO, true))) {
             bw.write(produto.getIdProduto() + ";" + produto.getNome() + ";" + produto.getDescricao());
             bw.newLine();
             System.out.println("Produto adicionado ao CSV: " + produto.getNome());
         } catch (IOException e) {
             System.err.println("Erro ao gravar o produto no CSV: " + e.getMessage());
+        }*/
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_PRODUTO))) {
+            bw.write("IDPRODUTO;NOME;DESCRICAO");
+            bw.newLine();
+
+            for (Produto produto : produtos) {
+                bw.write(produto.getIdProduto() + Tools.separador() +
+                        produto.getNome() + Tools.separador() +
+                        produto.getDescricao() + Tools.separador());
+                bw.newLine();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Erro ao gravar o ficheiro CSV de Produtos: " + e.getMessage());
         }
     }
 

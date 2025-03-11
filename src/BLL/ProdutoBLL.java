@@ -19,34 +19,11 @@ public class ProdutoBLL {
     }
 
     public static void adicionarProduto(Produto produto) {
+        carregarProdutos();
+        produto.setIdProduto(verificarUltimoId(produtos) + 1);
         produtos.add(produto);
-        ImportDal.gravarProdutos(produto);
+        ImportDal.gravarProdutos(produtos);
     }
-
-    public static boolean produtoExiste(String nome) {
-        try (BufferedReader br = new BufferedReader(new FileReader("data\\Produto.csv"))) {
-            String linha;
-            boolean primeiraLinha = true;
-
-            while ((linha = br.readLine()) != null) {
-                if (primeiraLinha) {
-                    primeiraLinha = false;
-                    continue;
-                }
-
-                String[] dados = linha.split(";", -1);
-                if (dados.length >= 2 && dados[0].trim().equalsIgnoreCase(nome)) {
-                    return true;
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Erro ao verificar produto no CSV: " + e.getMessage());
-        }
-
-        return false;
-    }
-
-
 
     public static List<Produto> obterTodosProdutos() {
         return ImportDal.carregarProdutos();
@@ -59,21 +36,31 @@ public class ProdutoBLL {
         }
     }
 
-    public static List<Produto> VerificarIdProdutos() {
-        if (produtos == null || produtos.isEmpty()) {
-            produtos = ImportDal.carregarProdutos();
-        }
-
-        int maiorId = 0;
+    public static Produto procurarProduto(int id) {
+        obterTodosProdutos();
         for (Produto produto : produtos) {
-            if (produto.getIdProduto() > maiorId) {
-                maiorId = produto.getIdProduto();
+            if (produto.getIdProduto() == id) {
+                return produto;
+            }
+        }
+        return null;
+
+    }
+
+    private static int verificarUltimoId(List<Produto> produtos) {
+        int ultimoId = 10;
+
+        // Percorrer a lista e encontrar o maior ID
+        for (Produto produto : produtos) {
+            // Verificar se o produto tem um ID válido
+            if (produto.getIdProduto() > ultimoId) {
+                ultimoId = produto.getIdProduto();
             }
         }
 
-        Produto.atualizarContador(maiorId);
-        return produtos;
+        return ultimoId;
     }
+
 
     public static void editarProduto(Produto produto) {
         System.out.println("Produto encontrado: " + produto);
@@ -108,19 +95,17 @@ public class ProdutoBLL {
         List<Produto> produtos = obterTodosProdutos();
         boolean produtoRemovido = false;
 
-        // 🔹 Percorrer a lista e remover o produto baseado no ID
         for (int i = 0; i < produtos.size(); i++) {
             if (produtos.get(i).getIdProduto() == produto.getIdProduto()) {
-                produtos.remove(i); // Remover pelo índice
+                produtos.remove(i);
                 produtoRemovido = true;
                 break;
             }
         }
 
-        // 🔹 Se o produto foi removido, salvar a lista no ficheiro CSV
         if (produtoRemovido) {
             ImportDal.salvarProdutos(produtos);
-            System.out.println("✅ Produto eliminado com sucesso!");
+            System.out.println("Produto eliminado com sucesso!");
         } else {
             System.out.println("[ERRO] Falha ao eliminar o produto.");
         }

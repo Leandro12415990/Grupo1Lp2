@@ -10,13 +10,12 @@ import View.ProdutoView;
 
 public class Main {
     public static void main(String[] args) {
-        List<Produto> produtos = ProdutoBLL.VerificarIdProdutos();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("=== MENU ===");
             System.out.println("1. Mostrar Leilões");
             System.out.println("2. Mostrar Utilizadores");
-            System.out.println("3. Mostrar Utilizadores");
+            System.out.println("3. Mostrar Produtos");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 

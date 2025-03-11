@@ -1,9 +1,11 @@
 package View;
 
 import Controller.ProdutoController;
+import Model.Produto;
 import Utils.Tools;
 
 import java.sql.SQLOutput;
+
 
 public class ProdutoView {
 
@@ -50,7 +52,7 @@ public class ProdutoView {
         System.out.println("Insira uma descrição do produto: ");
         String descricao = Tools.scanner.nextLine();
 
-        ProdutoController.criarProduto(nome, descricao);
+        ProdutoController.criarProduto(0,nome, descricao);
 
     }
 
@@ -61,15 +63,41 @@ public class ProdutoView {
         Tools.scanner.nextLine();
 
         ProdutoController.editarProduto(id);
+
+
     }
 
     public static void eliminarProduto() {
         System.out.println("\n --- ELIMINAR PRODUTO ---");
         System.out.println("Insira o ID do produto que deseja eliminar: ");
         int id = Tools.scanner.nextInt();
-        Tools.scanner.nextLine();
 
-       ProdutoController.eliminarProduto(id);
+        Produto produto = ProdutoController.procurarProduto(id);
+        if(produto != null) {
+
+            System.out.println("\nTêm a certeza que quer eliminar este produto ?");
+            System.out.println("\nInsira (S) para eliminar ou (N) para recusar o produto: ");
+            char opcao =  Character.toUpperCase(Tools.scanner.next().charAt(0));
+            switch (opcao) {
+                case 's':
+                    boolean sucesso = ProdutoController.eliminarProduto(produto);
+                    if (sucesso) {
+                        System.out.println("Produto eliminado com sucesso.");
+                    }else{
+                        System.out.println("Não foi possivel eliminar o produto.");
+                    }
+                    break;
+                case 'n':
+                    System.out.println("A eliminação do produto foi cancelada.");
+                    break;
+                default:
+                    System.out.println("A opção foi invalida. Tente novamente.");
+            }
+        }else{
+            System.out.println("[(ERRO)}");
+        }
+
+
 
     }
 
@@ -78,4 +106,9 @@ public class ProdutoView {
         ProdutoController.listarProduto();
     }
 
+    public static void exibirDetalhesProduto(Produto produto) {
+        System.out.println("\nDETALHES DO LEILÃO COM O ID " + produto.getIdProduto());
+        System.out.println("Nome: " + produto.getNome());
+        System.out.println("Descrição: " + produto.getDescricao());
+    }
 }

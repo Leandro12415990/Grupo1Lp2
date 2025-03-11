@@ -6,28 +6,17 @@ public class Produto {
     private String nome;
     private String descricao;
 
-    public Produto(String nome, String descricao) {
-        this.idProduto = contador++;
-        this.nome = nome;
-        this.descricao = descricao;
-    }
-
-    public Produto(int idProduto, String nome, String descricao) {
+    public Produto(int idProduto,String nome, String descricao) {
         this.idProduto = idProduto;
         this.nome = nome;
         this.descricao = descricao;
-
-    }
-
-    public static void atualizarContador(int maiorId) {
-        if (maiorId >= contador) {
-            contador = maiorId + 1;
-        }
     }
 
     public int getIdProduto() {
         return idProduto;
     }
+
+    public void setIdProduto(int idProduto) {}
 
     public String getNome() {
         return nome;
@@ -45,7 +34,4 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public String toString() {
-        return "ID: " + idProduto + " - Nome: " + nome + " - Descrição: " + descricao;
-    }
 }
