@@ -2,6 +2,7 @@ package DAL;
 
 import Model.Leilao;
 import Model.Utilizador;
+import Utils.Tools;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -55,7 +56,6 @@ public class ImportDal {
     }
 
     public static List<Utilizador> carregarUtilizador() {
-        List<Utilizador> utilizadores = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_UTILIZADOR))) {
@@ -83,15 +83,15 @@ public class ImportDal {
                 String password = dados[5];
                 LocalDate dataRegisto = LocalDate.parse(dados[6], formatter);
                 LocalDate ultimoLogin = dados[7].isEmpty() ? null : LocalDate.parse(dados[7], formatter);
-                String tipoUtilizador = dados[8];
+                int tipoUtilizador = Integer.parseInt(dados[8]);
 
                 Utilizador utilizador = new Utilizador(id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto, ultimoLogin, tipoUtilizador);
-                utilizadores.add(utilizador);
+                Tools.utilizadores.add(utilizador);
             }
         } catch (IOException e) {
             System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
         }
-        return utilizadores;
+        return Tools.utilizadores;
     }
 
     public static void gravarLeilao(List<Leilao> leiloes) {
