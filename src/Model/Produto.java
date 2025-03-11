@@ -1,7 +1,6 @@
 package Model;
 
 public class Produto {
-    private static int contador = 1;
     private int idProduto;
     private String nome;
     private String descricao;
@@ -16,7 +15,9 @@ public class Produto {
         return idProduto;
     }
 
-    public void setIdProduto(int idProduto) {}
+    public void setIdProduto(int idProduto) {
+        this.idProduto = idProduto;
+    }
 
     public String getNome() {
         return nome;

@@ -48,7 +48,7 @@ public class ProdutoBLL {
     }
 
     private static int verificarUltimoId(List<Produto> produtos) {
-        int ultimoId = 10;
+        int ultimoId = 0;
 
         // Percorrer a lista e encontrar o maior ID
         for (Produto produto : produtos) {
