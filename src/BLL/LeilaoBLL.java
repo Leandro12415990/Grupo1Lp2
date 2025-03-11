@@ -3,6 +3,7 @@ package BLL;
 import Model.Leilao;
 import DAL.ImportDal;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +49,23 @@ public class LeilaoBLL {
     public static void eliminarLeilao(Leilao leilao) {
         leiloes.remove(leilao);
         ImportDal.gravarLeilao(leiloes);
+    }
+
+    public static boolean editarLeilao(int id, String produto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, String estado) {
+        Leilao leilao = procurarLeilaoPorId(id);
+        if (leilao != null) {
+            leilao.setNomeProduto(produto);
+            leilao.setDescricao(descricao);
+            leilao.setTipoLeilao(tipoLeilao);
+            leilao.setDataInicio(dataInicio);
+            leilao.setDataFim(dataFim);
+            leilao.setValorMinimo(valorMin);
+            leilao.setValorMaximo(valorMax);
+            leilao.setMultiploLance(multiploLance);
+            leilao.setEstado(estado);
+            ImportDal.gravarLeilao(leiloes);
+            return true;
+        }
+        return false;
     }
 }

@@ -22,7 +22,7 @@ public class LeilaoController {
         } else if (valorMax >= 0 && valorMax < valorMin) { // Apenas valida se valorMax foi definido
             return false;
         }
-        Leilao leilao = new Leilao(id, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin,valorMax, multiploLance, estado);
+        Leilao leilao = new Leilao(id, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
         LeilaoBLL.adicionarLeilao(leilao);
 
         return true;
@@ -53,4 +53,32 @@ public class LeilaoController {
         }
         return false;
     }
+
+    public static boolean editarLeilao(int id, String produto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, String estado) {
+
+        Leilao leilao = procurarLeilaoPorId(id);
+        if (leilao != null) {
+            if (produto.isEmpty()) {
+                produto = leilao.getNomeProduto();
+            }
+            if (descricao.isEmpty()) {
+                descricao = leilao.getDescricao();
+            }
+            if (tipoLeilao.isEmpty()) {
+                tipoLeilao = leilao.getTipoLeilao();
+            }
+            if (valorMin == -1) {
+                valorMin = leilao.getValorMinimo();
+            }
+            if (valorMax == -1) {
+                valorMax = leilao.getValorMaximo();
+            }
+            if (multiploLance == -1) {
+                multiploLance = leilao.getMultiploLance();
+            }
+            return LeilaoBLL.editarLeilao(id, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
+        }
+        return false;
+    }
 }
+

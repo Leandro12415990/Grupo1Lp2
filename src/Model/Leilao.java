@@ -40,35 +40,71 @@ public class Leilao {
         return nomeProduto;
     }
 
+    public void setNomeProduto(String nomeProduto) {
+        this.nomeProduto = nomeProduto;
+    }
+
     public String getDescricao() {
         return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getTipoLeilao() {
         return tipoLeilao;
     }
 
+    public void setTipoLeilao(String tipoLeilao) {
+        this.tipoLeilao = tipoLeilao;
+    }
+
     public LocalDate getDataInicio() {
         return dataInicio;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
     }
 
     public LocalDate getDataFim() {
         return dataFim;
     }
 
-    public double getValorMinimo() {
-        return valorMinimo;
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
     }
 
     public Double getValorMaximo() {
         return valorMaximo;
     }
 
+    public void setValorMaximo(Double valorMaximo) {
+        this.valorMaximo = valorMaximo;
+    }
+
+    public Double getValorMinimo() {
+        return valorMinimo;
+    }
+
+    public void setValorMinimo(Double valorMinimo) {
+        this.valorMinimo = valorMinimo;
+    }
+
     public Double getMultiploLance() {
         return multiploLance;
     }
 
+    public void setMultiploLance(Double multiploLance) {
+        this.multiploLance = multiploLance;
+    }
+
     public String getEstado() {
         return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
