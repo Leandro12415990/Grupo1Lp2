@@ -9,6 +9,7 @@ public class Main {
             System.out.println("=== MENU ===");
             System.out.println("1. Mostrar Leilões");
             System.out.println("2. Mostrar Utilizadores");
+            System.out.println("3. Mostrar Lances");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -20,6 +21,9 @@ public class Main {
                     break;
                 case 2:
                     ImportView.mostrarUtilizador();
+                    break;
+                case 3:
+                    ImportView.mostrarLance();
                     break;
                 case 0:
                     System.out.println("A sair...");
