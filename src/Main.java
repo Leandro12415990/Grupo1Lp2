@@ -36,6 +36,9 @@ public class Main {
                 case 4:
                     ImportView.mostrarUtilizador();
                     break;
+                case 3:
+                    ImportView.mostrarLance();
+                    break;
                 case 0:
                     System.out.println("A sair...");
                     scanner.close();
