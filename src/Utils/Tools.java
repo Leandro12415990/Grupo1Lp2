@@ -1,5 +1,9 @@
 package Utils;
 
+import Model.Utilizador;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,4 +33,5 @@ public class Tools {
     public static String formatDate(LocalDate date) {
         return (date != null) ? date.format(FORMATTER) : "";
     }
+    public static List<Utilizador> utilizadores = new ArrayList<>();
 }
