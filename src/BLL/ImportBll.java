@@ -1,6 +1,7 @@
 package BLL;
 
 import DAL.ImportDal;
+import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
 
@@ -30,13 +31,22 @@ public class ImportBll {
         }
     }
 
-    // Método para gravar os leilões no CSV
     public static void gravarLeiloes(List<Leilao> leiloes) {
         ImportDal.gravarLeilao(leiloes);
     }
 
-    // Método para gravar os utilizadores no CSV
     public static void gravarUtilizadores(List<Utilizador> utilizadores) {
         ImportDal.gravarUtilizador(utilizadores);
     }
+
+    public static List<Lance> obterTodosLances(){return ImportDal.carregarLance();}
+
+    public static void listarLance(){
+        List<Lance> lances = obterTodosLances();
+        for (Lance lance : lances){
+            System.out.print("ID: " + lance.getIdLance() + " - ID LEILAO: " + lance.getIdLeilao() + " - NOME CLIENTE: " + lance.getNomeCliente());
+        }
+    }
+
+    public static void gravarLance(List<Lance> lances){ImportDal.gravarLance(lances);}
 }
