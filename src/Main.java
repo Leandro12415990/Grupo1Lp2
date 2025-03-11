@@ -1,13 +1,16 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import Controller.ProdutoController;
+import Model.Produto;
+import BLL.ProdutoBLL;
 import View.ImportView;
 import View.ProdutoView;
-import Model.Produto;
 
 public class Main {
     public static void main(String[] args) {
+        List<Produto> produtos = ProdutoBLL.VerificarIdProdutos();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("=== MENU ===");
