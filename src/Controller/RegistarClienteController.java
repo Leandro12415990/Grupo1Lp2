@@ -21,6 +21,7 @@ public class RegistarClienteController {
     {
         if (!passwordFirst.equals(passwordSecound)) return false;
         else return true;
-        // teste
+
     }
 }
+
