@@ -13,7 +13,7 @@ public class Lance {
     private double valorLanceEletronio;
     private LocalDateTime dataLance;
     private int ordemLance;
-    //TESTE
+
     public Lance() {}
 
     public Lance(int idLance, int idLeilao, int idCliente, String nomeCliente, String emailCliente,
