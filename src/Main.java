@@ -17,7 +17,7 @@ public class Main {
             System.out.println("1. Registar Utilizador");
             System.out.println("2. Login Cliente");
             System.out.println("3. Mostrar Leilões");
-            System.out.println("4. Mostrar Utilizadores");
+            System.out.println("4. Mostrar Utiliza  dores");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 

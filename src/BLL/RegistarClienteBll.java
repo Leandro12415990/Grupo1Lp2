@@ -32,8 +32,8 @@ public class RegistarClienteBll {
         }
 
         try {
-            if (idEncontrado) utilizador = new Utilizador( id, nome, email, nascimento, morada, password, hora, hora, 1);
-            else utilizador = new Utilizador( max + 1, nome, email, nascimento, morada, password, hora, hora, 1);
+            if (idEncontrado) utilizador = new Utilizador( id, nome, email, nascimento, morada, password, hora, hora, 1, Tools.estadoUtilizador.PENDENTE.getCodigo());
+            else utilizador = new Utilizador( max + 1, nome, email, nascimento, morada, password, hora, hora, 1, Tools.estadoUtilizador.PENDENTE.getCodigo());
         } catch (Exception e) {
             return false;
         }
