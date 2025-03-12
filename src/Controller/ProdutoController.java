@@ -18,28 +18,13 @@ public class ProdutoController {
         System.out.println("Produto criado com sucesso: " + novoProduto.getNome() + " - " + novoProduto.getDescricao());
     }
 
-    public static void editarProduto(int id) {
-        if (id <= 0) {
-            System.out.println("[ERRO] O ID deve ser um número positivo.");
-            return;
+    public static boolean editarProduto(Produto produto) {
+        boolean sucesso = ProdutoBLL.editarProduto(produto);
+
+        if(sucesso) {
+            ProdutoBLL.obterTodosProdutos();
         }
-
-        List<Produto> produtos = ProdutoBLL.obterTodosProdutos();
-        Produto produtoEncontrado = null;
-
-        for (Produto produto : produtos) {
-            if (produto.getIdProduto() == id) {
-                produtoEncontrado = produto;
-                break;
-            }
-        }
-
-        if (produtoEncontrado == null) {
-            System.out.println("[ERRO] Produto com ID " + id + " não encontrado.");
-            return;
-        }
-
-        ProdutoBLL.editarProduto(produtoEncontrado);
+        return sucesso;
     }
 
     public static boolean eliminarProduto(Produto produto) {

@@ -62,8 +62,19 @@ public class ProdutoView {
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
 
-        ProdutoController.editarProduto(id);
-
+        Produto produto = ProdutoController.procurarProduto(id);
+        if(produto != null){
+            exibirDetalhesProduto(produto);
+            boolean sucesso = ProdutoController.editarProduto(produto);
+            if(sucesso) {
+                System.out.println("Produto editado com sucesso!");
+            }
+            else{
+                System.out.println("Não foi possivel editar o produto.");
+            }
+        }else{
+            System.out.println("[ERRO] Não foi possível encontrar o produto com o ID fornecido.");
+        }
     }
 
     public static void eliminarProduto() {
