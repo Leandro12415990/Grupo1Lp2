@@ -1,6 +1,7 @@
 package BLL;
 
 import DAL.ImportDal;
+import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
 
@@ -15,7 +16,7 @@ public class ImportBll {
     public static void listarLeilao() {
         List<Leilao> leiloes = obterTodosLeiloes();
         for (Leilao leilao : leiloes) {
-            System.out.println("ID: " + leilao.getId() + " - Produto: " + leilao.getNomeProduto());
+            System.out.println("ID: " + leilao.getId() + " - Produto: " + leilao.getNomeProduto() + " - Estado: " + leilao.getEstado());
         }
     }
 
@@ -26,17 +27,26 @@ public class ImportBll {
     public static void listarUtilizador() {
         List<Utilizador> utilizadors = obterTodosUtilizadores();
         for (Utilizador utilizador : utilizadors) {
-            System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador());
+            System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
         }
     }
 
-    // Método para gravar os leilões no CSV
     public static void gravarLeiloes(List<Leilao> leiloes) {
         ImportDal.gravarLeilao(leiloes);
     }
 
-    // Método para gravar os utilizadores no CSV
     public static void gravarUtilizadores(List<Utilizador> utilizadores) {
         ImportDal.gravarUtilizador(utilizadores);
     }
+
+    public static List<Lance> obterTodosLances(){return ImportDal.carregarLance();}
+
+    public static void listarLance(){
+        List<Lance> lances = obterTodosLances();
+        for (Lance lance : lances){
+            System.out.print("ID: " + lance.getIdLance() + " - ID LEILAO: " + lance.getIdLeilao() + " - NOME CLIENTE: " + lance.getNomeCliente());
+        }
+    }
+
+    public static void gravarLance(List<Lance> lances){ImportDal.gravarLance(lances);}
 }
