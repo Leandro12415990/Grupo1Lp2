@@ -43,8 +43,13 @@ public class ProdutoController {
     }
 
     public static boolean eliminarProduto(Produto produto) {
-        ProdutoBLL.eliminarProduto(produto);
-        return true;
+        boolean sucesso = ProdutoBLL.eliminarProduto(produto);
+
+
+        if (sucesso) {
+            ProdutoBLL.obterTodosProdutos();
+        }
+        return sucesso;
     }
 
     public static void listarProduto() {

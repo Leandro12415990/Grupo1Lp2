@@ -64,42 +64,42 @@ public class ProdutoView {
 
         ProdutoController.editarProduto(id);
 
-
     }
 
     public static void eliminarProduto() {
         System.out.println("\n --- ELIMINAR PRODUTO ---");
         System.out.println("Insira o ID do produto que deseja eliminar: ");
         int id = Tools.scanner.nextInt();
+        Tools.scanner.nextLine();
 
         Produto produto = ProdutoController.procurarProduto(id);
-        if(produto != null) {
-
-            System.out.println("\nTêm a certeza que quer eliminar este produto ?");
+        if (produto != null) {
+            exibirDetalhesProduto(produto);
+            System.out.println("\nTem a certeza que quer eliminar este produto?");
             System.out.println("\nInsira (S) para eliminar ou (N) para recusar o produto: ");
-            char opcao =  Character.toUpperCase(Tools.scanner.next().charAt(0));
+
+            String opcao = Tools.scanner.nextLine().trim().toUpperCase();
+
             switch (opcao) {
-                case 's':
+                case "S":
                     boolean sucesso = ProdutoController.eliminarProduto(produto);
                     if (sucesso) {
-                        System.out.println("Produto eliminado com sucesso.");
-                    }else{
-                        System.out.println("Não foi possivel eliminar o produto.");
+                        System.out.println("Produto eliminado com sucesso!");
+                    } else {
+                        System.out.println("Não foi possível eliminar o produto.");
                     }
                     break;
-                case 'n':
+                case "N":
                     System.out.println("A eliminação do produto foi cancelada.");
                     break;
                 default:
-                    System.out.println("A opção foi invalida. Tente novamente.");
+                    System.out.println("A opção foi inválida. Tente novamente.");
             }
-        }else{
-            System.out.println("[(ERRO)}");
+        } else {
+            System.out.println("[ERRO] Não foi possível encontrar o produto com o ID fornecido.");
         }
-
-
-
     }
+
 
     public static void listarProduto() {
         System.out.println("\n --- LISTA DE PRODUTOS ---");

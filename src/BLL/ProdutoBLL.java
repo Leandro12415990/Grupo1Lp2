@@ -50,9 +50,9 @@ public class ProdutoBLL {
     private static int verificarUltimoId(List<Produto> produtos) {
         int ultimoId = 0;
 
-        // Percorrer a lista e encontrar o maior ID
+
         for (Produto produto : produtos) {
-            // Verificar se o produto tem um ID válido
+
             if (produto.getIdProduto() > ultimoId) {
                 ultimoId = produto.getIdProduto();
             }
@@ -91,7 +91,7 @@ public class ProdutoBLL {
         System.out.println("Produto atualizado com sucesso!");
     }
 
-    public static void eliminarProduto(Produto produto) {
+    public static boolean eliminarProduto(Produto produto) {
         List<Produto> produtos = obterTodosProdutos();
         boolean produtoRemovido = false;
 
@@ -105,9 +105,8 @@ public class ProdutoBLL {
 
         if (produtoRemovido) {
             ImportDal.salvarProdutos(produtos);
-            System.out.println("Produto eliminado com sucesso!");
-        } else {
-            System.out.println("[ERRO] Falha ao eliminar o produto.");
         }
+
+        return produtoRemovido;
     }
 }
