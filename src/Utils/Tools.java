@@ -71,4 +71,19 @@ public class Tools {
             e.printStackTrace();
         }
     }
+
+    public enum estadoUtilizador {
+        PENDENTE(1), ATIVO(2), INATIVO(3);
+
+        private final int codigo;
+
+        estadoUtilizador(int codigo) {
+            this.codigo = codigo;
+        }
+
+        public int getCodigo() {
+            return codigo;
+        }
+    }
+
 }

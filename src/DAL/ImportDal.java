@@ -136,7 +136,7 @@ public class ImportDal {
                 LocalDate dataRegisto = Tools.parseDate(dados[6]);
                 LocalDate ultimoLogin = dados[7].isEmpty() ? null : Tools.parseDate(dados[7]);
                 int tipoUtilizador = Integer.parseInt(dados[8]);
-                String estado = dados[9];
+                int estado = Integer.parseInt(dados[9]);
 
                 Utilizador utilizador = new Utilizador(id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto, ultimoLogin, tipoUtilizador, estado);
                 utilizadores.add(utilizador);
