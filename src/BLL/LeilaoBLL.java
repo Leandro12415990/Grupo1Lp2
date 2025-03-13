@@ -1,6 +1,7 @@
 package BLL;
 
 import Model.Leilao;
+import Model.ResultadoOperacao;
 import DAL.ImportDal;
 
 import java.time.LocalDate;

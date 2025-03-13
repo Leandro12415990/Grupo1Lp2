@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Leilao;
+import Model.ResultadoOperacao;
 import BLL.LeilaoBLL;
 import View.LeilaoView;
 
@@ -10,22 +11,30 @@ import java.util.Objects;
 
 public class LeilaoController {
 
-    public static boolean criarLeiloes(int id, String produto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, String estado) {
-        if (produto == null || produto.isEmpty()
-                || descricao == null || descricao.isEmpty()
-                || dataInicio == null || valorMin < 0) {
-            return false;
+    public static ResultadoOperacao criarLeiloes(int id, String produto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, String estado) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        if (produto == null || produto.isEmpty()){
+            resultado.msgErro = "O produto não pode ser nulo.";
+        } else if (descricao == null || descricao.isEmpty()) {
+            resultado.msgErro = "A descrição não pode ser nula.";
+        } else if (dataInicio == null) {
+            resultado.msgErro = "A data de inicio não pode ser nula.";
+        } else if (valorMin <0) {
+            resultado.msgErro = "O valor minimo não pode ser negativo.";
+        } else if (valorMax >= 0 && valorMax < valorMin) {
+            resultado.msgErro = "O valor máximo deve ser maior do que o valor minimo.";
         } else if (Objects.equals(tipoLeilao, "ELETRONICO") && multiploLance < 0) {
-            return false;
+            resultado.msgErro = "O múltiplo de lance deve ser positivo.";
         } else if (dataFim != null && dataFim.isBefore(dataInicio)) {
-            return false;
-        } else if (valorMax >= 0 && valorMax < valorMin) { // Apenas valida se valorMax foi definido
-            return false;
-        }
-        Leilao leilao = new Leilao(id, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
-        LeilaoBLL.adicionarLeilao(leilao);
+            resultado.msgErro = "A data de fim deve ser superior à data de inicio.";
+        }  else {
+            Leilao leilao = new Leilao(id, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
+            LeilaoBLL.adicionarLeilao(leilao);
 
-        return true;
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+        }
+        return resultado;
     }
 
     public static void listarLeiloes() {

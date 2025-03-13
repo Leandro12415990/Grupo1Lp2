@@ -1,6 +1,7 @@
 package View;
 
 import Model.Leilao;
+import Model.ResultadoOperacao;
 import Utils.Tools;
 import Controller.LeilaoController;
 
@@ -93,23 +94,23 @@ public class LeilaoView {
 
         double multiploLance = 0;
         if (opc == 1) {
-            System.out.print("Insira o múltiplo de lance: ");
+            System.out.print("Insira o valor de cada lance: ");
             multiploLance = Tools.scanner.nextDouble();
         }
 
         String estado = null;
         if (dataFim != null && dataFim.isBefore(LocalDate.now())) {
-            estado = "Fechado";
+            estado = "FECHADO";
         } else {
-            estado = "Ativo";
+            estado = "ATIVO";
         }
         // Chamada ao método criarLeiloes()
-        boolean criado = LeilaoController.criarLeiloes(0, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
+        ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
 
-        if (criado) {
+        if (resultado.Sucesso) {
             System.out.println("Leilão criado com sucesso!");
         } else {
-            System.out.println("Erro ao criar leilão. Verifique os dados inseridos.");
+            System.out.println(resultado.msgErro);
         }
     }
 
@@ -191,7 +192,7 @@ public class LeilaoView {
                     System.out.println("Opção inválida. Tente novamente.");
             }
         } else {
-            System.out.println("[ERRO]");
+            System.out.println("[ERRO] Leilão não encontrado.");
         }
 
 
