@@ -54,14 +54,14 @@ public class LeilaoView {
         String descricao = Tools.scanner.next();
 
         String tipoLeilao = null;
-        int opc;
+        int opcTipoLeilao;
         do {
             System.out.println("\n1. Leilão Eletrónico");
             System.out.println("2. Leilão Carta Fechada");
             System.out.println("3. Leilão Venda Direta");
             System.out.print("Escolha o tipo de leilão: ");
-            opc = Tools.scanner.nextInt();
-            switch (opc) {
+            opcTipoLeilao = Tools.scanner.nextInt();
+            switch (opcTipoLeilao) {
                 case 1:
                     tipoLeilao = "ELETRONICO";
                     break;
@@ -75,7 +75,7 @@ public class LeilaoView {
                     System.out.println("Opção inválida. Tente novamente...");
             }
 
-        } while (opc < 1 || opc > 3);
+        } while (opcTipoLeilao < 1 || opcTipoLeilao > 3);
 
         System.out.print("Insira a data de início do leilão (dd/MM/yyyy): ");
         String dataInicioStr = Tools.scanner.next();
@@ -93,12 +93,12 @@ public class LeilaoView {
         double valorMax = Tools.scanner.nextDouble();
 
         double multiploLance = 0;
-        if (opc == 1) {
+        if (opcTipoLeilao == 1) {
             System.out.print("Insira o valor de cada lance: ");
             multiploLance = Tools.scanner.nextDouble();
         }
 
-        String estado = null;
+        String estado;
         if (dataFim != null && dataFim.isBefore(LocalDate.now())) {
             estado = "FECHADO";
         } else {
@@ -267,7 +267,7 @@ public class LeilaoView {
                 multiploLance = Tools.scanner.nextDouble();
             }
 
-            String estado = null;
+            String estado;
             if (dataFim != null && dataFim.isBefore(LocalDate.now())) {
                 estado = "FECHADO";
             } else {
