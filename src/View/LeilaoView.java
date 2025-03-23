@@ -1,5 +1,6 @@
 package View;
 
+import Controller.ProdutoController;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import Utils.Tools;
@@ -48,8 +49,10 @@ public class LeilaoView {
 
     private static void criarLeilao() {
         System.out.println("\nCRIAÇÃO DE UM LEILÃO\n");
-        System.out.print("Insira o produto que pretende leiloar: ");
-        String produto = Tools.scanner.next();
+        System.out.print("⚠ Produto disponíveis para leiloar ⚠");
+        ProdutoView.listarProduto();
+        System.out.print("\nIntroduza o ID do produto que pretende leiloar: ");
+        int idProduto = Tools.scanner.nextInt();
         System.out.print("Insira a descrição do leilão: ");
         String descricao = Tools.scanner.next();
 
@@ -105,7 +108,7 @@ public class LeilaoView {
             estado = "ATIVO";
         }
         // Chamada ao método criarLeiloes()
-        ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
+        ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
 
         if (resultado.Sucesso) {
             System.out.println("Leilão criado com sucesso!");
@@ -127,7 +130,7 @@ public class LeilaoView {
         for (Leilao leilao : leiloes) {
             System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s\n",
                     leilao.getId(),
-                    leilao.getNomeProduto(),
+                    nomeProduto(leilao.getIdProduto()),
                     leilao.getDescricao(),
                     leilao.getTipoLeilao(),
                     leilao.getDataInicio() != null ? Tools.FORMATTER.format(leilao.getDataInicio()) : "N/A",
@@ -141,7 +144,8 @@ public class LeilaoView {
 
     private static void procurarLeilao() {
         System.out.println("\nPROCURAR UM LEILÃO");
-        System.out.print("Introduza o Id do Leilão: ");
+        listaLeiloes();
+        System.out.print("\nIntroduza o ID do Leilão que pretende consultar: ");
         int id = Tools.scanner.nextInt();
 
         Leilao leilao = LeilaoController.procurarLeilaoPorId(id);
@@ -155,7 +159,7 @@ public class LeilaoView {
 
     private static void exibirLeilaoDetalhado(Leilao leilao) {
         System.out.println("\nDETALHES DO LEILÃO COM O ID " + leilao.getId());
-        System.out.println("Produto: " + leilao.getNomeProduto());
+        System.out.println("Produto: " + nomeProduto(leilao.getIdProduto()));
         System.out.println("Descrição: " + leilao.getDescricao());
         System.out.println("Tipo Leilão: " + leilao.getTipoLeilao());
         System.out.println("Data Início: " + Tools.FORMATTER.format(leilao.getDataInicio()));
@@ -210,13 +214,14 @@ public class LeilaoView {
 
         if (leilao != null) {
             System.out.println("Introduza os novos dados: \n");
-            System.out.print("Novo produto que pretende leiloar (ou pressione ENTER para não alterar): ");
-            Tools.scanner.nextLine();
-            String produto = Tools.scanner.nextLine();
+            System.out.print("⚠ Produto disponíveis para leiloar ⚠");
+            ProdutoView.listarProduto();
+            System.out.print("\nNovo o ID do produto que pretende leiloar (ou -1 se não quiser alterar): ");
+            int idProduto = Tools.scanner.nextInt();
 
             System.out.print("Nova a descrição do leilão (ou pressione ENTER para não alterar): ");
             //Tools.scanner.nextLine();
-            String descricao = Tools.scanner.nextLine();
+            String descricao = Tools.scanner.next();
 
             String tipoLeilao = null;
             int opc;
@@ -276,7 +281,7 @@ public class LeilaoView {
                 estado = "ATIVO";
             }
 
-            boolean sucesso = LeilaoController.editarLeilao(id, produto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
+            boolean sucesso = LeilaoController.editarLeilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
             if (sucesso) {
                 System.out.println("Leilão editado com sucesso!");
             } else {
@@ -285,5 +290,9 @@ public class LeilaoView {
         } else {
             System.out.println("Leilão não encontrado.");
         }
+    }
+
+    private static String nomeProduto(int idProduto){
+        return ProdutoController.getNomeProdutoById(idProduto);
     }
 }

@@ -52,10 +52,10 @@ public class LeilaoBLL {
         ImportDal.gravarLeilao(leiloes);
     }
 
-    public static boolean editarLeilao(int id, String produto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, String estado) {
+    public static boolean editarLeilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, String estado) {
         Leilao leilao = procurarLeilaoPorId(id);
         if (leilao != null) {
-            leilao.setNomeProduto(produto);
+            leilao.setIdProduto(idProduto);
             leilao.setDescricao(descricao);
             leilao.setTipoLeilao(tipoLeilao);
             leilao.setDataInicio(dataInicio);

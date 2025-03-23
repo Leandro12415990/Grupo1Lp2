@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Leilao {
     private int id;
-    private String nomeProduto;
+    private int idProduto;
     private String descricao;
     private String tipoLeilao;
     private LocalDate dataInicio;
@@ -14,10 +14,10 @@ public class Leilao {
     private Double multiploLance;
     private String estado;
 
-    public Leilao(int id, String nomeProduto, String descricao, String tipoLeilao, LocalDate dataInicio,
+    public Leilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio,
                   LocalDate dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, String estado) {
         this.id = id;
-        this.nomeProduto = nomeProduto;
+        this.idProduto = idProduto;
         this.descricao = descricao;
         this.tipoLeilao = tipoLeilao;
         this.dataInicio = dataInicio;
@@ -36,12 +36,12 @@ public class Leilao {
         this.id = id;
     }
 
-    public String getNomeProduto() {
-        return nomeProduto;
+    public int getIdProduto() {
+        return idProduto;
     }
 
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
+    public void setIdProduto(int idProduto) {
+        this.idProduto = idProduto;
     }
 
     public String getDescricao() {
