@@ -9,6 +9,7 @@ public class RegistarClienteView {
     public static void MenuRegistarCliente()
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String passwordFirst, passwordSecound;
 
         System.out.println("=== Registar ===");
         System.out.println("Nome:");
@@ -29,12 +30,25 @@ public class RegistarClienteView {
         } while (!dataValida);
         System.out.println("Morada:");
         String morada = Tools.scanner.nextLine();
-        System.out.println("Insira a Password:");
-        String passwordFirst = Tools.scanner.nextLine();
-        System.out.println("Repita a Password:");
-        String passwordSecound = Tools.scanner.nextLine();
+        boolean respVerificarPassword = false;
+        do
+        {
+            System.out.println("Insira a Password:");
+            passwordFirst = Tools.scanner.nextLine();
+            System.out.println("Repita a Password:");
+            passwordSecound = Tools.scanner.nextLine();
+            respVerificarPassword = verifivarPassword(passwordFirst, passwordSecound);
+            if (!respVerificarPassword) System.out.println("Erro, passwords nao coincidem, tente novamente");
+        } while (!respVerificarPassword);
+
         boolean resp = RegistarClienteController.verificarDados(nome, email, nascimento, morada, passwordFirst, passwordSecound);
         if (resp) System.out.println("Cliente registado com sucesso");
         else System.out.println("Erro ao registar cliente");
+    }
+
+    private static boolean verifivarPassword(String passwordFirst, String passwordSecound)
+    {
+        if (!passwordFirst.equals(passwordSecound)) return false;
+        else return true;
     }
 }
