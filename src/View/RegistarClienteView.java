@@ -2,10 +2,13 @@ package View;
 
 import Utils.Tools;
 import Controller.RegistarClienteController;
+import com.sun.tools.javac.Main;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class RegistarClienteView {
+    private static int validate = 0;
     public static void MenuRegistarCliente()
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -13,9 +16,13 @@ public class RegistarClienteView {
 
         System.out.println("=== Registar ===");
         System.out.println("Nome:");
+
+
         String nome = Tools.scanner.nextLine();
+        if(nome.equals("-1")) return;
         System.out.println("E-mail:");
         String email = Tools.scanner.nextLine();
+        if(email.equals("-1")) return;
         LocalDate nascimento = null;
         boolean dataValida = false;
         do {
