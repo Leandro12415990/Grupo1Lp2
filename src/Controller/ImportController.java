@@ -9,10 +9,6 @@ import java.util.List;
 
 public class ImportController {
 
-    public static void mostrarLeilao() {
-        ImportBll.listarLeilao();
-    }
-
     public static void mostrarUtilizador() {
         ImportBll.listarUtilizador();
     }
