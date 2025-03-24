@@ -87,7 +87,7 @@ public class ImportDal {
                 }
 
                 int id = Integer.parseInt(dados[0]);
-                String nomeProduto = dados[1];
+                int idProduto = Integer.parseInt(dados[1]);
                 String descricao = dados[2];
                 String tipoLeilao = dados[3];
                 LocalDate dataInicio = Tools.parseDate(dados[4]);
@@ -97,7 +97,7 @@ public class ImportDal {
                 Double multiploLance = (dados.length > 8 && !dados[8].isEmpty()) ? Double.parseDouble(dados[8]) : null;
                 String estado = dados[9];
 
-                Leilao leilao = new Leilao(id, nomeProduto, descricao, tipoLeilao, dataInicio, dataFim,
+                Leilao leilao = new Leilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim,
                         valorMinimo, valorMaximo, multiploLance, estado);
                 leiloes.add(leilao);
             }
@@ -149,7 +149,7 @@ public class ImportDal {
 
     public static void gravarLeilao(List<Leilao> leiloes) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE))) {
-            bw.write("ID;PRODUTO;DESCRICAO;TIPO LEILAO;DATA INICIO;DATA FIM;VALOR MINIMO;VALOR MAXIMO;MULTIPLO BID;ESTADO");
+            bw.write("ID;IDPRODUTO;DESCRICAO;TIPO LEILAO;DATA INICIO;DATA FIM;VALOR MINIMO;VALOR MAXIMO;MULTIPLO BID;ESTADO");
             bw.newLine();
 
             for (Leilao leilao : leiloes) {
@@ -159,7 +159,7 @@ public class ImportDal {
                 String multiploLance = leilao.getMultiploLance() != null ? leilao.getMultiploLance().toString() : "";
 
                 bw.write(leilao.getId() + Tools.separador() +
-                        leilao.getNomeProduto() + Tools.separador() +
+                        leilao.getIdProduto() + Tools.separador() +
                         leilao.getDescricao() + Tools.separador() +
                         leilao.getTipoLeilao() + Tools.separador() +
                         dataInicio + Tools.separador() +

@@ -47,4 +47,8 @@ public class ProdutoController {
         }
         return null;
     }
+
+    public static String getNomeProdutoById(int idProduto) {
+        return ProdutoBLL.getNomeProdutoById(idProduto);
+    }
 }

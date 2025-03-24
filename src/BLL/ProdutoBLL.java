@@ -108,4 +108,14 @@ public class ProdutoBLL {
 
         return produtoRemovido;
     }
+
+    public static String getNomeProdutoById(int idProduto) {
+        carregarProdutos();
+        for (Produto produto : produtos) {
+            if (produto.getIdProduto() == idProduto) {
+                return produto.getNome().toUpperCase();
+            }
+        }
+        return null;
+    }
 }

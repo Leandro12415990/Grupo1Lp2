@@ -23,7 +23,7 @@ public class Tools {
         return ";";
     }
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static String formatDateTime(LocalDateTime dateTime) {
         return (dateTime != null) ? dateTime.format(DATA_HORA) : "";

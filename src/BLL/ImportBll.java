@@ -13,13 +13,6 @@ public class ImportBll {
         return ImportDal.carregarLeilao();
     }
 
-    public static void listarLeilao() {
-        List<Leilao> leiloes = obterTodosLeiloes();
-        for (Leilao leilao : leiloes) {
-            System.out.println("ID: " + leilao.getId() + " - Produto: " + leilao.getNomeProduto() + " - Estado: " + leilao.getEstado());
-        }
-    }
-
     public static List<Utilizador> obterTodosUtilizadores() {
         return ImportDal.carregarUtilizador();
     }
