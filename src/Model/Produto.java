@@ -2,13 +2,25 @@ package Model;
 
 public class Produto {
     private int idProduto;
+    private int estado;
     private String nome;
     private String descricao;
 
-    public Produto(int idProduto,String nome, String descricao) {
+
+    public Produto(int idProduto,int estado,String nome, String descricao) {
         this.idProduto = idProduto;
+        this.estado = estado;
         this.nome = nome;
         this.descricao = descricao;
+
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public int getIdProduto() {

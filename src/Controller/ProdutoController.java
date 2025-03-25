@@ -7,13 +7,13 @@ import java.util.List;
 
 public class ProdutoController {
 
-    public static void criarProduto(int idProduto, String nome, String descricao) {
+    public static void criarProduto(int idProduto,int estado, String nome, String descricao) {
         if(nome == null || nome.isEmpty() || descricao == null || descricao.isEmpty()) {
             System.out.println("Erro ao criar produto");
             return;
         }
 
-        Produto novoProduto = new Produto(idProduto,nome, descricao);
+        Produto novoProduto = new Produto(idProduto,estado,nome, descricao);
         ProdutoBLL.adicionarProduto(novoProduto);
         System.out.println("Produto criado com sucesso: " + novoProduto.getNome() + " - " + novoProduto.getDescricao());
     }

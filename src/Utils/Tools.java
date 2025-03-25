@@ -86,4 +86,18 @@ public class Tools {
         }
     }
 
+    public enum estadoProduto {
+        ATIVO(1), RESERVADO(2), INATIVO(3);
+
+        private final int codigo;
+
+        estadoProduto(int codigo) {
+            this.codigo = codigo;
+        }
+
+        public int getCodigo() {
+            return codigo;
+        }
+    }
+
 }
