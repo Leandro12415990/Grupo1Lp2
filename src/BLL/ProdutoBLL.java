@@ -64,7 +64,7 @@ public class ProdutoBLL {
         boolean produtoEditado = false;
 
         while (true) {
-            System.out.print("Novo estado (1 = ATIVO, 2 = UTILIZADO, 3 = INATIVO) - deixe vazio para manter: ");
+            System.out.print("Novo estado (1 = ATIVO, 2 = RESERVADO, 3 = INATIVO) - deixe vazio para manter: ");
             String novoEstadoStr = Tools.scanner.nextLine().trim();
 
             if (novoEstadoStr.isEmpty()) {

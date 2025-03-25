@@ -57,6 +57,9 @@ public class ProdutoView {
     }
 
     public static void editarProduto() {
+
+        listarProduto();
+
         System.out.println("\n --- EDITAR PRODUTO ---");
         System.out.println("Insira o ID do produto que deseja editar: ");
         int id = Tools.scanner.nextInt();
@@ -78,6 +81,9 @@ public class ProdutoView {
     }
 
     public static void eliminarProduto() {
+
+        listarProduto();
+
         System.out.println("\n --- ELIMINAR PRODUTO ---");
         System.out.println("Insira o ID do produto que deseja eliminar: ");
         int id = Tools.scanner.nextInt();
