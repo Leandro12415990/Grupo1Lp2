@@ -1,6 +1,7 @@
 package Controller;
 
 import BLL.RegistarClienteBll;
+import Model.ResultadoOperacao;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -10,18 +11,20 @@ public class RegistarClienteController {
 
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
 
-    public static boolean verificarDados(String nome, String email, LocalDate nascimento, String morada, String passwordFirst, String passwordSecound)
-    {
-        boolean respRegistarCliente = false;
+    public static ResultadoOperacao verificarDados(String nome, String email, LocalDate nascimento, String morada, String passwordFirst, String passwordSecound) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
         boolean respValidaDataNascimento = validaDataNascimento(nascimento);
 
-        if (!respValidaDataNascimento || !isValidEmail(email)) return false;
-
-        respRegistarCliente = RegistarClienteBll.criarCliente(nome, email, nascimento, morada, passwordFirst);
-
-        if (!respRegistarCliente) return false;
-
-        return true;
+        if (!respValidaDataNascimento) {
+            resultado.msgErro = "Deve ter mais de 18 anos para se registar.";
+        } else if (!isValidEmail(email)) {
+            resultado.msgErro = "O email inserido não é valido.";
+        } else {
+            RegistarClienteBll.criarCliente(nome, email, nascimento, morada, passwordFirst);
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+        }
+        return resultado;
     }
 
      private static boolean validaDataNascimento(LocalDate nascimento)
