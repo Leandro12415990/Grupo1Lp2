@@ -52,7 +52,7 @@ public class ProdutoView {
         System.out.println("Insira uma descrição do produto: ");
         String descricao = Tools.scanner.nextLine();
 
-        ProdutoController.criarProduto(0,nome, descricao);
+        ProdutoController.criarProduto(0,Tools.estadoProduto.ATIVO.getCodigo(), nome, descricao);
 
     }
 
@@ -119,6 +119,7 @@ public class ProdutoView {
 
     public static void exibirDetalhesProduto(Produto produto) {
         System.out.println("\nDETALHES DO LEILÃO COM O ID " + produto.getIdProduto());
+        System.out.println("Estado: " + produto.getEstado());
         System.out.println("Nome: " + produto.getNome());
         System.out.println("Descrição: " + produto.getDescricao());
     }
