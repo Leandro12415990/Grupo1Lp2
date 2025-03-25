@@ -5,21 +5,22 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class LoginController {
-    public static boolean verificarLogin(String email, String password)
+    public static int verificarLogin(String email, String password)
     {
         boolean respLerDados = lerDados();
-        if (!respLerDados) return false;
+        int tipoUtilizador = 0;
+        if (!respLerDados) return tipoUtilizador;
 
         for (Utilizador u : Tools.utilizadores)
         {
             if (email.equals(u.getEmail()) && password.equals(u.getPassword()))
             {
-                LoginUtilizadorBll.login(email, password);
-                return true;
+                tipoUtilizador = LoginUtilizadorBll.login(email, password);
+                return tipoUtilizador;
             }
         }
 
-        return false;
+        return tipoUtilizador;
     }
 
     public static boolean lerDados()
