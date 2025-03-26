@@ -2,6 +2,7 @@ package BLL;
 
 import DAL.ImportDal;
 import DAL.ProdutoDal;
+import Model.Leilao;
 import Model.Produto;
 import Utils.Tools;
 
@@ -27,11 +28,8 @@ public class ProdutoBLL {
         return ProdutoDal.carregarProdutos();
     }
 
-    public static void listarProdutos() {
-        List<Produto> produtos = obterTodosProdutos();
-        for (Produto produto : produtos) {
-            System.out.println("ID: " + produto.getIdProduto() + " - Estado: " + produto.getEstado() + " - Nome: " + produto.getNome() + " - Descrição: " + produto.getDescricao());
-        }
+    public static List<Produto>  listarProdutos() {
+        return carregarProdutos();
     }
 
     public static Produto procurarProduto(int id) {

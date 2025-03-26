@@ -1,7 +1,12 @@
 package Controller;
 
+import BLL.LeilaoBLL;
 import BLL.ProdutoBLL;
+import Model.Leilao;
 import Model.Produto;
+import Utils.Tools;
+import View.LeilaoView;
+import View.ProdutoView;
 
 import java.util.List;
 
@@ -28,6 +33,7 @@ public class ProdutoController {
     }
 
     public static boolean eliminarProduto(Produto produto) {
+
         boolean sucesso = ProdutoBLL.eliminarProduto(produto);
 
 
@@ -38,7 +44,9 @@ public class ProdutoController {
     }
 
     public static void listarProduto() {
-        ProdutoBLL.listarProdutos();
+        List<Produto> produtos = ProdutoBLL.listarProdutos();
+
+        ProdutoView.exibirProduto(produtos);
     }
 
     public static Produto procurarProduto(int Id) {

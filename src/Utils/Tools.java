@@ -90,6 +90,7 @@ public class Tools {
         ATIVO(1), RESERVADO(2), INATIVO(3);
 
         private final int codigo;
+        private int estado;
 
         estadoProduto(int codigo) {
             this.codigo = codigo;
@@ -97,6 +98,15 @@ public class Tools {
 
         public int getCodigo() {
             return codigo;
+        }
+
+        public static estadoProduto fromCodigo(int codigo) {
+            for (estadoProduto estado : estadoProduto.values()) {
+                if (estado.getCodigo() == codigo) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
         }
     }
 
