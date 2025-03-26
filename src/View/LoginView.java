@@ -26,9 +26,11 @@ public class LoginView {
 
             tipoUtilizador = LoginController.verificarLogin(email, password);
 
-            if (tipoUtilizador != 0) {
+            if (tipoUtilizador > 0) {
                 System.out.println("Login realizado com sucesso!");
                 return tipoUtilizador;
+            } else if (tipoUtilizador == -1) {
+                System.out.println("O seu utilizador ainda não foi aprovado.\n");
             } else {
                 System.out.println("Email ou Password inválidos! Tente novamente.\n");
             }
