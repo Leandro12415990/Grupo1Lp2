@@ -6,29 +6,19 @@ public class Lance {
     private int idLance;
     private int idLeilao;
     private int idCliente;
-    private String nomeCliente;
-    private String emailCliente;
     private double valorLance;
     private int numLance;
-    private double valorLanceEletronio;
     private LocalDateTime dataLance;
-    private int ordemLance;
 
-    public Lance() {}
-
-    public Lance(int idLance, int idLeilao, int idCliente, String nomeCliente, String emailCliente,
-                 double valorLance, int numLance, double valorLanceEletronio, LocalDateTime dataLance, int ordemLance){
+    public Lance(int idLance, int idLeilao, int idCliente,
+                 double valorLance, int numLance, LocalDateTime dataLance){
 
         this.idLance = idLance;
         this.idLeilao = idLeilao;
         this.idCliente = idCliente;
-        this.nomeCliente = nomeCliente;
-        this.emailCliente = emailCliente;
         this.valorLance = valorLance;
         this.numLance = numLance;
-        this.valorLanceEletronio = valorLanceEletronio;
         this.dataLance = dataLance;
-        this.ordemLance = ordemLance;
     }
 
     public int getIdLance() {
@@ -55,22 +45,6 @@ public class Lance {
         this.idCliente = idCliente;
     }
 
-    public String getNomeCliente() {
-        return nomeCliente;
-    }
-
-    public void setNomeCliente(String nomeCliente) {
-        this.nomeCliente = nomeCliente;
-    }
-
-    public String getEmailCliente() {
-        return emailCliente;
-    }
-
-    public void setEmailCliente(String emailCliente) {
-        this.emailCliente = emailCliente;
-    }
-
     public double getValorLance() {
         return valorLance;
     }
@@ -87,34 +61,11 @@ public class Lance {
         this.numLance = numLance;
     }
 
-    public double getValorLanceEletronio() {
-        return valorLanceEletronio;
-    }
-
-    public void setValorLanceEletronio(double valorLanceEletronio) {
-        this.valorLanceEletronio = valorLanceEletronio;
-    }
-
     public LocalDateTime getDataLance() {
         return dataLance;
     }
 
     public void setDataLance(LocalDateTime dataLance) {
         this.dataLance = dataLance;
-    }
-
-    public int getOrdemLance() {
-        return ordemLance;
-    }
-
-    public void setOrdemLance(int ordemLance) {
-        this.ordemLance = ordemLance;
-    }
-
-    @Override
-    public String toString(){
-        return idLance + idLeilao + idCliente + nomeCliente + emailCliente + valorLance +
-                numLance + valorLanceEletronio + dataLance + ordemLance;
-
     }
 }
