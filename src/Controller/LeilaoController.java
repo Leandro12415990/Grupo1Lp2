@@ -1,5 +1,6 @@
 package Controller;
 
+import BLL.ProdutoBLL;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import BLL.LeilaoBLL;
@@ -36,10 +37,8 @@ public class LeilaoController {
     }
 
     public static void listarLeiloes() {
-        // A Controller chama a BLL para pegar os leilões
         List<Leilao> leiloes = LeilaoBLL.listarLeiloes();
 
-        // A Controller agora passa os leilões para a View para exibir
         LeilaoView.exibirLeiloes(leiloes);
     }
 
@@ -86,6 +85,23 @@ public class LeilaoController {
             return LeilaoBLL.editarLeilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, estado);
         }
         return false;
+    }
+
+    public static ResultadoOperacao verificarDisponibilidadeProduto(int idProduto) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        Leilao leilao = procurarLeilaoPorId(idProduto);
+        if (leilao == null) {
+            resultado.msgErro = "O Produto que introduziu não existe no sistema.";
+        } else {
+            boolean isAvailable = ProdutoBLL.verificarDisponibilidadeProduto(idProduto);
+            if (isAvailable) {
+                resultado.Objeto = resultado;
+                resultado.Sucesso = true;
+            } else {
+                resultado.msgErro = "O Produto selecionado não se encontra disponível.";
+            }
+        }
+        return resultado;
     }
 }
 
