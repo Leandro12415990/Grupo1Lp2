@@ -4,7 +4,7 @@ import Controller.ProdutoController;
 import Model.Produto;
 import Utils.Tools;
 
-import java.sql.SQLOutput;
+import java.util.List;
 
 
 public class ProdutoView {
@@ -47,13 +47,21 @@ public class ProdutoView {
 
     public static void criarProduto() {
         System.out.println("\n --- Criar Produto ---");
-        System.out.println("Insira o nome do produto: ");
-        String nome = Tools.scanner.nextLine();
-        System.out.println("Insira uma descrição do produto: ");
-        String descricao = Tools.scanner.nextLine();
 
-        ProdutoController.criarProduto(0,Tools.estadoProduto.ATIVO.getCodigo(), nome, descricao);
+            System.out.println("Insira o nome do produto (-1 para cancelar): ");
+            String nome = Tools.scanner.nextLine();
+            if (nome.equals("-1")) {
+                System.out.println("Voltando ao menu anterior...");
+                return;
+            }
 
+            System.out.println("Insira uma descrição do produto (-1 para cancelar): ");
+            String descricao = Tools.scanner.nextLine();
+            if (descricao.equals("-1")) {
+                System.out.println("Voltando ao menu anterior...");
+                return;
+            }
+            ProdutoController.criarProduto(0, Tools.estadoProduto.ATIVO.getCodigo(), nome, descricao);
     }
 
     public static void editarProduto() {
@@ -61,9 +69,15 @@ public class ProdutoView {
         listarProduto();
 
         System.out.println("\n --- EDITAR PRODUTO ---");
-        System.out.println("Insira o ID do produto que deseja editar: ");
+
+        System.out.println("Insira o ID do produto que deseja editar: (-1 para cancelar)");
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
+        if (id == -1) {
+            System.out.println("Voltando ao menu anterior...");
+            return;
+        }
+
 
         Produto produto = ProdutoController.procurarProduto(id);
         if(produto != null){
@@ -85,12 +99,21 @@ public class ProdutoView {
         listarProduto();
 
         System.out.println("\n --- ELIMINAR PRODUTO ---");
-        System.out.println("Insira o ID do produto que deseja eliminar: ");
+        System.out.println("Insira o ID do produto que deseja eliminar: (-1 para cancelar)");
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
+        if (id == -1) {
+            System.out.println("Voltando ao menu anterior...");
+            return;
+        }
 
         Produto produto = ProdutoController.procurarProduto(id);
+
         if (produto != null) {
+            if (produto.getEstado() == Tools.estadoProduto.RESERVADO.getCodigo()) {
+                System.out.println("Este produto está reservado e não pode ser eliminado.");
+                return;
+            }
             exibirDetalhesProduto(produto);
             System.out.println("\nTem a certeza que quer eliminar este produto?");
             System.out.println("\nInsira (S) para eliminar ou (N) para recusar o produto: ");
@@ -117,11 +140,28 @@ public class ProdutoView {
         }
     }
 
-
     public static void listarProduto() {
-        System.out.println("\n --- LISTA DE PRODUTOS ---");
         ProdutoController.listarProduto();
     }
+    public static void exibirProduto(List<Produto> produtos) {
+        System.out.println("\n" + "=".repeat(5) + " LISTAGEM DOS PRODUTOS " + "=".repeat(5));
+        System.out.printf("%-8s %-8s %-30s %-40s\n",
+                "Id", "Estado", "Nome", "Descrição");
+        System.out.println("-".repeat(260));
+
+
+        for (Produto produto : produtos) {
+
+            String nomeEstado = Tools.estadoProduto.fromCodigo(produto.getEstado()).name();
+            System.out.printf("%-8s %-8s %-30s %-40s\n",
+                    produto.getIdProduto(),
+                    nomeEstado,
+                    produto.getNome(),
+                    produto.getDescricao());
+        }
+    }
+
+    
 
     public static void exibirDetalhesProduto(Produto produto) {
         System.out.println("\nDETALHES DO LEILÃO COM O ID " + produto.getIdProduto());
