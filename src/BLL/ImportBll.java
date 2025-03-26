@@ -44,7 +44,7 @@ public class ImportBll {
     public static void listarLance(){
         List<Lance> lances = obterTodosLances();
         for (Lance lance : lances){
-            System.out.print("ID: " + lance.getIdLance() + " - ID LEILAO: " + lance.getIdLeilao() + " - NOME CLIENTE: " + lance.getNomeCliente());
+            System.out.print("ID: " + lance.getIdLance() + " - ID LEILAO: " + lance.getIdLeilao());
         }
     }
 

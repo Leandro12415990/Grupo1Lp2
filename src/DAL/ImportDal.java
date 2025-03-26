@@ -43,16 +43,13 @@ public class ImportDal {
                     int idLance = Integer.parseInt(dados[0]);
                     int idLeilao = Integer.parseInt(dados[1]);
                     int idCliente = Integer.parseInt(dados[2]);
-                    String nomeCliente = dados[3];
-                    String emailCliente = dados[4];
-                    double valorLance = Double.parseDouble(dados[5]);
-                    int numLance = dados[6].isEmpty() ? 0 : Integer.parseInt(dados[6]);
-                    int pontosUtilizados = dados[7].isEmpty() ? 0 : Integer.parseInt(dados[7]);
-                    LocalDateTime dataLance = LocalDateTime.parse(dados[8], Tools.DATA_HORA);
-                    int ordemLance = (dados.length > 9 && !dados[9].isEmpty()) ? Integer.parseInt(dados[9]) : 0;
+                    double valorLance = Double.parseDouble(dados[3]);
+                    int numLance = dados[4].isEmpty() ? 0 : Integer.parseInt(dados[4]);
+                    int pontosUtilizados = dados[5].isEmpty() ? 0 : Integer.parseInt(dados[5]);
+                    LocalDateTime dataLance = LocalDateTime.parse(dados[6], Tools.DATA_HORA);
 
-                    Lance lance = new Lance(idLance, idLeilao, idCliente, nomeCliente, emailCliente,
-                            valorLance, numLance, pontosUtilizados, dataLance, ordemLance);
+                    Lance lance = new Lance(idLance, idLeilao, idCliente,
+                            valorLance, numLance, pontosUtilizados, dataLance);
                     lances.add(lance);
                 } catch (NumberFormatException e) {
                     System.err.println("Erro ao converter valores numéricos: " + linha);
@@ -206,7 +203,7 @@ public class ImportDal {
 
     public static void gravarLance(List<Lance> lances) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_LANCE))) {
-            bw.write("ID APOSTA;ID LEILÃO;ID CLIENTE;NOME CLIENTE;EMAIL;VALOR APOSTA;MULTIPLOS UTILIZADOS;PONTOS UTILIZADOS;DATA APOSTA;ORDEM DA APOSTA");
+            bw.write("ID APOSTA;ID LEILÃO;ID CLIENTE;VALOR APOSTA;MULTIPLOS UTILIZADOS;PONTOS UTILIZADOS;DATA APOSTA");
             bw.newLine();
 
             for (Lance lance : lances) {
@@ -215,13 +212,10 @@ public class ImportDal {
                 bw.write(lance.getIdLance() + Tools.separador() +
                         lance.getIdLeilao() + Tools.separador() +
                         lance.getIdCliente() + Tools.separador() +
-                        lance.getNomeCliente() + Tools.separador() +
-                        lance.getEmailCliente() + Tools.separador() +
                         lance.getValorLance() + Tools.separador() +
                         lance.getNumLance() + Tools.separador() +
                         lance.getValorLanceEletronio() + Tools.separador() +
-                        dataAposta + Tools.separador() +
-                        lance.getOrdemLance());
+                        dataAposta + Tools.separador());
                 bw.newLine();
             }
         } catch (IOException e) {
