@@ -28,8 +28,19 @@ public class ProdutoBLL {
         return ProdutoDal.carregarProdutos();
     }
 
-    public static List<Produto>  listarProdutos() {
-        return carregarProdutos();
+    public static List<Produto>  listarProdutos(boolean apenasAtivos) {
+        carregarProdutos();
+        if (!apenasAtivos) {
+            return produtos;
+        }
+        List<Produto> produtosAtivos = new ArrayList<>();
+        for (Produto produto : produtos) {
+            if (produto.getEstado() == 1) {
+                produtosAtivos.add(produto);
+            }
+        }
+
+        return produtosAtivos;
     }
 
     public static Produto procurarProduto(int id) {
@@ -133,5 +144,29 @@ public class ProdutoBLL {
             }
         }
         return null;
+    }
+
+    public static boolean verificarDisponibilidadeProduto(int idProduto) {
+        List<Produto> produtos = ProdutoDal.carregarProdutos();
+        for (Produto produto : produtos) {
+            if (produto.getIdProduto() == idProduto) {
+                if(produto.getEstado() == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void atualizarEstadoProduto(int idProduto) {
+        carregarProdutos();
+        int idEstadoReservado = 2; //ESTADO Reservado
+        for (Produto produto : produtos) {
+            if (produto.getIdProduto() == idProduto) {
+                produto.setEstado(idEstadoReservado);
+            }
+        }
     }
 }

@@ -34,7 +34,8 @@ public class ProdutoView {
                     eliminarProduto();
                     break;
                 case 4:
-                    listarProduto();
+                    boolean apenasAtivos = false;
+                    listarProduto(apenasAtivos);
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -66,7 +67,7 @@ public class ProdutoView {
 
     public static void editarProduto() {
 
-        listarProduto();
+        listarProduto(false);
 
         System.out.println("\n --- EDITAR PRODUTO ---");
 
@@ -96,7 +97,7 @@ public class ProdutoView {
 
     public static void eliminarProduto() {
 
-        listarProduto();
+        listarProduto(false);
 
         System.out.println("\n --- ELIMINAR PRODUTO ---");
         System.out.println("Insira o ID do produto que deseja eliminar: (-1 para cancelar)");
@@ -140,8 +141,8 @@ public class ProdutoView {
         }
     }
 
-    public static void listarProduto() {
-        ProdutoController.listarProduto();
+    public static void listarProduto(boolean apenasAtivos) {
+        ProdutoController.listarProduto(apenasAtivos);
     }
     public static void exibirProduto(List<Produto> produtos) {
         System.out.println("\n" + "=".repeat(5) + " LISTAGEM DOS PRODUTOS " + "=".repeat(5));
