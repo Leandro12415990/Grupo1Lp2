@@ -26,17 +26,18 @@ public class ProdutoDal {
 
                 String[] dados = linha.split(Tools.separador(), -1);
 
-                if (dados.length < 3) {
+                if (dados.length < 4) {
                     System.err.println("[ERRO] Linha inválida no CSV: " + linha);
                     continue;
                 }
 
                 try {
                     int id = Integer.parseInt(dados[0].trim());
-                    String nome = dados[1].trim();
-                    String descricao = dados[2].trim();
+                    int estado = Integer.parseInt(dados[1].trim());
+                    String nome = dados[2].trim();
+                    String descricao = dados[3].trim();
 
-                    Produto produto = new Produto(id, nome, descricao);
+                    Produto produto = new Produto(id, estado, nome, descricao);
                     produtos.add(produto);
 
                 } catch (NumberFormatException e) {
@@ -60,11 +61,12 @@ public class ProdutoDal {
         }*/
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_PRODUTO))) {
-            bw.write("IDPRODUTO;NOME;DESCRICAO");
+            bw.write("IDPRODUTO;ESTADO;NOME;DESCRICAO");
             bw.newLine();
 
             for (Produto produto : produtos) {
                 bw.write(produto.getIdProduto() + Tools.separador() +
+                        produto.getEstado() + Tools.separador() +
                         produto.getNome() + Tools.separador() +
                         produto.getDescricao() + Tools.separador());
                 bw.newLine();
@@ -77,11 +79,11 @@ public class ProdutoDal {
 
     public static void salvarProdutos(List<Produto> produtos) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_PRODUTO))) {
-            bw.write("ID;Nome;Descrição");
+            bw.write("ID;Estado;Nome;Descrição");
             bw.newLine();
 
             for (Produto produto : produtos) {
-                bw.write(produto.getIdProduto() + ";" + produto.getNome() + ";" + produto.getDescricao());
+                bw.write(produto.getIdProduto() + ";" + produto.getEstado() + ";" + produto.getNome() + ";" + produto.getDescricao());
                 bw.newLine();
             }
 

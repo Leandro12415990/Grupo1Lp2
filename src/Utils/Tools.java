@@ -23,7 +23,7 @@ public class Tools {
         return ";";
     }
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static String formatDateTime(LocalDateTime dateTime) {
         return (dateTime != null) ? dateTime.format(DATA_HORA) : "";
@@ -83,6 +83,30 @@ public class Tools {
 
         public int getCodigo() {
             return codigo;
+        }
+    }
+
+    public enum estadoProduto {
+        ATIVO(1), RESERVADO(2), INATIVO(3);
+
+        private final int codigo;
+        private int estado;
+
+        estadoProduto(int codigo) {
+            this.codigo = codigo;
+        }
+
+        public int getCodigo() {
+            return codigo;
+        }
+
+        public static estadoProduto fromCodigo(int codigo) {
+            for (estadoProduto estado : estadoProduto.values()) {
+                if (estado.getCodigo() == codigo) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
         }
     }
 

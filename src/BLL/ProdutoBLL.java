@@ -2,6 +2,7 @@ package BLL;
 
 import DAL.ImportDal;
 import DAL.ProdutoDal;
+import Model.Leilao;
 import Model.Produto;
 import Utils.Tools;
 
@@ -27,11 +28,8 @@ public class ProdutoBLL {
         return ProdutoDal.carregarProdutos();
     }
 
-    public static void listarProdutos() {
-        List<Produto> produtos = obterTodosProdutos();
-        for (Produto produto : produtos) {
-            System.out.println("ID: " + produto.getIdProduto() + " - Nome: " + produto.getNome() + " - Descrição: " + produto.getDescricao());
-        }
+    public static List<Produto>  listarProdutos() {
+        return carregarProdutos();
     }
 
     public static Produto procurarProduto(int id) {
@@ -62,6 +60,24 @@ public class ProdutoBLL {
     public static boolean editarProduto(Produto produto) {
         List<Produto> produtosAtualizados = ProdutoBLL.obterTodosProdutos();
         boolean produtoEditado = false;
+
+        while (true) {
+            System.out.print("Novo estado (1 = ATIVO, 2 = RESERVADO, 3 = INATIVO) - deixe vazio para manter: ");
+            String novoEstadoStr = Tools.scanner.nextLine().trim();
+
+            if (novoEstadoStr.isEmpty()) {
+                System.out.println("Alteração de estado mantida.");
+                break;
+            }
+
+            if (novoEstadoStr.equals("1") || novoEstadoStr.equals("2") || novoEstadoStr.equals("3")) {
+                int novoEstado = Integer.parseInt(novoEstadoStr);
+                produto.setEstado(novoEstado);
+                break;
+            } else {
+                System.out.println(" Estado inválido. Por favor, insira 1, 2 ou 3, ou deixe vazio para manter: .");
+            }
+        }
 
         System.out.print("Novo nome (deixe vazio para manter): ");
         String novoNome = Tools.scanner.nextLine().trim();
@@ -107,5 +123,15 @@ public class ProdutoBLL {
         }
 
         return produtoRemovido;
+    }
+
+    public static String getNomeProdutoById(int idProduto) {
+        carregarProdutos();
+        for (Produto produto : produtos) {
+            if (produto.getIdProduto() == idProduto) {
+                return produto.getNome().toUpperCase();
+            }
+        }
+        return null;
     }
 }

@@ -17,23 +17,19 @@ public class RegistarClienteBll {
         LocalDate hora = LocalDate.now();
 
         Tools.utilizadores = ImportDal.carregarUtilizador();
-        int id = 0, max = -1;
-        boolean idEncontrado = false;
+        int max = -1;
 
         for (Utilizador u : Tools.utilizadores)
         {
             if (u.getId() > max) max = u.getId();
             if (email == u.getEmail())
             {
-                id = u.getId();
-                idEncontrado = true;
-                break;
+                return false;
             }
         }
 
         try {
-            if (idEncontrado) utilizador = new Utilizador( id, nome, email, nascimento, morada, password, hora, hora, 1, Tools.estadoUtilizador.PENDENTE.getCodigo());
-            else utilizador = new Utilizador( max + 1, nome, email, nascimento, morada, password, hora, hora, 1, Tools.estadoUtilizador.PENDENTE.getCodigo());
+            utilizador = new Utilizador( max + 1, nome, email, nascimento, morada, password, hora, hora, 1, Tools.estadoUtilizador.PENDENTE.getCodigo());
         } catch (Exception e) {
             return false;
         }
