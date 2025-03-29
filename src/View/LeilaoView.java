@@ -117,7 +117,7 @@ public class LeilaoView {
         }
     }
 
-    private static void listaLeiloes() {
+    public static void listaLeiloes() {
         LeilaoController.listarLeiloes();
     }
 
