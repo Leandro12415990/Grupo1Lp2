@@ -1,6 +1,6 @@
 package Controller;
 
-import BLL.ImportBll;
+import BLL.ImportBLL;
 import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
@@ -10,18 +10,20 @@ import java.util.List;
 public class ImportController {
 
     public static void mostrarUtilizador() {
-        ImportBll.listarUtilizador();
+        ImportBLL.listarUtilizador();
     }
 
     public static void gravarLeiloes(List<Leilao> leiloes) {
-        ImportBll.gravarLeiloes(leiloes);
+        ImportBLL.gravarLeiloes(leiloes);
     }
 
     public static void gravarUtilizadores(List<Utilizador> utilizadores) {
-        ImportBll.gravarUtilizadores(utilizadores);
+        ImportBLL.gravarUtilizadores(utilizadores);
     }
 
-    public static void mostrarLance(){ImportBll.listarLance();}
+    public static void mostrarLance(){
+        ImportBLL.listarLance();}
 
-    public static void gravarLance(List<Lance> lances){ImportBll.gravarLance(lances);}
+    public static void gravarLance(List<Lance> lances){
+        ImportBLL.gravarLance(lances);}
 }

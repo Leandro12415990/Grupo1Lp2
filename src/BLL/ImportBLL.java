@@ -7,7 +7,7 @@ import Model.Utilizador;
 
 import java.util.List;
 
-public class ImportBll {
+public class ImportBLL {
 
     public static List<Leilao> obterTodosLeiloes() {
         return ImportDal.carregarLeilao();

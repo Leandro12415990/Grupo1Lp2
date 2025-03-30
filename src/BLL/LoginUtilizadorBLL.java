@@ -6,7 +6,7 @@ import Utils.Tools;
 
 import java.time.LocalDate;
 
-public class LoginUtilizadorBll {
+public class LoginUtilizadorBLL {
     public static int login(String email, String password)
     {
         for (Utilizador u : Tools.utilizadores)

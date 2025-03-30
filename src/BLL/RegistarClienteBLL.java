@@ -7,7 +7,7 @@ import Utils.Tools;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class RegistarClienteBll {
+public class RegistarClienteBLL {
 
     public static boolean criarCliente(String nome, String email, LocalDate nascimento, String morada, String password)
     {

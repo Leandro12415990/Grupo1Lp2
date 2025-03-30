@@ -7,8 +7,9 @@ public class MenuGestorView {
         while (true) {
             System.out.println("\n"+"=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
             System.out.println("1. Listagem de Utilizadores");
-            System.out.println("2. Menu Leilões");
-            System.out.println("3. Menu Produtos");
+            System.out.println("2. Aprovar Clientes");
+            System.out.println("3. Menu Leilões");
+            System.out.println("4. Menu Produtos");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
 
@@ -19,9 +20,12 @@ public class MenuGestorView {
                     ImportView.mostrarUtilizador();
                     break;
                 case 2:
-                    LeilaoView.exibirMenuLeiloes();
+                    AprovarClienteView.exibirMenu();
                     break;
                 case 3:
+                    LeilaoView.exibirMenuLeiloes();
+                    break;
+                case 4:
                     ProdutoView.exibirProduto();
                     break;
                 case 0:
