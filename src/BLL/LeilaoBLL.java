@@ -1,7 +1,9 @@
 package BLL;
 
+import DAL.ProdutoDal;
 import Model.Leilao;
 import DAL.ImportDal;
+import Model.Produto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,10 +11,17 @@ import java.util.List;
 
 public class LeilaoBLL {
     static final int EstadoAtivoLeilao = 1;
+    static final int EstadoPendenteLeilao = 2;
+    static final int EstadoCanceladoLeilao = 3;
+    static final int EstadoFechadoLeilao = 4;
+    static final int EstadoInativoLeilao = 5;
     private static List<Leilao> leiloes = new ArrayList<>();
 
     public static List<Leilao> carregarLeiloes() {
         leiloes = ImportDal.carregarLeilao();
+        for (Leilao leilao : leiloes) {
+            atualizarEstadoLeilaoAutomaticamente(leilao);
+        }
         return leiloes;
     }
 
@@ -78,5 +87,26 @@ public class LeilaoBLL {
             return true;
         }
         return false;
+    }
+
+    public static void atualizarEstadoLeilaoAutomaticamente(Leilao leilao) {
+        if (leilao.getEstado() != EstadoInativoLeilao || leilao.getEstado() != EstadoCanceladoLeilao) {
+            if (leilao.getDataFim() != null) {
+                if (leilao.getDataFim().isBefore(LocalDate.now())) {
+                    leilao.setEstado(EstadoFechadoLeilao);
+                    ImportDal.gravarLeilao(leiloes);
+                    return;
+                }
+            }
+            if (leilao.getDataInicio().isBefore(LocalDate.now()) || leilao.getDataInicio().equals(LocalDate.now())) {
+                leilao.setEstado(EstadoAtivoLeilao);
+                ImportDal.gravarLeilao(leiloes);
+                return;
+            }
+            if (leilao.getDataInicio().isAfter(LocalDate.now())) {
+                leilao.setEstado(EstadoPendenteLeilao);
+                ImportDal.gravarLeilao(leiloes);
+            }
+        }
     }
 }
