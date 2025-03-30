@@ -110,4 +110,40 @@ public class Tools {
         }
     }
 
+    public enum estadoLeilao {
+        ATIVO(1), PENDENTE(2), CANCELADO(3), FECHADO(4);
+
+        private final int idEstado;
+
+        estadoLeilao(int idEstado) {
+            this.idEstado = idEstado;
+        }
+
+        public int getIdEstado() {
+            return idEstado;
+        }
+
+        public static estadoLeilao fromCodigo(int idEstado) {
+            for (estadoLeilao estado : estadoLeilao.values()) {
+                if (estado.getIdEstado() == idEstado) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Estado inválido: " + idEstado);
+        }
+    }
+
+    public static boolean verificarSaida(String input) {
+        if (input.trim().equals("-1") || input.trim().equals("-1.0")) {
+            System.out.println("Operação cancelada. Voltando ao menu anterior...");
+            return true;
+        }
+        return false;
+    }
+
+    public static String alertaCancelar(){
+        return "(-1 para cancelar): ";
+    }
+
+
 }
