@@ -34,8 +34,8 @@ public class ProdutoView {
                     eliminarProduto();
                     break;
                 case 4:
-                    boolean apenasAtivos = false;
-                    listarProduto(apenasAtivos);
+                    boolean apenasDisponiveis = false;
+                    listarProduto(apenasDisponiveis);
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -141,28 +141,26 @@ public class ProdutoView {
         }
     }
 
-    public static void listarProduto(boolean apenasAtivos) {
-        ProdutoController.listarProduto(apenasAtivos);
+    public static void listarProduto(boolean apenasDisponiveis) {
+        ProdutoController.listarProduto(apenasDisponiveis);
     }
     public static void exibirProduto(List<Produto> produtos) {
         System.out.println("\n" + "=".repeat(5) + " LISTAGEM DOS PRODUTOS " + "=".repeat(5));
-        System.out.printf("%-8s %-8s %-30s %-40s\n",
+        System.out.printf("%-8s %-20s %-30s %-40s\n",
                 "Id", "Estado", "Nome", "Descrição");
-        System.out.println("-".repeat(260));
+        System.out.println("-".repeat(95));
 
 
         for (Produto produto : produtos) {
 
             String nomeEstado = Tools.estadoProduto.fromCodigo(produto.getEstado()).name();
-            System.out.printf("%-8s %-8s %-30s %-40s\n",
+            System.out.printf("%-8s %-20s %-30s %-40s\n",
                     produto.getIdProduto(),
                     nomeEstado,
-                    produto.getNome(),
-                    produto.getDescricao());
+                    produto.getNome().toUpperCase(),
+                    produto.getDescricao().toUpperCase());
         }
     }
-
-    
 
     public static void exibirDetalhesProduto(Produto produto) {
         System.out.println("\nDETALHES DO LEILÃO COM O ID " + produto.getIdProduto());

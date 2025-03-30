@@ -28,9 +28,9 @@ public class ProdutoBLL {
         return ProdutoDal.carregarProdutos();
     }
 
-    public static List<Produto>  listarProdutos(boolean apenasAtivos) {
+    public static List<Produto>  listarProdutos(boolean apenasDisponiveis) {
         carregarProdutos();
-        if (!apenasAtivos) {
+        if (!apenasDisponiveis) {
             return produtos;
         }
         List<Produto> produtosAtivos = new ArrayList<>();
@@ -160,13 +160,13 @@ public class ProdutoBLL {
         return false;
     }
 
-    public static void atualizarEstadoProduto(int idProduto) {
+    public static void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
         carregarProdutos();
-        int idEstadoReservado = 2; //ESTADO Reservado
         for (Produto produto : produtos) {
             if (produto.getIdProduto() == idProduto) {
-                produto.setEstado(idEstadoReservado);
+                produto.setEstado(novoIdEstado);
             }
         }
+        ProdutoDal.gravarProdutos(produtos);
     }
 }

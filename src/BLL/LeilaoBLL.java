@@ -1,7 +1,6 @@
 package BLL;
 
 import Model.Leilao;
-import Model.ResultadoOperacao;
 import DAL.ImportDal;
 
 import java.time.LocalDate;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LeilaoBLL {
+    static final int EstadoAtivoLeilao = 1;
     private static List<Leilao> leiloes = new ArrayList<>();
 
     public static List<Leilao> carregarLeiloes() {
@@ -33,8 +33,18 @@ public class LeilaoBLL {
         return ultimoId;
     }
 
-    public static List<Leilao> listarLeiloes() {
-        return carregarLeiloes();
+    public static List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
+        carregarLeiloes();
+        if (!apenasDisponiveis) {
+            return leiloes;
+        }
+        List<Leilao> leiloesAtivos = new ArrayList<>();
+        for (Leilao leilao : leiloes) {
+            if (leilao.getEstado() == EstadoAtivoLeilao) {
+                leiloesAtivos.add(leilao);
+            }
+        }
+        return leiloesAtivos;
     }
 
     public static Leilao procurarLeilaoPorId(int Id) {
@@ -52,7 +62,7 @@ public class LeilaoBLL {
         ImportDal.gravarLeilao(leiloes);
     }
 
-    public static boolean editarLeilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, String estado) {
+    public static boolean editarLeilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
         Leilao leilao = procurarLeilaoPorId(id);
         if (leilao != null) {
             leilao.setIdProduto(idProduto);
@@ -63,7 +73,7 @@ public class LeilaoBLL {
             leilao.setValorMinimo(valorMin);
             leilao.setValorMaximo(valorMax);
             leilao.setMultiploLance(multiploLance);
-            leilao.setEstado(estado);
+            leilao.setEstado(idEstado);
             ImportDal.gravarLeilao(leiloes);
             return true;
         }

@@ -1,8 +1,8 @@
-ID;Estado;Nome;Descrição
-1;1;PC GAMER;Pc com rgb 16 Ram e 512 de ssd
-2;3;Teclado Mecanico;switch azul
-3;1;HeadPhones;Wireless com bateria te 12h
-4;1;Rato Gamer;16000 dpi e wireless
-5;1;Carro;BMW 320d com 250000km
-6;3;laptop;8 Ram 1tb HDD e windows 11
-7;2;asd;asd
+IDPRODUTO;ESTADO;NOME;DESCRICAO
+1;1;PC GAMER;Pc com rgb 16 Ram e 512 de ssd;
+2;3;Teclado Mecanico;switch azul;
+3;2;HeadPhones;Wireless com bateria te 12h;
+4;1;Rato Gamer;16000 dpi e wireless;
+5;2;Carro;BMW 320d com 250000km;
+6;3;laptop;8 Ram 1tb HDD e windows 11;
+7;2;asd;asd;

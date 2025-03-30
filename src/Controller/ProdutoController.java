@@ -43,8 +43,8 @@ public class ProdutoController {
         return sucesso;
     }
 
-    public static void listarProduto(boolean apenasAtivos) {
-        List<Produto> produtos = ProdutoBLL.listarProdutos(apenasAtivos);
+    public static void listarProduto(boolean apenasDisponiveis) {
+        List<Produto> produtos = ProdutoBLL.listarProdutos(apenasDisponiveis);
 
         ProdutoView.exibirProduto(produtos);
     }
@@ -60,7 +60,7 @@ public class ProdutoController {
         return ProdutoBLL.getNomeProdutoById(idProduto);
     }
 
-    public static void atualizarEstadoProduto(int idProduto) {
-        ProdutoBLL.atualizarEstadoProduto(idProduto);
+    public static void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
+        ProdutoBLL.atualizarEstadoProduto(idProduto, novoIdEstado);
     }
 }

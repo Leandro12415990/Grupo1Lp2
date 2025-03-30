@@ -12,10 +12,10 @@ public class Leilao {
     private Double valorMinimo;
     private Double valorMaximo;
     private Double multiploLance;
-    private String estado;
+    private int idEstado;
 
     public Leilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio,
-                  LocalDate dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, String estado) {
+                  LocalDate dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, int idEstado) {
         this.id = id;
         this.idProduto = idProduto;
         this.descricao = descricao;
@@ -25,7 +25,7 @@ public class Leilao {
         this.valorMinimo = valorMinimo;
         this.valorMaximo = valorMaximo;
         this.multiploLance = multiploLance;
-        this.estado = estado;
+        this.idEstado = idEstado;
     }
 
     public int getId() {
@@ -100,11 +100,11 @@ public class Leilao {
         this.multiploLance = multiploLance;
     }
 
-    public String getEstado() {
-        return estado;
+    public int getEstado() {
+        return idEstado;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setEstado(int idEstado) {
+        this.idEstado = idEstado;
     }
 }
