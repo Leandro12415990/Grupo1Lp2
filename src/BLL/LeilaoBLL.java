@@ -109,4 +109,20 @@ public class LeilaoBLL {
             }
         }
     }
+
+    public static int determinarEstadoByDatas(LocalDate dataInicio, LocalDate dataFim) {
+        if (dataFim != null) {
+            if (dataFim.isBefore(LocalDate.now())) {
+                return EstadoFechadoLeilao;
+            }
+        }
+        if (dataInicio.isBefore(LocalDate.now()) || dataInicio.equals(LocalDate.now())) {
+            return EstadoAtivoLeilao;
+        }
+        if (dataInicio.isAfter(LocalDate.now())) {
+            return EstadoPendenteLeilao;
+        }
+        return EstadoPendenteLeilao;
+    }
+
 }

@@ -6,7 +6,6 @@ import Model.ResultadoOperacao;
 import Utils.Tools;
 import Controller.LeilaoController;
 
-import javax.tools.Tool;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -169,7 +168,8 @@ public class LeilaoView {
                 multiploLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(multiploLance))) return;
             }
-            ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, Tools.estadoLeilao.ATIVO.getIdEstado());
+            int idEstado = LeilaoController.determinarEstadoByDatas(dataInicio,dataFim);
+            ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
 
             if (resultado.Sucesso) {
                 ProdutoController.atualizarEstadoProduto(idProduto, 2);
@@ -487,7 +487,7 @@ public class LeilaoView {
                 }
             }
 
-            int idEstado = (dataFim != null && dataFim.isBefore(LocalDate.now())) ? Tools.estadoLeilao.FECHADO.getIdEstado() : Tools.estadoLeilao.ATIVO.getIdEstado();
+            int idEstado = LeilaoController.determinarEstadoByDatas(dataInicio,dataFim);
             boolean sucesso = LeilaoController.editarLeilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
             if (sucesso) {
                 if(leilao.getIdProduto()!=idProduto){
