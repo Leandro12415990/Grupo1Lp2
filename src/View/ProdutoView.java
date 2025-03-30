@@ -34,8 +34,7 @@ public class ProdutoView {
                     eliminarProduto();
                     break;
                 case 4:
-                    boolean apenasDisponiveis = false;
-                    listarProduto(apenasDisponiveis);
+                    listarProduto(false);
                     break;
                 case 0:
                     System.out.println("Saindo...");

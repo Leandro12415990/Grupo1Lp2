@@ -148,13 +148,11 @@ public class ProdutoBLL {
 
     public static boolean verificarDisponibilidadeProduto(int idProduto) {
         List<Produto> produtos = ProdutoDal.carregarProdutos();
+        final int EstadoProdutoAtivo = 1;
         for (Produto produto : produtos) {
             if (produto.getIdProduto() == idProduto) {
-                if(produto.getEstado() == 1) {
-                    return true;
-                } else {
-                    return false;
-                }
+                if(produto.getEstado() == EstadoProdutoAtivo) return true;
+                else return false;
             }
         }
         return false;
