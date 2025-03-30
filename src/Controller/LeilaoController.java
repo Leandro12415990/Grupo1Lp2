@@ -103,5 +103,16 @@ public class LeilaoController {
         }
         return resultado;
     }
+
+    public static ResultadoOperacao verificarValorMax (double valorMin, double valorMax) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        if (valorMax < valorMin) {
+            resultado.msgErro = "O valor máximo não pode ser inferior ao valor minimo.\n";
+        } else {
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+        }
+        return resultado;
+    }
 }
 

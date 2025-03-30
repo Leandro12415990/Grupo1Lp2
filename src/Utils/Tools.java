@@ -1,5 +1,6 @@
 package Utils;
 
+import Model.ResultadoOperacao;
 import Model.Utilizador;
 
 import java.io.BufferedReader;
@@ -29,17 +30,13 @@ public class Tools {
         return (dateTime != null) ? dateTime.format(DATA_HORA) : "";
     }
 
-
     public static final DateTimeFormatter DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public static LocalDate parseDate(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) {
-            return null;
-        }
+        if (dateStr == null || dateStr.isEmpty()) return null;
         try {
             return LocalDate.parse(dateStr, FORMATTER);
         } catch (DateTimeParseException e) {
-            System.err.println("Data inválida: " + dateStr);
             return null;
         }
     }
@@ -111,7 +108,7 @@ public class Tools {
     }
 
     public enum estadoLeilao {
-        ATIVO(1), PENDENTE(2), CANCELADO(3), FECHADO(4);
+        ATIVO(1), PENDENTE(2), CANCELADO(3), FECHADO(4), INATIVO(5);
 
         private final int idEstado;
 
@@ -145,5 +142,14 @@ public class Tools {
         return "(-1 para cancelar): ";
     }
 
-
+    public static ResultadoOperacao verificarDatasAnteriores (LocalDate dataInicial, LocalDate dataFinal) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        if (dataFinal.isBefore(dataInicial)) {
+            resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
+        } else {
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+        }
+        return resultado;
+    }
 }
