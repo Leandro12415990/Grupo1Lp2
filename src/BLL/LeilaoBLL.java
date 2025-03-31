@@ -46,7 +46,7 @@ public class LeilaoBLL {
         }
         List<Leilao> leiloesAtivos = new ArrayList<>();
         for (Leilao leilao : leiloes) {
-            if (leilao.getEstado() == Constantes.EstadoAtivoLeilao) {
+            if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
                 leiloesAtivos.add(leilao);
             }
         }
@@ -68,12 +68,12 @@ public class LeilaoBLL {
         ImportDal.gravarLeilao(leiloes);
     }
 
-    public static boolean editarLeilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
+    public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
         Leilao leilao = procurarLeilaoPorId(id);
         if (leilao != null) {
             leilao.setIdProduto(idProduto);
             leilao.setDescricao(descricao);
-            leilao.setTipoLeilao(tipoLeilao);
+            leilao.setTipoLeilao(idTipoLeilao);
             leilao.setDataInicio(dataInicio);
             leilao.setDataFim(dataFim);
             leilao.setValorMinimo(valorMin);
@@ -87,21 +87,20 @@ public class LeilaoBLL {
     }
 
     public static int determinarEstadoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
-        if (idEstado != Constantes.EstadoInativoLeilao || idEstado != Constantes.EstadoCanceladoLeilao) {
+        if (idEstado != Constantes.estadosLeilao.INATIVO || idEstado != Constantes.estadosLeilao.CANCELADO) {
             if (dataFim != null) {
                 if (dataFim.isBefore(LocalDate.now())) {
-                    return Constantes.EstadoFechadoLeilao;
+                    return Constantes.estadosLeilao.FECHADO;
                 }
             }
             if (dataInicio.isBefore(LocalDate.now()) || dataInicio.equals(LocalDate.now())) {
-                return Constantes.EstadoAtivoLeilao;
+                return Constantes.estadosLeilao.ATIVO;
             }
             if (dataInicio.isAfter(LocalDate.now())) {
-                return Constantes.EstadoPendenteLeilao;
+                return Constantes.estadosLeilao.PENDENTE;
             }
-            return Constantes.EstadoPendenteLeilao;
-        }
-        return idEstado;
+            return Constantes.estadosLeilao.PENDENTE;
+        } else return idEstado;
     }
 
 }

@@ -4,15 +4,15 @@ import BLL.ProdutoBLL;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import BLL.LeilaoBLL;
+import Utils.Constantes;
 import View.LeilaoView;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 public class LeilaoController {
 
-    public static ResultadoOperacao criarLeiloes(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, Double valorMax, Double multiploLance, int idEstado) {
+    public static ResultadoOperacao criarLeiloes(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, Double valorMax, Double multiploLance, int idEstado) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (descricao == null || descricao.isEmpty()) {
             resultado.msgErro = "A descrição não pode ser nula.";
@@ -22,12 +22,12 @@ public class LeilaoController {
             resultado.msgErro = "O valor minimo não pode ser negativo.";
         } else if (valorMax != 0.0 && valorMax >= 0 && valorMax < valorMin) {
             resultado.msgErro = "O valor máximo deve ser maior do que o valor minimo.";
-        } else if (Objects.equals(tipoLeilao, "ELETRONICO") && multiploLance < 0) {
+        } else if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO && multiploLance < 0) {
             resultado.msgErro = "O múltiplo de lance deve ser positivo.";
         } else if (dataFim != null && dataFim.isBefore(dataInicio)) {
             resultado.msgErro = "A data de fim deve ser superior à data de inicio.";
         }  else {
-            Leilao leilao = new Leilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
+            Leilao leilao = new Leilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
             LeilaoBLL.adicionarLeilao(leilao);
 
             resultado.Objeto = resultado;
@@ -60,31 +60,8 @@ public class LeilaoController {
         return false;
     }
 
-    public static boolean editarLeilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
-
-        Leilao leilao = procurarLeilaoPorId(id);
-        if (leilao != null) {
-            if (idProduto == -1) {
-                idProduto = leilao.getIdProduto();
-            }
-            if (descricao.isEmpty()) {
-                descricao = leilao.getDescricao();
-            }
-            if (tipoLeilao.isEmpty()) {
-                tipoLeilao = leilao.getTipoLeilao();
-            }
-            if (valorMin == -1) {
-                valorMin = leilao.getValorMinimo();
-            }
-            if (valorMax == -1) {
-                valorMax = leilao.getValorMaximo();
-            }
-            if (multiploLance == -1) {
-                multiploLance = leilao.getMultiploLance();
-            }
-            return LeilaoBLL.editarLeilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
-        }
-        return false;
+    public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
+            return LeilaoBLL.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
     }
 
     public static ResultadoOperacao verificarDisponibilidadeProduto(int idProduto) {

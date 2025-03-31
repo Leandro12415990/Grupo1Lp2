@@ -6,7 +6,7 @@ public class Leilao {
     private int id;
     private int idProduto;
     private String descricao;
-    private String tipoLeilao;
+    private int idTipoLeilao;
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private Double valorMinimo;
@@ -14,12 +14,12 @@ public class Leilao {
     private Double multiploLance;
     private int idEstado;
 
-    public Leilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio,
+    public Leilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio,
                   LocalDate dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, int idEstado) {
         this.id = id;
         this.idProduto = idProduto;
         this.descricao = descricao;
-        this.tipoLeilao = tipoLeilao;
+        this.idTipoLeilao = idTipoLeilao;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.valorMinimo = valorMinimo;
@@ -52,12 +52,12 @@ public class Leilao {
         this.descricao = descricao;
     }
 
-    public String getTipoLeilao() {
-        return tipoLeilao;
+    public int getTipoLeilao() {
+        return idTipoLeilao;
     }
 
-    public void setTipoLeilao(String tipoLeilao) {
-        this.tipoLeilao = tipoLeilao;
+    public void setTipoLeilao(int idTipoLeilao) {
+        this.idTipoLeilao = idTipoLeilao;
     }
 
     public LocalDate getDataInicio() {

@@ -50,7 +50,6 @@ public class LeilaoView {
 
     private static void criarLeilao() {
         System.out.println("\nCRIAÇÃO DE UM LEILÃO\n");
-        //System.out.print("⚠ Produto disponíveis para leiloar ⚠\n");
         ProdutoView.listarProduto(true);
         System.out.print("\nIntroduza o ID do produto que pretende leiloar " + Tools.alertaCancelar());
         int idProduto = Tools.scanner.nextInt();
@@ -62,31 +61,30 @@ public class LeilaoView {
             String descricao = Tools.scanner.next();
             if (Tools.verificarSaida(descricao)) return;
 
-            String tipoLeilao = null;
-            int opcTipoLeilao;
+            int idTipoLeilao;
             do {
                 System.out.println("\n1. Leilão Eletrónico");
                 System.out.println("2. Leilão Carta Fechada");
                 System.out.println("3. Leilão Venda Direta");
                 System.out.print("Escolha o tipo de leilão " + Tools.alertaCancelar());
-                opcTipoLeilao = Tools.scanner.nextInt();
-                if (Tools.verificarSaida(String.valueOf(opcTipoLeilao))) return;
+                idTipoLeilao = Tools.scanner.nextInt();
+                if (Tools.verificarSaida(String.valueOf(idTipoLeilao))) return;
 
-                switch (opcTipoLeilao) {
+                switch (idTipoLeilao) {
                     case 1:
-                        tipoLeilao = "ELETRONICO";
+                        idTipoLeilao = Constantes.tiposLeilao.ELETRONICO;
                         break;
                     case 2:
-                        tipoLeilao = "CARTA FECHADA";
+                        idTipoLeilao = Constantes.tiposLeilao.CARTA_FECHADA;
                         break;
                     case 3:
-                        tipoLeilao = "VENDA DIRETA";
+                        idTipoLeilao = Constantes.tiposLeilao.VENDA_DIRETA;
                         break;
                     default:
                         System.out.println("Opção inválida. Tente novamente...");
                 }
 
-            } while (opcTipoLeilao < 1 || opcTipoLeilao > 3);
+            } while (idTipoLeilao < 1 || idTipoLeilao > 3);
 
             LocalDate dataInicio;
             while (true) {
@@ -148,7 +146,7 @@ public class LeilaoView {
                             if (resultadoValores.Sucesso) {
                                 break;
                             } else {
-                                System.out.println(resultadoValores.msgErro);  // Exibe erro de validação
+                                System.out.println(resultadoValores.msgErro);
                                 valorMax = 0.0;
                             }
                         } else {
@@ -164,14 +162,14 @@ public class LeilaoView {
 
 
             double multiploLance = 0;
-            if (opcTipoLeilao == 1) {
+            if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
                 System.out.print("Insira o valor de cada lance " + Tools.alertaCancelar());
                 multiploLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(multiploLance))) return;
             }
-            int idEstado = Constantes.EstadoAtivoLeilao;
+            int idEstado = Constantes.estadosLeilao.ATIVO;
             idEstado =  LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,idEstado);
-            ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
+            ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
 
             if (resultado.Sucesso) {
                 ProdutoController.atualizarEstadoProduto(idProduto, 2);
@@ -195,11 +193,12 @@ public class LeilaoView {
         System.out.println("-".repeat(260));
         for (Leilao leilao : leiloes) {
             String estadoStr = Tools.estadoLeilao.fromCodigo(leilao.getEstado()).name();
+            String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()).name();
                     System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s\n",
                     leilao.getId(),
                     nomeProduto(leilao.getIdProduto()),
                     leilao.getDescricao(),
-                    leilao.getTipoLeilao(),
+                    tipoLeilaoStr,
                     leilao.getDataInicio() != null ? Tools.FORMATTER.format(leilao.getDataInicio()) : "N/A",
                     leilao.getDataFim() != null ? Tools.FORMATTER.format(leilao.getDataFim()) : "N/A",
                     leilao.getValorMinimo(),
@@ -226,10 +225,11 @@ public class LeilaoView {
 
     private static void exibirLeilaoDetalhado(Leilao leilao) {
         String estadoStr = Tools.estadoLeilao.fromCodigo(leilao.getEstado()).name();
+        String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()).name();
         System.out.println("\n- DETALHES DO LEILÃO COM O ID " + leilao.getId() + " -");
         System.out.println("Produto: " + nomeProduto(leilao.getIdProduto()));
         System.out.println("Descrição: " + leilao.getDescricao());
-        System.out.println("Tipo Leilão: " + leilao.getTipoLeilao());
+        System.out.println("Tipo Leilão: " + tipoLeilaoStr);
         System.out.println("Data Início: " + Tools.FORMATTER.format(leilao.getDataInicio()));
         System.out.println("Data Fim: " + (leilao.getDataFim() != null ? Tools.FORMATTER.format(leilao.getDataFim()) : "N/A"));
         System.out.println("Valor Minimo: " + leilao.getValorMinimo());
@@ -282,7 +282,6 @@ public class LeilaoView {
         if (leilao != null) {
             exibirLeilaoDetalhado(leilao);
             System.out.println("\nIntroduza os novos dados");
-            //System.out.print("⚠ Produtos disponíveis para leiloar ⚠\n");
             ProdutoView.listarProduto(true);
 
             System.out.print("\nNovo ID do produto que pretende leiloar ou pressione ENTER para não alterar " + Tools.alertaCancelar());
@@ -291,12 +290,8 @@ public class LeilaoView {
 
             while (true) {
                 input = Tools.scanner.nextLine();
-
                 if (Tools.verificarSaida(input)) return;
-
-                if (input.isEmpty()) {
-                    break;
-                }
+                if (input.isEmpty()) break;
 
                 try {
                     idProduto = Integer.parseInt(input);
@@ -317,11 +312,9 @@ public class LeilaoView {
             System.out.print("Nova descrição do leilão ou pressione ENTER para não alterar " + Tools.alertaCancelar());
             String descricao = Tools.scanner.nextLine().trim();
             if (Tools.verificarSaida(descricao)) return;
-            if (descricao.isEmpty()) {
-                descricao = leilao.getDescricao();
-            }
+            if (descricao.isEmpty()) descricao = leilao.getDescricao();
 
-            String tipoLeilao = leilao.getTipoLeilao();
+            int idTipoLeilao = leilao.getTipoLeilao();
             while (true) {
                 System.out.println("\n1. Leilão Eletrónico");
                 System.out.println("2. Leilão Carta Fechada");
@@ -330,18 +323,17 @@ public class LeilaoView {
                 String tipoInput = Tools.scanner.nextLine().trim();
 
                 if (Tools.verificarSaida(tipoInput)) return;
-                if (tipoInput.isEmpty()) {
-                    break;
-                }
+                if (tipoInput.isEmpty()) break;
 
                 try {
-                    int opc = Integer.parseInt(tipoInput);
-                    switch (opc) {
-                        case 1 -> tipoLeilao = "ELETRONICO";
-                        case 2 -> tipoLeilao = "CARTA FECHADA";
-                        case 3 -> tipoLeilao = "VENDA DIRETA";
+                    idTipoLeilao = Integer.parseInt(tipoInput);
+                    switch (idTipoLeilao) {
+                        case 1 -> idTipoLeilao = Constantes.tiposLeilao.ELETRONICO;
+                        case 2 -> idTipoLeilao = Constantes.tiposLeilao.CARTA_FECHADA;
+                        case 3 -> idTipoLeilao = Constantes.tiposLeilao.VENDA_DIRETA;
                         default -> {
                             System.out.println("Opção inválida. Tente novamente.");
+                            idTipoLeilao = leilao.getTipoLeilao();
                             continue;
                         }
                     }
@@ -384,11 +376,9 @@ public class LeilaoView {
                         isCorrect = Tools.verificarDatasAnteriores(dataInicio,dataFim);
                         if (isCorrect.Sucesso) break;
                         else System.out.println(isCorrect.msgErro);
-
                     }
                 }
             }
-
 
             double valorMin = leilao.getValorMinimo();
             while (true) {
@@ -446,9 +436,9 @@ public class LeilaoView {
                     }
                 }
             }
-            double multiploLance = leilao.getMultiploLance();
 
-            if (tipoLeilao.equals("ELETRONICO")) {
+            double multiploLance = leilao.getMultiploLance();
+            if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
                 while (true) {
                     System.out.print("Novo múltiplo de lance ou pressione ENTER para não alterar " + Tools.alertaCancelar());
                     String multiploLanceStr = Tools.scanner.nextLine().trim();
@@ -471,7 +461,8 @@ public class LeilaoView {
 
             int idEstado = leilao.getEstado();
             idEstado =  LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,idEstado);
-            boolean sucesso = LeilaoController.editarLeilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
+            boolean sucesso = LeilaoController.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
+
             if (sucesso) {
                 if(leilao.getIdProduto()!=idProduto){
                     ProdutoController.atualizarEstadoProduto(leilao.getIdProduto(), 1);

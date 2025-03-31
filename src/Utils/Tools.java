@@ -130,6 +130,24 @@ public class Tools {
         }
     }
 
+    public enum tipoLeilao {
+        ELETRONICO(1),
+        CARTA_FECHADA(2),
+        VENDA_DIRETA(3);
+
+        private final int idTipoLeilao;
+
+        tipoLeilao(int idTipoLeilao) { this.idTipoLeilao = idTipoLeilao; }
+        public int getIdTipoLeilao() { return idTipoLeilao; }
+
+        public static tipoLeilao fromCodigo(int idTipoLeilao) {
+            for (tipoLeilao tipo : tipoLeilao.values()) {
+                if (tipo.getIdTipoLeilao() == idTipoLeilao) return tipo;
+            }
+            throw new IllegalArgumentException("Tipo de Leilão inválido: " + idTipoLeilao);
+        }
+    }
+
     public static boolean verificarSaida(String input) {
         if (input.trim().equals("-1") || input.trim().equals("-1.0")) {
             System.out.println("Operação cancelada. Voltando ao menu anterior...");
