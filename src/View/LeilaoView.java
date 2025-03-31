@@ -167,8 +167,7 @@ public class LeilaoView {
                 multiploLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(multiploLance))) return;
             }
-            int idEstado = Constantes.estadosLeilao.ATIVO;
-            idEstado =  LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,idEstado);
+            int idEstado = LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,Constantes.estadosLeilao.ATIVO);
             ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
 
             if (resultado.Sucesso) {
