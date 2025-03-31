@@ -10,6 +10,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class LeilaoView {
+    static final int EstadoAtivoLeilao = 1;
+    static final int EstadoPendenteLeilao = 2;
+    static final int EstadoCanceladoLeilao = 3;
+    static final int EstadoFechadoLeilao = 4;
+    static final int EstadoInativoLeilao = 5;
     public static void exibirMenuLeiloes() {
         int opc;
         do {
@@ -168,7 +173,8 @@ public class LeilaoView {
                 multiploLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(multiploLance))) return;
             }
-            int idEstado = LeilaoController.determinarEstadoByDatas(dataInicio,dataFim);
+            int idEstado = EstadoAtivoLeilao;
+            idEstado =  LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,idEstado);
             ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
 
             if (resultado.Sucesso) {
@@ -487,7 +493,8 @@ public class LeilaoView {
                 }
             }
 
-            int idEstado = LeilaoController.determinarEstadoByDatas(dataInicio,dataFim);
+            int idEstado = leilao.getEstado();
+            idEstado =  LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,idEstado);
             boolean sucesso = LeilaoController.editarLeilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
             if (sucesso) {
                 if(leilao.getIdProduto()!=idProduto){

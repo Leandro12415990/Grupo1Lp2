@@ -19,8 +19,11 @@ public class LeilaoBLL {
 
     public static List<Leilao> carregarLeiloes() {
         leiloes = ImportDal.carregarLeilao();
+        int idEstado;
         for (Leilao leilao : leiloes) {
-            atualizarEstadoLeilaoAutomaticamente(leilao);
+            idEstado = determinarEstadoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
+            leilao.setEstado(idEstado);
+            ImportDal.gravarLeilao(leiloes);
         }
         return leiloes;
     }
@@ -89,40 +92,22 @@ public class LeilaoBLL {
         return false;
     }
 
-    public static void atualizarEstadoLeilaoAutomaticamente(Leilao leilao) {
-        if (leilao.getEstado() != EstadoInativoLeilao || leilao.getEstado() != EstadoCanceladoLeilao) {
-            if (leilao.getDataFim() != null) {
-                if (leilao.getDataFim().isBefore(LocalDate.now())) {
-                    leilao.setEstado(EstadoFechadoLeilao);
-                    ImportDal.gravarLeilao(leiloes);
-                    return;
+    public static int determinarEstadoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
+        if (idEstado != EstadoInativoLeilao || idEstado != EstadoCanceladoLeilao) {
+            if (dataFim != null) {
+                if (dataFim.isBefore(LocalDate.now())) {
+                    return EstadoFechadoLeilao;
                 }
             }
-            if (leilao.getDataInicio().isBefore(LocalDate.now()) || leilao.getDataInicio().equals(LocalDate.now())) {
-                leilao.setEstado(EstadoAtivoLeilao);
-                ImportDal.gravarLeilao(leiloes);
-                return;
+            if (dataInicio.isBefore(LocalDate.now()) || dataInicio.equals(LocalDate.now())) {
+                return EstadoAtivoLeilao;
             }
-            if (leilao.getDataInicio().isAfter(LocalDate.now())) {
-                leilao.setEstado(EstadoPendenteLeilao);
-                ImportDal.gravarLeilao(leiloes);
+            if (dataInicio.isAfter(LocalDate.now())) {
+                return EstadoPendenteLeilao;
             }
-        }
-    }
-
-    public static int determinarEstadoByDatas(LocalDate dataInicio, LocalDate dataFim) {
-        if (dataFim != null) {
-            if (dataFim.isBefore(LocalDate.now())) {
-                return EstadoFechadoLeilao;
-            }
-        }
-        if (dataInicio.isBefore(LocalDate.now()) || dataInicio.equals(LocalDate.now())) {
-            return EstadoAtivoLeilao;
-        }
-        if (dataInicio.isAfter(LocalDate.now())) {
             return EstadoPendenteLeilao;
         }
-        return EstadoPendenteLeilao;
+        return idEstado;
     }
 
 }
