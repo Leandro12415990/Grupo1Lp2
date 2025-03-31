@@ -3,6 +3,7 @@ package View;
 import Controller.ProdutoController;
 import Model.Leilao;
 import Model.ResultadoOperacao;
+import Utils.Constantes;
 import Utils.Tools;
 import Controller.LeilaoController;
 
@@ -10,11 +11,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class LeilaoView {
-    static final int EstadoAtivoLeilao = 1;
-    static final int EstadoPendenteLeilao = 2;
-    static final int EstadoCanceladoLeilao = 3;
-    static final int EstadoFechadoLeilao = 4;
-    static final int EstadoInativoLeilao = 5;
     public static void exibirMenuLeiloes() {
         int opc;
         do {
@@ -92,7 +88,7 @@ public class LeilaoView {
 
             } while (opcTipoLeilao < 1 || opcTipoLeilao > 3);
 
-            LocalDate dataInicio = null;
+            LocalDate dataInicio;
             while (true) {
                 System.out.print("\nInsira a data de início (dd/MM/yyyy) " + Tools.alertaCancelar());
                 Tools.scanner.nextLine();
@@ -138,7 +134,7 @@ public class LeilaoView {
             Tools.scanner.nextLine();
             if (Tools.verificarSaida(String.valueOf(valorMin))) return;
 
-            Double valorMax = 0.0;
+            double valorMax = 0.0;
             while (true) {
                 System.out.print("Insira o valor máximo ou pressione ENTER para não definir (-1 para cancelar): ");
                 String entrada = Tools.scanner.nextLine();
@@ -173,7 +169,7 @@ public class LeilaoView {
                 multiploLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(multiploLance))) return;
             }
-            int idEstado = EstadoAtivoLeilao;
+            int idEstado = Constantes.EstadoAtivoLeilao;
             idEstado =  LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,idEstado);
             ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, tipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
 
@@ -341,21 +337,9 @@ public class LeilaoView {
                 try {
                     int opc = Integer.parseInt(tipoInput);
                     switch (opc) {
-                        case 1 -> {
-                            tipoLeilao = "ELETRONICO";
-                            break;
-                        }
-                        case 2 -> {
-                            tipoLeilao = "CARTA FECHADA";
-                            break;
-                        }
-                        case 3 -> {
-                            tipoLeilao = "VENDA DIRETA";
-                            break;
-                        }
-                        case 0 -> {
-                            break;
-                        }
+                        case 1 -> tipoLeilao = "ELETRONICO";
+                        case 2 -> tipoLeilao = "CARTA FECHADA";
+                        case 3 -> tipoLeilao = "VENDA DIRETA";
                         default -> {
                             System.out.println("Opção inválida. Tente novamente.");
                             continue;
@@ -375,11 +359,8 @@ public class LeilaoView {
                 if (dataInicioStr.isEmpty()) break;
 
                 dataInicio = Tools.parseDate(dataInicioStr);
-                if (dataInicio != null) {
-                    break;
-                } else {
-                    System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
-                }
+                if (dataInicio != null) break;
+                else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
             }
 
             LocalDate dataFim = leilao.getDataFim();
@@ -393,22 +374,17 @@ public class LeilaoView {
 
                     if (dataFim != null) {
                         isCorrect = Tools.verificarDatasAnteriores(dataInicio,dataFim);
-                        if (isCorrect.Sucesso) {
-                            break;
-                        } else {
-                            System.out.println(isCorrect.msgErro);
-                        }
+                        if (isCorrect.Sucesso) break;
+                        else System.out.println(isCorrect.msgErro);
                     } else {
                         System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.\n");
                     }
                 } else {
                     if (dataFim != null) {
                         isCorrect = Tools.verificarDatasAnteriores(dataInicio,dataFim);
-                        if (isCorrect.Sucesso) {
-                            break;
-                        } else {
-                            System.out.println(isCorrect.msgErro);
-                        }
+                        if (isCorrect.Sucesso) break;
+                        else System.out.println(isCorrect.msgErro);
+
                     }
                 }
             }

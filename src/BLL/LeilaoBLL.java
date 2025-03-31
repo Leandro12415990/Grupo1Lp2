@@ -1,20 +1,14 @@
 package BLL;
 
-import DAL.ProdutoDal;
 import Model.Leilao;
 import DAL.ImportDal;
-import Model.Produto;
+import Utils.Constantes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LeilaoBLL {
-    static final int EstadoAtivoLeilao = 1;
-    static final int EstadoPendenteLeilao = 2;
-    static final int EstadoCanceladoLeilao = 3;
-    static final int EstadoFechadoLeilao = 4;
-    static final int EstadoInativoLeilao = 5;
     private static List<Leilao> leiloes = new ArrayList<>();
 
     public static List<Leilao> carregarLeiloes() {
@@ -52,7 +46,7 @@ public class LeilaoBLL {
         }
         List<Leilao> leiloesAtivos = new ArrayList<>();
         for (Leilao leilao : leiloes) {
-            if (leilao.getEstado() == EstadoAtivoLeilao) {
+            if (leilao.getEstado() == Constantes.EstadoAtivoLeilao) {
                 leiloesAtivos.add(leilao);
             }
         }
@@ -93,19 +87,19 @@ public class LeilaoBLL {
     }
 
     public static int determinarEstadoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
-        if (idEstado != EstadoInativoLeilao || idEstado != EstadoCanceladoLeilao) {
+        if (idEstado != Constantes.EstadoInativoLeilao || idEstado != Constantes.EstadoCanceladoLeilao) {
             if (dataFim != null) {
                 if (dataFim.isBefore(LocalDate.now())) {
-                    return EstadoFechadoLeilao;
+                    return Constantes.EstadoFechadoLeilao;
                 }
             }
             if (dataInicio.isBefore(LocalDate.now()) || dataInicio.equals(LocalDate.now())) {
-                return EstadoAtivoLeilao;
+                return Constantes.EstadoAtivoLeilao;
             }
             if (dataInicio.isAfter(LocalDate.now())) {
-                return EstadoPendenteLeilao;
+                return Constantes.EstadoPendenteLeilao;
             }
-            return EstadoPendenteLeilao;
+            return Constantes.EstadoPendenteLeilao;
         }
         return idEstado;
     }
