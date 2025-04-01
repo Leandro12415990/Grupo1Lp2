@@ -155,7 +155,7 @@ public class LeilaoView {
                 multiploLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(multiploLance))) return;
             }
-            int idEstado = LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,Constantes.estadosLeilao.ATIVO);
+            int idEstado = LeilaoController.determinarEstadoLeilaoByDatas(dataInicio,dataFim,Constantes.estadosLeilao.ATIVO);
             ResultadoOperacao resultado = LeilaoController.criarLeiloes(0, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
 
             if (resultado.Sucesso) {
@@ -442,7 +442,7 @@ public class LeilaoView {
             }
 
             int idEstado = leilao.getEstado();
-            idEstado =  LeilaoController.determinarEstadoByDatas(dataInicio,dataFim,idEstado);
+            idEstado =  LeilaoController.determinarEstadoLeilaoByDatas(dataInicio,dataFim,idEstado);
             boolean sucesso = LeilaoController.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
 
             if (sucesso) {

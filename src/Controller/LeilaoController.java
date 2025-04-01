@@ -92,8 +92,8 @@ public class LeilaoController {
         return resultado;
     }
 
-    public static int determinarEstadoByDatas (LocalDate dataInicio, LocalDate dataFim, int idEstado) {
-        return LeilaoBLL.determinarEstadoByDatas(dataInicio, dataFim, idEstado);
+    public static int determinarEstadoLeilaoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
+        return LeilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
     }
 }
 

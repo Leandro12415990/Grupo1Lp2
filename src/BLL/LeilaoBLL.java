@@ -15,7 +15,7 @@ public class LeilaoBLL {
         leiloes = ImportDal.carregarLeilao();
         int idEstado;
         for (Leilao leilao : leiloes) {
-            idEstado = determinarEstadoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
+            idEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
             leilao.setEstado(idEstado);
             ImportDal.gravarLeilao(leiloes);
         }
@@ -86,7 +86,7 @@ public class LeilaoBLL {
         return false;
     }
 
-    public static int determinarEstadoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
+    public static int determinarEstadoLeilaoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
         if (idEstado != Constantes.estadosLeilao.INATIVO || idEstado != Constantes.estadosLeilao.CANCELADO) {
             if (dataFim != null) {
                 if (dataFim.isBefore(LocalDate.now())) {
