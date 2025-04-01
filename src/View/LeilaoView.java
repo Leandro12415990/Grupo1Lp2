@@ -69,21 +69,9 @@ public class LeilaoView {
                 System.out.print("Escolha o tipo de leilão " + Tools.alertaCancelar());
                 idTipoLeilao = Tools.scanner.nextInt();
                 if (Tools.verificarSaida(String.valueOf(idTipoLeilao))) return;
-
-                switch (idTipoLeilao) {
-                    case 1:
-                        idTipoLeilao = Constantes.tiposLeilao.ELETRONICO;
-                        break;
-                    case 2:
-                        idTipoLeilao = Constantes.tiposLeilao.CARTA_FECHADA;
-                        break;
-                    case 3:
-                        idTipoLeilao = Constantes.tiposLeilao.VENDA_DIRETA;
-                        break;
-                    default:
-                        System.out.println("Opção inválida. Tente novamente...");
+                if (idTipoLeilao != Constantes.tiposLeilao.ELETRONICO && idTipoLeilao != Constantes.tiposLeilao.CARTA_FECHADA && idTipoLeilao != Constantes.tiposLeilao.VENDA_DIRETA) {
+                    System.out.println("Opção inválida. Tente novamente...");
                 }
-
             } while (idTipoLeilao < 1 || idTipoLeilao > 3);
 
             LocalDate dataInicio;
@@ -326,15 +314,10 @@ public class LeilaoView {
 
                 try {
                     idTipoLeilao = Integer.parseInt(tipoInput);
-                    switch (idTipoLeilao) {
-                        case 1 -> idTipoLeilao = Constantes.tiposLeilao.ELETRONICO;
-                        case 2 -> idTipoLeilao = Constantes.tiposLeilao.CARTA_FECHADA;
-                        case 3 -> idTipoLeilao = Constantes.tiposLeilao.VENDA_DIRETA;
-                        default -> {
-                            System.out.println("Opção inválida. Tente novamente.");
-                            idTipoLeilao = leilao.getTipoLeilao();
-                            continue;
-                        }
+                    if (idTipoLeilao != Constantes.tiposLeilao.ELETRONICO && idTipoLeilao != Constantes.tiposLeilao.CARTA_FECHADA && idTipoLeilao != Constantes.tiposLeilao.VENDA_DIRETA) {
+                        System.out.println("Opção inválida. Tente novamente...");
+                        idTipoLeilao = leilao.getTipoLeilao();
+                        continue;
                     }
                     break;
                 } catch (NumberFormatException e) {
