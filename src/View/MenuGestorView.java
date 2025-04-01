@@ -1,5 +1,7 @@
 package View;
 
+import Utils.Tools;
+
 import static Utils.Tools.scanner;
 
 public class MenuGestorView {
