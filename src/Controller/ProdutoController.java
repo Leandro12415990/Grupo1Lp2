@@ -44,10 +44,17 @@ public class ProdutoController {
         return sucesso;
     }
 
-    public static void listarProduto(boolean apenasDisponiveis) {
+    public static ResultadoOperacao listarProduto(boolean apenasDisponiveis) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
         List<Produto> produtos = ProdutoBLL.listarProdutos(apenasDisponiveis);
-
-        ProdutoView.exibirProduto(produtos);
+        if(produtos.isEmpty()) {
+            resultado.msgErro = "Não existem produtos disponíveis para leiloar!";
+        } else {
+            ProdutoView.exibirProduto(produtos);
+            resultado.Sucesso = true;
+            resultado.Objeto = resultado;
+        }
+        return resultado;
     }
 
     public static Produto procurarProduto(int Id) {

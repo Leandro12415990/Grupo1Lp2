@@ -13,7 +13,6 @@ public class ProdutoView {
 
     public static void exibirProduto() {
         int opcao;
-
         do {
             System.out.println("\nMenu:");
             System.out.println("1. Criar Produto");
@@ -115,7 +114,7 @@ public class ProdutoView {
             if (sucesso) {
                 System.out.println("Produto editado com sucesso!");
             } else {
-                System.out.println("Não foi possivel editar o produto.");
+                System.out.println("Não foi possível editar o produto.");
             }
         } else {
             System.out.println("Produto não encontrado.");
@@ -145,11 +144,8 @@ public class ProdutoView {
             switch (opcao) {
                 case "S":
                     boolean sucesso = ProdutoController.eliminarProduto(produto);
-                    if (sucesso) {
-                        System.out.println("Produto eliminado com sucesso!");
-                    } else {
-                        System.out.println("Não foi possível eliminar o produto.");
-                    }
+                    if (sucesso) System.out.println("Produto eliminado com sucesso!");
+                    else System.out.println("Não foi possível eliminar o produto.");
                     break;
                 case "N":
                     System.out.println("A eliminação do produto foi cancelada.");
@@ -158,7 +154,7 @@ public class ProdutoView {
                     System.out.println("Opção Inválida. Tente novamente...");
             }
         } else {
-            System.out.println("[ERRO] Não foi possível encontrar o produto com o ID fornecido.");
+            System.out.println("Produto não encontrado.");
         }
     }
 
