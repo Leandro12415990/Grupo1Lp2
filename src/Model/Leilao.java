@@ -6,26 +6,26 @@ public class Leilao {
     private int id;
     private int idProduto;
     private String descricao;
-    private String tipoLeilao;
+    private int idTipoLeilao;
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private Double valorMinimo;
     private Double valorMaximo;
     private Double multiploLance;
-    private String estado;
+    private int idEstado;
 
-    public Leilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio,
-                  LocalDate dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, String estado) {
+    public Leilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio,
+                  LocalDate dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, int idEstado) {
         this.id = id;
         this.idProduto = idProduto;
         this.descricao = descricao;
-        this.tipoLeilao = tipoLeilao;
+        this.idTipoLeilao = idTipoLeilao;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.valorMinimo = valorMinimo;
         this.valorMaximo = valorMaximo;
         this.multiploLance = multiploLance;
-        this.estado = estado;
+        this.idEstado = idEstado;
     }
 
     public int getId() {
@@ -52,12 +52,12 @@ public class Leilao {
         this.descricao = descricao;
     }
 
-    public String getTipoLeilao() {
-        return tipoLeilao;
+    public int getTipoLeilao() {
+        return idTipoLeilao;
     }
 
-    public void setTipoLeilao(String tipoLeilao) {
-        this.tipoLeilao = tipoLeilao;
+    public void setTipoLeilao(int idTipoLeilao) {
+        this.idTipoLeilao = idTipoLeilao;
     }
 
     public LocalDate getDataInicio() {
@@ -100,11 +100,11 @@ public class Leilao {
         this.multiploLance = multiploLance;
     }
 
-    public String getEstado() {
-        return estado;
+    public int getEstado() {
+        return idEstado;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setEstado(int idEstado) {
+        this.idEstado = idEstado;
     }
 }
