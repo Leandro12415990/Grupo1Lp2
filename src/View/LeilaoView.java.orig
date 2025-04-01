@@ -170,8 +170,13 @@ public class LeilaoView {
         }
     }
 
+<<<<<<< HEAD
     static void listaLeiloes() {
+        LeilaoController.listarLeiloes();
+=======
+    private static void listaLeiloes(boolean apenasDisponiveis) {
         LeilaoController.listarLeiloes(apenasDisponiveis);
+>>>>>>> master
     }
 
     public static void exibirLeiloes(List<Leilao> leiloes) {

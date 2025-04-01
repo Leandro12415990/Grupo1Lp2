@@ -43,8 +43,8 @@ public class ProdutoController {
         return sucesso;
     }
 
-    public static void listarProduto() {
-        List<Produto> produtos = ProdutoBLL.listarProdutos();
+    public static void listarProduto(boolean apenasDisponiveis) {
+        List<Produto> produtos = ProdutoBLL.listarProdutos(apenasDisponiveis);
 
         ProdutoView.exibirProduto(produtos);
     }
@@ -58,5 +58,9 @@ public class ProdutoController {
 
     public static String getNomeProdutoById(int idProduto) {
         return ProdutoBLL.getNomeProdutoById(idProduto);
+    }
+
+    public static void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
+        ProdutoBLL.atualizarEstadoProduto(idProduto, novoIdEstado);
     }
 }

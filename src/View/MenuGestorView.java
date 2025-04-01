@@ -9,6 +9,7 @@ public class MenuGestorView {
             System.out.println("1. Listagem de Utilizadores");
             System.out.println("2. Menu Leilões");
             System.out.println("3. Menu Produtos");
+            System.out.println("4. Listagens");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
 
@@ -23,6 +24,9 @@ public class MenuGestorView {
                     break;
                 case 3:
                     ProdutoView.exibirProduto();
+                    break;
+                case 4:
+                    EstatisticaView.exibirMenuListagem();
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");

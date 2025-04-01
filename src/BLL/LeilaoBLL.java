@@ -1,8 +1,8 @@
 package BLL;
 
 import Model.Leilao;
-import Model.ResultadoOperacao;
 import DAL.ImportDal;
+import Utils.Constantes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,6 +13,12 @@ public class LeilaoBLL {
 
     public static List<Leilao> carregarLeiloes() {
         leiloes = ImportDal.carregarLeilao();
+        int idEstado;
+        for (Leilao leilao : leiloes) {
+            idEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
+            leilao.setEstado(idEstado);
+            ImportDal.gravarLeilao(leiloes);
+        }
         return leiloes;
     }
 
@@ -33,8 +39,18 @@ public class LeilaoBLL {
         return ultimoId;
     }
 
-    public static List<Leilao> listarLeiloes() {
-        return carregarLeiloes();
+    public static List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
+        carregarLeiloes();
+        if (!apenasDisponiveis) {
+            return leiloes;
+        }
+        List<Leilao> leiloesAtivos = new ArrayList<>();
+        for (Leilao leilao : leiloes) {
+            if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
+                leiloesAtivos.add(leilao);
+            }
+        }
+        return leiloesAtivos;
     }
 
     public static Leilao procurarLeilaoPorId(int Id) {
@@ -52,21 +68,39 @@ public class LeilaoBLL {
         ImportDal.gravarLeilao(leiloes);
     }
 
-    public static boolean editarLeilao(int id, int idProduto, String descricao, String tipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, String estado) {
+    public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
         Leilao leilao = procurarLeilaoPorId(id);
         if (leilao != null) {
             leilao.setIdProduto(idProduto);
             leilao.setDescricao(descricao);
-            leilao.setTipoLeilao(tipoLeilao);
+            leilao.setTipoLeilao(idTipoLeilao);
             leilao.setDataInicio(dataInicio);
             leilao.setDataFim(dataFim);
             leilao.setValorMinimo(valorMin);
             leilao.setValorMaximo(valorMax);
             leilao.setMultiploLance(multiploLance);
-            leilao.setEstado(estado);
+            leilao.setEstado(idEstado);
             ImportDal.gravarLeilao(leiloes);
             return true;
         }
         return false;
     }
+
+    public static int determinarEstadoLeilaoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
+        if (idEstado != Constantes.estadosLeilao.INATIVO || idEstado != Constantes.estadosLeilao.CANCELADO) {
+            if (dataFim != null) {
+                if (dataFim.isBefore(LocalDate.now())) {
+                    return Constantes.estadosLeilao.FECHADO;
+                }
+            }
+            if (dataInicio.isBefore(LocalDate.now()) || dataInicio.equals(LocalDate.now())) {
+                return Constantes.estadosLeilao.ATIVO;
+            }
+            if (dataInicio.isAfter(LocalDate.now())) {
+                return Constantes.estadosLeilao.PENDENTE;
+            }
+            return Constantes.estadosLeilao.PENDENTE;
+        } else return idEstado;
+    }
+
 }
