@@ -13,10 +13,17 @@ public class LoginController {
 
         for (Utilizador u : Tools.utilizadores)
         {
-            if (email.equals(u.getEmail()) && password.equals(u.getPassword()))
+            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
             {
-                tipoUtilizador = LoginUtilizadorBll.login(email, password);
-                return tipoUtilizador;
+                if (u.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo())
+                {
+                    tipoUtilizador = LoginUtilizadorBll.login(email, password);
+                    return tipoUtilizador;
+                }
+                else
+                {
+                    return -1;
+                }
             }
         }
 
