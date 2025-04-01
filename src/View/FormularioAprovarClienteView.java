@@ -9,7 +9,9 @@ public class FormularioAprovarClienteView {
         {
             System.out.println("Email do cliente:");
             String email = Tools.scanner.nextLine();
-            FormularioAprovarClienteController.aprovarCliente(email);
+            boolean resFormularioAprovarClienteController = FormularioAprovarClienteController.aprovarCliente(email);
+            if (resFormularioAprovarClienteController) System.out.println("Utilizador alterado com sucesso!");
+            else System.out.println("Email inválido");
         }
     }
 }

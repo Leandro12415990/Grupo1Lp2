@@ -1,5 +1,7 @@
 package View;
 
+import Utils.Tools;
+
 import static Utils.Tools.scanner;
 
 public class MenuGestorView {
@@ -17,7 +19,7 @@ public class MenuGestorView {
             scanner.nextLine();
             switch (opcao) {
                 case 1:
-                    ImportView.mostrarUtilizador();
+                    ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo());
                     break;
                 case 2:
                     AprovarClienteView.exibirMenu();

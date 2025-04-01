@@ -5,14 +5,16 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class FormularioAprovarClienteController {
-    public static void aprovarCliente(String email)
+    public static boolean aprovarCliente(String email)
     {
         for (Utilizador u : Tools.utilizadores)
         {
-            if (u.getEmail().equals(email))
+            if (u.getEmail().equalsIgnoreCase(email))
             {
-                FormularioAprovarClienteBLL.aprovarCliente(u);
+                boolean respFormularioAprovarClienteBLL = FormularioAprovarClienteBLL.aprovarCliente(u);
+                if (respFormularioAprovarClienteBLL) return true;
             }
         }
+        return false;
     }
 }

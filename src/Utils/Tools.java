@@ -73,7 +73,7 @@ public class Tools {
     }
 
     public enum estadoUtilizador {
-        PENDENTE(1), ATIVO(2), INATIVO(3);
+        DEFAULT(0), PENDENTE(1), ATIVO(2), INATIVO(3);
 
         private final int codigo;
 
@@ -83,6 +83,10 @@ public class Tools {
 
         public int getCodigo() {
             return codigo;
+        }
+
+        public static estadoUtilizador getDefault() {
+            return DEFAULT; // Valor Default do enum estadoUtilizador
         }
     }
 

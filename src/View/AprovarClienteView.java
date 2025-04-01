@@ -1,6 +1,8 @@
 package View;
 
+import BLL.FormularioAprovarClienteBLL;
 import Controller.AprovarClienteController;
+import Utils.Tools;
 
 import static Utils.Tools.scanner;
 
@@ -8,7 +10,7 @@ public class AprovarClienteView {
     public static void exibirMenu() {
         while (true) {
             System.out.println("Menu Aprovar Clientes");
-            ImportView.mostrarUtilizador();
+            ImportView.mostrarUtilizador(Tools.estadoUtilizador.ATIVO.getCodigo());
             System.out.println("-----------------------------------------------------------------");
             System.out.println("1. Aprovar todos");
             System.out.println("2. Aprovar Cliente especifico");
@@ -25,7 +27,7 @@ public class AprovarClienteView {
                             "liste os utilizadores no menu para verificar quais não foram aprovados!");
                     break;
                 case 2:
-                    //boolean respArpovarCliente =
+                    FormularioAprovarClienteView.exibirMenu();
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");

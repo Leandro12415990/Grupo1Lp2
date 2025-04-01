@@ -1,6 +1,7 @@
 package Controller;
 
 import BLL.AprovarClienteBLL;
+import DAL.ImportDal;
 import Model.Utilizador;
 import Utils.Tools;
 
@@ -22,6 +23,8 @@ public class AprovarClienteController {
                 return false;
             }
         }
+
+        ImportDal.gravarUtilizador(Tools.utilizadores);
 
         return true;
     }
