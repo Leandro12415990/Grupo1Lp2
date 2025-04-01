@@ -2,6 +2,8 @@ package View;
 
 import Controller.ProdutoController;
 import Model.Produto;
+import Model.ResultadoOperacao;
+import Utils.Constantes;
 import Utils.Tools;
 
 import java.util.List;
@@ -46,50 +48,77 @@ public class ProdutoView {
     }
 
     public static void criarProduto() {
-        System.out.println("\n --- Criar Produto ---");
+        System.out.println("\nCRIAÇÃO DE UM PRODUTO\n");
 
-        System.out.println("Insira o nome do produto (-1 para cancelar): ");
+        System.out.println("Insira o nome do produto " + Tools.alertaCancelar());
         String nome = Tools.scanner.nextLine();
-        if (nome.equals("-1")) {
-            System.out.println("Voltando ao menu anterior...");
-            return;
-        }
+        if (Tools.verificarSaida(nome)) return;
 
-        System.out.println("Insira uma descrição do produto (-1 para cancelar): ");
+        System.out.println("Insira uma descrição do produto " + Tools.alertaCancelar());
         String descricao = Tools.scanner.nextLine();
-        if (descricao.equals("-1")) {
-            System.out.println("Voltando ao menu anterior...");
-            return;
+        if (Tools.verificarSaida(descricao)) return;
+        ResultadoOperacao resultado = ProdutoController.criarProduto(0, Constantes.estadosProduto.ATIVO, nome, descricao);
+        if (resultado.Sucesso) {
+            System.out.println("Produto criado com sucesso!");
+        } else {
+            System.out.println(resultado.msgErro);
         }
-        ProdutoController.criarProduto(0, Tools.estadoProduto.ATIVO.getCodigo(), nome, descricao);
     }
 
     public static void editarProduto() {
-
         listarProduto(false);
 
-        System.out.println("\n --- EDITAR PRODUTO ---");
-
-        System.out.println("Insira o ID do produto que deseja editar: (-1 para cancelar)");
+        System.out.println("\nEDIÇÃO DE UM PRODUTO");
+        System.out.println("Insira o ID do produto que deseja editar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
-        if (id == -1) {
-            System.out.println("Voltando ao menu anterior...");
-            return;
-        }
-
+        if (Tools.verificarSaida(String.valueOf(id))) return;
 
         Produto produto = ProdutoController.procurarProduto(id);
         if (produto != null) {
             exibirDetalhesProduto(produto);
-            boolean sucesso = ProdutoController.editarProduto(produto);
+
+            System.out.print("\nNovo nome do produto ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+            String nome = Tools.scanner.nextLine().trim();
+            if (Tools.verificarSaida(nome)) return;
+            if (nome.isEmpty()) nome = produto.getNome();
+
+            System.out.print("Nova descrição do produto ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+            String descricao = Tools.scanner.nextLine().trim();
+            if (Tools.verificarSaida(descricao)) return;
+            if (descricao.isEmpty()) descricao = produto.getDescricao();
+
+            int idEstado = produto.getEstado();
+            if (ProdutoController.verificarProdutoEmLeilao(id)) {
+                System.out.println("O produto já se encontra associado a um leilão, deste modo não será possível alterar o estado.");
+            } else {
+                while (true) {
+                    System.out.print("Novo estado do produto ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    String estadoStr = Tools.scanner.nextLine().trim();
+                    if (Tools.verificarSaida(estadoStr)) return;
+                    if (!estadoStr.isEmpty()) {
+                        try {
+                            idEstado = Integer.parseInt(estadoStr);
+                            if (idEstado != Constantes.estadosProduto.ATIVO && idEstado != Constantes.estadosProduto.INATIVO) {
+                                System.out.println("Opção inválida. Tente novamente...");
+                                idEstado = produto.getEstado();
+                                continue;
+                            }
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Entrada inválida. Insira um número entre 0 e 3.");
+                        }
+                    }
+                }
+            }
+            boolean sucesso = ProdutoController.editarProduto(id, nome, descricao, idEstado);
             if (sucesso) {
                 System.out.println("Produto editado com sucesso!");
             } else {
                 System.out.println("Não foi possivel editar o produto.");
             }
         } else {
-            System.out.println("[ERRO] Não foi possível encontrar o produto com o ID fornecido.");
+            System.out.println("Produto não encontrado.");
         }
     }
 
@@ -97,26 +126,20 @@ public class ProdutoView {
 
         listarProduto(false);
 
-        System.out.println("\n --- ELIMINAR PRODUTO ---");
-        System.out.println("Insira o ID do produto que deseja eliminar: (-1 para cancelar)");
+        System.out.println("\nELIMINAÇÃO DE UM PRODUTO");
+        System.out.println("Insira o ID do produto que deseja eliminar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
-        if (id == -1) {
-            System.out.println("Voltando ao menu anterior...");
-            return;
-        }
-
+        if (Tools.verificarSaida(String.valueOf(id))) return;
         Produto produto = ProdutoController.procurarProduto(id);
 
         if (produto != null) {
-            if (produto.getEstado() == Tools.estadoProduto.RESERVADO.getCodigo()) {
-                System.out.println("Este produto está reservado e não pode ser eliminado.");
+            if (produto.getEstado() == Constantes.estadosProduto.RESERVADO) {
+                System.out.println("O produto está reservado e não pode ser eliminado.");
                 return;
             }
             exibirDetalhesProduto(produto);
-            System.out.println("\nTem a certeza que quer eliminar este produto?");
-            System.out.println("\nInsira (S) para eliminar ou (N) para recusar o produto: ");
-
+            System.out.println("\nTem a certeza que pretende eliminar o produto com o Id " + id + "? (S/N)");
             String opcao = Tools.scanner.nextLine().trim().toUpperCase();
 
             switch (opcao) {
@@ -132,7 +155,7 @@ public class ProdutoView {
                     System.out.println("A eliminação do produto foi cancelada.");
                     break;
                 default:
-                    System.out.println("A opção foi inválida. Tente novamente.");
+                    System.out.println("Opção Inválida. Tente novamente...");
             }
         } else {
             System.out.println("[ERRO] Não foi possível encontrar o produto com o ID fornecido.");
@@ -150,7 +173,6 @@ public class ProdutoView {
                     "Id", "Estado", "Nome", "Descrição");
             System.out.println("-".repeat(95));
             for (Produto produto : produtos) {
-
                 String nomeEstado = Tools.estadoProduto.fromCodigo(produto.getEstado()).name();
                 System.out.printf("%-8s %-20s %-30s %-40s\n",
                         produto.getIdProduto(),
