@@ -8,16 +8,18 @@ public class Lance {
     private int idCliente;
     private double valorLance;
     private int numLance;
+    private int pontosUtilizados;
     private LocalDateTime dataLance;
 
     public Lance(int idLance, int idLeilao, int idCliente,
-                 double valorLance, int numLance, LocalDateTime dataLance){
+                 double valorLance, int numLance, int pontosUtilizados, LocalDateTime dataLance) {
 
         this.idLance = idLance;
         this.idLeilao = idLeilao;
         this.idCliente = idCliente;
         this.valorLance = valorLance;
         this.numLance = numLance;
+        this.pontosUtilizados = pontosUtilizados;
         this.dataLance = dataLance;
     }
 
@@ -61,11 +63,31 @@ public class Lance {
         this.numLance = numLance;
     }
 
+    public int getPontosUtilizados() {
+        return pontosUtilizados;
+    }
+
+    public void setPontosUtilizados(int pontosUtilizados) {
+        this.pontosUtilizados = pontosUtilizados;
+    }
+
     public LocalDateTime getDataLance() {
         return dataLance;
     }
 
     public void setDataLance(LocalDateTime dataLance) {
         this.dataLance = dataLance;
+    }
+
+    @Override
+    public String toString() {
+        return "Lance{" +
+                "idLance=" + idLance +
+                ", idLeilao=" + idLeilao +
+                ", idCliente=" + idCliente +
+                ", valorLance=" + valorLance +
+                ", numLance=" + numLance +
+                ", dataLance=" + dataLance +
+                '}';
     }
 }

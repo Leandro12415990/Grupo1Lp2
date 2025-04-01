@@ -34,7 +34,7 @@ public class ImportDal {
 
                 String[] dados = linha.split(Tools.separador(), -1);
 
-                if (dados.length < 9) {
+                if (dados.length < 7) {
                     System.err.println("Linha inválida no CSV: " + linha);
                     continue;
                 }
@@ -214,7 +214,7 @@ public class ImportDal {
                         lance.getIdCliente() + Tools.separador() +
                         lance.getValorLance() + Tools.separador() +
                         lance.getNumLance() + Tools.separador() +
-                        lance.getValorLanceEletronio() + Tools.separador() +
+                        lance.getPontosUtilizados() + Tools.separador() +
                         dataAposta + Tools.separador());
                 bw.newLine();
             }

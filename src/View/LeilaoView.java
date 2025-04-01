@@ -1,6 +1,7 @@
 package View;
 
 import Controller.ProdutoController;
+import Model.ClienteSessao;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import Utils.Tools;
@@ -117,7 +118,7 @@ public class LeilaoView {
         }
     }
 
-    private static void listaLeiloes() {
+    static void listaLeiloes() {
         LeilaoController.listarLeiloes();
     }
 
