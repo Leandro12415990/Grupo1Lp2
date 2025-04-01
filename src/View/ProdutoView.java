@@ -34,7 +34,7 @@ public class ProdutoView {
                     eliminarProduto();
                     break;
                 case 4:
-                    listarProduto();
+                    listarProduto(false);
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -48,25 +48,25 @@ public class ProdutoView {
     public static void criarProduto() {
         System.out.println("\n --- Criar Produto ---");
 
-            System.out.println("Insira o nome do produto (-1 para cancelar): ");
-            String nome = Tools.scanner.nextLine();
-            if (nome.equals("-1")) {
-                System.out.println("Voltando ao menu anterior...");
-                return;
-            }
+        System.out.println("Insira o nome do produto (-1 para cancelar): ");
+        String nome = Tools.scanner.nextLine();
+        if (nome.equals("-1")) {
+            System.out.println("Voltando ao menu anterior...");
+            return;
+        }
 
-            System.out.println("Insira uma descrição do produto (-1 para cancelar): ");
-            String descricao = Tools.scanner.nextLine();
-            if (descricao.equals("-1")) {
-                System.out.println("Voltando ao menu anterior...");
-                return;
-            }
-            ProdutoController.criarProduto(0, Tools.estadoProduto.ATIVO.getCodigo(), nome, descricao);
+        System.out.println("Insira uma descrição do produto (-1 para cancelar): ");
+        String descricao = Tools.scanner.nextLine();
+        if (descricao.equals("-1")) {
+            System.out.println("Voltando ao menu anterior...");
+            return;
+        }
+        ProdutoController.criarProduto(0, Tools.estadoProduto.ATIVO.getCodigo(), nome, descricao);
     }
 
     public static void editarProduto() {
 
-        listarProduto();
+        listarProduto(false);
 
         System.out.println("\n --- EDITAR PRODUTO ---");
 
@@ -80,23 +80,22 @@ public class ProdutoView {
 
 
         Produto produto = ProdutoController.procurarProduto(id);
-        if(produto != null){
+        if (produto != null) {
             exibirDetalhesProduto(produto);
             boolean sucesso = ProdutoController.editarProduto(produto);
-            if(sucesso) {
+            if (sucesso) {
                 System.out.println("Produto editado com sucesso!");
-            }
-            else{
+            } else {
                 System.out.println("Não foi possivel editar o produto.");
             }
-        }else{
+        } else {
             System.out.println("[ERRO] Não foi possível encontrar o produto com o ID fornecido.");
         }
     }
 
     public static void eliminarProduto() {
 
-        listarProduto();
+        listarProduto(false);
 
         System.out.println("\n --- ELIMINAR PRODUTO ---");
         System.out.println("Insira o ID do produto que deseja eliminar: (-1 para cancelar)");
@@ -140,28 +139,29 @@ public class ProdutoView {
         }
     }
 
-    public static void listarProduto() {
-        ProdutoController.listarProduto();
+    public static void listarProduto(boolean apenasDisponiveis) {
+        ProdutoController.listarProduto(apenasDisponiveis);
     }
+
     public static void exibirProduto(List<Produto> produtos) {
-        System.out.println("\n" + "=".repeat(5) + " LISTAGEM DOS PRODUTOS " + "=".repeat(5));
-        System.out.printf("%-8s %-8s %-30s %-40s\n",
-                "Id", "Estado", "Nome", "Descrição");
-        System.out.println("-".repeat(260));
+        if (!produtos.isEmpty()) {
+            System.out.println("\n" + "=".repeat(5) + " LISTAGEM DOS PRODUTOS " + "=".repeat(5));
+            System.out.printf("%-8s %-20s %-30s %-40s\n",
+                    "Id", "Estado", "Nome", "Descrição");
+            System.out.println("-".repeat(95));
+            for (Produto produto : produtos) {
 
-
-        for (Produto produto : produtos) {
-
-            String nomeEstado = Tools.estadoProduto.fromCodigo(produto.getEstado()).name();
-            System.out.printf("%-8s %-8s %-30s %-40s\n",
-                    produto.getIdProduto(),
-                    nomeEstado,
-                    produto.getNome(),
-                    produto.getDescricao());
+                String nomeEstado = Tools.estadoProduto.fromCodigo(produto.getEstado()).name();
+                System.out.printf("%-8s %-20s %-30s %-40s\n",
+                        produto.getIdProduto(),
+                        nomeEstado,
+                        produto.getNome().toUpperCase(),
+                        produto.getDescricao().toUpperCase());
+            }
+        } else {
+            System.out.println("Não existem produtos disponíveis para leilão.");
         }
     }
-
-    
 
     public static void exibirDetalhesProduto(Produto produto) {
         System.out.println("\nDETALHES DO LEILÃO COM O ID " + produto.getIdProduto());

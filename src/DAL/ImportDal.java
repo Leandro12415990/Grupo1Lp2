@@ -89,16 +89,16 @@ public class ImportDal {
                 int id = Integer.parseInt(dados[0]);
                 int idProduto = Integer.parseInt(dados[1]);
                 String descricao = dados[2];
-                String tipoLeilao = dados[3];
+                int idTipoLeilao = Integer.parseInt(dados[3]);
                 LocalDate dataInicio = Tools.parseDate(dados[4]);
                 LocalDate dataFim = dados[5].isEmpty() ? null : Tools.parseDate(dados[5]);
                 Double valorMinimo = Double.parseDouble(dados[6]);
                 Double valorMaximo = dados[7].isEmpty() ? null : Double.parseDouble(dados[7]);
                 Double multiploLance = (dados.length > 8 && !dados[8].isEmpty()) ? Double.parseDouble(dados[8]) : null;
-                String estado = dados[9];
+                int idEstado = Integer.parseInt(dados[9]);
 
-                Leilao leilao = new Leilao(id, idProduto, descricao, tipoLeilao, dataInicio, dataFim,
-                        valorMinimo, valorMaximo, multiploLance, estado);
+                Leilao leilao = new Leilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim,
+                        valorMinimo, valorMaximo, multiploLance, idEstado);
                 leiloes.add(leilao);
             }
         } catch (IOException e) {
@@ -149,7 +149,7 @@ public class ImportDal {
 
     public static void gravarLeilao(List<Leilao> leiloes) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE))) {
-            bw.write("ID;IDPRODUTO;DESCRICAO;TIPO LEILAO;DATA INICIO;DATA FIM;VALOR MINIMO;VALOR MAXIMO;MULTIPLO BID;ESTADO");
+            bw.write("ID;ID_PRODUTO;DESCRICAO;ID_TIPO_LEILAO;DATA_INICIO;DATA_FIM;VALOR_MINIMO;VALOR_MAXIMO;MULTIPLO_LANCE;ID_ESTADO");
             bw.newLine();
 
             for (Leilao leilao : leiloes) {

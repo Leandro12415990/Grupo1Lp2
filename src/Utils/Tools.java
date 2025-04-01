@@ -1,5 +1,6 @@
 package Utils;
 
+import Model.ResultadoOperacao;
 import Model.Utilizador;
 
 import java.io.BufferedReader;
@@ -29,17 +30,13 @@ public class Tools {
         return (dateTime != null) ? dateTime.format(DATA_HORA) : "";
     }
 
-
     public static final DateTimeFormatter DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public static LocalDate parseDate(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) {
-            return null;
-        }
+        if (dateStr == null || dateStr.isEmpty()) return null;
         try {
             return LocalDate.parse(dateStr, FORMATTER);
         } catch (DateTimeParseException e) {
-            System.err.println("Data inválida: " + dateStr);
             return null;
         }
     }
@@ -110,4 +107,67 @@ public class Tools {
         }
     }
 
+    public enum estadoLeilao {
+        ATIVO(1), PENDENTE(2), CANCELADO(3), FECHADO(4), INATIVO(5);
+
+        private final int idEstado;
+
+        estadoLeilao(int idEstado) {
+            this.idEstado = idEstado;
+        }
+
+        public int getIdEstado() {
+            return idEstado;
+        }
+
+        public static estadoLeilao fromCodigo(int idEstado) {
+            for (estadoLeilao estado : estadoLeilao.values()) {
+                if (estado.getIdEstado() == idEstado) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Estado inválido: " + idEstado);
+        }
+    }
+
+    public enum tipoLeilao {
+        ELETRONICO(1),
+        CARTA_FECHADA(2),
+        VENDA_DIRETA(3);
+
+        private final int idTipoLeilao;
+
+        tipoLeilao(int idTipoLeilao) { this.idTipoLeilao = idTipoLeilao; }
+        public int getIdTipoLeilao() { return idTipoLeilao; }
+
+        public static tipoLeilao fromCodigo(int idTipoLeilao) {
+            for (tipoLeilao tipo : tipoLeilao.values()) {
+                if (tipo.getIdTipoLeilao() == idTipoLeilao) return tipo;
+            }
+            throw new IllegalArgumentException("Tipo de Leilão inválido: " + idTipoLeilao);
+        }
+    }
+
+    public static boolean verificarSaida(String input) {
+        if (input.trim().equals("-1") || input.trim().equals("-1.0")) {
+            System.out.println("Operação cancelada. Voltando ao menu anterior...");
+            return true;
+        }
+        return false;
+    }
+
+    public static String alertaCancelar(){
+        return "(-1 para cancelar): ";
+    }
+
+    public static ResultadoOperacao verificarDatasAnteriores (LocalDate dataInicial, LocalDate dataFinal) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        if (dataFinal.isBefore(dataInicial)) {
+            resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
+        } else {
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+        }
+        return resultado;
+    }
 }
