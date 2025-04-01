@@ -1,6 +1,7 @@
 package BLL;
 
 import Model.Leilao;
+import Utils.Constantes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +9,11 @@ import java.util.List;
 public class EstatisticaBLL {
 
     private static List<Leilao> filtrarLeiloesFechados() {
-        List<Leilao> todos = LeilaoBLL.listarLeiloes();
+        List<Leilao> todos = LeilaoBLL.listarLeiloes(false);
         List<Leilao> fechados = new ArrayList<>();
 
         for (Leilao l : todos) {
-            if (l.getEstado() != null && l.getEstado().equalsIgnoreCase("Fechado")) {
+            if (l.getEstado() == Constantes.estadosLeilao.FECHADO) {
                 fechados.add(l);
             }
         }
@@ -20,12 +21,12 @@ public class EstatisticaBLL {
         return fechados;
     }
 
-    private static List<Leilao> filtrarLeiloesFechadosPorTipo(String tipoLeilao) {
+    private static List<Leilao> filtrarLeiloesFechadosPorTipo(int idTipoLeilao) {
         List<Leilao> fechados = filtrarLeiloesFechados();
         List<Leilao> resultado = new ArrayList<>();
 
         for (Leilao l : fechados) {
-            if (l.getTipoLeilao() != null && l.getTipoLeilao().equalsIgnoreCase(tipoLeilao)) {
+            if (l.getTipoLeilao() == idTipoLeilao) {
                 resultado.add(l);
             }
         }
@@ -37,8 +38,8 @@ public class EstatisticaBLL {
         return filtrarLeiloesFechados().size();
     }
 
-    public static int contarLeiloesFechadosPorTipo(String tipoLeilao) {
-        return filtrarLeiloesFechadosPorTipo(tipoLeilao).size();
+    public static int contarLeiloesFechadosPorTipo(int idTipoLeilao) {
+        return filtrarLeiloesFechadosPorTipo(idTipoLeilao).size();
     }
 
     public static List<String> obterLeiloesFechadosFormatados() {
@@ -54,8 +55,8 @@ public class EstatisticaBLL {
         return resultado;
     }
 
-    public static List<String> listarLeiloesFechadosFormatadosPorTipo(String tipoLeilao) {
-        List<Leilao> leiloes = filtrarLeiloesFechadosPorTipo(tipoLeilao);
+    public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipoLeilao) {
+        List<Leilao> leiloes = filtrarLeiloesFechadosPorTipo(idTipoLeilao);
         List<String> resultado = new ArrayList<>();
 
         for (Leilao l : leiloes) {

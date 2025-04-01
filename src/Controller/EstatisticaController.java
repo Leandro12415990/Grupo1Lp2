@@ -10,15 +10,15 @@ public class EstatisticaController {
         return EstatisticaBLL.contarLeilaoFechados();
     }
 
-    public static int contarLeiloesFechadosPorTipo(String tipo) {
-        return EstatisticaBLL.contarLeiloesFechadosPorTipo(tipo);
+    public static int contarLeiloesFechadosPorTipo(int idTipo) {
+        return EstatisticaBLL.contarLeiloesFechadosPorTipo(idTipo);
     }
 
     public static List<String> listarLeiloesFechadosFormatados() {
         return EstatisticaBLL.obterLeiloesFechadosFormatados();
     }
 
-    public static List<String> listarLeiloesFechadosFormatadosPorTipo(String tipo) {
-        return EstatisticaBLL.listarLeiloesFechadosFormatadosPorTipo(tipo);
+    public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
+        return EstatisticaBLL.listarLeiloesFechadosFormatadosPorTipo(idTipo);
     }
 }
