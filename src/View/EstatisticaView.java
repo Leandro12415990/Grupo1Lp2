@@ -1,6 +1,7 @@
 package View;
 
 import Controller.EstatisticaController;
+import Utils.Constantes;
 import Utils.Tools;
 
 import java.util.List;
@@ -111,7 +112,7 @@ public class EstatisticaView {
 
             switch (opc) {
                 case 1:
-                    exibirContagemPorTipo("ELETRONICO");
+                    exibirContagemPorTipo(Constantes.tiposLeilao.ELETRONICO);
                     break;
                 case 2:
 
@@ -147,7 +148,7 @@ public class EstatisticaView {
 
             switch (opc) {
                 case 1:
-                    exibirContagemPorTipo("CARTA FECHADA");
+                    exibirContagemPorTipo(Constantes.tiposLeilao.CARTA_FECHADA);
                     break;
                 case 2:
 
@@ -186,7 +187,7 @@ public class EstatisticaView {
 
             switch (opc) {
                 case 1:
-                    exibirContagemPorTipo("VENDA DIRETA");
+                    exibirContagemPorTipo(Constantes.tiposLeilao.VENDA_DIRETA);
                     break;
                 case 2:
                     break;
@@ -208,13 +209,13 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public static void exibirContagemPorTipo(String tipo) {
-        int total = EstatisticaController.contarLeiloesFechadosPorTipo(tipo);
-
+    public static void exibirContagemPorTipo(int idTipo) {
+        int total = EstatisticaController.contarLeiloesFechadosPorTipo(idTipo);
+        String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(idTipo).name();
         if (total == 0) {
-            System.out.println("Não existem leilões fechados do tipo \"" + tipo + "\".");
+            System.out.println("Não existem leilões fechados do tipo \"" + tipoLeilaoStr + "\".");
         } else {
-            System.out.println("Total de leilões fechados do tipo \"" + tipo + "\": " + total);
+            System.out.println("Total de leilões fechados do tipo \"" + tipoLeilaoStr + "\": " + total);
         }
     }
 
