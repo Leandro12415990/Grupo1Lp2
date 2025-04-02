@@ -11,7 +11,7 @@ public class LoginUtilizadorBLL {
     {
         for (Utilizador u : Tools.utilizadores)
         {
-            if (email.equals(u.getEmail()) && password.equals(u.getPassword()))
+            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
             {
                 u.setUltimoLogin(LocalDate.now());
                 ImportDal.gravarUtilizador(Tools.utilizadores);
