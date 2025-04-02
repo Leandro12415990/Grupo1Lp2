@@ -6,12 +6,12 @@ import Utils.Tools;
 
 import java.time.LocalDate;
 
-public class LoginUtilizadorBll {
+public class LoginUtilizadorBLL {
     public static int login(String email, String password)
     {
         for (Utilizador u : Tools.utilizadores)
         {
-            if (email.equals(u.getEmail()) && password.equals(u.getPassword()))
+            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
             {
                 u.setUltimoLogin(LocalDate.now());
                 ImportDal.gravarUtilizador(Tools.utilizadores);
