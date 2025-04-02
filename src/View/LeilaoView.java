@@ -1,7 +1,6 @@
 package View;
 
 import Controller.ProdutoController;
-import Model.ClienteSessao;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
@@ -170,7 +169,7 @@ public class LeilaoView {
         }
     }
 
-    static void listaLeiloes() {
+    static void listaLeiloes(boolean apenasDisponiveis) {
         LeilaoController.listarLeiloes(apenasDisponiveis);
     }
 
