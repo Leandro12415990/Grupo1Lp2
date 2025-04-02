@@ -174,7 +174,7 @@ public class LeilaoView {
         }
     }
 
-    private static void listaLeiloes(boolean apenasDisponiveis) {
+    static void listaLeiloes(boolean apenasDisponiveis) {
         LeilaoController.listarLeiloes(apenasDisponiveis);
     }
 
