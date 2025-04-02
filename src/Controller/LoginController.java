@@ -1,6 +1,6 @@
 package Controller;
 
-import BLL.LoginUtilizadorBll;
+import BLL.LoginUtilizadorBLL;
 import Model.Utilizador;
 import Utils.Tools;
 
@@ -17,7 +17,7 @@ public class LoginController {
             {
                 if (u.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo())
                 {
-                    tipoUtilizador = LoginUtilizadorBll.login(email, password);
+                    tipoUtilizador = LoginUtilizadorBLL.login(email, password);
                     return tipoUtilizador;
                 }
                 else
@@ -32,7 +32,7 @@ public class LoginController {
 
     public static boolean lerDados()
     {
-        boolean respLerDados = LoginUtilizadorBll.lerDados();
+        boolean respLerDados = LoginUtilizadorBLL.lerDados();
         if (respLerDados) return true;
         else return false;
     }
