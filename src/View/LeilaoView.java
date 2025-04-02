@@ -369,6 +369,7 @@ public class LeilaoView {
                         if (isCorrect.Sucesso) break;
                         else System.out.println(isCorrect.msgErro);
                     }
+                    break;
                 }
             }
 
@@ -427,6 +428,7 @@ public class LeilaoView {
                         }
                     }
                 }
+                break;
             }
 
             double multiploLance = leilao.getMultiploLance();
