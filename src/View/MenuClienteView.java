@@ -11,14 +11,13 @@ public class MenuClienteView {
             System.out.print("Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
                     System.out.println("Funcionalidade em desenvolvimento...");
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");
-                    scanner.close();
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");

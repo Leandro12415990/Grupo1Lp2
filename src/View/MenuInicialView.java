@@ -4,7 +4,7 @@ import static Utils.Tools.scanner;
 
 public class MenuInicialView {
     public static void menuInicial() {
-        int opcao = -1;
+        int opcao;
         do {
             System.out.println("\nBem-vindo à leiloeira Valor em Alta!\n");
 
@@ -14,7 +14,7 @@ public class MenuInicialView {
             System.out.print("Escolha uma opção: ");
 
             opcao = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine().trim();
 
             switch (opcao) {
                 case 1:
@@ -34,6 +34,7 @@ public class MenuInicialView {
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");
+                    scanner.close();
                     return;
                 default:
                     System.out.println("Opção inválida, tente novamente.");
