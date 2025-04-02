@@ -30,6 +30,11 @@ public class ImportBLL {
                 if (utilizador.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo()) System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
             }
         }
+        else if (estado == Tools.estadoUtilizador.PENDENTE.getCodigo()) {
+            for (Utilizador utilizador : utilizadors) {
+                if (utilizador.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo()) System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
+            }
+        }
     }
 
     public static void gravarLeiloes(List<Leilao> leiloes) {

@@ -10,7 +10,7 @@ public class AprovarClienteView {
     public static void exibirMenu() {
         while (true) {
             System.out.println("Menu Aprovar Clientes");
-            ImportView.mostrarUtilizador(Tools.estadoUtilizador.ATIVO.getCodigo());
+            ImportView.mostrarUtilizador(Tools.estadoUtilizador.PENDENTE.getCodigo());
             System.out.println("-----------------------------------------------------------------");
             System.out.println("1. Aprovar todos");
             System.out.println("2. Aprovar Cliente especifico");
@@ -18,7 +18,7 @@ public class AprovarClienteView {
             System.out.print("Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
                     boolean respAprovarTodos = AprovarClienteController.AprovarTodos();
@@ -31,7 +31,6 @@ public class AprovarClienteView {
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");
-                    scanner.close();
                     return;
                 default:
                     System.out.println("Opção inválida, tente novamente.");
