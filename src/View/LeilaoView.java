@@ -174,7 +174,7 @@ public class LeilaoView {
         }
     }
 
-    private static void listaLeiloes(boolean apenasDisponiveis) {
+    static void listaLeiloes(boolean apenasDisponiveis) {
         LeilaoController.listarLeiloes(apenasDisponiveis);
     }
 
@@ -369,6 +369,7 @@ public class LeilaoView {
                         if (isCorrect.Sucesso) break;
                         else System.out.println(isCorrect.msgErro);
                     }
+                    break;
                 }
             }
 
@@ -427,6 +428,7 @@ public class LeilaoView {
                         }
                     }
                 }
+                break;
             }
 
             double multiploLance = leilao.getMultiploLance();
