@@ -4,6 +4,7 @@ import DAL.ImportDal;
 import DAL.ProdutoDal;
 import Model.Leilao;
 import Model.Produto;
+import Utils.Constantes;
 import Utils.Tools;
 
 import java.util.ArrayList;
@@ -14,6 +15,12 @@ public class ProdutoBLL {
 
     public static List<Produto> carregarProdutos() {
         produtos = ProdutoDal.carregarProdutos();
+        int idEstado;
+        for (Produto produto : produtos) {
+            idEstado = determinarEstadoProduto(produto);
+            produto.setEstado(idEstado);
+            ProdutoDal.gravarProdutos(produtos);
+        }
         return produtos;
     }
 
@@ -28,7 +35,7 @@ public class ProdutoBLL {
         return ProdutoDal.carregarProdutos();
     }
 
-    public static List<Produto>  listarProdutos(boolean apenasDisponiveis) {
+    public static List<Produto> listarProdutos(boolean apenasDisponiveis) {
         carregarProdutos();
         if (!apenasDisponiveis) {
             return produtos;
@@ -57,64 +64,24 @@ public class ProdutoBLL {
     private static int verificarUltimoId(List<Produto> produtos) {
         int ultimoId = 0;
 
-
         for (Produto produto : produtos) {
-
             if (produto.getIdProduto() > ultimoId) {
                 ultimoId = produto.getIdProduto();
             }
         }
-
         return ultimoId;
     }
 
-    public static boolean editarProduto(Produto produto) {
-        List<Produto> produtosAtualizados = ProdutoBLL.obterTodosProdutos();
-        boolean produtoEditado = false;
-
-        while (true) {
-            System.out.print("Novo estado (1 = ATIVO, 2 = RESERVADO, 3 = INATIVO) - deixe vazio para manter: ");
-            String novoEstadoStr = Tools.scanner.nextLine().trim();
-
-            if (novoEstadoStr.isEmpty()) {
-                System.out.println("Alteração de estado mantida.");
-                break;
-            }
-
-            if (novoEstadoStr.equals("1") || novoEstadoStr.equals("2") || novoEstadoStr.equals("3")) {
-                int novoEstado = Integer.parseInt(novoEstadoStr);
-                produto.setEstado(novoEstado);
-                break;
-            } else {
-                System.out.println(" Estado inválido. Por favor, insira 1, 2 ou 3, ou deixe vazio para manter: .");
-            }
+    public static boolean editarProduto(int idProduto, String nome, String descricao, int idEstado) {
+        Produto produto = procurarProduto(idProduto);
+        if (produto != null) {
+            produto.setNome(nome);
+            produto.setDescricao(descricao);
+            produto.setEstado(idEstado);
+            ProdutoDal.gravarProdutos(produtos);
+            return true;
         }
-
-        System.out.print("Novo nome (deixe vazio para manter): ");
-        String novoNome = Tools.scanner.nextLine().trim();
-        if (!novoNome.isEmpty()) {
-            produto.setNome(novoNome);
-        }
-        System.out.print("Nova descrição (deixe vazio para manter): ");
-        String novaDescricao = Tools.scanner.nextLine().trim();
-        if (!novaDescricao.isEmpty()) {
-            produto.setDescricao(novaDescricao);
-        }
-
-        for (int i = 0; i < produtosAtualizados.size(); i++) {
-            if (produtosAtualizados.get(i).getIdProduto() == produto.getIdProduto()) {
-                produtosAtualizados.set(i, produto);
-                produtoEditado = true;
-                break;
-            }
-        }
-
-        if (produtoEditado) {
-            ProdutoDal.salvarProdutos(produtosAtualizados);
-            System.out.println("Produto atualizado e salvo com sucesso.");
-        }
-
-        return produtoEditado;
+        return false;
     }
 
     public static boolean eliminarProduto(Produto produto) {
@@ -148,10 +115,9 @@ public class ProdutoBLL {
 
     public static boolean verificarDisponibilidadeProduto(int idProduto) {
         List<Produto> produtos = ProdutoDal.carregarProdutos();
-        final int EstadoProdutoAtivo = 1;
         for (Produto produto : produtos) {
             if (produto.getIdProduto() == idProduto) {
-                if(produto.getEstado() == EstadoProdutoAtivo) return true;
+                if (produto.getEstado() == Constantes.estadosProduto.ATIVO) return true;
                 else return false;
             }
         }
@@ -166,5 +132,25 @@ public class ProdutoBLL {
             }
         }
         ProdutoDal.gravarProdutos(produtos);
+    }
+
+    public static int determinarEstadoProduto(Produto produto) {
+        if (produto.getEstado() != Constantes.estadosProduto.INATIVO) {
+            for (Leilao leilao : LeilaoBLL.carregarLeiloes()) {
+                if (leilao.getIdProduto() == produto.getIdProduto()) {
+                    return Constantes.estadosProduto.RESERVADO;
+                }
+            }
+        }
+        return Constantes.estadosProduto.ATIVO;
+    }
+
+    public static boolean verificarProdutoEmLeilao(int idProduto) {
+        for (Leilao leilao : LeilaoBLL.carregarLeiloes()) {
+            if (leilao.getIdProduto() == idProduto) {
+                return false;
+            }
+        }
+        return true;
     }
 }
