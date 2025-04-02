@@ -13,7 +13,6 @@ public class MenuInicialView {
 
             System.out.println("1. Efetuar Login");
             System.out.println("2. Efetuar Registo");
-            System.out.println("3. Testes");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
 
@@ -36,8 +35,6 @@ public class MenuInicialView {
                 case 2:
                     RegistarClienteView.MenuRegistarCliente();
                     break;
-                case 3:
-                    LanceView.exibirMenuLance();
                 case 0:
                     System.out.println("A desligar sistema...");
                     return;

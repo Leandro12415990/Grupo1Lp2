@@ -44,8 +44,7 @@ public class LanceController {
         return LanceBLL.listarMeuLance(idCliente);
     }
 
-    public static List<Lance> obterLancesPorLeilao(int idLeilao) {
-        return LanceBLL.obterLancesPorLeilao(idLeilao);
+    public static List<Lance> obterLancesPorLeilao(int idLeilao) {return LanceBLL.obterLancesPorLeilao(idLeilao);
     }
 
     public static List<Leilao> listarLeiloesByTipo(List<Leilao> leiloes, int idTipoLeilao) {
