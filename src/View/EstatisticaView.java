@@ -4,6 +4,7 @@ import Controller.EstatisticaController;
 import Utils.Constantes;
 import Utils.Tools;
 
+import java.time.Period;
 import java.util.List;
 
 public class EstatisticaView {
@@ -52,6 +53,7 @@ public class EstatisticaView {
                     exibirLeiloesFinalizados();
                     break;
                 case 2:
+                    mostrarLeilaoMaisTempoAtivo();
                     break;
                 case 3:
                     break;
@@ -220,21 +222,35 @@ public class EstatisticaView {
     }
 
     public static void exibirLeiloesFinalizados() {
-        System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
+            System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
 
-        int total = EstatisticaController.contarLeilaoGlobal();
+            int total = EstatisticaController.contarLeilaoGlobal();
 
-        if (total == 0) {
-            System.out.println("Não existem leilões com estado 'Fechado'.");
-        } else {
-            System.out.println("A quantidade de leilões terminados é: " + total);
-            System.out.println("\n Lista de leilões fechados:\n");
+            if (total == 0) {
+                System.out.println("Não existem leilões com estado 'Fechado'.");
+            } else {
+                System.out.println("A quantidade de leilões terminados é: " + total);
+                System.out.println("\n Lista de leilões fechados:\n");
 
-            List<String> linhas = EstatisticaController.listarLeiloesFechadosFormatados();
-            for (String linha : linhas) {
-                System.out.println(linha);
+                List<String> linhas = EstatisticaController.listarLeiloesFechadosFormatados();
+                for (String linha : linhas) {
+                    System.out.println(linha);
+                }
             }
         }
+
+    public static void mostrarLeilaoMaisTempoAtivo() {
+        Object[] dados = EstatisticaController.obterLeilaoMaisTempoAtivoComPeriodo();
+
+        if (dados == null) {
+            System.out.println("Não há leilões disponíveis.");
+            return;
+        }
+
+        System.out.println("\n=== Leilão que esteve mais tempo ativo ===");
+        System.out.println("ID: " + dados[0]);
+        System.out.println("Descrição: " + dados[1]);
+        System.out.println("Tempo ativo: " + dados[2] + " anos, " + dados[3] + " meses, " + dados[4] + " dias");
     }
 
 
