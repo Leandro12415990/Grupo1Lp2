@@ -4,10 +4,11 @@ import DAL.ImportDal;
 import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
+import Utils.Tools;
 
 import java.util.List;
 
-public class ImportBll {
+public class ImportBLL {
 
     public static List<Leilao> obterTodosLeiloes() {
         return ImportDal.carregarLeilao();
@@ -17,10 +18,17 @@ public class ImportBll {
         return ImportDal.carregarUtilizador();
     }
 
-    public static void listarUtilizador() {
+    public static void listarUtilizador(int estado) {
         List<Utilizador> utilizadors = obterTodosUtilizadores();
-        for (Utilizador utilizador : utilizadors) {
-            System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
+        if (estado == Tools.estadoUtilizador.getDefault().getCodigo()) {
+            for (Utilizador utilizador : utilizadors) {
+                System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
+            }
+        }
+        else if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
+            for (Utilizador utilizador : utilizadors) {
+                if (utilizador.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo()) System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 package Controller;
 
-import BLL.RegistarClienteBll;
+import BLL.RegistarClienteBLL;
 import Model.ResultadoOperacao;
 
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ public class RegistarClienteController {
         } else if (!isValidEmail(email)) {
             resultado.msgErro = "O email inserido não é valido.";
         } else {
-            RegistarClienteBll.criarCliente(nome, email, nascimento, morada, passwordFirst);
+            RegistarClienteBLL.criarCliente(nome, email, nascimento, morada, passwordFirst);
             resultado.Objeto = resultado;
             resultado.Sucesso = true;
         }

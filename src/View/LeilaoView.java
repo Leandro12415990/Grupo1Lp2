@@ -203,8 +203,9 @@ public class LeilaoView {
     private static void procurarLeilao() {
         System.out.println("\nPROCURAR UM LEILÃO");
         listaLeiloes(false);
-        System.out.print("\nIntroduza o ID do Leilão que pretende consultar: ");
+        System.out.print("\nIntroduza o ID do Leilão que pretende consultar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
+        if (Tools.verificarSaida(String.valueOf(id))) return;
 
         Leilao leilao = LeilaoController.procurarLeilaoPorId(id);
 
@@ -233,8 +234,9 @@ public class LeilaoView {
     private static void eliminarLeilao() {
         System.out.println("\nELIMINAÇÃO DE UM LEILÃO");
         listaLeiloes(false);
-        System.out.print("\nIntroduza o ID do Leilão que pretende eliminar: ");
+        System.out.print("\nIntroduza o ID do Leilão que pretende eliminar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
+        if (Tools.verificarSaida(String.valueOf(id))) return;
 
         Leilao leilao = LeilaoController.procurarLeilaoPorId(id);
         if (leilao != null) {

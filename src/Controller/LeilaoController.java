@@ -2,6 +2,7 @@ package Controller;
 
 import BLL.ProdutoBLL;
 import Model.Leilao;
+import Model.Produto;
 import Model.ResultadoOperacao;
 import BLL.LeilaoBLL;
 import Utils.Constantes;
@@ -66,8 +67,8 @@ public class LeilaoController {
 
     public static ResultadoOperacao verificarDisponibilidadeProduto(int idProduto) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        Leilao leilao = procurarLeilaoPorId(idProduto);
-        if (leilao == null) {
+        Produto produto = ProdutoBLL.procurarProduto(idProduto);
+        if (produto == null) {
             resultado.msgErro = "O Produto que introduziu não existe no sistema.";
         } else {
             boolean isAvailable = ProdutoBLL.verificarDisponibilidadeProduto(idProduto);
