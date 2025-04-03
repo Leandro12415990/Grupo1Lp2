@@ -6,7 +6,7 @@ IDPRODUTO;ESTADO;NOME;DESCRICAO
 5;2;Mouse Gamer;DPI ajustável até 16.000;
 6;2;Headset Wireless;Cancelamento de ruído ativo;
 7;2;Smartwatch;Monitoramento cardíaco e GPS;
-8;2;Tablet Pro;Tela 12.9", processador M1;
+8;1;Tablet Pro;Tela 12.9", processador M1;
 9;1;Impressora Laser;Monocromática, conexão Wi-Fi;
 10;1;Cadeira Gamer;Ajustável com apoio para pés;
 11;1;Console de Videogame;Nova geração, 1TB SSD;
@@ -28,4 +28,4 @@ IDPRODUTO;ESTADO;NOME;DESCRICAO
 27;1;Soundbar;Sistema 5.1, Dolby Atmos;
 28;1;Caixa de Som Bluetooth;Autonomia de 24h;
 29;1;Microfone Condensador;Ideal para streaming;
-30;2;Webcam 4K;Suporte HDR e 60FPS;
+30;1;Webcam 4K;Suporte HDR e 60FPS;

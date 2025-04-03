@@ -1,8 +1,10 @@
 package View;
 
+import BLL.LeilaoBLL;
 import Controller.EstatisticaController;
-import Model.Lance;
+import DAL.ImportDal;
 import Model.Leilao;
+import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
 import java.time.Period;
@@ -16,17 +18,22 @@ public class EstatisticaView {
             System.out.println("1. Estatisticas Por Leilão");
             System.out.println("2. Estatisticas Globais");
             System.out.println("3. Estatisticas Por Tipo Leilão");
+            System.out.println("4. Estatisticas De Clientes");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
             opc = Tools.scanner.nextInt();
             switch (opc) {
                 case 1:
+                    estatisticasPorLeilao();
                     break;
                 case 2:
                     exibirMenuGlobal();
                     break;
                 case 3:
                     exibirMenuPorTipo();
+                    break;
+                case 4:
+                    exibirMenuEstatisticaCliente();
                     break;
                 case 0:
                     System.out.println("\nSair...");
@@ -101,6 +108,35 @@ public class EstatisticaView {
                 default: System.out.println("Opção inválida.");
             }
 
+        } while (opc != 0);
+    }
+
+    public static void exibirMenuEstatisticaCliente() {
+        int opc;
+        do {
+            System.out.println("\n" + "=".repeat(5) + " MENU LISTAGEM " + "=".repeat(5));
+            System.out.println("1. Clientes Registados");
+            System.out.println("2. Média De Idades Dos Clientes");
+            System.out.println("3. Percentagem de clientes que usam o maior domínio de e-mail ");
+            System.out.println("0. Voltar ao menu principal...");
+            System.out.print("Escolha uma opção: ");
+            opc = Tools.scanner.nextInt();
+            switch (opc) {
+                case 1:
+                    mostrarTodosClientes();
+                    break;
+                case 2:
+                    mostrarMediaIdadeUtilizadores();
+                    break;
+                case 3:
+                    mostrarDominioMaisUsadoEPercentagem();
+                    break;
+                case 0:
+                    System.out.println("\nSair...");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente...");
+            }
         } while (opc != 0);
     }
 
@@ -379,7 +415,87 @@ public class EstatisticaView {
         }
     }
 
+    public static void mostrarTodosClientes() {
+        List<Utilizador> clientes = ImportDal.carregarUtilizador();
 
+        if (clientes == null || clientes.isEmpty()) {
+            System.out.println("Não existem clientes registados.");
+            return;
+        }
 
+        System.out.println("\n=== Lista de Clientes ===");
+
+        for (Utilizador u : clientes) {
+            System.out.println("ID: " + u.getId() +
+                    " | Nome: " + u.getNomeUtilizador() +
+                    " | Email: " + u.getEmail() + "\n");
+        }
+
+        System.out.println("Total de clientes: " + clientes.size() + "\n");
+    }
+
+    public static void mostrarMediaIdadeUtilizadores() {
+        double media = EstatisticaController.getMediaIdadeUtilizadores();
+
+        if (media == -1) {
+            System.out.println("Não foi possível calcular a média de idades.");
+            return;
+        }
+
+        System.out.printf("\n=== Média de idade dos utilizadores ===\n");
+        System.out.printf("Média: %.2f anos\n", media);
+    }
+
+    public static void mostrarDominioMaisUsadoEPercentagem() {
+        String[] resultado = EstatisticaController.getDominioMaisUsadoEPercentagem();
+
+        if (resultado == null) {
+            System.out.println("Não foi possível calcular (sem clientes ou emails válidos).");
+            return;
+        }
+
+        System.out.println("\n=== Domínio de Email Mais Usado ===");
+        System.out.println("Domínio mais comum: " + resultado[0]);
+        System.out.println("Percentagem de clientes: " + resultado[1] + "%");
+    }
+
+    public static void estatisticasPorLeilao() {
+        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
+
+        if (leiloes == null || leiloes.isEmpty()) {
+            System.out.println("Não há leilões registados.");
+            return;
+        }
+
+        LeilaoView.exibirLeiloes(leiloes);
+
+        System.out.print("\nInsira o ID do leilão que deseja analisar (-1 para cancelar): ");
+        int id = Tools.scanner.nextInt();
+        Tools.scanner.nextLine();
+
+        if (id == -1) return;
+
+        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(id);
+        if (leilao == null) {
+            System.out.println("Leilão não encontrado.");
+            return;
+        }
+
+        Period tempo = EstatisticaController.getTempoAtivoLeilao(id);
+        System.out.println("\n=== Tempo total ativo do leilão ===");
+        System.out.println("Duração: " + tempo.getYears() + " anos, "
+                + tempo.getMonths() + " meses, "
+                + tempo.getDays() + " dias");
+
+        System.out.println("\n=== Clientes ordenados pelo maior lance no leilão \"" + leilao.getDescricao() + "\" ===");
+        List<String> lista = EstatisticaController.getClientesOrdenadosPorValorMaisAlto(id);
+        if (lista.isEmpty()) {
+            System.out.println("Nenhum cliente participou neste leilão.");
+        } else {
+            for (String linha : lista) {
+                System.out.println(linha);
+            }
+        }
+    }
 
 }

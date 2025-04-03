@@ -1,6 +1,7 @@
 package Controller;
 
 import BLL.EstatisticaBLL;
+import BLL.LeilaoBLL;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 
@@ -55,6 +56,25 @@ public class EstatisticaController {
     public static List<Leilao> getLeiloesSemLancesPorTipo(int idTipoLeilao) {
         return EstatisticaBLL.obterLeiloesSemLancesPorTipo(idTipoLeilao);
     }
+
+    public static double getMediaIdadeUtilizadores() {
+        return EstatisticaBLL.calcularMediaIdadeUtilizadores();
+    }
+
+    public static String[] getDominioMaisUsadoEPercentagem() {
+        return EstatisticaBLL.calcularDominioMaisUsadoEPercentagem();
+    }
+
+    public static List<String> getClientesOrdenadosPorValorMaisAlto(int idLeilao) {
+        return EstatisticaBLL.listarClientesOrdenadosPorMaiorLance(idLeilao);
+    }
+
+    public static Period getTempoAtivoLeilao(int idLeilao) {
+        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
+        return EstatisticaBLL.calcularTempoAtivoLeilao(leilao);
+    }
+
+
 
 
 
