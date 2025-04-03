@@ -7,6 +7,7 @@ public class MenuClienteView {
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));
             System.out.println("1. Editar Ficha de Cliente");
+            System.out.println("2. Carteira");
             System.out.println("2. Menu Lances");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
@@ -18,7 +19,11 @@ public class MenuClienteView {
                     System.out.println("Funcionalidade em desenvolvimento...");
                     break;
                 case 2:
+                    CarteiraView.exibirMenuCarteira();
+                    break;
+                case 3:
                     LanceView.exibirMenuLance();
+                    break;
                 case 0:
                     System.out.println("A desligar sistema...");
                     return;
