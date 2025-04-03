@@ -1,5 +1,6 @@
 package DAL;
 
+import Model.Carteira;
 import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
@@ -18,6 +19,7 @@ public class ImportDal {
     private static final String CSV_FILE = "data\\Leilao.csv";
     private static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
     private static final String CSV_FILE_LANCE = "data\\Lance.csv";
+    private static final String CSV_FILE_CARTEIRA = "data\\Carteira.csv";
 
     public static List<Lance> carregarLance() {
         List<Lance> lances = new ArrayList<>();
@@ -144,6 +146,42 @@ public class ImportDal {
         return utilizadores;
     }
 
+    public static List<Carteira> carregarCarteira() {
+        List<Carteira> carteiraList = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_CARTEIRA))) {
+            String linha;
+            boolean primeiraLinha = true;
+
+            while ((linha = br.readLine()) != null) {
+                if (primeiraLinha) {
+                    primeiraLinha = false;
+                    continue;
+                }
+
+                String[] dados = linha.split(Tools.separador(), -1);
+
+                if (dados.length < 6) {
+                    System.err.println("Linha inválida no CSV: " + linha);
+                    continue;
+                }
+
+                int idDeposito = Integer.parseInt(dados[0]);
+                int idCliente = Integer.parseInt(dados[1]);
+                Double valorTotal = Double.parseDouble(dados[2]);
+                Double valorDeposito = Double.parseDouble(dados[3]);
+                LocalDateTime dataDeposito = Tools.parseDateTimeByDate(dados[4]);
+                int idEstado = Integer.parseInt(dados[5]);
+
+                Carteira carteira = new Carteira(idDeposito, idCliente, valorTotal, valorDeposito, dataDeposito, idEstado);
+                carteiraList.add(carteira);
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
+        }
+        return carteiraList;
+    }
+
     public static void gravarLeilao(List<Leilao> leiloes) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE))) {
             bw.write("ID;ID_PRODUTO;DESCRICAO;ID_TIPO_LEILAO;DATA_INICIO;DATA_FIM;VALOR_MINIMO;VALOR_MAXIMO;MULTIPLO_LANCE;ID_ESTADO");
@@ -222,4 +260,28 @@ public class ImportDal {
             System.err.println("Erro ao gravar o ficheiro CSV Lances: " + e.getMessage());
         }
     }
+
+    public static void gravarCarteira(List<Carteira> carteiraList) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_CARTEIRA))) {
+            bw.write("ID_DEPOSITO;ID_CLIENTE;VALOR_TOTAL;VALOR_DEPOSITO;DATA_DEPOSITO;ID_ESTADO");
+            bw.newLine();
+
+            for (Carteira carteira : carteiraList) {
+                String dataDeposito = Tools.formatDateTime(carteira.getDataDeposito());
+
+                bw.write(carteira.getIdDeposito() + Tools.separador() +
+                        carteira.getIdCliente() + Tools.separador() +
+                        carteira.getValorTotal() + Tools.separador() +
+                        carteira.getValorDeposito() + Tools.separador() +
+                        dataDeposito + Tools.separador() +
+                        carteira.getIdEstadoDeposito() + Tools.separador());
+                bw.newLine();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Erro ao gravar o ficheiro CSV de Leilões: " + e.getMessage());
+        }
+    }
+
+
 }
