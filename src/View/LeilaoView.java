@@ -117,39 +117,61 @@ public class LeilaoView {
 
                 }
 
-                System.out.print("Insira o valor mínimo " + Tools.alertaCancelar());
-                double valorMin = Tools.scanner.nextDouble();
-                Tools.scanner.nextLine();
-                if (Tools.verificarSaida(String.valueOf(valorMin))) return;
-
+                double valorMin = 0.0;
                 double valorMax = 0.0;
-                while (true) {
-                    System.out.print("Insira o valor máximo ou pressione ENTER para não definir (-1 para cancelar): ");
-                    String entrada = Tools.scanner.nextLine();
-                    if (Tools.verificarSaida(entrada)) return;
+                // No caso de ser um Leilão Venda Direta, apenas pede um valor (estou a armazenar na variável valorMin)
+                if (idTipoLeilao == Constantes.tiposLeilao.VENDA_DIRETA) {
+                    while (true) {
+                        System.out.print("Valor ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                        String valorMinStr = Tools.scanner.nextLine().trim();
 
-                    if (!entrada.isEmpty()) {
+                        if (Tools.verificarSaida(valorMinStr)) return;
+                        if (valorMinStr.isEmpty()) break;
+
                         try {
-                            valorMax = Double.parseDouble(entrada);
-                            if (valorMax != 0.0) {
-                                ResultadoOperacao resultadoValores = LeilaoController.verificarValorMax(valorMin, valorMax);
-                                if (resultadoValores.Sucesso) {
-                                    break;
-                                } else {
-                                    System.out.println(resultadoValores.msgErro);
-                                    valorMax = 0.0;
-                                }
-                            } else {
-                                System.out.println("Entrada inválida. Por favor, insira um valor válido.\n");
+                            valorMin = Double.parseDouble(valorMinStr);
+                            if (valorMin < 0) {
+                                System.out.println("O valor não pode ser negativo. Tente novamente.");
+                                continue;
                             }
+                            break;
                         } catch (NumberFormatException e) {
-                            System.out.println("Entrada inválida. Por favor, insira um valor numérico.\n");
+                            System.out.println("Entrada inválida. Insira um número válido.");
                         }
-                    } else {
-                        break;
+                    }
+                } else {
+                    System.out.print("Insira o valor mínimo " + Tools.alertaCancelar());
+                    valorMin = Tools.scanner.nextDouble();
+                    Tools.scanner.nextLine();
+                    if (Tools.verificarSaida(String.valueOf(valorMin))) return;
+
+                    while (true) {
+                        System.out.print("Insira o valor máximo ou pressione ENTER para não definir (-1 para cancelar): ");
+                        String entrada = Tools.scanner.nextLine();
+                        if (Tools.verificarSaida(entrada)) return;
+
+                        if (!entrada.isEmpty()) {
+                            try {
+                                valorMax = Double.parseDouble(entrada);
+                                if (valorMax != 0.0) {
+                                    ResultadoOperacao resultadoValores = LeilaoController.verificarValorMax(valorMin, valorMax);
+                                    if (resultadoValores.Sucesso) {
+                                        break;
+                                    } else {
+                                        System.out.println(resultadoValores.msgErro);
+                                        valorMax = 0.0;
+                                    }
+                                } else {
+                                    System.out.println("Entrada inválida. Por favor, insira um valor válido.\n");
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Entrada inválida. Por favor, insira um valor numérico.\n");
+                            }
+                        } else {
+                            break;
+                        }
                     }
                 }
-
 
                 double multiploLance = 0;
                 if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
@@ -180,8 +202,9 @@ public class LeilaoView {
 
     public static void exibirLeiloes(List<Leilao> leiloes) {
         System.out.println("\n" + "=".repeat(5) + " LISTAGEM DE LEILÕES " + "=".repeat(5));
+        System.out.println("No caso dos leilões de Venda Direta apenas existe um valor!");
         System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s\n",
-                "Id", "Produto", "Descrição", "TipoLeilão", "Data Início", "Data Fim", "Valor Minimo", "Valor Maximo", "Multiplo de Lance", "Estado");
+                "Id", "Produto", "Descrição", "TipoLeilão", "Data Início", "Data Fim", "Valor Minimo/Valor", "Valor Maximo", "Multiplo de Lance", "Estado");
         System.out.println("-".repeat(260));
         for (Leilao leilao : leiloes) {
             String estadoStr = Tools.estadoLeilao.fromCodigo(leilao.getEstado()).name();
@@ -372,37 +395,74 @@ public class LeilaoView {
                     break;
                 }
             }
-
             double valorMin = leilao.getValorMinimo();
-            while (true) {
-                System.out.print("Novo valor mínimo ou pressione ENTER para não alterar " + Tools.alertaCancelar());
-                String valorMinStr = Tools.scanner.nextLine().trim();
-
-                if (Tools.verificarSaida(valorMinStr)) return;
-                if (valorMinStr.isEmpty()) break;
-
-                try {
-                    valorMin = Double.parseDouble(valorMinStr);
-                    if (valorMin < 0) {
-                        System.out.println("O valor mínimo não pode ser negativo. Tente novamente.");
-                        continue;
-                    }
-                    break;
-                } catch (NumberFormatException e) {
-                    System.out.println("Entrada inválida. Insira um número válido.");
-                }
-            }
-
             double valorMax = leilao.getValorMaximo();
-            while (true) {
-                ResultadoOperacao resultadoValores;
-                System.out.print("Novo valor máximo ou pressione ENTER para não alterar " + Tools.alertaCancelar());
-                String valorMaxStr = Tools.scanner.nextLine().trim();
+            // No caso de ser um Leilão Venda Direta, apenas pede um valor (estou a armazenar na variável valorMin)
+            if (idTipoLeilao == Constantes.tiposLeilao.VENDA_DIRETA) {
+                while (true) {
+                    System.out.print("Novo valor ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    String valorMinStr = Tools.scanner.nextLine().trim();
 
-                if (Tools.verificarSaida(valorMaxStr)) return;
-                if (!valorMaxStr.isEmpty()) {
+                    if (Tools.verificarSaida(valorMinStr)) return;
+                    if (valorMinStr.isEmpty()) break;
+
                     try {
-                        valorMax = Double.parseDouble(valorMaxStr);
+                        valorMin = Double.parseDouble(valorMinStr);
+                        if (valorMin < 0) {
+                            System.out.println("O valor não pode ser negativo. Tente novamente.");
+                            continue;
+                        }
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Entrada inválida. Insira um número válido.");
+                    }
+                }
+            } else {
+                valorMin = leilao.getValorMinimo();
+                while (true) {
+                    System.out.print("Novo valor mínimo ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    String valorMinStr = Tools.scanner.nextLine().trim();
+
+                    if (Tools.verificarSaida(valorMinStr)) return;
+                    if (valorMinStr.isEmpty()) break;
+
+                    try {
+                        valorMin = Double.parseDouble(valorMinStr);
+                        if (valorMin < 0) {
+                            System.out.println("O valor mínimo não pode ser negativo. Tente novamente.");
+                            continue;
+                        }
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Entrada inválida. Insira um número válido.");
+                    }
+                }
+
+                valorMax = leilao.getValorMaximo();
+                while (true) {
+                    ResultadoOperacao resultadoValores;
+                    System.out.print("Novo valor máximo ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    String valorMaxStr = Tools.scanner.nextLine().trim();
+
+                    if (Tools.verificarSaida(valorMaxStr)) return;
+                    if (!valorMaxStr.isEmpty()) {
+                        try {
+                            valorMax = Double.parseDouble(valorMaxStr);
+                            if (valorMax != 0.0) {
+                                resultadoValores = LeilaoController.verificarValorMax(valorMin, valorMax);
+                                if (resultadoValores.Sucesso) {
+                                    break;
+                                } else {
+                                    System.out.println(resultadoValores.msgErro);  // Exibe erro de validação
+                                    valorMax = 0.0;
+                                }
+                            } else {
+                                System.out.println("Entrada inválida. Por favor, insira um valor válido.\n");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Entrada inválida. Por favor, insira um valor numérico.\n");
+                        }
+                    } else {
                         if (valorMax != 0.0) {
                             resultadoValores = LeilaoController.verificarValorMax(valorMin, valorMax);
                             if (resultadoValores.Sucesso) {
@@ -411,24 +471,10 @@ public class LeilaoView {
                                 System.out.println(resultadoValores.msgErro);  // Exibe erro de validação
                                 valorMax = 0.0;
                             }
-                        } else {
-                            System.out.println("Entrada inválida. Por favor, insira um valor válido.\n");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Entrada inválida. Por favor, insira um valor numérico.\n");
-                    }
-                } else {
-                    if (valorMax != 0.0) {
-                        resultadoValores = LeilaoController.verificarValorMax(valorMin, valorMax);
-                        if (resultadoValores.Sucesso) {
-                            break;
-                        } else {
-                            System.out.println(resultadoValores.msgErro);  // Exibe erro de validação
-                            valorMax = 0.0;
                         }
                     }
+                    break;
                 }
-                break;
             }
 
             double multiploLance = leilao.getMultiploLance();
