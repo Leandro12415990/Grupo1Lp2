@@ -3,6 +3,9 @@ package BLL;
 import Model.Lance;
 import Model.Leilao;
 import Utils.Constantes;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,19 +133,70 @@ public class EstatisticaBLL {
 
     /** Obter o leilão com mais lances feitos */
 
-    public static int obterIdLeilaoComMaisLances() {
+    public static String[] getDadosLeilaoComMaisLances() {
         List<Lance> lances = LanceBLL.carregarLance();
-        if (lances == null || lances.isEmpty()) return -1;
+        if (lances == null || lances.isEmpty()) return null;
 
         List<Integer> idsVerificados = new ArrayList<>();
         int idLeilaoMaisLances = -1;
         int maxLances = 0;
+
+        for (Lance l1 : lances) {
+            int idAtual = l1.getIdLeilao();
+            if (idsVerificados.contains(idAtual)) continue;
+            idsVerificados.add(idAtual);
+
+            int contador = 0;
+            for (Lance l2 : lances) {
+                if (l2.getIdLeilao() == idAtual) contador++;
+            }
+
+            if (contador > maxLances) {
+                maxLances = contador;
+                idLeilaoMaisLances = idAtual;
+            }
+        }
+
+        if (idLeilaoMaisLances == -1) return null;
+
+        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilaoMaisLances);
+        if (leilao == null) return null;
+
+        return new String[] {
+                String.valueOf(leilao.getId()),
+                leilao.getDescricao(),
+                String.valueOf(maxLances)
+        };
+    }
+
+    public static String[] getDadosLeilaoComMaisLancesPorTipo(int idTipoLeilao) {
+        List<Lance> lances = LanceBLL.carregarLance();
+        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
+
+        if (lances == null || lances.isEmpty() || leiloes == null || leiloes.isEmpty()) {
+            return null;
+        }
+
+        List<Integer> idsVerificados = new ArrayList<>();
+        int idLeilaoMaisLances = -1;
+        int maxLances = 0;
+        String descricaoLeilao = "";
 
         for (Lance lance : lances) {
             int idAtual = lance.getIdLeilao();
 
             if (idsVerificados.contains(idAtual)) continue;
             idsVerificados.add(idAtual);
+
+            Leilao leilao = null;
+            for (Leilao l : leiloes) {
+                if (l.getId() == idAtual) {
+                    leilao = l;
+                    break;
+                }
+            }
+
+            if (leilao == null || leilao.getTipoLeilao() != idTipoLeilao) continue;
 
             int contador = 0;
             for (Lance outro : lances) {
@@ -154,15 +208,175 @@ public class EstatisticaBLL {
             if (contador > maxLances) {
                 maxLances = contador;
                 idLeilaoMaisLances = idAtual;
+                descricaoLeilao = leilao.getDescricao();
             }
         }
 
-        return idLeilaoMaisLances;
+        if (idLeilaoMaisLances == -1) return null;
+
+        return new String[] {
+                String.valueOf(idLeilaoMaisLances),
+                descricaoLeilao,
+                String.valueOf(maxLances)
+        };
     }
 
-    public static int obterIdLeilaoComMaisTempoTipo(int idTipoLeilao) {
+    /** Calcular a media de tempo para acontecer um lance */
+
+    public static double calcularMediaTempoEntreLancesEmMinutos() {
+            List<Lance> lances = LanceBLL.carregarLance();
+            if (lances == null || lances.isEmpty()) return -1;
+
+            List<Integer> idsVerificados = new ArrayList<>();
+            double somaMinutos = 0;
+            int totalIntervalos = 0;
+
+            for (Lance l : lances) {
+                int idLeilao = l.getIdLeilao();
+                if (idsVerificados.contains(idLeilao)) continue;
+                idsVerificados.add(idLeilao);
+
+                List<Lance> lancesDoLeilao = new ArrayList<>();
+                for (Lance outro : lances) {
+                    if (outro.getIdLeilao() == idLeilao) {
+                        lancesDoLeilao.add(outro);
+                    }
+                }
+
+                if (lancesDoLeilao.size() < 2) continue;
+
+                for (int i = 0; i < lancesDoLeilao.size() - 1; i++) {
+                    for (int j = i + 1; j < lancesDoLeilao.size(); j++) {
+                        if (lancesDoLeilao.get(i).getDataLance().isAfter(lancesDoLeilao.get(j).getDataLance())) {
+                            Lance temp = lancesDoLeilao.get(i);
+                            lancesDoLeilao.set(i, lancesDoLeilao.get(j));
+                            lancesDoLeilao.set(j, temp);
+                        }
+                    }
+                }
+
+                for (int i = 1; i < lancesDoLeilao.size(); i++) {
+                    LocalDateTime anterior = lancesDoLeilao.get(i - 1).getDataLance();
+                    LocalDateTime atual = lancesDoLeilao.get(i).getDataLance();
+                    long minutos = Duration.between(anterior, atual).toMinutes();
+
+                    somaMinutos += minutos;
+                    totalIntervalos++;
+                }
+            }
+
+            if (totalIntervalos == 0) return -1;
+
+            return somaMinutos / totalIntervalos;
+        }
+
+    public static double calcularMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
+        List<Lance> lances = LanceBLL.carregarLance();
+        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
+
+        if (lances == null || lances.isEmpty() || leiloes == null || leiloes.isEmpty()) return -1;
+
+        List<Integer> idsVerificados = new ArrayList<>();
+        double somaMinutos = 0;
+        int totalIntervalos = 0;
+
+        for (Leilao leilao : leiloes) {
+            if (leilao.getTipoLeilao() != idTipoLeilao) continue;
+
+            int idLeilao = leilao.getId();
+            if (idsVerificados.contains(idLeilao)) continue;
+            idsVerificados.add(idLeilao);
+
+            List<Lance> lancesDoLeilao = new ArrayList<>();
+            for (Lance l : lances) {
+                if (l.getIdLeilao() == idLeilao) {
+                    lancesDoLeilao.add(l);
+                }
+            }
+
+            if (lancesDoLeilao.size() < 2) continue;
+
+            for (int i = 0; i < lancesDoLeilao.size() - 1; i++) {
+                for (int j = i + 1; j < lancesDoLeilao.size(); j++) {
+                    if (lancesDoLeilao.get(i).getDataLance().isAfter(lancesDoLeilao.get(j).getDataLance())) {
+                        Lance temp = lancesDoLeilao.get(i);
+                        lancesDoLeilao.set(i, lancesDoLeilao.get(j));
+                        lancesDoLeilao.set(j, temp);
+                    }
+                }
+            }
+
+            for (int i = 1; i < lancesDoLeilao.size(); i++) {
+                LocalDateTime anterior = lancesDoLeilao.get(i - 1).getDataLance();
+                LocalDateTime atual = lancesDoLeilao.get(i).getDataLance();
+                long minutos = Duration.between(anterior, atual).toMinutes();
+
+                somaMinutos += minutos;
+                totalIntervalos++;
+            }
+        }
+
+        if (totalIntervalos == 0) return -1;
+
+        return somaMinutos / totalIntervalos;
+    }
+
+    /** Calcular a quantidade de leiloes sem lance */
+
+    public static List<Leilao> obterLeiloesSemLances() {
+        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
         List<Lance> lances = LanceBLL.carregarLance();
 
+        if (leiloes == null || leiloes.isEmpty()) return new ArrayList<>();
+
+        List<Leilao> semLances = new ArrayList<>();
+
+        for (Leilao leilao : leiloes) {
+            boolean temLance = false;
+
+            for (Lance lance : lances) {
+                if (lance.getIdLeilao() == leilao.getId()) {
+                    temLance = true;
+                    break;
+                }
+            }
+
+            if (!temLance) {
+                semLances.add(leilao);
+            }
+        }
+
+        return semLances;
     }
+
+    public static List<Leilao> obterLeiloesSemLancesPorTipo(int idTipoLeilao) {
+        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
+        List<Lance> lances = LanceBLL.carregarLance();
+
+        if (leiloes == null || leiloes.isEmpty()) return new ArrayList<>();
+
+        List<Leilao> semLances = new ArrayList<>();
+
+        for (Leilao leilao : leiloes) {
+            if (leilao.getTipoLeilao() != idTipoLeilao) continue;
+
+            boolean temLance = false;
+
+            for (Lance lance : lances) {
+                if (lance.getIdLeilao() == leilao.getId()) {
+                    temLance = true;
+                    break;
+                }
+            }
+
+            if (!temLance) {
+                semLances.add(leilao);
+            }
+        }
+
+        return semLances;
+    }
+
+
 
 }

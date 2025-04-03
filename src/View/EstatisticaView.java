@@ -1,12 +1,10 @@
 package View;
 
-import BLL.LanceBLL;
 import Controller.EstatisticaController;
 import Model.Lance;
 import Model.Leilao;
 import Utils.Constantes;
 import Utils.Tools;
-
 import java.time.Period;
 import java.util.List;
 
@@ -62,10 +60,13 @@ public class EstatisticaView {
                     mostrarLeilaoComMaisLances();
                     break;
                 case 4:
+                    mostrarMediaTempoEntreLances();
                     break;
                 case 5:
+                    mostrarLeiloesSemLances();
                     break;
                 case 0:
+                    System.out.println("A voltar...");
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente...");
@@ -124,10 +125,13 @@ public class EstatisticaView {
                     mostrarLeilaoMaisTempoPorTipo(Constantes.tiposLeilao.ELETRONICO);
                     break;
                 case 3:
+                    mostrarLeilaoComMaisLancesPorTipo(Constantes.tiposLeilao.ELETRONICO);
                     break;
                 case 4:
+                    mostrarMediaTempoEntreLancesPorTipo(Constantes.tiposLeilao.ELETRONICO);
                     break;
                 case 5:
+                    mostrarLeiloesSemLancesPorTipo(Constantes.tiposLeilao.ELETRONICO);
                     break;
 
                 case 0:
@@ -160,13 +164,13 @@ public class EstatisticaView {
                     mostrarLeilaoMaisTempoPorTipo(Constantes.tiposLeilao.CARTA_FECHADA);
                     break;
                 case 3:
-
+                    mostrarLeilaoComMaisLancesPorTipo(Constantes.tiposLeilao.CARTA_FECHADA);
                     break;
                 case 4:
-
+                    mostrarMediaTempoEntreLancesPorTipo(Constantes.tiposLeilao.CARTA_FECHADA);
                     break;
                 case 5:
-
+                    mostrarLeiloesSemLancesPorTipo(Constantes.tiposLeilao.CARTA_FECHADA);
                     break;
                 case 0:
                     System.out.println("A voltar...");
@@ -199,12 +203,13 @@ public class EstatisticaView {
                     mostrarLeilaoMaisTempoPorTipo(Constantes.tiposLeilao.VENDA_DIRETA);
                     break;
                 case 3:
+                    mostrarLeilaoComMaisLancesPorTipo(Constantes.tiposLeilao.VENDA_DIRETA);
                     break;
                 case 4:
-
+                    mostrarMediaTempoEntreLancesPorTipo(Constantes.tiposLeilao.VENDA_DIRETA);
                     break;
                 case 5:
-
+                    mostrarLeiloesSemLancesPorTipo(Constantes.tiposLeilao.VENDA_DIRETA);
                     break;
                 case 0:
                     System.out.println("A voltar...");
@@ -280,25 +285,99 @@ public class EstatisticaView {
     }
 
     public static void mostrarLeilaoComMaisLances() {
-        int id = EstatisticaController.getIdLeilaoComMaisLances();
+        String[] dados = EstatisticaController.getDadosLeilaoComMaisLances();
 
-        if (id == -1) {
+        if (dados == null) {
             System.out.println("Não existem lances registados.");
             return;
         }
 
-        int total = 0;
-        List<Lance> lances = LanceBLL.carregarLance();
-        for (Lance l : lances) {
-            if (l.getIdLeilao() == id) total++;
-        }
-
         System.out.println("\n=== Leilão com mais lances ===");
-        System.out.println("ID do Leilão: " + id);
-        System.out.println("Total de lances: " + total);
+        System.out.println("ID do Leilão: " + dados[0]);
+        System.out.println("Descrição: " + dados[1]);
+        System.out.println("Total de lances: " + dados[2]);
     }
 
+    public static void mostrarLeilaoComMaisLancesPorTipo(int idTipo) {
+        String[] dados = EstatisticaController.getDadosLeilaoComMaisLancesPorTipo(idTipo);
 
+        if (dados == null) {
+            System.out.println("Nenhum leilão com lances encontrado para esse tipo.");
+            return;
+        }
+
+        String tipoStr = Tools.tipoLeilao.fromCodigo(idTipo).name();
+
+        System.out.println("\n=== Leilão com mais lances do tipo " + tipoStr + " ===");
+        System.out.println("ID do Leilão: " + dados[0]);
+        System.out.println("Descrição: " + dados[1]);
+        System.out.println("Total de lances: " + dados[2]);
+    }
+
+    public static void mostrarMediaTempoEntreLances() {
+        double media = EstatisticaController.calcularMediaTempoEntreLances();
+
+        if (media == -1) {
+            System.out.println("Não foi possível calcular a média (faltam lances suficientes).");
+            return;
+        }
+
+        System.out.println("\n=== Média de tempo entre lances ===");
+        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutos(media));
+    }
+
+    public static void mostrarMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
+        double media = EstatisticaController.calcularMediaTempoEntreLancesPorTipo(idTipoLeilao);
+
+        if (media == -1) {
+            System.out.println("Não há lances suficientes para calcular a média.");
+            return;
+        }
+
+        System.out.println("\n=== Média de tempo entre lances para tipo " +
+                Tools.tipoLeilao.fromCodigo(idTipoLeilao).name() + " ===");
+
+        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutos(media));
+    }
+
+    public static void mostrarLeiloesSemLances() {
+        List<Leilao> semLances = EstatisticaController.getLeiloesSemLances();
+
+        if (semLances.isEmpty()) {
+            System.out.println("Todos os leilões têm pelo menos um lance.");
+            return;
+        }
+
+        System.out.println("\n=== Leilões sem lances ===");
+        System.out.println("Quantidade: " + semLances.size());
+        System.out.println("Lista de leilões sem lances:\n");
+
+        for (Leilao leilao : semLances) {
+            System.out.println("ID: " + leilao.getId() +
+                    " | Descrição: " + leilao.getDescricao() +
+                    " | Tipo: " + leilao.getTipoLeilao());
+        }
+    }
+
+    public static void mostrarLeiloesSemLancesPorTipo(int idTipoLeilao) {
+        List<Leilao> semLances = EstatisticaController.getLeiloesSemLancesPorTipo(idTipoLeilao);
+
+        String tipoStr = Tools.tipoLeilao.fromCodigo(idTipoLeilao).name();
+
+        if (semLances.isEmpty()) {
+            System.out.println("Não há leilões do tipo " + tipoStr + " sem lances.");
+            return;
+        }
+
+        System.out.println("\n=== Leilões do tipo " + tipoStr + " sem lances ===");
+        System.out.println("Quantidade: " + semLances.size());
+        System.out.println("Lista de leilões:\n");
+
+        for (Leilao leilao : semLances) {
+            System.out.println("ID: " + leilao.getId() +
+                    " | Descrição: " + leilao.getDescricao());
+        }
+    }
 
 
 

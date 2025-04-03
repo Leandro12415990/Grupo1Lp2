@@ -32,9 +32,30 @@ public class EstatisticaController {
         return EstatisticaBLL.obterLeilaoTipoMaisTempoAtivo(idTipo);
     }
 
-    public static int getIdLeilaoComMaisLances() {
-        return EstatisticaBLL.obterIdLeilaoComMaisLances();
+    public static String[] getDadosLeilaoComMaisLances() {
+        return EstatisticaBLL.getDadosLeilaoComMaisLances();
     }
+
+    public static String[] getDadosLeilaoComMaisLancesPorTipo(int idTipo) {
+        return EstatisticaBLL.getDadosLeilaoComMaisLancesPorTipo(idTipo);
+    }
+
+    public static double calcularMediaTempoEntreLances() {
+        return EstatisticaBLL.calcularMediaTempoEntreLancesEmMinutos();
+    }
+
+    public static double calcularMediaTempoEntreLancesPorTipo(int tipo) {
+        return EstatisticaBLL.calcularMediaTempoEntreLancesPorTipo(tipo);
+    }
+
+    public static List<Leilao> getLeiloesSemLances() {
+        return EstatisticaBLL.obterLeiloesSemLances();
+    }
+
+    public static List<Leilao> getLeiloesSemLancesPorTipo(int idTipoLeilao) {
+        return EstatisticaBLL.obterLeiloesSemLancesPorTipo(idTipoLeilao);
+    }
+
 
 
 

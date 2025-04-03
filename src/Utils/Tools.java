@@ -174,4 +174,12 @@ public class Tools {
         }
         return resultado;
     }
+
+    public static String formatarMinutosParaHorasEMinutos(double minutosTotal) {
+        long horas = (long) minutosTotal / 60;
+        long minutos = (long) minutosTotal % 60;
+
+        return horas + " horas e " + minutos + " minutos";
+    }
+
 }
