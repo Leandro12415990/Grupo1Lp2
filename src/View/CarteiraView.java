@@ -1,7 +1,8 @@
 package View;
 
-import Model.Carteira;
+import Controller.CarteiraController;
 import Model.ClienteSessao;
+import Model.ResultadoOperacao;
 import Utils.Tools;
 
 public class CarteiraView {
@@ -45,8 +46,26 @@ public class CarteiraView {
     private static void adicionarCreditos() {
         int idCliente = ClienteSessao.getIdCliente();
         System.out.println("\nADICIONAR CRÉDITOS");
-        System.out.println("Saldo atual: ");
+
+        Double saldoAtual = buscarValorTotalAtual(idCliente);
+        Double saldoPendente = valorPendente(idCliente);
+        System.out.println("Saldo atual: " + saldoAtual + "€");
+        System.out.println("Saldo pendente de aprovação: " + saldoPendente + "€");
+
+        System.out.print("Insira a quantidade de créditos que pretende depositar " + Tools.alertaCancelar());
+        Double creditos = Tools.scanner.nextDouble();
+        if(Tools.verificarSaida(String.valueOf(creditos))) return;
+
+        ResultadoOperacao resultado = CarteiraController.criarDeposito(idCliente, saldoAtual, creditos);
+        if (resultado.Sucesso) System.out.println("Os créditos serão adicionados à sua conta quando o gestor aprovar o depósito!");
+            else System.out.println(resultado.msgErro);
     }
 
-    //private static Carteira buscarInformacoes(int idCliente) {    }
+    private static Double buscarValorTotalAtual(int idCliente) {
+        return CarteiraController.buscarValorTotalAtual(idCliente);
+    }
+
+    private static Double valorPendente(int idCliente) {
+        return CarteiraController.valorPendente(idCliente);
+    }
 }

@@ -136,8 +136,9 @@ public class ImportDal {
                 LocalDate ultimoLogin = dados[7].isEmpty() ? null : Tools.parseDate(dados[7]);
                 int tipoUtilizador = Integer.parseInt(dados[8]);
                 int estado = Integer.parseInt(dados[9]);
+                Double saldo = Double.parseDouble(dados[10]);
 
-                Utilizador utilizador = new Utilizador(id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto, ultimoLogin, tipoUtilizador, estado);
+                Utilizador utilizador = new Utilizador(id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto, ultimoLogin, tipoUtilizador, estado, saldo);
                 utilizadores.add(utilizador);
             }
         } catch (IOException e) {
@@ -213,7 +214,7 @@ public class ImportDal {
 
     public static void gravarUtilizador(List<Utilizador> utilizadores) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_UTILIZADOR))) {
-            bw.write("ID;NOME;EMAIL;DATA NASCIMENTO;MORADA;PASSWORD;DATA REGISTO;ULTIMO LOGIN;TIPO UTILIZADOR;ESTADO");
+            bw.write("ID;NOME;EMAIL;DATA NASCIMENTO;MORADA;PASSWORD;DATA REGISTO;ULTIMO LOGIN;TIPO UTILIZADOR;ESTADO;SALDO");
             bw.newLine();
 
             for (Utilizador utilizador : utilizadores) {
@@ -230,7 +231,8 @@ public class ImportDal {
                         dataRegisto + Tools.separador() +
                         ultimoLogin + Tools.separador() +
                         utilizador.getTipoUtilizador() + Tools.separador() +
-                        utilizador.getEstado());
+                        utilizador.getEstado() + Tools.separador() +
+                        utilizador.getSaldo());
                 bw.newLine();
             }
 
@@ -274,7 +276,7 @@ public class ImportDal {
                         carteira.getValorTotal() + Tools.separador() +
                         carteira.getValorDeposito() + Tools.separador() +
                         dataDeposito + Tools.separador() +
-                        carteira.getIdEstadoDeposito() + Tools.separador());
+                        carteira.getIdEstadoDeposito());
                 bw.newLine();
             }
 

@@ -152,6 +152,29 @@ public class Tools {
         }
     }
 
+    public enum estadoDeposito {
+        PENDENTE(1), ACEITE(2), NEGADO(3);
+
+        private final int idEstado;
+
+        estadoDeposito(int idEstado) {
+            this.idEstado = idEstado;
+        }
+
+        public int getIdEstado() {
+            return idEstado;
+        }
+
+        public static estadoDeposito fromCodigo(int idEstado) {
+            for (estadoDeposito estado : estadoDeposito.values()) {
+                if (estado.getIdEstado() == idEstado) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Estado inválido: " + idEstado);
+        }
+    }
+
     public static boolean verificarSaida(String input) {
         if (input.trim().equals("-1") || input.trim().equals("-1.0")) {
             System.out.println("Operação cancelada. Voltando ao menu anterior...");
