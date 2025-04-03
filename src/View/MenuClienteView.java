@@ -14,7 +14,7 @@ public class MenuClienteView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    System.out.println("Funcionalidade em desenvolvimento...");
+
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");
