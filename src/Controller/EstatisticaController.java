@@ -1,6 +1,7 @@
 package Controller;
 
 import BLL.EstatisticaBLL;
+import Model.Leilao;
 import Model.ResultadoOperacao;
 
 import java.time.Period;
@@ -19,13 +20,23 @@ public class EstatisticaController {
         return EstatisticaBLL.obterLeiloesFechadosFormatados();
     }
 
-    public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
+   /** public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
         return EstatisticaBLL.listarLeiloesFechadosFormatadosPorTipo(idTipo);
+    } */
+
+    public static Leilao getLeilaoMaisTempoAtivo() {
+        return EstatisticaBLL.obterLeilaoMaisTempoAtivo();
     }
 
-    public static Object[] obterLeilaoMaisTempoAtivoComPeriodo() {
-        return EstatisticaBLL.obterDadosLeilaoMaisTempoAtivo();
+    public static Leilao getLeilaoTipoMaisTempoAtivo(int idTipo) {
+        return EstatisticaBLL.obterLeilaoTipoMaisTempoAtivo(idTipo);
     }
+
+    public static int getIdLeilaoComMaisLances() {
+        return EstatisticaBLL.obterIdLeilaoComMaisLances();
+    }
+
+
 
 
 }

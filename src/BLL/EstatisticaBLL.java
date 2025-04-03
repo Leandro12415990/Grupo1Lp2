@@ -1,17 +1,14 @@
 package BLL;
 
+import Model.Lance;
 import Model.Leilao;
 import Utils.Constantes;
-
-import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
-import static BLL.ImportBll.obterTodosLeiloes;
-
 public class EstatisticaBLL {
-
+    /** Filtragem dos Leilões */
     private static List<Leilao> filtrarLeiloesFechados() {
         List<Leilao> todos = LeilaoBLL.listarLeiloes(false);
         List<Leilao> fechados = new ArrayList<>();
@@ -26,17 +23,11 @@ public class EstatisticaBLL {
     }
 
     private static List<Leilao> filtrarLeiloesFechadosPorTipo(int idTipoLeilao) {
-        List<Leilao> resultado = new ArrayList<>();
         List<Leilao> fechados = filtrarLeiloesFechados();
-
-        if (fechados == null) return resultado;
-
-        String tipoStr = String.valueOf(idTipoLeilao);
+        List<Leilao> resultado = new ArrayList<>();
 
         for (Leilao l : fechados) {
-            String tipo = String.valueOf(l.getTipoLeilao());
-
-            if (tipo != null && tipo.equals(tipoStr)) {
+            if (l.getTipoLeilao() == idTipoLeilao) {
                 resultado.add(l);
             }
         }
@@ -44,7 +35,7 @@ public class EstatisticaBLL {
         return resultado;
     }
 
-
+    /** Contagem dos leilões fechados */
     public static int contarLeilaoFechados() {
         return filtrarLeiloesFechados().size();
     }
@@ -52,6 +43,8 @@ public class EstatisticaBLL {
     public static int contarLeiloesFechadosPorTipo(int idTipoLeilao) {
         return filtrarLeiloesFechadosPorTipo(idTipoLeilao).size();
     }
+
+    /** Listagem de leilões por tipo */
 
     public static List<String> obterLeiloesFechadosFormatados() {
         List<Leilao> fechados = filtrarLeiloesFechados();
@@ -65,7 +58,7 @@ public class EstatisticaBLL {
 
         return resultado;
     }
-
+/**
     public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipoLeilao) {
         List<Leilao> leiloes = filtrarLeiloesFechadosPorTipo(idTipoLeilao);
         List<String> resultado = new ArrayList<>();
@@ -80,50 +73,96 @@ public class EstatisticaBLL {
 
         return resultado;
     }
+*/
+    /** Obter o leilão mais tempo ativo */
 
-        public static Object[] obterDadosLeilaoMaisTempoAtivo() {
-            List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
-            if (leiloes == null || leiloes.isEmpty()) return null;
+    public static Leilao obterLeilaoTipoMaisTempoAtivo(int idTipoLeilao) {
+        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
+        if (leiloes == null || leiloes.isEmpty()) return null;
 
-            Leilao leilaoMaisTempo = null;
-            Period maiorPeriodo = Period.ZERO;
+        Leilao leilaoMaisTempo = null;
+        Period maiorPeriodo = Period.ZERO;
 
-            for (Leilao leilao : leiloes) {
-                LocalDate dataInicio = leilao.getDataInicio();
-                LocalDate dataFim = leilao.getDataFim();
+        for (Leilao leilao : leiloes) {
+            if (leilao.getTipoLeilao() != idTipoLeilao) continue;
 
-                if (dataInicio == null || dataFim == null) {
-                    continue;
-                }
+            if (leilao.getDataInicio() == null || leilao.getDataFim() == null) continue;
 
-                Period periodo = Period.between(dataInicio, dataFim);
+            Period periodo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
 
-                if (MaiorPeriodo(periodo, maiorPeriodo)) {
-                    maiorPeriodo = periodo;
-                    leilaoMaisTempo = leilao;
+            if (isMaiorPeriodo(periodo, maiorPeriodo)) {
+                maiorPeriodo = periodo;
+                leilaoMaisTempo = leilao;
+            }
+        }
+
+        return leilaoMaisTempo;
+    }
+
+    public static Leilao obterLeilaoMaisTempoAtivo() {
+        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
+        if (leiloes == null || leiloes.isEmpty()) return null;
+
+        Leilao leilaoMaisTempo = null;
+        Period maiorPeriodo = Period.ZERO;
+
+        for (Leilao leilao : leiloes) {
+            if (leilao.getDataInicio() == null || leilao.getDataFim() == null) continue;
+
+            Period periodo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+
+            if (isMaiorPeriodo(periodo, maiorPeriodo)) {
+                maiorPeriodo = periodo;
+                leilaoMaisTempo = leilao;
+            }
+        }
+
+        return leilaoMaisTempo;
+    }
+
+    private static boolean isMaiorPeriodo(Period novo, Period atual) {
+        if (novo.getYears() > atual.getYears()) return true;
+        if (novo.getYears() == atual.getYears() && novo.getMonths() > atual.getMonths()) return true;
+        return novo.getYears() == atual.getYears()
+                && novo.getMonths() == atual.getMonths()
+                && novo.getDays() > atual.getDays();
+    }
+
+    /** Obter o leilão com mais lances feitos */
+
+    public static int obterIdLeilaoComMaisLances() {
+        List<Lance> lances = LanceBLL.carregarLance();
+        if (lances == null || lances.isEmpty()) return -1;
+
+        List<Integer> idsVerificados = new ArrayList<>();
+        int idLeilaoMaisLances = -1;
+        int maxLances = 0;
+
+        for (Lance lance : lances) {
+            int idAtual = lance.getIdLeilao();
+
+            if (idsVerificados.contains(idAtual)) continue;
+            idsVerificados.add(idAtual);
+
+            int contador = 0;
+            for (Lance outro : lances) {
+                if (outro.getIdLeilao() == idAtual) {
+                    contador++;
                 }
             }
 
-            if (leilaoMaisTempo == null) return null;
-
-            return new Object[] {
-                    leilaoMaisTempo.getId(),
-                    leilaoMaisTempo.getDescricao(),
-                    maiorPeriodo.getYears(),
-                    maiorPeriodo.getMonths(),
-                    maiorPeriodo.getDays()
-            };
+            if (contador > maxLances) {
+                maxLances = contador;
+                idLeilaoMaisLances = idAtual;
+            }
         }
 
+        return idLeilaoMaisLances;
+    }
 
-    private static boolean MaiorPeriodo(Period novo, Period atual) {
-        if (novo.getYears() > atual.getYears()) return true;
-        if (novo.getYears() == atual.getYears() && novo.getMonths() > atual.getMonths()) return true;
-        if (novo.getYears() == atual.getYears() &&
-                novo.getMonths() == atual.getMonths() &&
-                novo.getDays() > atual.getDays()) return true;
+    public static int obterIdLeilaoComMaisTempoTipo(int idTipoLeilao) {
+        List<Lance> lances = LanceBLL.carregarLance();
 
-        return false;
     }
 
 }

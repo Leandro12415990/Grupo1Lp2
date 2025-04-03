@@ -1,6 +1,9 @@
 package View;
 
+import BLL.LanceBLL;
 import Controller.EstatisticaController;
+import Model.Lance;
+import Model.Leilao;
 import Utils.Constantes;
 import Utils.Tools;
 
@@ -56,6 +59,7 @@ public class EstatisticaView {
                     mostrarLeilaoMaisTempoAtivo();
                     break;
                 case 3:
+                    mostrarLeilaoComMaisLances();
                     break;
                 case 4:
                     break;
@@ -117,7 +121,7 @@ public class EstatisticaView {
                     exibirContagemPorTipo(Constantes.tiposLeilao.ELETRONICO);
                     break;
                 case 2:
-
+                    mostrarLeilaoMaisTempoPorTipo(Constantes.tiposLeilao.ELETRONICO);
                     break;
                 case 3:
                     break;
@@ -153,7 +157,7 @@ public class EstatisticaView {
                     exibirContagemPorTipo(Constantes.tiposLeilao.CARTA_FECHADA);
                     break;
                 case 2:
-
+                    mostrarLeilaoMaisTempoPorTipo(Constantes.tiposLeilao.CARTA_FECHADA);
                     break;
                 case 3:
 
@@ -192,6 +196,7 @@ public class EstatisticaView {
                     exibirContagemPorTipo(Constantes.tiposLeilao.VENDA_DIRETA);
                     break;
                 case 2:
+                    mostrarLeilaoMaisTempoPorTipo(Constantes.tiposLeilao.VENDA_DIRETA);
                     break;
                 case 3:
                     break;
@@ -240,18 +245,60 @@ public class EstatisticaView {
         }
 
     public static void mostrarLeilaoMaisTempoAtivo() {
-        Object[] dados = EstatisticaController.obterLeilaoMaisTempoAtivoComPeriodo();
+        Leilao leilao = EstatisticaController.getLeilaoMaisTempoAtivo();
 
-        if (dados == null) {
-            System.out.println("Não há leilões disponíveis.");
+        if (leilao == null) {
+            System.out.println("Não existem leilões válidos.");
             return;
         }
 
-        System.out.println("\n=== Leilão que esteve mais tempo ativo ===");
-        System.out.println("ID: " + dados[0]);
-        System.out.println("Descrição: " + dados[1]);
-        System.out.println("Tempo ativo: " + dados[2] + " anos, " + dados[3] + " meses, " + dados[4] + " dias");
+        Period tempo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+
+        System.out.println("\n=== Leilão com mais tempo ativo ===");
+        System.out.println("ID: " + leilao.getId());
+        System.out.println("Descrição: " + leilao.getDescricao());
+        System.out.println("Tempo ativo: " + tempo.getYears() + " anos, " +
+                tempo.getMonths() + " meses, " +
+                tempo.getDays() + " dias");
     }
+
+    public static void mostrarLeilaoMaisTempoPorTipo(int idTipo) {
+        Leilao leilao = EstatisticaController.getLeilaoTipoMaisTempoAtivo(idTipo);
+
+        if (leilao == null) {
+            System.out.println("Nenhum leilão válido encontrado para este tipo.");
+            return;
+        }
+
+        Period tempo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+
+        System.out.println("\n=== Leilão com mais tempo ativo (por tipo) ===");
+        System.out.println("ID: " + leilao.getId());
+        System.out.println("Descrição: " + leilao.getDescricao());
+        System.out.println("Tempo ativo: " + tempo.getYears() + " anos, " +
+                tempo.getMonths() + " meses, " + tempo.getDays() + " dias");
+    }
+
+    public static void mostrarLeilaoComMaisLances() {
+        int id = EstatisticaController.getIdLeilaoComMaisLances();
+
+        if (id == -1) {
+            System.out.println("Não existem lances registados.");
+            return;
+        }
+
+        int total = 0;
+        List<Lance> lances = LanceBLL.carregarLance();
+        for (Lance l : lances) {
+            if (l.getIdLeilao() == id) total++;
+        }
+
+        System.out.println("\n=== Leilão com mais lances ===");
+        System.out.println("ID do Leilão: " + id);
+        System.out.println("Total de lances: " + total);
+    }
+
+
 
 
 
