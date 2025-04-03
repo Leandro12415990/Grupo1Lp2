@@ -17,9 +17,19 @@ public class CarteiraBLL {
 
     public static void criarDeposito(Carteira carteira) {
         carregarCarteira();
+        carteira.setIdDeposito(verificarUltimoIdCarteira(carteiraList) + 1);
         carteiraList.add(carteira);
         ImportDal.gravarCarteira(carteiraList);
     }
-    
+
+    private static int verificarUltimoIdCarteira(List<Carteira> carteiraList) {
+        int ultimoId = 0;
+        for (Carteira carteira : carteiraList) {
+            if (carteira.getIdDeposito() > ultimoId) {
+                ultimoId = carteira.getIdDeposito();
+            }
+        }
+        return ultimoId;
+    }
 
 }
