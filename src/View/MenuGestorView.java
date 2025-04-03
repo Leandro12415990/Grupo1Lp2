@@ -20,7 +20,7 @@ public class MenuGestorView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo());
+                    ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
                     break;
                 case 2:
                     AprovarClienteView.exibirMenu();
