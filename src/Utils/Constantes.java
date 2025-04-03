@@ -24,4 +24,11 @@ public class Constantes {
         public static final int INATIVO = 3;
 
     }
+
+    // Secção: Estados Deposito Cliente
+    public static class estadosDeposito {
+        public static final int PENDENTE = 1;
+        public static final int ACEITE = 2;
+        public static final int NEGADO = 3;
+    }
 }
