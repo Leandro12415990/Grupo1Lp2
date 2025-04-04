@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -206,5 +207,24 @@ public class Tools {
             resultado.Sucesso = true;
         }
         return resultado;
+    }
+
+    public static String formatarMinutosParaHorasEMinutos(double minutosTotal) {
+        long horas = (long) minutosTotal / 60;
+        long minutos = (long) minutosTotal % 60;
+
+        return horas + " horas e " + minutos + " minutos";
+    }
+
+    public static int pedirOpcaoMenu(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            try {
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println(" Entrada inválida. Por favor insira um número inteiro.");
+                scanner.nextLine();
+            }
+        }
     }
 }
