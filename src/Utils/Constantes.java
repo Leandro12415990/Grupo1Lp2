@@ -25,10 +25,16 @@ public class Constantes {
 
     }
 
-    // Secção: Estados Deposito Cliente
-    public static class estadosDeposito {
+    // Secção: Estados Transacoes
+    public static class estadosTransacao {
         public static final int PENDENTE = 1;
         public static final int ACEITE = 2;
         public static final int NEGADO = 3;
+    }
+
+    // Secção: Tipos Transacoes
+    public static class tiposTransacao {
+        public static final int DEPOSITO = 1;
+        public static final int LANCE = 2;
     }
 }

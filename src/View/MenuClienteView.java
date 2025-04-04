@@ -19,7 +19,7 @@ public class MenuClienteView {
                     System.out.println("Funcionalidade em desenvolvimento...");
                     break;
                 case 2:
-                    CarteiraView.exibirMenuCarteira();
+                    TransacaoView.exibirMenuTransacao();
                     break;
                 case 3:
                     LanceView.exibirMenuLance();

@@ -1,8 +1,8 @@
 package DAL;
 
-import Model.Carteira;
 import Model.Lance;
 import Model.Leilao;
+import Model.Transacao;
 import Model.Utilizador;
 import Utils.Tools;
 
@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class ImportDal {
     private static final String CSV_FILE = "data\\Leilao.csv";
     private static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
     private static final String CSV_FILE_LANCE = "data\\Lance.csv";
-    private static final String CSV_FILE_CARTEIRA = "data\\Carteira.csv";
+    private static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
 
     public static List<Lance> carregarLance() {
         List<Lance> lances = new ArrayList<>();
@@ -147,19 +146,16 @@ public class ImportDal {
         return utilizadores;
     }
 
-    public static List<Carteira> carregarCarteira() {
-        List<Carteira> carteiraList = new ArrayList<>();
+    public static List<Transacao> carregarTransacao() {
+        List<Transacao> transacaoList = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_CARTEIRA))) {
-            String linha;
-            boolean primeiraLinha = true;
-
+        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_TRANSACAO))) {
+            String linha; boolean primeiraLinha = true;
             while ((linha = br.readLine()) != null) {
                 if (primeiraLinha) {
                     primeiraLinha = false;
                     continue;
                 }
-
                 String[] dados = linha.split(Tools.separador(), -1);
 
                 if (dados.length < 6) {
@@ -167,20 +163,21 @@ public class ImportDal {
                     continue;
                 }
 
-                int idDeposito = Integer.parseInt(dados[0]);
+                int idTransacao = Integer.parseInt(dados[0]);
                 int idCliente = Integer.parseInt(dados[1]);
                 Double valorTotal = Double.parseDouble(dados[2]);
-                Double valorDeposito = Double.parseDouble(dados[3]);
-                LocalDateTime dataDeposito = Tools.parseDateTimeByDate(dados[4]);
-                int idEstado = Integer.parseInt(dados[5]);
+                Double valorTransacao = Double.parseDouble(dados[3]);
+                LocalDateTime dataTransacao = Tools.parseDateTimeByDate(dados[4]);
+                int idTipoTransacao = Integer.parseInt(dados[5]);
+                int idEstadoTransacao = Integer.parseInt(dados[6]);
 
-                Carteira carteira = new Carteira(idDeposito, idCliente, valorTotal, valorDeposito, dataDeposito, idEstado);
-                carteiraList.add(carteira);
+                Transacao transacao = new Transacao(idTransacao, idCliente, valorTotal, valorTransacao, dataTransacao, idTipoTransacao, idEstadoTransacao);
+                transacaoList.add(transacao);
             }
         } catch (IOException e) {
             System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
         }
-        return carteiraList;
+        return transacaoList;
     }
 
     public static void gravarLeilao(List<Leilao> leiloes) {
@@ -263,20 +260,21 @@ public class ImportDal {
         }
     }
 
-    public static void gravarCarteira(List<Carteira> carteiraList) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_CARTEIRA))) {
-            bw.write("ID_DEPOSITO;ID_CLIENTE;VALOR_TOTAL;VALOR_DEPOSITO;DATA_DEPOSITO;ID_ESTADO");
+    public static void gravarTransacao(List<Transacao> transacaoList) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_TRANSACAO))) {
+            bw.write("ID_TRANSACAO;ID_CLIENTE;VALOR_TOTAL;VALOR_TRANSACAO;DATA_TRANSACAO;ID_TIPO;ID_ESTADO");
             bw.newLine();
 
-            for (Carteira carteira : carteiraList) {
-                String dataDeposito = Tools.formatDateTime(carteira.getDataDeposito());
+            for (Transacao transacao : transacaoList) {
+                String dataTransacao = Tools.formatDateTime(transacao.getDataTransacao());
 
-                bw.write(carteira.getIdDeposito() + Tools.separador() +
-                        carteira.getIdCliente() + Tools.separador() +
-                        carteira.getValorTotal() + Tools.separador() +
-                        carteira.getValorDeposito() + Tools.separador() +
-                        dataDeposito + Tools.separador() +
-                        carteira.getIdEstadoDeposito());
+                bw.write(transacao.getIdTransacao() + Tools.separador() +
+                        transacao.getIdCliente() + Tools.separador() +
+                        transacao.getValorTotal() + Tools.separador() +
+                        transacao.getValorTransacao() + Tools.separador() +
+                        dataTransacao + Tools.separador() +
+                        transacao.getIdTipoTransacao() + Tools.separador() +
+                        transacao.getIdEstadoTransacao());
                 bw.newLine();
             }
 

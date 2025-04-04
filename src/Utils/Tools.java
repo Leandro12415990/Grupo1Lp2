@@ -189,13 +189,12 @@ public class Tools {
 
     public static ResultadoOperacao verificarDatasAnteriores (LocalDate dataInicial, LocalDate dataFinal) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        if (dataFinal.isBefore(dataInicial)) {
-            resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
-        } else {
-            resultado.Objeto = resultado;
-            resultado.Sucesso = true;
-        }
-        return resultado;
+        if (dataFinal.isBefore(dataInicial)) resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
+            else {
+                resultado.Objeto = resultado;
+                resultado.Sucesso = true;
+            }
+            return resultado;
     }
 
     public static LocalDateTime parseDateTimeByDate(String dateStr) {
@@ -216,14 +215,12 @@ public class Tools {
     public static LocalDateTime parseDateTime(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) return null;
         try {
-            // Primeiro tenta o formato com data e hora
             return LocalDateTime.parse(dateStr, DATA_HORA);
         } catch (DateTimeParseException e) {
             try {
-                // Se não for no formato com hora, tenta só a data
                 return LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
             } catch (DateTimeParseException ex) {
-                return null;  // Se falhar em ambos, retorna null
+                return null;
             }
         }
     }
