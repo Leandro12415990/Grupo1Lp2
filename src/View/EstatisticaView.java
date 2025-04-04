@@ -484,7 +484,7 @@ public class EstatisticaView {
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
 
-        if (id == -1) return;
+        if (Tools.verificarSaida(String.valueOf(id))) return;
 
         Leilao leilao = LeilaoBLL.procurarLeilaoPorId(id);
         if (leilao == null) {
