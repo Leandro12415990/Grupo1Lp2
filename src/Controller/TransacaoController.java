@@ -41,7 +41,8 @@ public class TransacaoController {
 
     public static void listarDepositos(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
         List<Transacao> transacaoList = TransacaoBLL.listarTransacoes(apenasPendentes, idTipoTransacao, idCliente);
-        TransacaoView.exibirTransacoes(transacaoList);
+        if (idCliente != 0) TransacaoView.exibirTransacoes(transacaoList, true);
+            else TransacaoView.exibirTransacoes(transacaoList, false);
     }
 
     public static Utilizador getUtilizador(int idCliente) {
