@@ -11,6 +11,8 @@ import java.time.Period;
 import java.util.List;
 
 public class EstatisticaView {
+
+    /** Exibição dos menus */
     public static void exibirMenuListagem() {
         int opc;
         do {
@@ -21,7 +23,7 @@ public class EstatisticaView {
             System.out.println("4. Estatisticas De Clientes");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             switch (opc) {
                 case 1:
                     estatisticasPorLeilao();
@@ -55,7 +57,7 @@ public class EstatisticaView {
             System.out.println("5. Leilões sem lances.");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             switch (opc) {
                 case 1:
                     exibirLeiloesFinalizados();
@@ -90,7 +92,7 @@ public class EstatisticaView {
             System.out.println("3. Venda Direta");
             System.out.println("0. Voltar");
             System.out.print("Opção: ");
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
 
             switch (opc) {
                 case 1:
@@ -120,7 +122,7 @@ public class EstatisticaView {
             System.out.println("3. Percentagem de clientes que usam o maior domínio de e-mail ");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             switch (opc) {
                 case 1:
                     mostrarTodosClientes();
@@ -151,7 +153,7 @@ public class EstatisticaView {
             System.out.println("5. Leilões sem lances.");
             System.out.println("0. Voltar");
             System.out.print("Opção: ");
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
 
             switch (opc) {
                 case 1:
@@ -190,7 +192,7 @@ public class EstatisticaView {
             System.out.println("5. Leilões sem lances.");
             System.out.println("0. Voltar");
             System.out.print("Opção: ");
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
 
             switch (opc) {
                 case 1:
@@ -229,7 +231,7 @@ public class EstatisticaView {
             System.out.println("5. Leilões sem lances.");
             System.out.println("0. Voltar");
             System.out.print("Opção: ");
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
 
             switch (opc) {
                 case 1:
@@ -257,13 +259,22 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
+    /** metodos da view */
+
     public static void exibirContagemPorTipo(int idTipo) {
+        System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
+
         int total = EstatisticaController.contarLeiloesFechadosPorTipo(idTipo);
         String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(idTipo).name();
         if (total == 0) {
             System.out.println("Não existem leilões fechados do tipo \"" + tipoLeilaoStr + "\".");
         } else {
             System.out.println("Total de leilões fechados do tipo \"" + tipoLeilaoStr + "\": " + total);
+            System.out.println("\n Lista de leilões fechados:\n");
+        }
+        List<String> linhas = EstatisticaController.listarLeiloesFechadosFormatadosPorTipo(idTipo);
+        for (String linha : linhas) {
+            System.out.println(linha);
         }
     }
 
@@ -469,7 +480,7 @@ public class EstatisticaView {
 
         LeilaoView.exibirLeiloes(leiloes);
 
-        System.out.print("\nInsira o ID do leilão que deseja analisar (-1 para cancelar): ");
+        System.out.print("\nInsira o ID do leilão que deseja analisar "+ Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
 

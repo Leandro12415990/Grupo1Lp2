@@ -21,9 +21,9 @@ public class EstatisticaController {
         return EstatisticaBLL.obterLeiloesFechadosFormatados();
     }
 
-   /** public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
+    public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
         return EstatisticaBLL.listarLeiloesFechadosFormatadosPorTipo(idTipo);
-    } */
+    }
 
     public static Leilao getLeilaoMaisTempoAtivo() {
         return EstatisticaBLL.obterLeilaoMaisTempoAtivo();

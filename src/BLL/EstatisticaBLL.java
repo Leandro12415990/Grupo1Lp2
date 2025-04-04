@@ -64,7 +64,7 @@ public class EstatisticaBLL {
 
         return resultado;
     }
-/**
+
     public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipoLeilao) {
         List<Leilao> leiloes = filtrarLeiloesFechadosPorTipo(idTipoLeilao);
         List<String> resultado = new ArrayList<>();
@@ -79,7 +79,7 @@ public class EstatisticaBLL {
 
         return resultado;
     }
-*/
+
     /** Obter o leilão mais tempo ativo */
 
     public static Leilao obterLeilaoTipoMaisTempoAtivo(int idTipoLeilao) {
