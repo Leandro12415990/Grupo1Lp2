@@ -39,8 +39,8 @@ public class TransacaoController {
         return 0.0;
     }
 
-    public static void listarDepositos(boolean apenasPendentes) {
-        List<Transacao> transacaoList = TransacaoBLL.listarTransacoes(apenasPendentes);
+    public static void listarDepositos(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
+        List<Transacao> transacaoList = TransacaoBLL.listarTransacoes(apenasPendentes, idTipoTransacao, idCliente);
         TransacaoView.exibirTransacoes(transacaoList);
     }
 
@@ -50,7 +50,7 @@ public class TransacaoController {
 
     public static ResultadoOperacao verificarTransacao(int idTransacao) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        List<Transacao> transacaoList = TransacaoBLL.listarTransacoes(true);
+        List<Transacao> transacaoList = TransacaoBLL.listarTransacoes(true, 0, 0);
         for (Transacao transacao : transacaoList) {
             if (idTransacao == transacao.getIdTransacao()) {
                 resultado.Objeto = transacao;

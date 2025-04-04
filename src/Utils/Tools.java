@@ -30,7 +30,7 @@ public class Tools {
         return (dateTime != null) ? dateTime.format(DATA_HORA) : "";
     }
 
-    public static final DateTimeFormatter DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    public static final DateTimeFormatter DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     public static LocalDate parseDate(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) return null;
@@ -40,39 +40,6 @@ public class Tools {
             return null;
         }
     }
-
-    public static LocalDateTime parseDateTimeByDate(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) return null;
-
-        dateStr = dateStr.trim();
-        try {
-            return LocalDateTime.parse(dateStr, DATA_HORA);
-        } catch (DateTimeParseException e) {
-            try {
-                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
-            } catch (DateTimeParseException ex) {
-                return null;
-            }
-        }
-    }
-
-    public static LocalDateTime parseDateTime(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) return null;
-        try {
-            // Primeiro tenta o formato com data e hora
-            return LocalDateTime.parse(dateStr, DATA_HORA);
-        } catch (DateTimeParseException e) {
-            try {
-                // Se não for no formato com hora, tenta só a data
-                return LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
-            } catch (DateTimeParseException ex) {
-                return null;  // Se falhar em ambos, retorna null
-            }
-        }
-    }
-
-
-
 
     public static String formatDate(LocalDate date) {
         return (date != null) ? date.format(FORMATTER) : "";
@@ -205,6 +172,29 @@ public class Tools {
                 }
             }
             throw new IllegalArgumentException("Estado inválido: " + idEstado);
+        }
+    }
+
+    public enum tipoTransacao {
+        DEPOSITO(1), LANCE(2);
+
+        private final int idTipoTransacao;
+
+        tipoTransacao(int idTipoTransacao) {
+            this.idTipoTransacao = idTipoTransacao;
+        }
+
+        public int getIdTipoTransacao() {
+            return idTipoTransacao;
+        }
+
+        public static tipoTransacao fromCodigo(int idTipoTransacao) {
+            for (tipoTransacao tipo : tipoTransacao.values()) {
+                if (tipo.getIdTipoTransacao() == idTipoTransacao) {
+                    return tipo;
+                }
+            }
+            throw new IllegalArgumentException("Tipo inválido: " + idTipoTransacao);
         }
     }
 

@@ -66,17 +66,37 @@ public class TransacaoBLL {
         } return valorTotalPendente;
     }
 
-    public static List<Transacao> listarTransacoes(boolean apenasPendentes) {
+    public static List<Transacao> listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
         carregarTransacao();
-        if (!apenasPendentes) return transacaoList;
+        if (!apenasPendentes && idTipoTransacao == 0 && idCliente == 0) {
+            return transacaoList;
+        }
 
-        List<Transacao> transacoesPendentes = new ArrayList<>();
+        List<Transacao> transacoesFiltradas = new ArrayList<>();
+
         for (Transacao transacao : transacaoList) {
-            if (transacao.getIdEstadoTransacao() == Constantes.estadosTransacao.PENDENTE)
-                transacoesPendentes.add(transacao);
+            boolean adicionar = false;
 
-        } return transacoesPendentes;
+            if (apenasPendentes && transacao.getIdEstadoTransacao() == Constantes.estadosTransacao.PENDENTE) {
+                adicionar = false;
+            }
+
+            if (idTipoTransacao != 0 && transacao.getIdTipoTransacao() == idTipoTransacao) {
+                adicionar = true;
+            }
+
+            if (idCliente != 0 && transacao.getIdCliente() == idCliente) {
+                adicionar = true;
+            }
+
+            if (adicionar) {
+                transacoesFiltradas.add(transacao);
+            }
+        }
+
+        return transacoesFiltradas;
     }
+
 
     public static Utilizador getUtilizador(int idCliente) {
         for (Utilizador utilizador : utilizadores) {
