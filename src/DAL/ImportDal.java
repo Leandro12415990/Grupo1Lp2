@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,8 +86,8 @@ public class ImportDal {
                 int idProduto = Integer.parseInt(dados[1]);
                 String descricao = dados[2];
                 int idTipoLeilao = Integer.parseInt(dados[3]);
-                LocalDate dataInicio = Tools.parseDate(dados[4]);
-                LocalDate dataFim = dados[5].isEmpty() ? null : Tools.parseDate(dados[5]);
+                LocalDateTime dataInicio = Tools.parseDateTimeByDate(dados[4]);
+                LocalDateTime dataFim = dados[5].isEmpty() ? null : Tools.parseDateTimeByDate(dados[5]);
                 Double valorMinimo = Double.parseDouble(dados[6]);
                 Double valorMaximo = dados[7].isEmpty() ? null : Double.parseDouble(dados[7]);
                 Double multiploLance = (dados.length > 8 && !dados[8].isEmpty()) ? Double.parseDouble(dados[8]) : null;
@@ -150,8 +149,8 @@ public class ImportDal {
             bw.newLine();
 
             for (Leilao leilao : leiloes) {
-                String dataInicio = Tools.formatDate(leilao.getDataInicio());
-                String dataFim = Tools.formatDate(leilao.getDataFim());
+                String dataInicio = Tools.formatDateTime(leilao.getDataInicio());
+                String dataFim = Tools.formatDateTime(leilao.getDataFim());
                 String valorMaximo = leilao.getValorMaximo() != null ? leilao.getValorMaximo().toString() : "";
                 String multiploLance = leilao.getMultiploLance() != null ? leilao.getMultiploLance().toString() : "";
 
