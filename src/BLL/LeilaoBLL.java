@@ -1,8 +1,10 @@
 package BLL;
 
+import Model.Lance;
 import Model.Leilao;
 import DAL.ImportDal;
 import Utils.Constantes;
+import View.LanceView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -102,5 +104,29 @@ public class LeilaoBLL {
             return Constantes.estadosLeilao.PENDENTE;
         } else return idEstado;
     }
+
+    public static void alterarEstadoLeilao(int idLeilao, int idEstado){
+        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
+        for (Leilao leilao : leiloes) {
+            if (leilao.getId() == idLeilao) {
+                leilao.setEstado(idEstado);
+            }
+        }
+        ImportDal.gravarLeilao(leiloes);
+    }
+
+    public static void colocarDataFimLeilao(int idLeilao, LocalDate dataFim){
+        List<Leilao> leilaos = LeilaoBLL.carregarLeiloes();
+        for (Leilao leilao : leilaos){
+            if (leilao.getId() == idLeilao){
+                leilao.setDataFim(dataFim);
+            }
+        }
+        ImportDal.gravarLeilao(leilaos);
+    }
+
+
+
+
 
 }

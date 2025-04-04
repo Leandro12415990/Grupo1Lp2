@@ -1,5 +1,6 @@
 package View;
 
+import BLL.LeilaoBLL;
 import Controller.ProdutoController;
 import Model.Leilao;
 import Model.ResultadoOperacao;
@@ -20,6 +21,7 @@ public class LeilaoView {
             System.out.println("3. Consultar Leilão");
             System.out.println("4. Eliminar Leilão");
             System.out.println("5. Listar Leilão");
+            System.out.println("6. Fechar Leilão");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
             opc = Tools.scanner.nextInt();
@@ -38,6 +40,9 @@ public class LeilaoView {
                     break;
                 case 5:
                     listaLeiloes(false);
+                    break;
+                case 6:
+                    fecharLeilaoManual();
                     break;
                 case 0:
                     System.out.println("\nSair...");
@@ -473,6 +478,29 @@ public class LeilaoView {
 
     private static String nomeProduto(int idProduto) {
         return ProdutoController.getNomeProdutoById(idProduto);
+    }
+
+    public static void fecharLeilaoManual() {
+        System.out.print("\nInsira o ID do leilão que deseja fechar: ");
+        int idLeilao = Tools.scanner.nextInt();
+
+        System.out.println("Tem certeza que deseja fechar o leilão? (S/N)");
+        char confirmacao = Character.toUpperCase(Tools.scanner.next().charAt(0));
+        if (confirmacao != 'S') {
+            System.out.println("❌ Operação cancelada.");
+            return;
+        }
+
+        int idEstadoFechado = Constantes.estadosLeilao.FECHADO;
+        LocalDate dataFim = LocalDate.now();
+
+        boolean sucesso = LeilaoController.fecharLeilao(idLeilao, idEstadoFechado, dataFim);
+
+        if (sucesso) {
+            System.out.println("✅ Leilão fechado com sucesso!");
+        } else {
+            System.out.println("❌ Leilão não encontrado!");
+        }
     }
 
 }

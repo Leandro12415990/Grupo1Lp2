@@ -1,5 +1,6 @@
 package View;
 
+import BLL.LeilaoBLL;
 import Controller.LanceController;
 import Controller.LeilaoController;
 import Model.Lance;
@@ -9,6 +10,7 @@ import Utils.Constantes;
 import Utils.Tools;
 
 import javax.tools.Tool;
+import java.time.LocalDate;
 import java.util.List;
 
 import static BLL.LeilaoBLL.listarLeiloes;
@@ -57,36 +59,39 @@ public class LanceView {
     }
 
     public static void lanceDireto() {
+        ResultadoOperacao resultado;
         System.out.println("\n===== LEILÕES VENDA DIRETA =====");
 
         List<Leilao> leiloesAtivos = listarLeiloes(true);
         List<Leilao> leiloesLanceDireto = LanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
         if (!leiloesLanceDireto.isEmpty()) {
             for (Leilao leilao : leiloesLanceDireto) {
-                System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getIdProduto() + " | Valor mínimo: " + leilao.getValorMinimo());
+                System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getIdProduto() + " | Valor Lance: " + leilao.getValorMinimo());
             }
 
             System.out.print("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
             int idLeilao = Tools.scanner.nextInt();
             if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
             boolean verificarID = LanceController.verificarDisponibilidadeLeilao(leiloesLanceDireto, idLeilao);
-
+            Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
             if (verificarID) {
-                System.out.print("Insira o valor do lance " + Tools.alertaCancelar());
-                double valorLance = Tools.scanner.nextDouble();
-                if (Tools.verificarSaida(String.valueOf(valorLance))) return;
-
-                if (valorLance <= LeilaoController.procurarLeilaoPorId(idLeilao).getValorMinimo()) {
-                    System.out.println("❌ Erro: O valor do lance deve ser igual ao valor mínimo do leilão (" + LeilaoController.procurarLeilaoPorId(idLeilao).getValorMinimo() + ").");
-                }
-
-                ResultadoOperacao resultado = LanceController.adicionarLanceDireto(idLeilao, valorLance);
-
-                if (resultado.Sucesso) {
-                    System.out.println("✅ aceite");
+                System.out.print("Tem a certeza que quer dar um Lance? (S/N)" + Tools.alertaCancelar());
+                char opc = Character.toUpperCase(Tools.scanner.next().charAt(0));
+                if (Tools.verificarSaida(String.valueOf(opc))) return;
+                if (opc == 'S') {
+                    Double valorLance = leilao.getValorMinimo();
+                    resultado = LanceController.adicionarLanceDireto(idLeilao, valorLance);
+                    if (resultado.Sucesso) {
+                        System.out.println("✅ aceite");
+                    } else {
+                        System.out.println("❌ " + resultado.msgErro);
+                    }
+                }else if (opc == 'N'){
+                    return;
                 } else {
-                    System.out.println("❌ " + resultado.msgErro);
+                    System.out.println("Opção inválida!");
                 }
+
             } else {
                 System.out.printf("Leilão não disponível!");
             }
@@ -208,4 +213,5 @@ public class LanceView {
             }
         }
     }
+
 }
