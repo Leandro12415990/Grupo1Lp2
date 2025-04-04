@@ -1,21 +1,22 @@
 package Model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Leilao {
     private int id;
     private int idProduto;
     private String descricao;
     private int idTipoLeilao;
-    private LocalDate dataInicio;
-    private LocalDate dataFim;
+    private LocalDateTime dataInicio;
+    private LocalDateTime dataFim;
     private Double valorMinimo;
     private Double valorMaximo;
     private Double multiploLance;
     private int idEstado;
 
-    public Leilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio,
-                  LocalDate dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, int idEstado) {
+    public Leilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio,
+                  LocalDateTime dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, int idEstado) {
         this.id = id;
         this.idProduto = idProduto;
         this.descricao = descricao;
@@ -60,19 +61,19 @@ public class Leilao {
         this.idTipoLeilao = idTipoLeilao;
     }
 
-    public LocalDate getDataInicio() {
+    public LocalDateTime getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(LocalDate dataInicio) {
+    public void setDataInicio(LocalDateTime dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public LocalDate getDataFim() {
+    public LocalDateTime getDataFim() {
         return dataFim;
     }
 
-    public void setDataFim(LocalDate dataFim) {
+    public void setDataFim(LocalDateTime dataFim) {
         this.dataFim = dataFim;
     }
 

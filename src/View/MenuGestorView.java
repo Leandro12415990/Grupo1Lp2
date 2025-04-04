@@ -17,7 +17,7 @@ public class MenuGestorView {
             System.out.print("Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
                     ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo());
@@ -36,7 +36,6 @@ public class MenuGestorView {
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");
-                    scanner.close();
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");
