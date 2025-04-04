@@ -27,21 +27,15 @@ public class TransacaoBLL {
     private static int verificarUltimoIdCarteira(List<Transacao> transacaoList) {
         int ultimoId = 0;
         for (Transacao transacao : transacaoList) {
-            if (transacao.getIdTransacao() > ultimoId) {
-                ultimoId = transacao.getIdTransacao();
-            }
+            if (transacao.getIdTransacao() > ultimoId) ultimoId = transacao.getIdTransacao();
         } return ultimoId;
     }
 
     public static Double buscarValorTotalAtual(int IdCliente) {
         List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
-
         for (Utilizador utilizador : utilizadores) {
-            if (utilizador.getId() == IdCliente) {
-                return utilizador.getSaldo();
-            }
-        }
-        return 0.0;
+            if (utilizador.getId() == IdCliente) return utilizador.getSaldo();
+        } return 0.0;
     }
 
     public static void atualizarSaldo(int idCliente, double creditos) {
@@ -60,7 +54,7 @@ public class TransacaoBLL {
         double valorTotalPendente = 0;
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdCliente() == idCliente && transacao.getIdTipoTransacao() == Constantes.tiposTransacao.DEPOSITO) {
-                if(transacao.getIdEstadoTransacao() == Constantes.estadosTransacao.PENDENTE)
+                if (transacao.getIdEstadoTransacao() == Constantes.estadosTransacao.PENDENTE)
                     valorTotalPendente += transacao.getValorTransacao();
             }
         } return valorTotalPendente;
@@ -68,59 +62,41 @@ public class TransacaoBLL {
 
     public static List<Transacao> listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
         carregarTransacao();
-        if (!apenasPendentes && idTipoTransacao == 0 && idCliente == 0) {
-            return transacaoList;
-        }
-
+        if (!apenasPendentes && idTipoTransacao == 0 && idCliente == 0) return transacaoList;
         List<Transacao> transacoesFiltradas = new ArrayList<>();
 
         for (Transacao transacao : transacaoList) {
             boolean adicionar = true;
 
-            if (apenasPendentes && transacao.getIdEstadoTransacao() != Constantes.estadosTransacao.PENDENTE) {
+            if (apenasPendentes && transacao.getIdEstadoTransacao() != Constantes.estadosTransacao.PENDENTE)
                 adicionar = false;
-            }
 
-            if (idTipoTransacao != 0 && transacao.getIdTipoTransacao() != idTipoTransacao) {
+            if (idTipoTransacao != 0 && transacao.getIdTipoTransacao() != idTipoTransacao)
                 adicionar = false;
-            }
 
-            if (idCliente != 0 && transacao.getIdCliente() != idCliente) {
+            if (idCliente != 0 && transacao.getIdCliente() != idCliente)
                 adicionar = false;
-            }
 
-            if (adicionar) {
+            if (adicionar)
                 transacoesFiltradas.add(transacao);
-            }
-        }
-
-        return transacoesFiltradas;
+        } return transacoesFiltradas;
     }
-
 
     public static Utilizador getUtilizador(int idCliente) {
         for (Utilizador utilizador : utilizadores) {
-            if (utilizador.getId() == idCliente) {
-                return utilizador;
-            }
-        }
-        return null;
+            if (utilizador.getId() == idCliente) return utilizador;
+        } return null;
     }
 
     public static Transacao buscarTransacao(int idTransacao) {
         for (Transacao transacao : transacaoList) {
-            if (transacao.getIdTransacao() == idTransacao) {
-                return transacao;
-            }
-        }
-        return null;
+            if (transacao.getIdTransacao() == idTransacao) return transacao;
+        } return null;
     }
 
     public static void atualizarEstadosTransacao(int idTransacao, int idEstado) {
         for (Transacao transacao : transacaoList) {
-            if (transacao.getIdTransacao() == idTransacao) {
-                transacao.setIdEstadoTransacao(idEstado);
-            }
+            if (transacao.getIdTransacao() == idTransacao) transacao.setIdEstadoTransacao(idEstado);
         }
         ImportDal.gravarTransacao(transacaoList);
     }

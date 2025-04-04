@@ -21,28 +21,23 @@ public class TransacaoController {
 
             resultado.Objeto = resultado;
             resultado.Sucesso = true;
-        }
-        return resultado;
+        } return resultado;
     }
 
     public static Double buscarValorTotalAtual(int idCliente) {
-        if (idCliente > 0) {
-            return TransacaoBLL.buscarValorTotalAtual(idCliente);
-        }
+        if (idCliente > 0) return TransacaoBLL.buscarValorTotalAtual(idCliente);
         return 0.0;
     }
 
     public static Double valorPendente(int idCliente) {
-        if (idCliente > 0) {
-            return TransacaoBLL.valorPendente(idCliente);
-        }
+        if (idCliente > 0) return TransacaoBLL.valorPendente(idCliente);
         return 0.0;
     }
 
     public static void listarDepositos(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
         List<Transacao> transacaoList = TransacaoBLL.listarTransacoes(apenasPendentes, idTipoTransacao, idCliente);
         if (idCliente != 0) TransacaoView.exibirTransacoes(transacaoList, true);
-            else TransacaoView.exibirTransacoes(transacaoList, false);
+        else TransacaoView.exibirTransacoes(transacaoList, false);
     }
 
     public static Utilizador getUtilizador(int idCliente) {
@@ -56,10 +51,8 @@ public class TransacaoController {
             if (idTransacao == transacao.getIdTransacao()) {
                 resultado.Objeto = transacao;
                 resultado.Sucesso = true;
-            } else
-                resultado.msgErro = "O deposito selecionado não está pendente.";
+            } else resultado.msgErro = "O deposito selecionado não está pendente.";
         }
-
         return resultado;
     }
 

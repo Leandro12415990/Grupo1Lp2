@@ -24,19 +24,15 @@ public class TransacaoView {
             opc = Tools.scanner.nextInt();
             switch (opc) {
                 case 1:
-                    //System.out.println("Funcionalidade em desenvolvimento");
                     adicionarCreditos();
                     break;
                 case 2:
-                    //System.out.println("Funcionalidade em desenvolvimento");
                     verDepositos(idCliente);
                     break;
                 case 3:
-                    //System.out.println("Funcionalidade em desenvolvimento");
                     verCarteira(idCliente);
                     break;
                 case 4:
-                    //System.out.println("Funcionalidade em desenvolvimento");
                     verTransacoes(idCliente);
                     break;
                 case 0:
