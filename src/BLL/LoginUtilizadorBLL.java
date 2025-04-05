@@ -7,7 +7,7 @@ import Utils.Tools;
 import java.time.LocalDate;
 
 public class LoginUtilizadorBLL {
-    public static int login(String email, String password)
+    public static Utilizador login(String email, String password)
     {
         for (Utilizador u : Tools.utilizadores)
         {
@@ -15,11 +15,10 @@ public class LoginUtilizadorBLL {
             {
                 u.setUltimoLogin(LocalDate.now());
                 ImportDal.gravarUtilizador(Tools.utilizadores);
-                if (u.getTipoUtilizador() == 1) return 1;
-                else if (u.getTipoUtilizador() == 2) return 2;
+                if (u.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo() || u.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) return u;
             }
         }
-        return 0;
+        return null;
     }
 
     public static boolean lerDados()
