@@ -35,6 +35,8 @@ public class Constantes {
     // Secção: Tipos Transacoes
     public static class tiposTransacao {
         public static final int DEPOSITO = 1;
-        public static final int LANCE = 2;
+        public static final int LANCE_DEBITO = 2;
+        public static final int LANCE_DEPOSITO = 3;
+        public static final int LANCE_REEMBOLSO = 4;
     }
 }

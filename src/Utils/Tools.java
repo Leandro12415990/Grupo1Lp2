@@ -176,7 +176,10 @@ public class Tools {
     }
 
     public enum tipoTransacao {
-        DEPOSITO(1), LANCE(2);
+        DEPOSITO(1),
+        LANCE_DEBITO(2),
+        LANCE_DEPOSITO(3),
+        LANCE_REEMBOLSO(4);
 
         private final int idTipoTransacao;
 
