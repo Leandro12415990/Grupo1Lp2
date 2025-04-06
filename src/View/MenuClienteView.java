@@ -8,7 +8,7 @@ public class MenuClienteView {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));
             System.out.println("1. Editar Ficha de Cliente");
             System.out.println("2. Carteira");
-            System.out.println("2. Menu Lances");
+            System.out.println("3. Menu Lances");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
 

@@ -1,39 +1,43 @@
 package View;
 
-import BLL.TransacaoBLL;
+import Model.Transacao;
+import Model.ResultadoOperacao;
+import Model.ClienteSessao;
+import Model.Utilizador;
 import Controller.TransacaoController;
-import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
 
 import java.util.List;
 
 public class TransacaoView {
-    private static int idCliente = ClienteSessao.getIdCliente();
+    private static final int idCliente = ClienteSessao.getIdCliente();
 
     public static void exibirMenuTransacao() {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(8) + " CARTEIRA " + "=".repeat(8));
             System.out.println("1. Adicionar Créditos");
-            System.out.println("2. Ver Depósitos");
-            System.out.println("3. Ver Carteira");
-            System.out.println("4. Ver Transações");
+            System.out.println("2. Ver Saldo");
+            System.out.println("3. Ver Depósitos");
+            System.out.println("4. Ver Movimentos");
             System.out.println("0. Voltar ao menu principal...");
-            System.out.print("Escolha uma opção: ");
+            System.out.print("Escolha uma opção " + Tools.alertaCancelar());
             opc = Tools.scanner.nextInt();
+            if (Tools.verificarSaida(String.valueOf(opc))) return;
+
             switch (opc) {
                 case 1:
                     adicionarCreditos();
                     break;
                 case 2:
-                    verDepositos(idCliente);
-                    break;
-                case 3:
                     verCarteira(idCliente);
                     break;
+                case 3:
+                    verDepositos(idCliente);
+                    break;
                 case 4:
-                    verTransacoes(idCliente);
+                    verMovimentos(idCliente);
                     break;
                 case 0:
                     System.out.println("\nVoltando ao menu anterior...");
@@ -47,18 +51,15 @@ public class TransacaoView {
     private static void adicionarCreditos() {
         System.out.println("\nADICIONAR CRÉDITOS");
 
-        Double saldoAtual = buscarValorTotalAtual(idCliente);
-        Double saldoPendente = valorPendente(idCliente);
-        System.out.println("Saldo atual: " + saldoAtual + "€");
-        System.out.println("Saldo pendente de aprovação: " + saldoPendente + "€");
+        verCarteira(idCliente);
+        double saldoAtual =  buscarValorTotalAtual(idCliente);
 
-        System.out.print("Insira a quantidade de créditos que pretende depositar " + Tools.alertaCancelar());
+        System.out.print("\nInsira a quantidade de créditos que pretende depositar " + Tools.alertaCancelar());
         Double creditos = Tools.scanner.nextDouble();
         if (Tools.verificarSaida(String.valueOf(creditos))) return;
 
         ResultadoOperacao resultado = TransacaoController.criarTransacao(idCliente, saldoAtual, creditos);
-        if (resultado.Sucesso)
-            System.out.println("Os créditos serão adicionados à sua conta quando o gestor aprovar o depósito!");
+        if (resultado.Sucesso) System.out.println("\n⚠ Os créditos serão adicionados à sua conta aquando da aprovação do gestor!");
         else System.out.println(resultado.msgErro);
     }
 
@@ -86,37 +87,30 @@ public class TransacaoView {
         }
 
         int idDeposito = Tools.scanner.nextInt();
+        Tools.scanner.nextLine();
         if (Tools.verificarSaida(String.valueOf(idDeposito))) return;
 
         ResultadoOperacao resultado = TransacaoController.verificarTransacao(idDeposito);
         if (resultado.Sucesso) {
             Transacao deposito = TransacaoController.buscarTransacao(idDeposito);
             while (true) {
-                System.out.println("Pretende aprovar ou negar? ");
-                System.out.println("1. Aprovar");
-                System.out.println("2. Negar");
-                System.out.print("Escolha a opção " + Tools.alertaCancelar());
-                if (!Tools.scanner.hasNextInt()) {
-                    System.out.println("Entrada inválida. Por favor, insira um número.");
-                    Tools.scanner.next();
-                    continue;
-                }
+                System.out.printf("Pretende aprovar(A) ou negar(N)? " + Tools.alertaCancelar());
+                String input = Tools.scanner.nextLine().trim();
+                if (Tools.verificarSaida(input)) return;
+                char opc = Character.toUpperCase(input.charAt(0));
 
-                int opc = Tools.scanner.nextInt();
-                if (Tools.verificarSaida(String.valueOf(opc))) return;
                 switch (opc) {
-                    case 1:
-                        System.out.println("Aprovado!");
+                    case 'A':
+                        System.out.println("O depósito " + deposito.getIdTransacao() + " foi aprovado com sucesso!");
                         TransacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao());
                         TransacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.ACEITE);
                         return;
-                    case 2:
-                        System.out.println("Negado!");
+                    case 'N':
+                        System.out.println("O depósito " + deposito.getIdTransacao() + " foi negado!");
                         TransacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.NEGADO);
                         return;
                     default:
                         System.out.println("Opção inválida. Tente novamente...");
-                        return;
                 }
             }
         } else System.out.println(resultado.msgErro);
@@ -124,33 +118,35 @@ public class TransacaoView {
 
     public static void exibirTransacoes(List<Transacao> transacaoList, boolean vistaCliente) {
         if (!vistaCliente) {
-            System.out.printf("%-12s %-30s %-30s %-25s %-30s %-30s %-30s\n",
+            System.out.println("\n" + "=".repeat(5) + " DEPÓSITOS PENDENTES " + "=".repeat(5));
+            System.out.printf("%-18s %-45s %-25s %-25s %-25s %-18s %-30s\n",
                     "IdTransação", "Cliente", "Valor Total Conta", "Valor Depósito", "Data Depósito", "TipoTransação", "Estado");
-            System.out.println("-".repeat(145));
+            System.out.println("-".repeat(172));
             for (Transacao transacao : transacaoList) {
                 String estadoStr = Tools.estadoDeposito.fromCodigo(transacao.getIdEstadoTransacao()).name();
                 String tipoStr = Tools.tipoTransacao.fromCodigo(transacao.getIdTipoTransacao()).name();
                 String cliente = (getUtilizador(transacao.getIdCliente()).getNomeUtilizador()) + " (" + getUtilizador(transacao.getIdCliente()).getEmail() + ")";
-                System.out.printf("%-12s %-30s %-30s %-25s %-30s %-30s %-30s\n",
+
+                System.out.printf("%-18s %-45s %-25s %-25s %-25s %-18s %-30s\n",
                         transacao.getIdTransacao(),
                         cliente,
-                        transacao.getValorTotal(),
-                        transacao.getValorTransacao(),
+                        transacao.getValorTotal() + "€",
+                        transacao.getValorTransacao() + "€",
                         transacao.getDataTransacao() != null ? Tools.DATA_HORA.format(transacao.getDataTransacao()) : "N/A",
                         tipoStr,
                         estadoStr);
             }
         } else {
-            System.out.printf("%-18s %-30s %-25s %-30s %-30s %-30s\n",
+            System.out.printf("%-18s %-25s %-20s %-30s %-20s %-30s\n",
                     "IdTransação", "Valor Total Conta", "Valor Depósito", "Data Depósito", "TipoTransação", "Estado");
-            System.out.println("-".repeat(145));
+            System.out.println("-".repeat(130));
             for (Transacao transacao : transacaoList) {
                 String estadoStr = Tools.estadoDeposito.fromCodigo(transacao.getIdEstadoTransacao()).name();
                 String tipoStr = Tools.tipoTransacao.fromCodigo(transacao.getIdTipoTransacao()).name();
-                System.out.printf("%-18s %-30s %-25s %-30s %-30s %-30s\n",
+                System.out.printf("%-18s %-25s %-20s %-30s %-20s %-30s\n",
                         transacao.getIdTransacao(),
-                        transacao.getValorTotal(),
-                        transacao.getValorTransacao(),
+                        transacao.getValorTotal() + "€",
+                        transacao.getValorTransacao() + "€",
                         transacao.getDataTransacao() != null ? Tools.DATA_HORA.format(transacao.getDataTransacao()) : "N/A",
                         tipoStr,
                         estadoStr);
@@ -163,16 +159,19 @@ public class TransacaoView {
     }
 
     public static void verDepositos(int idCliente) {
+        System.out.println("\n" + "=".repeat(5) + " DEPÓSITOS " + "=".repeat(5));
         listarTransacoes(false, Constantes.tiposTransacao.DEPOSITO, idCliente);
     }
 
-    public static void verTransacoes(int idCliente) {
+    public static void verMovimentos(int idCliente) {
+        System.out.println("\n" + "=".repeat(5) + " MOVIMENTOS " + "=".repeat(5));
         listarTransacoes(false, 0, idCliente);
     }
 
     public static void verCarteira(int idCliente) {
         Double saldoAtual = buscarValorTotalAtual(idCliente);
         Double saldoPendente = valorPendente(idCliente);
+        System.out.println("\n" + "=".repeat(5) + " SALDO " + "=".repeat(5));
         System.out.println("Saldo atual: " + saldoAtual + "€");
         System.out.println("Saldo pendente de aprovação: " + saldoPendente + "€");
     }
