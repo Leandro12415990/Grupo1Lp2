@@ -18,21 +18,28 @@ public class ImportBLL {
         return ImportDal.carregarUtilizador();
     }
 
-    public static void listarUtilizador(int estado) {
+    public static void listarUtilizador(int estado, int tipo) {
         List<Utilizador> utilizadors = obterTodosUtilizadores();
         if (estado == Tools.estadoUtilizador.getDefault().getCodigo()) {
             for (Utilizador utilizador : utilizadors) {
-                System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
+                if(tipo != 0 && utilizador.getTipoUtilizador() == tipo) System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Email: " + utilizador.getEmail() + " - Estado: " + utilizador.getEstado());
+                else System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Email: " + utilizador.getEmail() + " - Estado: " + utilizador.getEstado());
             }
         }
         else if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
             for (Utilizador utilizador : utilizadors) {
-                if (utilizador.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo()) System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
+                if (utilizador.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo() && (tipo != 0 && utilizador.getTipoUtilizador() == tipo))
+                    System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Email: " + utilizador.getEmail() + " - Estado: " + utilizador.getEstado());
+                else if (utilizador.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo())
+                    System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Email: " + utilizador.getEmail() + " - Estado: " + utilizador.getEstado());
             }
         }
         else if (estado == Tools.estadoUtilizador.PENDENTE.getCodigo()) {
             for (Utilizador utilizador : utilizadors) {
-                if (utilizador.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo()) System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Estado: " + utilizador.getEstado());
+                if (utilizador.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo() && (tipo != 0 && utilizador.getTipoUtilizador() == tipo))
+                    System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Email: " + utilizador.getEmail() + " - Estado: " + utilizador.getEstado());
+                else if (utilizador.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo())
+                    System.out.println("ID: " + utilizador.getId() + " - Nome: " + utilizador.getNomeUtilizador() + " - Email: " + utilizador.getEmail() + " - Estado: " + utilizador.getEstado());
             }
         }
     }

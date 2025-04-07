@@ -15,7 +15,7 @@ public class MenuClienteView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    System.out.println("Funcionalidade em desenvolvimento...");
+
                     break;
                 case 2:
                     LanceView.exibirMenuLance();
