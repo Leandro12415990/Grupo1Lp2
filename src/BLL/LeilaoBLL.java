@@ -5,6 +5,7 @@ import DAL.ImportDal;
 import Utils.Constantes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class LeilaoBLL {
         ImportDal.gravarLeilao(leiloes);
     }
 
-    public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
+    public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
         Leilao leilao = procurarLeilaoPorId(id);
         if (leilao != null) {
             leilao.setIdProduto(idProduto);
@@ -86,17 +87,17 @@ public class LeilaoBLL {
         return false;
     }
 
-    public static int determinarEstadoLeilaoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
+    public static int determinarEstadoLeilaoByDatas(LocalDateTime dataInicio, LocalDateTime dataFim, int idEstado) {
         if (idEstado != Constantes.estadosLeilao.INATIVO || idEstado != Constantes.estadosLeilao.CANCELADO) {
             if (dataFim != null) {
-                if (dataFim.isBefore(LocalDate.now())) {
+                if (dataFim.isBefore(LocalDateTime.now())) {
                     return Constantes.estadosLeilao.FECHADO;
                 }
             }
-            if (dataInicio.isBefore(LocalDate.now()) || dataInicio.equals(LocalDate.now())) {
+            if (dataInicio.isBefore(LocalDateTime.now()) || dataInicio.equals(LocalDateTime.now())) {
                 return Constantes.estadosLeilao.ATIVO;
             }
-            if (dataInicio.isAfter(LocalDate.now())) {
+            if (dataInicio.isAfter(LocalDateTime.now())) {
                 return Constantes.estadosLeilao.PENDENTE;
             }
             return Constantes.estadosLeilao.PENDENTE;
