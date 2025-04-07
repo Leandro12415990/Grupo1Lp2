@@ -2,17 +2,19 @@ package Controller;
 
 import BLL.ProdutoBLL;
 import Model.Leilao;
+import Model.Produto;
 import Model.ResultadoOperacao;
 import BLL.LeilaoBLL;
 import Utils.Constantes;
 import View.LeilaoView;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class LeilaoController {
 
-    public static ResultadoOperacao criarLeiloes(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, Double valorMax, Double multiploLance, int idEstado) {
+    public static ResultadoOperacao criarLeiloes(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, Double valorMax, Double multiploLance, int idEstado) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (descricao == null || descricao.isEmpty()) {
             resultado.msgErro = "A descrição não pode ser nula.";
@@ -60,14 +62,14 @@ public class LeilaoController {
         return false;
     }
 
-    public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDate dataInicio, LocalDate dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
+    public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
             return LeilaoBLL.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
     }
 
     public static ResultadoOperacao verificarDisponibilidadeProduto(int idProduto) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        Leilao leilao = procurarLeilaoPorId(idProduto);
-        if (leilao == null) {
+        Produto produto = ProdutoBLL.procurarProduto(idProduto);
+        if (produto == null) {
             resultado.msgErro = "O Produto que introduziu não existe no sistema.";
         } else {
             boolean isAvailable = ProdutoBLL.verificarDisponibilidadeProduto(idProduto);
@@ -92,7 +94,7 @@ public class LeilaoController {
         return resultado;
     }
 
-    public static int determinarEstadoLeilaoByDatas(LocalDate dataInicio, LocalDate dataFim, int idEstado) {
+    public static int determinarEstadoLeilaoByDatas(LocalDateTime dataInicio, LocalDateTime dataFim, int idEstado) {
         return LeilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
     }
 }
