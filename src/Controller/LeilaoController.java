@@ -98,11 +98,10 @@ public class LeilaoController {
         return LeilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
     }
 
-    public static boolean fecharLeilao(int idLeilao, int idEstadoLeilao, LocalDate dataFim) {
+    public static boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) {
         Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
         if (leilao == null) return false;
 
-        LeilaoBLL.alterarEstadoLeilao(idLeilao, idEstadoLeilao);
         LeilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
         return true;
     }

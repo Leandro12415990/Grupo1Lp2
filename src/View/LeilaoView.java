@@ -8,8 +8,13 @@ import Utils.Constantes;
 import Utils.Tools;
 import Controller.LeilaoController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static BLL.LeilaoBLL.carregarLeiloes;
+import static BLL.LeilaoBLL.listarLeiloes;
 
 public class LeilaoView {
     public static void exibirMenuLeiloes() {
@@ -564,27 +569,60 @@ public class LeilaoView {
     }
 
     public static void fecharLeilaoManual() {
-        System.out.print("\nInsira o ID do leilão que deseja fechar: ");
-        int idLeilao = Tools.scanner.nextInt();
+        System.out.println("\n===== LEILÕES ATIVOS =====");
 
-        System.out.println("Tem certeza que deseja fechar o leilão? (S/N)");
-        char confirmacao = Character.toUpperCase(Tools.scanner.next().charAt(0));
-        if (confirmacao != 'S') {
-            System.out.println("❌ Operação cancelada.");
-            return;
+        listaLeiloes(true);
+        System.out.print("\nInsira o ID do leilão que deseja fechar: " + Tools.alertaCancelar());
+        int idLeilao = Tools.scanner.nextInt();
+        Tools.scanner.nextLine();
+        if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
+
+        LocalDateTime dataFim = LocalDateTime.now();
+
+        System.out.print("Tem certeza que quer fechar o leilão? (S/N) " + Tools.alertaCancelar());
+        String imput1 = Tools.scanner.nextLine().trim();
+        if (Tools.verificarSaida(imput1)) return;
+        char confirmacao = Character.toUpperCase(imput1.charAt(0));
+
+        if (confirmacao != 'S') return;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        System.out.print("Quer usar a data de agora (" + dataFim.format(formatter) + ")? (S/N) " + Tools.alertaCancelar());
+        String imput2 = Tools.scanner.nextLine().trim();
+        if (Tools.verificarSaida(imput2)) return;
+        char confirmacaoData = Character.toUpperCase(imput2.charAt(0));
+
+        Tools.scanner.nextLine();
+
+        if (confirmacaoData != 'S') {
+            System.out.println("Insira a data que quer fechar o leilão (formato dd/MM/yyyy): " + Tools.alertaCancelar());
+            String dataFimManual = Tools.scanner.nextLine().trim();
+
+            if (Tools.verificarSaida(dataFimManual)) return;
+
+            if (!dataFimManual.isEmpty()) {
+                dataFim = Tools.parseDateTimeByDate(dataFimManual);
+                if (dataFim != null) {
+                    dataFim = dataFim.withHour(0).withMinute(0).withSecond(0).withNano(0);
+                } else {
+                    System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
+                    return;
+                }
+            } else {
+                System.out.println("Data não pode ser vazia.");
+                return;
+            }
         }
 
-        int idEstadoFechado = Constantes.estadosLeilao.FECHADO;
-        LocalDate dataFim = LocalDate.now();
-
-        boolean sucesso = LeilaoController.fecharLeilao(idLeilao, idEstadoFechado, dataFim);
+        boolean sucesso = LeilaoController.fecharLeilao(idLeilao, dataFim);
 
         if (sucesso) {
-            System.out.println("✅ Leilão fechado com sucesso!");
+            System.out.println("Leilão fechado com sucesso!");
         } else {
-            System.out.println("❌ Leilão não encontrado!");
+            System.out.println("Leilão não encontrado!");
         }
     }
+
 
 
 }

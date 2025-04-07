@@ -1,16 +1,10 @@
 package BLL;
 
-import Controller.LanceController;
-import Controller.LeilaoController;
 import DAL.ImportDal;
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
-import Utils.Constantes;
-import Utils.Tools;
-import View.LanceView;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,15 +35,13 @@ public class LanceBLL {
         ImportDal.gravarLance(lances);
 
         if (valorLance == leilao.getValorMinimo()) {
-            fimLeilao(idLeilao, Constantes.estadosLeilao.FECHADO, dataLance.toLocalDate());
+            fimLeilao(idLeilao, dataLance);
         }
 
         resultado.Sucesso = true;
         resultado.Objeto = resultado;
         return resultado;
     }
-
-
 
     public static ResultadoOperacao adicionarLanceCartaFechada(int idLance, int idLeilao, double valorLance, int idCliente) {
         ResultadoOperacao resultado = new ResultadoOperacao();
@@ -127,9 +119,8 @@ public class LanceBLL {
                 .collect(Collectors.toList());
     }
 
-    public static void fimLeilao(int idLeilao, int idEstado, LocalDate dataFim){
+    public static void fimLeilao(int idLeilao, LocalDateTime dataFim){
 
-        LeilaoBLL.alterarEstadoLeilao(idLeilao, idEstado);
         LeilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
     }
 

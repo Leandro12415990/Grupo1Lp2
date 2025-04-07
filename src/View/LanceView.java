@@ -56,6 +56,7 @@ public class LanceView {
                     System.out.println("Opção inválida. Tente novamente...");
             }
         } while (opc != 0);
+
     }
 
     public static void lanceDireto() {
@@ -71,20 +72,23 @@ public class LanceView {
 
             System.out.print("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
             int idLeilao = Tools.scanner.nextInt();
+            Tools.scanner.nextLine();
             if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
             boolean verificarID = LanceController.verificarDisponibilidadeLeilao(leiloesLanceDireto, idLeilao);
             Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
+
             if (verificarID) {
                 System.out.print("Tem a certeza que quer dar um Lance? (S/N)" + Tools.alertaCancelar());
-                char opc = Character.toUpperCase(Tools.scanner.next().charAt(0));
-                if (Tools.verificarSaida(String.valueOf(opc))) return;
+                String imput1 = Tools.scanner.nextLine().trim();
+                if (Tools.verificarSaida(imput1)) return;
+                char opc = Character.toUpperCase(imput1.charAt(0));
                 if (opc == 'S') {
                     Double valorLance = leilao.getValorMinimo();
                     resultado = LanceController.adicionarLanceDireto(idLeilao, valorLance);
                     if (resultado.Sucesso) {
-                        System.out.println("✅ aceite");
+                        System.out.println("PARABÉNS! É O VENCEDOR!");
                     } else {
-                        System.out.println("❌ " + resultado.msgErro);
+                        System.out.println("Créditos Insuficientes " + resultado.msgErro);
                     }
                 }else if (opc == 'N'){
                     return;
@@ -142,7 +146,7 @@ public class LanceView {
         List<Leilao> leilaoEletronico = LanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.ELETRONICO);
         if (!leilaoEletronico.isEmpty()) {
             for (Leilao leilao : leilaoEletronico) {
-                System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getIdProduto());
+                System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getIdProduto() + " | " + "Valor Lance: " + leilao.getMultiploLance());
             }
 
             System.out.print("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
@@ -160,9 +164,9 @@ public class LanceView {
                 ResultadoOperacao resultado = LanceController.adicionarLanceEletronico(idLeilao, numLance, multiploLance);
 
                 if (resultado.Sucesso) {
-                    System.out.println("✅ aceite");
+                    System.out.println("O seu Lance foi aceite");
                 } else {
-                    System.out.println("❌ " + resultado.msgErro);
+                    System.out.println("O lance não foi aceite " + resultado.msgErro);
                 }
             } else {
                 System.out.printf("Leilão não disponível!");
