@@ -31,7 +31,7 @@ public class Tools {
         return (dateTime != null) ? dateTime.format(DATA_HORA) : "";
     }
 
-    public static final DateTimeFormatter DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    public static final DateTimeFormatter DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     public static LocalDate parseDate(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) return null;
@@ -41,39 +41,6 @@ public class Tools {
             return null;
         }
     }
-
-    public static LocalDateTime parseDateTimeByDate(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) return null;
-
-        dateStr = dateStr.trim();
-        try {
-            return LocalDateTime.parse(dateStr, DATA_HORA);
-        } catch (DateTimeParseException e) {
-            try {
-                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
-            } catch (DateTimeParseException ex) {
-                return null;
-            }
-        }
-    }
-
-    public static LocalDateTime parseDateTime(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) return null;
-        try {
-            // Primeiro tenta o formato com data e hora
-            return LocalDateTime.parse(dateStr, DATA_HORA);
-        } catch (DateTimeParseException e) {
-            try {
-                // Se não for no formato com hora, tenta só a data
-                return LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
-            } catch (DateTimeParseException ex) {
-                return null;  // Se falhar em ambos, retorna null
-            }
-        }
-    }
-
-
-
 
     public static String formatDate(LocalDate date) {
         return (date != null) ? date.format(FORMATTER) : "";
@@ -200,6 +167,55 @@ public class Tools {
         }
     }
 
+    public enum estadoDeposito {
+        PENDENTE(1), ACEITE(2), NEGADO(3);
+
+        private final int idEstado;
+
+        estadoDeposito(int idEstado) {
+            this.idEstado = idEstado;
+        }
+
+        public int getIdEstado() {
+            return idEstado;
+        }
+
+        public static estadoDeposito fromCodigo(int idEstado) {
+            for (estadoDeposito estado : estadoDeposito.values()) {
+                if (estado.getIdEstado() == idEstado) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Estado inválido: " + idEstado);
+        }
+    }
+
+    public enum tipoTransacao {
+        DEPOSITO(1),
+        LANCE_DEBITO(2),
+        LANCE_DEPOSITO(3),
+        LANCE_REEMBOLSO(4);
+
+        private final int idTipoTransacao;
+
+        tipoTransacao(int idTipoTransacao) {
+            this.idTipoTransacao = idTipoTransacao;
+        }
+
+        public int getIdTipoTransacao() {
+            return idTipoTransacao;
+        }
+
+        public static tipoTransacao fromCodigo(int idTipoTransacao) {
+            for (tipoTransacao tipo : tipoTransacao.values()) {
+                if (tipo.getIdTipoTransacao() == idTipoTransacao) {
+                    return tipo;
+                }
+            }
+            throw new IllegalArgumentException("Tipo inválido: " + idTipoTransacao);
+        }
+    }
+
     public static boolean verificarSaida(String input) {
         if (input.trim().equals("-1") || input.trim().equals("-1.0")) {
             System.out.println("Operação cancelada. Voltando ao menu anterior...");
@@ -214,13 +230,40 @@ public class Tools {
 
     public static ResultadoOperacao verificarDatasAnteriores (LocalDateTime dataInicial, LocalDateTime dataFinal) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        if (dataFinal.isBefore(dataInicial)) {
-            resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
-        } else {
-            resultado.Objeto = resultado;
-            resultado.Sucesso = true;
+        if (dataFinal.isBefore(dataInicial)) resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
+            else {
+                resultado.Objeto = resultado;
+                resultado.Sucesso = true;
+            }
+            return resultado;
+    }
+
+    public static LocalDateTime parseDateTimeByDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+
+        dateStr = dateStr.trim();
+        try {
+            return LocalDateTime.parse(dateStr, DATA_HORA);
+        } catch (DateTimeParseException e) {
+            try {
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+            } catch (DateTimeParseException ex) {
+                return null;
+            }
         }
-        return resultado;
+    }
+
+    public static LocalDateTime parseDateTime(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        try {
+            return LocalDateTime.parse(dateStr, DATA_HORA);
+        } catch (DateTimeParseException e) {
+            try {
+                return LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+            } catch (DateTimeParseException ex) {
+                return null;
+            }
+        }
     }
 
     public static String formatarMinutosParaHorasEMinutos(double minutosTotal) {
