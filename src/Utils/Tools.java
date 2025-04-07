@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -40,6 +41,39 @@ public class Tools {
             return null;
         }
     }
+
+    public static LocalDateTime parseDateTimeByDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+
+        dateStr = dateStr.trim();
+        try {
+            return LocalDateTime.parse(dateStr, DATA_HORA);
+        } catch (DateTimeParseException e) {
+            try {
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+            } catch (DateTimeParseException ex) {
+                return null;
+            }
+        }
+    }
+
+    public static LocalDateTime parseDateTime(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        try {
+            // Primeiro tenta o formato com data e hora
+            return LocalDateTime.parse(dateStr, DATA_HORA);
+        } catch (DateTimeParseException e) {
+            try {
+                // Se não for no formato com hora, tenta só a data
+                return LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+            } catch (DateTimeParseException ex) {
+                return null;  // Se falhar em ambos, retorna null
+            }
+        }
+    }
+
+
+
 
     public static String formatDate(LocalDate date) {
         return (date != null) ? date.format(FORMATTER) : "";
@@ -178,7 +212,7 @@ public class Tools {
         return "(-1 para cancelar): ";
     }
 
-    public static ResultadoOperacao verificarDatasAnteriores (LocalDate dataInicial, LocalDate dataFinal) {
+    public static ResultadoOperacao verificarDatasAnteriores (LocalDateTime dataInicial, LocalDateTime dataFinal) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (dataFinal.isBefore(dataInicial)) {
             resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
@@ -187,5 +221,24 @@ public class Tools {
             resultado.Sucesso = true;
         }
         return resultado;
+    }
+
+    public static String formatarMinutosParaHorasEMinutos(double minutosTotal) {
+        long horas = (long) minutosTotal / 60;
+        long minutos = (long) minutosTotal % 60;
+
+        return horas + " horas e " + minutos + " minutos";
+    }
+
+    public static int pedirOpcaoMenu(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            try {
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println(" Entrada inválida. Por favor insira um número inteiro.");
+                scanner.nextLine();
+            }
+        }
     }
 }
