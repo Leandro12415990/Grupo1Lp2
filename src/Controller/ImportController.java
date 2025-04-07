@@ -10,8 +10,8 @@ import java.util.List;
 
 public class ImportController {
 
-    public static void mostrarUtilizador(int estado) {
-        ImportBLL.listarUtilizador(estado);
+    public static void mostrarUtilizador(int estado, int tipo) {
+        ImportBLL.listarUtilizador(estado, tipo);
     }
 
     public static void gravarLeiloes(List<Leilao> leiloes) {

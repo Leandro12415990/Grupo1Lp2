@@ -11,8 +11,8 @@ public class LoginUtilizadorBLL {
     public static int login(String email, String password) {
         for (Utilizador u : Tools.utilizadores) {
             if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword())) {
-            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
-                u.setUltimoLogin(LocalDate.now());
+                if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
+                    u.setUltimoLogin(LocalDate.now());
                 ImportDal.gravarUtilizador(Tools.utilizadores);
 
                 ClienteSessao.setIdCliente(u.getId());
@@ -26,6 +26,5 @@ public class LoginUtilizadorBLL {
     public static boolean lerDados() {
         Tools.utilizadores = ImportDal.carregarUtilizador();
         return Tools.utilizadores != null;
-    }
 }
-
+}

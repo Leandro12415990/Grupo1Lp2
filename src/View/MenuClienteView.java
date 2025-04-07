@@ -1,8 +1,12 @@
 package View;
 
+import Model.ClienteSessao;
+import Model.Utilizador;
+
 import static Utils.Tools.scanner;
 
 public class MenuClienteView {
+    private static final int idCliente = ClienteSessao.getIdCliente();
     public static void exibirMenu() {
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));
@@ -16,7 +20,7 @@ public class MenuClienteView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    System.out.println("Funcionalidade em desenvolvimento...");
+                    EditarClienteView.exibirMenu(idCliente);
                     break;
                 case 2:
                     TransacaoView.exibirMenuTransacao();

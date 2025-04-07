@@ -70,6 +70,20 @@ public class Tools {
         }
     }
 
+    public enum tipoUtilizador {
+        GESTOR(1), CLIENTE(2);
+
+        private final int codigo;
+
+        tipoUtilizador(int codigo) {
+            this.codigo = codigo;
+        }
+
+        public int getCodigo() {
+            return codigo;
+        }
+    }
+
     public enum estadoUtilizador {
         DEFAULT(0), PENDENTE(1), ATIVO(2), INATIVO(3);
 

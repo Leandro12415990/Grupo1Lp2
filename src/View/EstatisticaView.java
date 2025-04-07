@@ -304,7 +304,7 @@ public class EstatisticaView {
             return;
         }
 
-        Period tempo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+        Period tempo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
 
         System.out.println("\n=== Leilão com mais tempo ativo ===");
         System.out.println("ID: " + leilao.getId());
@@ -322,7 +322,7 @@ public class EstatisticaView {
             return;
         }
 
-        Period tempo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+        Period tempo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
 
         System.out.println("\n=== Leilão com mais tempo ativo (por tipo) ===");
         System.out.println("ID: " + leilao.getId());

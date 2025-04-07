@@ -10,7 +10,7 @@ public class AprovarClienteView {
     public static void exibirMenu() {
         while (true) {
             System.out.println("Menu Aprovar Clientes");
-            ImportView.mostrarUtilizador(Tools.estadoUtilizador.PENDENTE.getCodigo());
+            ImportView.mostrarUtilizador(Tools.estadoUtilizador.PENDENTE.getCodigo(), 2);
             System.out.println("-----------------------------------------------------------------");
             System.out.println("1. Aprovar todos");
             System.out.println("2. Aprovar Cliente especifico");

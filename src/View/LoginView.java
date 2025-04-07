@@ -1,6 +1,7 @@
 package View;
 
 import Controller.LoginController;
+import Model.Utilizador;
 import Utils.Tools;
 
 public class LoginView {
@@ -32,7 +33,7 @@ public class LoginView {
             } else if (tipoUtilizador == -1) {
                 System.out.println("O seu utilizador ainda não foi aprovado.\n");
             } else {
-                System.out.println("Email ou Password inválidos! Tente novamente.\n");
+                System.out.println("Credênciais erradas ou utilizador não aprovado\n");
             }
         }
     }
