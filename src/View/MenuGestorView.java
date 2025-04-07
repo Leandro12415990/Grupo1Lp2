@@ -20,18 +20,21 @@ public class MenuGestorView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo());
+                    ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
                     break;
                 case 2:
                     AprovarClienteView.exibirMenu();
                     break;
                 case 3:
-                    LeilaoView.exibirMenuLeiloes();
+                    AprovarClienteView.exibirMenu();
                     break;
                 case 4:
-                    ProdutoView.exibirProduto();
+                    LeilaoView.exibirMenuLeiloes();
                     break;
                 case 5:
+                    ProdutoView.exibirProduto();
+                    break;
+                case  6:
                     EstatisticaView.exibirMenuListagem();
                     break;
                 case 0:
