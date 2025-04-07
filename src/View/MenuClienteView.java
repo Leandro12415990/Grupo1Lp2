@@ -19,6 +19,7 @@ public class MenuClienteView {
                     break;
                 case 2:
                     LanceView.exibirMenuLance();
+                    break;
                 case 0:
                     System.out.println("A desligar sistema...");
                     return;

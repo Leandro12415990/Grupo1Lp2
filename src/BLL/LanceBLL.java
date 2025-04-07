@@ -21,11 +21,10 @@ public class LanceBLL {
     public static ResultadoOperacao adicionarLanceDireto(int idLance, int idLeilao, double valorLance, int idCliente) {
         ResultadoOperacao resultado = new ResultadoOperacao();
 
-        List<Leilao> leiloesAtivos = LeilaoBLL.listarLeiloes(true);
-        List<Leilao> leilaoLanceDireto = new ArrayList<>();
-
         List<Lance> lances = carregarLance();
         idLance = verUltimoId(lances) + 1;
+
+        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
 
         int numLance = 0;
         int pontosUtilizados = 0;
@@ -35,6 +34,10 @@ public class LanceBLL {
         lances.add(lance);
         ImportDal.gravarLance(lances);
 
+        if (valorLance == leilao.getValorMinimo()) {
+            fimLeilao(idLeilao, dataLance);
+        }
+
         resultado.Sucesso = true;
         resultado.Objeto = resultado;
         return resultado;
@@ -43,11 +46,9 @@ public class LanceBLL {
     public static ResultadoOperacao adicionarLanceCartaFechada(int idLance, int idLeilao, double valorLance, int idCliente) {
         ResultadoOperacao resultado = new ResultadoOperacao();
 
-        List<Leilao> leiloesAtivos = LeilaoBLL.listarLeiloes(true);
-        List<Leilao> leiloesCartaFechada = new ArrayList<>();
-
         List<Lance> lances = carregarLance();
         idLance = verUltimoId(lances) + 1;
+
 
         int numLance = 0;
         int pontosUtilizados = 0;
@@ -64,9 +65,6 @@ public class LanceBLL {
 
     public static ResultadoOperacao adicionarLanceEletronico(int idLance, int idLeilao, double valorLance, int numLance, double multiploLance, int idCliente, int valorLanceAtual) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-
-        List<Leilao> leiloesAtivos = LeilaoBLL.listarLeiloes(true);
-        List<Leilao> leiloesEletronicos = new ArrayList<>();
 
         List<Lance> lances = carregarLance();
         idLance = verUltimoId(lances) + 1;
@@ -110,7 +108,7 @@ public class LanceBLL {
     }
 
     public static List<Lance> obterLancesPorLeilao(int idLeilao) {
-        List<Lance> lances = carregarLance(); // Carrega os lances apenas uma vez
+        List<Lance> lances = carregarLance();
 
         if (lances == null) {
             return new ArrayList<>();
@@ -121,13 +119,9 @@ public class LanceBLL {
                 .collect(Collectors.toList());
     }
 
-    public static Lance procurarLanceId(int id) {
-        carregarLance();
-        for (Lance lance : lances) {
-            if (lance.getIdLance() == id) {
-                return lance;
-            }
-        }
-        return null;
+    public static void fimLeilao(int idLeilao, LocalDateTime dataFim){
+
+        LeilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
     }
+
 }

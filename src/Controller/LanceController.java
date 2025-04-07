@@ -2,10 +2,12 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
+import DAL.ImportDal;
 import Model.ClienteSessao;
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
+import View.LeilaoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +27,11 @@ public class LanceController {
 
     public static ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance) {
         int idCliente = ClienteSessao.getIdCliente();
-        List<Leilao> leiloesAtivos = LeilaoBLL.listarLeiloes(true);
+        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
+        valorLance = leilao.getValorMinimo();
 
         ResultadoOperacao resultado = LanceBLL.adicionarLanceDireto(0, idLeilao, valorLance, idCliente);
+
         return resultado;
     }
 
@@ -66,4 +70,6 @@ public class LanceController {
         }
         return false;
     }
+
 }
+
