@@ -4,8 +4,9 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class AprovarClienteBLL {
-    public static void AprovarTodos(Utilizador u)
+    public static void AprovarTodos(Utilizador u, int estado)
     {
-        u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
+        if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
+        else u.setEstado(Tools.estadoUtilizador.INATIVO.getCodigo());
     }
 }
