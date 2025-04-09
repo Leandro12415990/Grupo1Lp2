@@ -1,5 +1,6 @@
 package View;
 
+import Model.Transacao;
 import Utils.Tools;
 
 import static Utils.Tools.scanner;
@@ -11,9 +12,9 @@ public class MenuGestorView {
             System.out.println("1. Listagem de Utilizadores");
             System.out.println("2. Aprovar Clientes");
             System.out.println("3. Inativar Clientes");
-            System.out.println("4. Menu Produtos");
-            System.out.println("5. Menu Leilões");
-            System.out.println("6. Menu Produtos");
+            System.out.println("4. Aprovar Depósitos");
+            System.out.println("5. Menu Produtos");
+            System.out.println("6. Menu Leilões");
             System.out.println("7. Listagens");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
@@ -31,12 +32,15 @@ public class MenuGestorView {
                     AprovarClienteView.exibirMenu(Tools.estadoUtilizador.INATIVO.getCodigo());
                     break;
                 case 4:
-                    LeilaoView.exibirMenuLeiloes();
+                    TransacaoView.exibirMenuTransacao();
                     break;
                 case 5:
                     ProdutoView.exibirProduto();
                     break;
-                case  6:
+                case 6:
+                    LeilaoView.exibirMenuLeiloes();
+                    break;
+                case 7:
                     EstatisticaView.exibirMenuListagem();
                     break;
                 case 0:
