@@ -5,18 +5,36 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class FormularioAprovarClienteBLL {
-    public static boolean aprovarCliente(Utilizador u)
+    public static boolean aprovarCliente(Utilizador u, int estado)
     {
-        u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
+        if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
+        else u.setEstado(Tools.estadoUtilizador.INATIVO.getCodigo());
 
-        for (Utilizador uti : Tools.utilizadores)
+        if (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
         {
-            if (u.getEmail().equalsIgnoreCase(uti.getEmail()))
+            for (Utilizador uti : Tools.utilizadores)
             {
-                if (uti.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo())
+                if (u.getEmail().equalsIgnoreCase(uti.getEmail()))
                 {
-                    ImportDal.gravarUtilizador(Tools.utilizadores);
-                    return true;
+                    if (uti.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo())
+                    {
+                        ImportDal.gravarUtilizador(Tools.utilizadores);
+                        return true;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (Utilizador uti : Tools.utilizadores)
+            {
+                if (u.getEmail().equalsIgnoreCase(uti.getEmail()))
+                {
+                    if (uti.getEstado() == Tools.estadoUtilizador.INATIVO.getCodigo())
+                    {
+                        ImportDal.gravarUtilizador(Tools.utilizadores);
+                        return true;
+                    }
                 }
             }
         }

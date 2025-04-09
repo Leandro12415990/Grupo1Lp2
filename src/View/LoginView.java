@@ -5,8 +5,8 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class LoginView {
-    public static int login() {
-        int tipoUtilizador = 0;
+    public static Utilizador login() {
+        Utilizador utilizador = null;
 
         System.out.println("\n" + "-".repeat(7) + " LOGIN " + "-".repeat(7));
 
@@ -15,25 +15,24 @@ public class LoginView {
             String email = Tools.scanner.nextLine();
             if (email.equals("-1")) {
                 System.out.println("Voltando ao menu anterior...");
-                return -1;
+                return null;
             }
 
             System.out.print("Password (-1 para cancelar): ");
             String password = Tools.scanner.nextLine();
             if (password.equals("-1")) {
                 System.out.println("Voltando ao menu anterior...");
-                return -1;
+                return null;
             }
 
-            tipoUtilizador = LoginController.verificarLogin(email, password);
+            utilizador = LoginController.verificarLogin(email, password);
 
-            if (tipoUtilizador > 0) {
+            if (utilizador != null && utilizador.getTipoUtilizador() > 0) {
                 System.out.println("Login realizado com sucesso!");
-                return tipoUtilizador;
-            } else if (tipoUtilizador == -1) {
-                System.out.println("O seu utilizador ainda não foi aprovado.\n");
-            } else {
-                System.out.println("Credênciais erradas ou utilizador não aprovado\n");
+                return utilizador;
+            } else
+            {
+                System.out.println("Credênciais erradas ou utilziador não aprovado\n");
             }
         }
     }
