@@ -29,6 +29,5 @@ public class LoginUtilizadorBLL {
     public static boolean lerDados() {
         Tools.utilizadores = ImportDal.carregarUtilizador();
         return Tools.utilizadores != null;
-    }
 }
-
+}

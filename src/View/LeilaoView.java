@@ -1,5 +1,6 @@
 package View;
 
+import BLL.LeilaoBLL;
 import Controller.ProdutoController;
 import Model.Leilao;
 import Model.ResultadoOperacao;
@@ -7,8 +8,13 @@ import Utils.Constantes;
 import Utils.Tools;
 import Controller.LeilaoController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static BLL.LeilaoBLL.carregarLeiloes;
+import static BLL.LeilaoBLL.listarLeiloes;
 
 public class LeilaoView {
     public static void exibirMenuLeiloes() {
@@ -20,6 +26,7 @@ public class LeilaoView {
             System.out.println("3. Consultar Leilão");
             System.out.println("4. Eliminar Leilão");
             System.out.println("5. Listar Leilão");
+            System.out.println("6. Fechar Leilão");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
             opc = Tools.scanner.nextInt();
@@ -38,6 +45,9 @@ public class LeilaoView {
                     break;
                 case 5:
                     listaLeiloes(false);
+                    break;
+                case 6:
+                    fecharLeilaoManual();
                     break;
                 case 0:
                     System.out.println("\nSair...");
@@ -557,6 +567,62 @@ public class LeilaoView {
     private static String nomeProduto(int idProduto) {
         return ProdutoController.getNomeProdutoById(idProduto);
     }
+
+    public static void fecharLeilaoManual() {
+        System.out.println("\n===== LEILÕES ATIVOS =====");
+
+        listaLeiloes(true);
+        System.out.print("\nInsira o ID do leilão que deseja fechar: " + Tools.alertaCancelar());
+        int idLeilao = Tools.scanner.nextInt();
+        Tools.scanner.nextLine();
+        if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
+
+        LocalDateTime dataFim = LocalDateTime.now();
+
+        System.out.print("Tem certeza que quer fechar o leilão? (S/N) " + Tools.alertaCancelar());
+        String imput1 = Tools.scanner.nextLine().trim();
+        if (Tools.verificarSaida(imput1)) return;
+        char confirmacao = Character.toUpperCase(imput1.charAt(0));
+
+        if (confirmacao != 'S') return;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        System.out.print("Quer usar a data de agora (" + dataFim.format(formatter) + ")? (S/N) " + Tools.alertaCancelar());
+        String imput2 = Tools.scanner.nextLine().trim();
+        if (Tools.verificarSaida(imput2)) return;
+        char confirmacaoData = Character.toUpperCase(imput2.charAt(0));
+
+        Tools.scanner.nextLine();
+
+        if (confirmacaoData != 'S') {
+            System.out.println("Insira a data que quer fechar o leilão (formato dd/MM/yyyy): " + Tools.alertaCancelar());
+            String dataFimManual = Tools.scanner.nextLine().trim();
+
+            if (Tools.verificarSaida(dataFimManual)) return;
+
+            if (!dataFimManual.isEmpty()) {
+                dataFim = Tools.parseDateTimeByDate(dataFimManual);
+                if (dataFim != null) {
+                    dataFim = dataFim.withHour(0).withMinute(0).withSecond(0).withNano(0);
+                } else {
+                    System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
+                    return;
+                }
+            } else {
+                System.out.println("Data não pode ser vazia.");
+                return;
+            }
+        }
+
+        boolean sucesso = LeilaoController.fecharLeilao(idLeilao, dataFim);
+
+        if (sucesso) {
+            System.out.println("Leilão fechado com sucesso!");
+        } else {
+            System.out.println("Leilão não encontrado!");
+        }
+    }
+
 
 
 }

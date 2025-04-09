@@ -13,9 +13,10 @@ public class Utilizador {
     private LocalDate ultimoLogin;
     private int tipoUtilizador;
     private int estado;
+    private Double saldo;
 
     public Utilizador(int id, String nomeUtilizador, String email, LocalDate dataNascimento, String morada, String password,
-                      LocalDate dataRegisto, LocalDate ultimoLogin, int tipoUtilizador, int estado) {
+                      LocalDate dataRegisto, LocalDate ultimoLogin, int tipoUtilizador, int estado, Double saldo) {
         this.id = id;
         this.nomeUtilizador = nomeUtilizador;
         this.email = email;
@@ -26,6 +27,7 @@ public class Utilizador {
         this.ultimoLogin = ultimoLogin;
         this.tipoUtilizador = tipoUtilizador;
         this.estado = estado;
+        this.saldo = saldo;
     }
 
     public int getId() {
@@ -100,5 +102,17 @@ public class Utilizador {
 
     public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(Double saldo) {
+        this.saldo = saldo;
     }
 }

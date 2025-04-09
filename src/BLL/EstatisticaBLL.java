@@ -94,7 +94,7 @@ public class EstatisticaBLL {
 
             if (leilao.getDataInicio() == null || leilao.getDataFim() == null) continue;
 
-            Period periodo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+            Period periodo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
 
             if (isMaiorPeriodo(periodo, maiorPeriodo)) {
                 maiorPeriodo = periodo;
@@ -115,7 +115,7 @@ public class EstatisticaBLL {
         for (Leilao leilao : leiloes) {
             if (leilao.getDataInicio() == null || leilao.getDataFim() == null) continue;
 
-            Period periodo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+            Period periodo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
 
             if (isMaiorPeriodo(periodo, maiorPeriodo)) {
                 maiorPeriodo = periodo;
@@ -527,7 +527,7 @@ public class EstatisticaBLL {
         if (leilao.getDataInicio() == null || leilao.getDataFim() == null) {
             return Period.ZERO;
         }
-        return Period.between(leilao.getDataInicio(), leilao.getDataFim());
+        return Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
     }
 
 

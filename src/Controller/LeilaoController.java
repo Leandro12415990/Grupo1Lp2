@@ -20,7 +20,7 @@ public class LeilaoController {
             resultado.msgErro = "A descrição não pode ser nula.";
         } else if (dataInicio == null) {
             resultado.msgErro = "A data de inicio não pode ser nula.";
-        } else if (valorMin <0) {
+        } else if (valorMin < 0) {
             resultado.msgErro = "O valor minimo não pode ser negativo.";
         } else if (valorMax != 0.0 && valorMax >= 0 && valorMax < valorMin) {
             resultado.msgErro = "O valor máximo deve ser maior do que o valor minimo.";
@@ -28,7 +28,7 @@ public class LeilaoController {
             resultado.msgErro = "O múltiplo de lance deve ser positivo.";
         } else if (dataFim != null && dataFim.isBefore(dataInicio)) {
             resultado.msgErro = "A data de fim deve ser superior à data de inicio.";
-        }  else {
+        } else {
             Leilao leilao = new Leilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
             LeilaoBLL.adicionarLeilao(leilao);
 
@@ -63,7 +63,7 @@ public class LeilaoController {
     }
 
     public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
-            return LeilaoBLL.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
+        return LeilaoBLL.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
     }
 
     public static ResultadoOperacao verificarDisponibilidadeProduto(int idProduto) {
@@ -83,7 +83,7 @@ public class LeilaoController {
         return resultado;
     }
 
-    public static ResultadoOperacao verificarValorMax (double valorMin, double valorMax) {
+    public static ResultadoOperacao verificarValorMax(double valorMin, double valorMax) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (valorMax < valorMin) {
             resultado.msgErro = "O valor máximo não pode ser inferior ao valor minimo.\n";
@@ -97,5 +97,15 @@ public class LeilaoController {
     public static int determinarEstadoLeilaoByDatas(LocalDateTime dataInicio, LocalDateTime dataFim, int idEstado) {
         return LeilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
     }
+
+    public static boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) {
+        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
+        if (leilao == null) return false;
+
+        LeilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
+        return true;
+    }
+
+
 }
 
