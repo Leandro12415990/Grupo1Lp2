@@ -138,15 +138,16 @@ public class TransacaoView {
             }
         } else {
             System.out.printf("%-18s %-25s %-20s %-30s %-20s %-30s\n",
-                    "IdTransação", "Valor Total Conta", "Valor Depósito", "Data Depósito", "TipoTransação", "Estado");
+                    "IdTransação", "Valor Total Conta", "Valor Transação", "Data Transação", "Tipo Transação", "Estado");
             System.out.println("-".repeat(130));
             for (Transacao transacao : transacaoList) {
                 String estadoStr = Tools.estadoDeposito.fromCodigo(transacao.getIdEstadoTransacao()).name();
                 String tipoStr = Tools.tipoTransacao.fromCodigo(transacao.getIdTipoTransacao()).name();
+                String valorTransacao = (transacao.getIdTipoTransacao() == Constantes.tiposTransacao.LANCE_DEBITO ? "-" : "+") + transacao.getValorTransacao() + "€";
                 System.out.printf("%-18s %-25s %-20s %-30s %-20s %-30s\n",
                         transacao.getIdTransacao(),
                         transacao.getValorTotal() + "€",
-                        transacao.getValorTransacao() + "€",
+                        valorTransacao,
                         transacao.getDataTransacao() != null ? Tools.DATA_HORA.format(transacao.getDataTransacao()) : "N/A",
                         tipoStr,
                         estadoStr);

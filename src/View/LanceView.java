@@ -1,19 +1,19 @@
 package View;
 
+import BLL.ImportBLL;
 import BLL.LeilaoBLL;
 import Controller.LanceController;
 import Controller.LeilaoController;
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
+import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
-
-import javax.tools.Tool;
-import java.time.LocalDate;
 import java.util.List;
 
 import static BLL.LeilaoBLL.listarLeiloes;
+
 
 public class LanceView {
     public static void exibirMenuLance() {
@@ -63,6 +63,7 @@ public class LanceView {
         ResultadoOperacao resultado;
         System.out.println("\n===== LEILÕES VENDA DIRETA =====");
 
+        List<Utilizador> cliente = ImportBLL.obterTodosUtilizadores();
         List<Leilao> leiloesAtivos = listarLeiloes(true);
         List<Leilao> leiloesLanceDireto = LanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
         if (!leiloesLanceDireto.isEmpty()) {
@@ -111,7 +112,7 @@ public class LanceView {
         List<Leilao> leilaoCartaFechada = LanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.CARTA_FECHADA);
         if (!leilaoCartaFechada.isEmpty()) {
             for (Leilao leilao : leilaoCartaFechada) {
-                System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getIdProduto());
+                System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getDescricao());
             }
 
             System.out.print("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
@@ -124,7 +125,7 @@ public class LanceView {
                 double valorLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(valorLance))) return;
 
-                ResultadoOperacao resultado = LanceController.adicionarLanceDireto(idLeilao, valorLance);
+                ResultadoOperacao resultado = LanceController.adicionarLanceCartaFechada(idLeilao, valorLance);
 
                 if (resultado.Sucesso) {
                     System.out.println("✅ aceite");
