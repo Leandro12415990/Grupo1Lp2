@@ -73,7 +73,7 @@ public class EditarClienteView {
 
             ResultadoOperacao resultado = EditarClienteController.verificarDados(utilizador, nome, nascimento, morada, passwordFirst);
             if (resultado.Sucesso) {
-                System.out.println("Cliente registado com sucesso");
+                System.out.println("Cliente alterado com sucesso");
             } else {
                 System.out.println(resultado.msgErro);
             }
