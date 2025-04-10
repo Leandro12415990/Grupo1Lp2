@@ -6,21 +6,47 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class AprovarClienteController {
-    public static boolean AprovarTodos()
+    public static boolean AprovarTodos(int estado)
     {
-        for (Utilizador u : Tools.utilizadores)
+        if (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
         {
-            if (u.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo())
+            for (Utilizador u : Tools.utilizadores)
             {
-                AprovarClienteBLL.AprovarTodos(u);
+                if (u.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo())
+                {
+                    AprovarClienteBLL.AprovarTodos(u, estado);
+                }
+            }
+        }
+        else
+        {
+            for (Utilizador u : Tools.utilizadores)
+            {
+                if (u.getEstado() != Tools.estadoUtilizador.INATIVO.getCodigo())
+                {
+                    AprovarClienteBLL.AprovarTodos(u, estado);
+                }
             }
         }
 
-        for (Utilizador u : Tools.utilizadores)
+        if (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
         {
-            if (u.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo())
+            for (Utilizador u : Tools.utilizadores)
             {
-                return false;
+                if (u.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo())
+                {
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            for (Utilizador u : Tools.utilizadores)
+            {
+                if (u.getEstado() != Tools.estadoUtilizador.INATIVO.getCodigo())
+                {
+                    return false;
+                }
             }
         }
 
