@@ -1,9 +1,6 @@
 package DAL;
 
-import Model.Lance;
-import Model.Leilao;
-import Model.Transacao;
-import Model.Utilizador;
+import Model.*;
 import Utils.Tools;
 
 import java.io.*;
@@ -19,6 +16,7 @@ public class ImportDal {
     private static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
     private static final String CSV_FILE_LANCE = "data\\Lance.csv";
     private static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
+    private static final String CSV_FILE_TEMPLATE = "data\\Template.csv";
 
     public static List<Lance> carregarLance() {
         List<Lance> lances = new ArrayList<>();
@@ -180,6 +178,41 @@ public class ImportDal {
         return transacaoList;
     }
 
+    public static List<Template> carregarTemplates() {
+        List<Template> templates = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_TEMPLATE))) {
+            String linha;
+            boolean primeiraLinha = true;
+
+            while ((linha = br.readLine()) != null) {
+                if (primeiraLinha) {
+                    primeiraLinha = false;
+                    continue;
+                }
+
+                String[] dados = linha.split(";", -1);
+
+                if (dados.length < 3) {
+                    System.err.println("Linha inválida no CSV: " + linha);
+                    continue;
+                }
+
+                int idTemplate = Integer.parseInt(dados[0]);
+                String nome = dados[1];
+                String conteudo = dados[2].replace("\\n", "\n");
+
+                Template template = new Template(idTemplate, nome, conteudo);
+                templates.add(template);
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
+        }
+
+        return templates;
+    }
+
+
     public static void gravarLeilao(List<Leilao> leiloes) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE))) {
             bw.write("ID;ID_PRODUTO;DESCRICAO;ID_TIPO_LEILAO;DATA_INICIO;DATA_FIM;VALOR_MINIMO;VALOR_MAXIMO;MULTIPLO_LANCE;ID_ESTADO");
@@ -282,6 +315,21 @@ public class ImportDal {
             System.err.println("Erro ao gravar o ficheiro CSV de Leilões: " + e.getMessage());
         }
     }
+
+    public static void gravarTemplates(List<Template> templates) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(CSV_FILE_TEMPLATE))) {
+            writer.println("ID_TEMPLATE;NOME;CONTEUDO");
+
+            for (Template t : templates) {
+                String conteudoEscapado = t.getConteudo().replace("\n", "\\n");
+                writer.println(t.getIdTemplate() + ";" + t.getNome() + ";" + conteudoEscapado);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Erro ao guardar o ficheiro CSV: " + e.getMessage());
+        }
+    }
+
 
 
 }
