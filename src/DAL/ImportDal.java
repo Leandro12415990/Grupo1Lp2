@@ -193,16 +193,17 @@ public class ImportDal {
 
                 String[] dados = linha.split(";", -1);
 
-                if (dados.length < 3) {
+                if (dados.length < 4) {
                     System.err.println("Linha inválida no CSV: " + linha);
                     continue;
                 }
 
                 int idTemplate = Integer.parseInt(dados[0]);
                 String nome = dados[1];
-                String conteudo = dados[2].replace("\\n", "\n");
+                String assunto = dados[2];
+                String conteudo = dados[3].replace("\\n", "\n");
 
-                Template template = new Template(idTemplate, nome, conteudo);
+                Template template = new Template(idTemplate, nome, assunto, conteudo);
                 templates.add(template);
             }
         } catch (IOException e) {
@@ -211,6 +212,7 @@ public class ImportDal {
 
         return templates;
     }
+
 
 
     public static void gravarLeilao(List<Leilao> leiloes) {
@@ -318,13 +320,17 @@ public class ImportDal {
 
     public static void gravarTemplates(List<Template> templates) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CSV_FILE_TEMPLATE))) {
-            writer.println("ID_TEMPLATE;NOME;CONTEUDO");
+            writer.println("ID_TEMPLATE;NOME;ASSUNTO;CONTEUDO");
 
             for (Template t : templates) {
                 String conteudoEscapado = t.getConteudo().replace("\n", "\\n");
-                writer.println(t.getIdTemplate() + ";" + t.getNome() + ";" + conteudoEscapado);
+                writer.println(t.getIdTemplate() + Tools.separador() +
+                        t.getNome() + Tools.separador() +
+                        t.getAssunto() + Tools.separador() +
+                        conteudoEscapado);
             }
 
+            System.out.println("Templates guardados com sucesso.");
         } catch (IOException e) {
             System.err.println("Erro ao guardar o ficheiro CSV: " + e.getMessage());
         }
