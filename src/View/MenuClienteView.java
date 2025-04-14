@@ -28,7 +28,7 @@ public class MenuClienteView {
                     LanceView.exibirMenuLance();
                     break;
                 case 0:
-                    System.out.println("A desligar sistema...");
+                    System.out.println("A sair...");
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");
