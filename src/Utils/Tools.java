@@ -3,11 +3,6 @@ package Utils;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,30 +41,6 @@ public class Tools {
         return (date != null) ? date.format(FORMATTER) : "";
     }
 
-    public static List<String[]> lerCSV(String caminho) {
-        List<String[]> linhas = new ArrayList<>();
-        try (BufferedReader br = Files.newBufferedReader(Paths.get(caminho))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                linhas.add(linha.split(";"));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return linhas;
-    }
-
-    public static void escreverCSV(String caminho, List<String[]> linhas) {
-        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(caminho))) {
-            for (String[] linha : linhas) {
-                bw.write(String.join(";", linha));
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public enum tipoUtilizador {
         GESTOR(1), CLIENTE(2);
 
@@ -81,6 +52,15 @@ public class Tools {
 
         public int getCodigo() {
             return codigo;
+        }
+
+        public static tipoUtilizador fromCodigo(int codigo) {
+            for (tipoUtilizador tipo : tipoUtilizador.values()) {
+                if (tipo.getCodigo() == codigo) {
+                    return tipo;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
         }
     }
 
@@ -95,6 +75,15 @@ public class Tools {
 
         public int getCodigo() {
             return codigo;
+        }
+
+        public static estadoUtilizador fromCodigo(int codigo) {
+            for (estadoUtilizador estado : estadoUtilizador.values()) {
+                if (estado.getCodigo() == codigo) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
         }
 
         public static estadoUtilizador getDefault() {
@@ -246,7 +235,7 @@ public class Tools {
             return LocalDateTime.parse(dateStr, DATA_HORA);
         } catch (DateTimeParseException e) {
             try {
-                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atStartOfDay();
             } catch (DateTimeParseException ex) {
                 return null;
             }

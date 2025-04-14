@@ -1,13 +1,11 @@
 package View;
 
-import Model.ClienteSessao;
 import Model.Utilizador;
 
 import static Utils.Tools.scanner;
 
 public class MenuClienteView {
-    private static final int idCliente = ClienteSessao.getIdCliente();
-    public static void exibirMenu() {
+    public static void exibirMenu(Utilizador utilizador) {
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));
             System.out.println("1. Editar Ficha de Cliente");
@@ -20,7 +18,7 @@ public class MenuClienteView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    EditarClienteView.exibirMenu(idCliente);
+                    UtilizadorView.editarCliente(utilizador);
                     break;
                 case 2:
                     TransacaoView.exibirMenuTransacao();
@@ -29,7 +27,7 @@ public class MenuClienteView {
                     LanceView.exibirMenuLance();
                     break;
                 case 0:
-                    System.out.println("A desligar sistema...");
+                    System.out.println("A sair...");
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");

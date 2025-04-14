@@ -10,6 +10,10 @@ import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+<<<<<<< HEAD
+=======
+
+>>>>>>> quality
 import java.util.List;
 
 import static BLL.LeilaoBLL.listarLeiloes;
@@ -63,7 +67,7 @@ public class LanceView {
         ResultadoOperacao resultado;
         System.out.println("\n===== LEILÕES VENDA DIRETA =====");
 
-        List<Utilizador> cliente = ImportDal.carregarUtilizador();
+        List<Utilizador> cliente = ImportBLL.obterTodosUtilizadores();
         List<Leilao> leiloesAtivos = listarLeiloes(true);
         List<Leilao> leiloesLanceDireto = LanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
         if (!leiloesLanceDireto.isEmpty()) {

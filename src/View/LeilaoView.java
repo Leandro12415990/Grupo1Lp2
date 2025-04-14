@@ -1,6 +1,5 @@
 package View;
 
-import BLL.LeilaoBLL;
 import Controller.ProdutoController;
 import Model.Leilao;
 import Model.ResultadoOperacao;
@@ -8,13 +7,10 @@ import Utils.Constantes;
 import Utils.Tools;
 import Controller.LeilaoController;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static BLL.LeilaoBLL.carregarLeiloes;
-import static BLL.LeilaoBLL.listarLeiloes;
 
 public class LeilaoView {
     public static void exibirMenuLeiloes() {
