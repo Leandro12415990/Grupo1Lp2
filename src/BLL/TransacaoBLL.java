@@ -1,10 +1,12 @@
 package BLL;
 
 import DAL.ImportDal;
+import Model.Lance;
 import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,26 +30,32 @@ public class TransacaoBLL {
         int ultimoId = 0;
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdTransacao() > ultimoId) ultimoId = transacao.getIdTransacao();
-        } return ultimoId;
+        }
+        return ultimoId;
     }
 
     public static Double buscarValorTotalAtual(int IdCliente) {
         List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == IdCliente) return utilizador.getSaldo();
-        } return 0.0;
+        }
+        return 0.0;
     }
 
-    public static void atualizarSaldo(int idCliente, double creditos) {
+    public static double atualizarSaldo(int idCliente, double creditos) {
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == idCliente) {
                 double saldoAtual = utilizador.getSaldo();
                 saldoAtual += creditos;
                 utilizador.setSaldo(saldoAtual);
+
+                ImportDal.gravarUtilizador(utilizadores);
+                return saldoAtual;
             }
         }
-        ImportDal.gravarUtilizador(utilizadores);
+        return 0.0;
     }
+
 
     public static Double valorPendente(int idCliente) {
         transacaoList = ImportDal.carregarTransacao();
@@ -57,7 +65,8 @@ public class TransacaoBLL {
                 if (transacao.getIdEstadoTransacao() == Constantes.estadosTransacao.PENDENTE)
                     valorTotalPendente += transacao.getValorTransacao();
             }
-        } return valorTotalPendente;
+        }
+        return valorTotalPendente;
     }
 
     public static List<Transacao> listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
@@ -79,19 +88,22 @@ public class TransacaoBLL {
 
             if (adicionar)
                 transacoesFiltradas.add(transacao);
-        } return transacoesFiltradas;
+        }
+        return transacoesFiltradas;
     }
 
     public static Utilizador getUtilizador(int idCliente) {
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == idCliente) return utilizador;
-        } return null;
+        }
+        return null;
     }
 
     public static Transacao buscarTransacao(int idTransacao) {
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdTransacao() == idTransacao) return transacao;
-        } return null;
+        }
+        return null;
     }
 
     public static void atualizarEstadosTransacao(int idTransacao, int idEstado) {
@@ -99,5 +111,20 @@ public class TransacaoBLL {
             if (transacao.getIdTransacao() == idTransacao) transacao.setIdEstadoTransacao(idEstado);
         }
         ImportDal.gravarTransacao(transacaoList);
+    }
+
+    public static void devolverSaldo(int idLeilao, int idLanceVencedor) {
+        List<Lance> lances = LanceBLL.obterLancesPorLeilao(idLeilao);
+
+        for (Lance lance : lances) {
+            if (lance.getIdLance() != idLanceVencedor) {
+                double saldoAtual = atualizarSaldo(lance.getIdCliente(), lance.getValorLance());
+                if (saldoAtual != 0.0) {
+                    Transacao transacao = new Transacao(0, lance.getIdCliente(), saldoAtual, lance.getValorLance(), LocalDateTime.now(), Constantes.tiposTransacao.LANCE_REEMBOLSO, Constantes.estadosTransacao.ACEITE);
+                    criarTransacao(transacao);
+                }
+            }
+
+        }
     }
 }

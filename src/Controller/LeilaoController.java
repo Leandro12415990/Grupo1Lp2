@@ -1,9 +1,9 @@
 package Controller;
 
+import BLL.LanceBLL;
 import BLL.ProdutoBLL;
-import Model.Leilao;
-import Model.Produto;
-import Model.ResultadoOperacao;
+import BLL.TransacaoBLL;
+import Model.*;
 import BLL.LeilaoBLL;
 import Utils.Constantes;
 import View.LeilaoView;
@@ -103,6 +103,9 @@ public class LeilaoController {
         if (leilao == null) return false;
 
         LeilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
+        int idLanceVencedor = LanceBLL.selecionarLanceVencedor(idLeilao);
+        TransacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
+
         return true;
     }
 

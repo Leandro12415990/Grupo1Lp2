@@ -175,13 +175,10 @@ public class LanceBLL {
         int idEstadoTransacao = 0;
         int idTipoTransacao = 0;
         switch (tipoLeilao) {
-            case Constantes.tiposLeilao.VENDA_DIRETA, Constantes.tiposLeilao.ELETRONICO:
+            case Constantes.tiposLeilao.VENDA_DIRETA, Constantes.tiposLeilao.ELETRONICO,
+                 Constantes.tiposLeilao.CARTA_FECHADA:
                 idTipoTransacao = Constantes.tiposTransacao.LANCE_DEBITO;
                 idEstadoTransacao= Constantes.estadosTransacao.ACEITE;
-                break;
-            case Constantes.tiposLeilao.CARTA_FECHADA:
-                idTipoTransacao = Constantes.tiposTransacao.LANCE_DEPOSITO;
-                idEstadoTransacao = Constantes.estadosTransacao.PENDENTE;
                 break;
             default:
                 break;
@@ -189,7 +186,24 @@ public class LanceBLL {
         return new Transacao(0, idCliente,saldo,valorTransacao,LocalDateTime.now(),idTipoTransacao,idEstadoTransacao);
     }
 
+    public static int selecionarLanceVencedor(int idLeilao) {
+        List<Lance> lances1 = LanceBLL.obterLancesPorLeilao(idLeilao);
 
+        if (lances1 == null || lances1.isEmpty()) {
+            return 0;
+        }
+
+        Lance lanceVencedor = lances1.getFirst();
+
+        for (Lance lance : lances1) {
+            if (lance.getValorLance() > lanceVencedor.getValorLance()) {
+                lanceVencedor = lance;
+            }
+        }
+
+        return lanceVencedor.getIdLance();
+
+    }
 }
 
 
