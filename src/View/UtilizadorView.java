@@ -176,19 +176,18 @@ public class UtilizadorView {
 
     public static void exibirUtilizadores(List<Utilizador> utilizadores) {
         System.out.println("\n" + "=".repeat(5) + " LISTAGEM DE UTILIZADORES " + "=".repeat(5));
-        System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s %-10s\n",
-                "Id", "Nome Utilizador", "Email", "Data Nascimento", "Morada", "Password", "Data Registo", "Ultimo Login", "Tipo Utilizador", "Estado", "Saldo");
-        System.out.println("-".repeat(260));
+        System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %-10s\n",
+                "Id", "Nome Utilizador", "Email", "Data Nascimento", "Morada", "Data Registo", "Ultimo Login", "Tipo Utilizador", "Estado", "Saldo");
+        System.out.println("-".repeat(245));
         for (Utilizador utilizador : utilizadores) {
             String estadoStr = Tools.estadoUtilizador.fromCodigo(utilizador.getEstado()).name();
             String tipoUtilizadorStr = Tools.tipoLeilao.fromCodigo(utilizador.getTipoUtilizador()).name();
-            System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s %-10s\n",
+            System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %-10s\n",
                     utilizador.getId(),
                     utilizador.getNomeUtilizador(),
                     utilizador.getEmail(),
                     utilizador.getDataNascimento(),
                     utilizador.getMorada(),
-                    utilizador.getPassword(),
                     utilizador.getDataRegisto() != null ? utilizador.getDataRegisto().toString() : "N/A",
                     utilizador.getUltimoLogin() != null ? utilizador.getUltimoLogin().toString() : "N/A",
                     tipoUtilizadorStr,
