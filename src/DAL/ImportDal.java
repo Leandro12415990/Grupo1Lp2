@@ -47,7 +47,7 @@ public class ImportDal {
                     double valorLance = Double.parseDouble(dados[3]);
                     int numLance = dados[4].isEmpty() ? 0 : Integer.parseInt(dados[4]);
                     int pontosUtilizados = dados[5].isEmpty() ? 0 : Integer.parseInt(dados[5]);
-                    LocalDateTime dataLance = LocalDateTime.parse(dados[6], Tools.DATA_HORA);
+                    LocalDateTime dataLance = Tools.parseDateTimeByDate(dados[6]);
 
                     Lance lance = new Lance(idLance, idLeilao, idCliente,
                             valorLance, numLance, pontosUtilizados, dataLance);
