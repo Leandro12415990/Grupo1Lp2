@@ -41,7 +41,7 @@ public class EstatisticaController {
     }
 
     public static double calcularMediaTempoEntreLances() {
-        return EstatisticaBLL.calcularMediaTempoEntreLancesEmMinutos();
+        return EstatisticaBLL.calcularMediaTempoEntreLancesGeral();
     }
 
     public static double calcularMediaTempoEntreLancesPorTipo(int tipo) {

@@ -235,7 +235,7 @@ public class Tools {
             return LocalDateTime.parse(dateStr, DATA_HORA);
         } catch (DateTimeParseException e) {
             try {
-                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atStartOfDay();
             } catch (DateTimeParseException ex) {
                 return null;
             }
