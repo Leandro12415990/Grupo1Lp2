@@ -82,6 +82,15 @@ public class Tools {
         public int getCodigo() {
             return codigo;
         }
+
+        public static tipoUtilizador fromCodigo(int codigo) {
+            for (tipoUtilizador tipo : tipoUtilizador.values()) {
+                if (tipo.getCodigo() == codigo) {
+                    return tipo;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
+        }
     }
 
     public enum estadoUtilizador {
@@ -95,6 +104,15 @@ public class Tools {
 
         public int getCodigo() {
             return codigo;
+        }
+
+        public static estadoUtilizador fromCodigo(int codigo) {
+            for (estadoUtilizador estado : estadoUtilizador.values()) {
+                if (estado.getCodigo() == codigo) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
         }
 
         public static estadoUtilizador getDefault() {

@@ -19,7 +19,7 @@ public class MenuClienteView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    EditarClienteView.exibirMenu(utilizador);
+                    UtilizadorView.editarCliente(utilizador);
                     break;
                 case 2:
                     TransacaoView.exibirMenuTransacao();

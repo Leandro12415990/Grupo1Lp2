@@ -21,13 +21,13 @@ public class MenuGestorView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
+                    UtilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
                     break;
                 case 2:
-                    AprovarClienteView.exibirMenu(Tools.estadoUtilizador.ATIVO.getCodigo());
+                    UtilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
                     break;
                 case 3:
-                    AprovarClienteView.exibirMenu(Tools.estadoUtilizador.INATIVO.getCodigo());
+                    UtilizadorView.aprovarCliente(Tools.estadoUtilizador.INATIVO.getCodigo());
                     break;
                 case 4:
                     LeilaoView.exibirMenuLeiloes();

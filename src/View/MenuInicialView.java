@@ -3,7 +3,6 @@ package View;
 
 import Model.Utilizador;
 import Utils.Tools;
-import BLL.LanceBLL;
 
 
 import static Utils.Tools.scanner;
@@ -34,7 +33,7 @@ public class MenuInicialView {
                     }
                     break;
                 case 2:
-                    RegistarClienteView.MenuRegistarCliente();
+                    UtilizadorView.registarCliente();
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");
