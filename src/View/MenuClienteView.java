@@ -1,6 +1,5 @@
 package View;
 
-import Model.ClienteSessao;
 import Model.Utilizador;
 
 import static Utils.Tools.scanner;
@@ -19,7 +18,7 @@ public class MenuClienteView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    EditarClienteView.exibirMenu(utilizador);
+                    UtilizadorView.editarCliente(utilizador);
                     break;
                 case 2:
                     TransacaoView.exibirMenuTransacao();
@@ -28,7 +27,7 @@ public class MenuClienteView {
                     LanceView.exibirMenuLance();
                     break;
                 case 0:
-                    System.out.println("A desligar sistema...");
+                    System.out.println("A sair...");
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");

@@ -6,10 +6,14 @@ import Utils.Tools;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ProdutoDal {
     private static final String CSV_FILE_PRODUTO = "data\\Produto.csv"; // Caminho do arquivo CSV
+
+    private static final Logger logger = Logger.getLogger(ProdutoDal.class.getName());
 
     public static List<Produto> carregarProdutos() {
         List<Produto> produtos = new ArrayList<>();
@@ -27,7 +31,7 @@ public class ProdutoDal {
                 String[] dados = linha.split(Tools.separador(), -1);
 
                 if (dados.length < 4) {
-                    System.err.println("[ERRO] Linha inválida no CSV: " + linha);
+                    logger.log(Level.WARNING, "[ERRO] Linha inválida no CSV: ", linha);
                     continue;
                 }
 
@@ -41,25 +45,17 @@ public class ProdutoDal {
                     produtos.add(produto);
 
                 } catch (NumberFormatException e) {
-                    System.err.println("[ERRO] ID inválido no CSV: " + dados[0]);
+                    logger.log(Level.WARNING,"[ERRO] ID inválido no CSV: ", dados[0]);
                 }
             }
         } catch (IOException e) {
-            System.err.println("[ERRO] Problema ao ler o ficheiro CSV: " + e.getMessage());
+            logger.log(Level.SEVERE,"[ERRO] Problema ao ler o ficheiro CSV: ", e.getMessage());
         }
 
         return produtos;
     }
 
     public static void gravarProdutos(List<Produto> produtos) {
-        /*try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_PRODUTO, true))) {
-            bw.write(produto.getIdProduto() + ";" + produto.getNome() + ";" + produto.getDescricao());
-            bw.newLine();
-            System.out.println("Produto adicionado ao CSV: " + produto.getNome());
-        } catch (IOException e) {
-            System.err.println("Erro ao gravar o produto no CSV: " + e.getMessage());
-        }*/
-
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_PRODUTO))) {
             bw.write("IDPRODUTO;ESTADO;NOME;DESCRICAO");
             bw.newLine();
@@ -73,7 +69,7 @@ public class ProdutoDal {
             }
 
         } catch (IOException e) {
-            System.err.println("Erro ao gravar o ficheiro CSV de Produtos: " + e.getMessage());
+            logger.log(Level.SEVERE,"Erro ao gravar o ficheiro CSV de Produtos: ", e.getMessage());
         }
     }
 
@@ -87,9 +83,9 @@ public class ProdutoDal {
                 bw.newLine();
             }
 
-            System.out.println("Ficheiro atualizado com sucesso!");
+            logger.log(Level.SEVERE,"Ficheiro atualizado com sucesso!");
         } catch (IOException e) {
-            System.err.println("[ERRO] Não foi possível salvar o ficheiro: " + e.getMessage());
+            logger.log(Level.SEVERE,"[ERRO] Não foi possível salvar o ficheiro: " + e.getMessage());
         }
     }
 

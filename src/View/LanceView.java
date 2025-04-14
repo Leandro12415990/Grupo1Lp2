@@ -9,8 +9,6 @@ import Model.ResultadoOperacao;
 import Utils.Constantes;
 import Utils.Tools;
 
-import javax.tools.Tool;
-import java.time.LocalDate;
 import java.util.List;
 
 import static BLL.LeilaoBLL.listarLeiloes;

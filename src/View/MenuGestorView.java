@@ -11,10 +11,9 @@ public class MenuGestorView {
             System.out.println("1. Listagem de Utilizadores");
             System.out.println("2. Aprovar Clientes");
             System.out.println("3. Inativar Clientes");
-            System.out.println("4. Menu Produtos");
-            System.out.println("5. Menu Leilões");
-            System.out.println("6. Menu Produtos");
-            System.out.println("7. Listagens");
+            System.out.println("4. Menu Leilões");
+            System.out.println("5. Menu Produtos");
+            System.out.println("6. Listagens");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
 
@@ -22,13 +21,13 @@ public class MenuGestorView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
+                    UtilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
                     break;
                 case 2:
-                    AprovarClienteView.exibirMenu(Tools.estadoUtilizador.ATIVO.getCodigo());
+                    UtilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
                     break;
                 case 3:
-                    AprovarClienteView.exibirMenu(Tools.estadoUtilizador.INATIVO.getCodigo());
+                    UtilizadorView.aprovarCliente(Tools.estadoUtilizador.INATIVO.getCodigo());
                     break;
                 case 4:
                     LeilaoView.exibirMenuLeiloes();
@@ -40,7 +39,7 @@ public class MenuGestorView {
                     EstatisticaView.exibirMenuListagem();
                     break;
                 case 0:
-                    System.out.println("A desligar sistema...");
+                    System.out.println("A sair...");
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");
