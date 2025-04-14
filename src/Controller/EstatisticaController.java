@@ -3,7 +3,6 @@ package Controller;
 import BLL.EstatisticaBLL;
 import BLL.LeilaoBLL;
 import Model.Leilao;
-import Model.ResultadoOperacao;
 
 import java.time.Period;
 import java.util.List;

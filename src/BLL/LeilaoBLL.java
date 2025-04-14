@@ -1,12 +1,9 @@
 package BLL;
 
-import Model.Lance;
 import Model.Leilao;
 import DAL.ImportDal;
 import Utils.Constantes;
-import View.LanceView;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,12 +2,10 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
-import DAL.ImportDal;
 import Model.ClienteSessao;
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
-import View.LeilaoView;
 
 import java.util.ArrayList;
 import java.util.List;

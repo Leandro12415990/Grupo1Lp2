@@ -1,12 +1,8 @@
 package Controller;
 
-import BLL.LeilaoBLL;
 import BLL.ProdutoBLL;
-import Model.Leilao;
 import Model.Produto;
 import Model.ResultadoOperacao;
-import Utils.Tools;
-import View.LeilaoView;
 import View.ProdutoView;
 
 import java.util.List;

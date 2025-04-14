@@ -1,6 +1,5 @@
 package View;
 
-
 import Model.Utilizador;
 import Utils.Tools;
 
