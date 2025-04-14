@@ -46,30 +46,6 @@ public class Tools {
         return (date != null) ? date.format(FORMATTER) : "";
     }
 
-    public static List<String[]> lerCSV(String caminho) {
-        List<String[]> linhas = new ArrayList<>();
-        try (BufferedReader br = Files.newBufferedReader(Paths.get(caminho))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                linhas.add(linha.split(";"));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return linhas;
-    }
-
-    public static void escreverCSV(String caminho, List<String[]> linhas) {
-        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(caminho))) {
-            for (String[] linha : linhas) {
-                bw.write(String.join(";", linha));
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public enum tipoUtilizador {
         GESTOR(1), CLIENTE(2);
 
