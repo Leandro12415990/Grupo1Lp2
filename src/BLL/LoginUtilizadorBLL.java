@@ -17,11 +17,10 @@ public class LoginUtilizadorBLL {
             {
                 u.setUltimoLogin(LocalDate.now());
                 ImportDal.gravarUtilizador(Tools.utilizadores);
+                ClienteSessao.setIdCliente(u.getId());
 
                 if (u.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo() || u.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) return u;
 
-                ClienteSessao.setIdCliente(u.getId());
-               
             }
         }
         return null;

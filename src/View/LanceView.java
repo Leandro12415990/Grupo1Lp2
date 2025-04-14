@@ -1,6 +1,6 @@
 package View;
 
-import BLL.ImportBLL;
+import DAL.ImportDal;
 import BLL.LeilaoBLL;
 import Controller.LanceController;
 import Controller.LeilaoController;

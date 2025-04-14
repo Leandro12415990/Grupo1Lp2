@@ -85,7 +85,6 @@ public class LeilaoView {
 
                 LocalDateTime dataInicio = null;
                 LocalDateTime dataFim = null;
-                // No caso de ser um Leilão Eletronico, pede DateTime
                 if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
                     while (true) {
                         System.out.print("\nInsira a data de início (dd/MM/yyyy hh:mm) (-1 para cancelar): ");

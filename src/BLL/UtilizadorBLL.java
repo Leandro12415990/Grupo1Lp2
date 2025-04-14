@@ -97,4 +97,14 @@ public class UtilizadorBLL {
         if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
         else u.setEstado(Tools.estadoUtilizador.INATIVO.getCodigo());
     }
+
+    public static Utilizador procurarUtilizadorPorId(int idCliente) {
+        List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
+        for (Utilizador u : utilizadores) {
+            if (u.getId() == idCliente) {
+                return u;
+            }
+        }
+        return null;
+    }
 }
