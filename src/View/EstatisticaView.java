@@ -304,7 +304,7 @@ public class EstatisticaView {
             return;
         }
 
-        Period tempo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+        Period tempo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
 
         System.out.println("\n=== Leilão com mais tempo ativo ===");
         System.out.println("ID: " + leilao.getId());
@@ -322,7 +322,7 @@ public class EstatisticaView {
             return;
         }
 
-        Period tempo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+        Period tempo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
 
         System.out.println("\n=== Leilão com mais tempo ativo (por tipo) ===");
         System.out.println("ID: " + leilao.getId());
@@ -370,7 +370,7 @@ public class EstatisticaView {
         }
 
         System.out.println("\n=== Média de tempo entre lances ===");
-        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutos(media));
+        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutosESegundos(media));
     }
 
     public static void mostrarMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
@@ -384,7 +384,7 @@ public class EstatisticaView {
         System.out.println("\n=== Média de tempo entre lances para tipo " +
                 Tools.tipoLeilao.fromCodigo(idTipoLeilao).name() + " ===");
 
-        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutos(media));
+        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutosESegundos(media));
     }
 
     public static void mostrarLeiloesSemLances() {
@@ -399,10 +399,11 @@ public class EstatisticaView {
         System.out.println("Quantidade: " + semLances.size());
         System.out.println("Lista de leilões sem lances:\n");
 
+
         for (Leilao leilao : semLances) {
             System.out.println("ID: " + leilao.getId() +
                     " | Descrição: " + leilao.getDescricao() +
-                    " | Tipo: " + leilao.getTipoLeilao());
+                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()));
         }
     }
 
@@ -480,9 +481,7 @@ public class EstatisticaView {
 
         LeilaoView.exibirLeiloes(leiloes);
 
-        System.out.print("\nInsira o ID do leilão que deseja analisar "+ Tools.alertaCancelar());
-        int id = Tools.scanner.nextInt();
-        Tools.scanner.nextLine();
+        int id = Tools.pedirOpcaoMenu("Insira o ID do leilão que deseja analisar "+ Tools.alertaCancelar());
 
         if (Tools.verificarSaida(String.valueOf(id))) return;
 

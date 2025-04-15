@@ -3,6 +3,7 @@ package BLL;
 import DAL.ImportDal;
 import Model.Lance;
 import Model.Leilao;
+import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Constantes;
 
@@ -11,7 +12,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EstatisticaBLL {
     /** Filtragem dos Leilões */
@@ -94,7 +97,7 @@ public class EstatisticaBLL {
 
             if (leilao.getDataInicio() == null || leilao.getDataFim() == null) continue;
 
-            Period periodo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+            Period periodo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
 
             if (isMaiorPeriodo(periodo, maiorPeriodo)) {
                 maiorPeriodo = periodo;
@@ -115,7 +118,7 @@ public class EstatisticaBLL {
         for (Leilao leilao : leiloes) {
             if (leilao.getDataInicio() == null || leilao.getDataFim() == null) continue;
 
-            Period periodo = Period.between(leilao.getDataInicio(), leilao.getDataFim());
+            Period periodo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
 
             if (isMaiorPeriodo(periodo, maiorPeriodo)) {
                 maiorPeriodo = periodo;
@@ -226,52 +229,52 @@ public class EstatisticaBLL {
 
     /** Calcular a media de tempo para acontecer um lance */
 
-    public static double calcularMediaTempoEntreLancesEmMinutos() {
-            List<Lance> lances = LanceBLL.carregarLance();
-            if (lances == null || lances.isEmpty()) return -1;
+    public static double calcularMediaTempoEntreLancesGeral() {
+        List<Lance> lances = LanceBLL.carregarLance();
 
-            List<Integer> idsVerificados = new ArrayList<>();
-            double somaMinutos = 0;
-            int totalIntervalos = 0;
-
-            for (Lance l : lances) {
-                int idLeilao = l.getIdLeilao();
-                if (idsVerificados.contains(idLeilao)) continue;
-                idsVerificados.add(idLeilao);
-
-                List<Lance> lancesDoLeilao = new ArrayList<>();
-                for (Lance outro : lances) {
-                    if (outro.getIdLeilao() == idLeilao) {
-                        lancesDoLeilao.add(outro);
-                    }
-                }
-
-                if (lancesDoLeilao.size() < 2) continue;
-
-                for (int i = 0; i < lancesDoLeilao.size() - 1; i++) {
-                    for (int j = i + 1; j < lancesDoLeilao.size(); j++) {
-                        if (lancesDoLeilao.get(i).getDataLance().isAfter(lancesDoLeilao.get(j).getDataLance())) {
-                            Lance temp = lancesDoLeilao.get(i);
-                            lancesDoLeilao.set(i, lancesDoLeilao.get(j));
-                            lancesDoLeilao.set(j, temp);
-                        }
-                    }
-                }
-
-                for (int i = 1; i < lancesDoLeilao.size(); i++) {
-                    LocalDateTime anterior = lancesDoLeilao.get(i - 1).getDataLance();
-                    LocalDateTime atual = lancesDoLeilao.get(i).getDataLance();
-                    long minutos = Duration.between(anterior, atual).toMinutes();
-
-                    somaMinutos += minutos;
-                    totalIntervalos++;
-                }
-            }
-
-            if (totalIntervalos == 0) return -1;
-
-            return somaMinutos / totalIntervalos;
+        if (lances == null) {
+            return -1;
         }
+
+        if (lances.isEmpty()) {
+            return -1;
+        }
+
+        List<Lance> lancesValidos = lances.stream()
+                .filter(lance -> lance.getDataLance() != null)
+                .collect(Collectors.toList());
+
+        if (lancesValidos.size() < 2) {
+            return -1;
+        }
+
+        lancesValidos.sort(Comparator.comparing(Lance::getDataLance));
+
+        double somaSegundos = 0;
+        int totalIntervalos = 0;
+
+        for (int i = 1; i < lancesValidos.size(); i++) {
+            LocalDateTime anterior = lancesValidos.get(i - 1).getDataLance();
+            LocalDateTime atual = lancesValidos.get(i).getDataLance();
+
+            if (anterior == null || atual == null) continue;
+
+            long segundos = Duration.between(anterior, atual).getSeconds();
+
+            somaSegundos += segundos;
+            totalIntervalos++;
+        }
+
+        if (totalIntervalos == 0) {
+            return -1;
+        }
+
+        double mediaMinutos = (somaSegundos / 60.0) / totalIntervalos;
+
+        return mediaMinutos;
+    }
+
+
 
     public static double calcularMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
         List<Lance> lances = LanceBLL.carregarLance();
@@ -280,48 +283,50 @@ public class EstatisticaBLL {
         if (lances == null || lances.isEmpty() || leiloes == null || leiloes.isEmpty()) return -1;
 
         List<Integer> idsVerificados = new ArrayList<>();
-        double somaMinutos = 0;
+        double somaSegundos = 0;
         int totalIntervalos = 0;
 
-        for (Leilao leilao : leiloes) {
-            if (leilao.getTipoLeilao() != idTipoLeilao) continue;
+        for (Lance l : lances) {
+            int idLeilao = l.getIdLeilao();
 
-            int idLeilao = leilao.getId();
             if (idsVerificados.contains(idLeilao)) continue;
             idsVerificados.add(idLeilao);
 
+            Leilao leilao = null;
+            for (Leilao aux : leiloes) {
+                if (aux.getId() == idLeilao) {
+                    leilao = aux;
+                    break;
+                }
+            }
+
+            if (leilao == null || leilao.getTipoLeilao() != idTipoLeilao) continue;
+
             List<Lance> lancesDoLeilao = new ArrayList<>();
-            for (Lance l : lances) {
-                if (l.getIdLeilao() == idLeilao) {
-                    lancesDoLeilao.add(l);
+            for (Lance outro : lances) {
+                if (outro.getIdLeilao() == idLeilao && outro.getDataLance() != null) {
+                    lancesDoLeilao.add(outro);
                 }
             }
 
-            if (lancesDoLeilao.size() < 2) continue;
-
-            for (int i = 0; i < lancesDoLeilao.size() - 1; i++) {
-                for (int j = i + 1; j < lancesDoLeilao.size(); j++) {
-                    if (lancesDoLeilao.get(i).getDataLance().isAfter(lancesDoLeilao.get(j).getDataLance())) {
-                        Lance temp = lancesDoLeilao.get(i);
-                        lancesDoLeilao.set(i, lancesDoLeilao.get(j));
-                        lancesDoLeilao.set(j, temp);
-                    }
-                }
-            }
+            lancesDoLeilao.sort(Comparator.comparing(Lance::getDataLance));
 
             for (int i = 1; i < lancesDoLeilao.size(); i++) {
                 LocalDateTime anterior = lancesDoLeilao.get(i - 1).getDataLance();
                 LocalDateTime atual = lancesDoLeilao.get(i).getDataLance();
-                long minutos = Duration.between(anterior, atual).toMinutes();
 
-                somaMinutos += minutos;
+                long segundos = Duration.between(anterior, atual).getSeconds();
+                somaSegundos += segundos;
                 totalIntervalos++;
             }
         }
 
-        if (totalIntervalos == 0) return -1;
+        if (totalIntervalos == 0) {
+            return -1;
+        }
 
-        return somaMinutos / totalIntervalos;
+        double mediaMinutos = (somaSegundos / 60.0) / totalIntervalos;
+        return mediaMinutos;
     }
 
     /** Calcular a quantidade de leiloes sem lance */
@@ -524,11 +529,14 @@ public class EstatisticaBLL {
     }
 
     public static Period calcularTempoAtivoLeilao(Leilao leilao) {
-        if (leilao.getDataInicio() == null || leilao.getDataFim() == null) {
-            return Period.ZERO;
+
+        LocalDateTime dataFim = leilao.getDataFim();
+        if (dataFim == null) {
+            dataFim = LocalDateTime.now();
         }
-        return Period.between(leilao.getDataInicio(), leilao.getDataFim());
+        return Period.between(leilao.getDataInicio().toLocalDate(), dataFim.toLocalDate());
     }
+
 
 
 
