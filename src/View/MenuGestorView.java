@@ -14,6 +14,7 @@ public class MenuGestorView {
             System.out.println("4. Menu Leilões");
             System.out.println("5. Menu Produtos");
             System.out.println("6. Listagens");
+            System.out.println("7. Aprovar Despósitos");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
 
@@ -37,6 +38,9 @@ public class MenuGestorView {
                     break;
                 case  6:
                     EstatisticaView.exibirMenuListagem();
+                    break;
+                case 7:
+                    TransacaoView.aprovarDepositos();
                     break;
                 case 0:
                     System.out.println("A sair...");

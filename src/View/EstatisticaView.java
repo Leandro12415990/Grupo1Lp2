@@ -399,10 +399,11 @@ public class EstatisticaView {
         System.out.println("Quantidade: " + semLances.size());
         System.out.println("Lista de leilões sem lances:\n");
 
+
         for (Leilao leilao : semLances) {
             System.out.println("ID: " + leilao.getId() +
                     " | Descrição: " + leilao.getDescricao() +
-                    " | Tipo: " + leilao.getTipoLeilao());
+                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()));
         }
     }
 
