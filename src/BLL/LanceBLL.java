@@ -160,7 +160,7 @@ public class LanceBLL {
                 break;
             }
         }
-        Transacao transacao = obterTipoEEstadoPorLeilao(idCliente,novoSaldo,valor,idTipoLeilao);
+        Transacao transacao = obterTipoEEstadoPorLeilao(idCliente, novoSaldo, valor, idTipoLeilao);
 
         TransacaoBLL.criarTransacao(transacao);
 
@@ -171,19 +171,19 @@ public class LanceBLL {
         return resultado;
     }
 
-    public static Transacao obterTipoEEstadoPorLeilao (int idCliente, double saldo, double valorTransacao,int tipoLeilao){
+    public static Transacao obterTipoEEstadoPorLeilao(int idCliente, double saldo, double valorTransacao, int tipoLeilao) {
         int idEstadoTransacao = 0;
         int idTipoTransacao = 0;
         switch (tipoLeilao) {
             case Constantes.tiposLeilao.VENDA_DIRETA, Constantes.tiposLeilao.ELETRONICO,
                  Constantes.tiposLeilao.CARTA_FECHADA:
                 idTipoTransacao = Constantes.tiposTransacao.LANCE_DEBITO;
-                idEstadoTransacao= Constantes.estadosTransacao.ACEITE;
+                idEstadoTransacao = Constantes.estadosTransacao.ACEITE;
                 break;
             default:
                 break;
         }
-        return new Transacao(0, idCliente,saldo,valorTransacao,LocalDateTime.now(),idTipoTransacao,idEstadoTransacao);
+        return new Transacao(0, idCliente, saldo, valorTransacao, LocalDateTime.now(), idTipoTransacao, idEstadoTransacao);
     }
 
     public static int selecionarLanceVencedor(int idLeilao) {
@@ -203,6 +203,16 @@ public class LanceBLL {
 
         return lanceVencedor.getIdLance();
 
+    }
+
+    public static String obterNomeVencedor(int idLance) {
+        for (Lance lance : lances) {
+            if (lance.getIdLance() == idLance) {
+                Utilizador utilizadorVencedor = UtilizadorBLL.procurarUtilizadorPorId(lance.getIdCliente());
+                return utilizadorVencedor.getNomeUtilizador();
+            }
+        }
+        return null;
     }
 }
 

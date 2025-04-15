@@ -1,6 +1,9 @@
 package View;
 
+import BLL.LanceBLL;
+import BLL.UtilizadorBLL;
 import Controller.ProdutoController;
+import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
@@ -435,7 +438,8 @@ public class LeilaoView {
                             isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
                             if (isCorrect.Sucesso) break;
                             else System.out.println(isCorrect.msgErro);
-                        } break;
+                        }
+                        break;
                     }
                 }
             }
@@ -497,7 +501,7 @@ public class LeilaoView {
                                 if (resultadoValores.Sucesso) {
                                     break;
                                 } else {
-                                    System.out.println(resultadoValores.msgErro);  // Exibe erro de validação
+                                    System.out.println(resultadoValores.msgErro);
                                     valorMax = 0.0;
                                 }
                             } else {
@@ -512,7 +516,7 @@ public class LeilaoView {
                             if (resultadoValores.Sucesso) {
                                 break;
                             } else {
-                                System.out.println(resultadoValores.msgErro);  // Exibe erro de validação
+                                System.out.println(resultadoValores.msgErro);
                                 valorMax = 0.0;
                             }
                         }
@@ -534,7 +538,8 @@ public class LeilaoView {
                         if (multiploLance <= 0) {
                             System.out.println("O múltiplo de lance deve ser maior que zero. Tente novamente.");
                             continue;
-                        } break;
+                        }
+                        break;
                     } catch (NumberFormatException e) {
                         System.out.println("Entrada inválida. Insira um número válido.");
                     }
@@ -587,8 +592,6 @@ public class LeilaoView {
         if (Tools.verificarSaida(imput2)) return;
         char confirmacaoData = Character.toUpperCase(imput2.charAt(0));
 
-        Tools.scanner.nextLine();
-
         if (confirmacaoData != 'S') {
             System.out.println("Insira a data que quer fechar o leilão (formato dd/MM/yyyy): " + Tools.alertaCancelar());
             String dataFimManual = Tools.scanner.nextLine().trim();
@@ -613,11 +616,14 @@ public class LeilaoView {
 
         if (sucesso) {
             System.out.println("Leilão fechado com sucesso!");
+            String vencedor = LanceBLL.obterNomeVencedor(LanceBLL.selecionarLanceVencedor(idLeilao));
+            if (vencedor != null) {
+                System.out.println("O vencedor do Leilão é: " + LanceBLL.obterNomeVencedor(LanceBLL.selecionarLanceVencedor(idLeilao)));
+            } else System.out.println("Não existem vencedores");
         } else {
             System.out.println("Leilão não encontrado!");
         }
     }
-
 
 
 }
