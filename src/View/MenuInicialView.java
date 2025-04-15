@@ -1,6 +1,7 @@
 package View;
 
-import BLL.LanceBLL;
+import Model.Utilizador;
+import Utils.Tools;
 
 
 import static Utils.Tools.scanner;
@@ -21,19 +22,17 @@ public class MenuInicialView {
 
             switch (opcao) {
                 case 1:
-                    int tipoUtilizador = LoginView.login();
-                    if (tipoUtilizador == -1) {
-                        continue;
-                    } else if (tipoUtilizador == 1) {
+                    Utilizador utilizador = LoginView.login();
+                    if (utilizador == null) {
+                        System.out.println("Erro a fazer Login");
+                    } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo()) {
                         MenuGestorView.exibirMenu();
-                    } else if (tipoUtilizador == 2) {
-                        MenuClienteView.exibirMenu();
-                    } else {
-                        System.out.println("Tipo de utilizador inválido.");
+                    } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) {
+                        MenuClienteView.exibirMenu(utilizador);
                     }
                     break;
                 case 2:
-                    RegistarClienteView.MenuRegistarCliente();
+                    UtilizadorView.registarCliente();
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");

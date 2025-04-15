@@ -29,7 +29,7 @@ public class RegistarClienteBLL {
         }
 
         try {
-            utilizador = new Utilizador( max + 1, nome, email, nascimento, morada, password, hora, hora, 1, Tools.estadoUtilizador.PENDENTE.getCodigo());
+            utilizador = new Utilizador( max + 1, nome, email, nascimento, morada, password, hora, hora, Tools.tipoUtilizador.CLIENTE.getCodigo(), Tools.estadoUtilizador.PENDENTE.getCodigo(), 0.0);
         } catch (Exception e) {
             return false;
         }

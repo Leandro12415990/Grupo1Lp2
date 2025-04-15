@@ -38,8 +38,6 @@ public class RegistarClienteView {
                     nascimento = LocalDate.parse(data, formatter);
                     dataValida = true;
                 }
-
-
             }
             catch (Exception e) {
                 System.out.println("Tipo de data inválida, tente novamente...\n");
@@ -70,7 +68,6 @@ public class RegistarClienteView {
         } else {
             System.out.println(resultado.msgErro);
         }
-
     }
 
     private static boolean verificarPassword(String passwordFirst, String passwordSecound)
