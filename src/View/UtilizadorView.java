@@ -128,7 +128,7 @@ public class UtilizadorView {
             System.out.println("Menu Aprovar Clientes");
             if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) UtilizadorView.mostrarUtilizador(Tools.estadoUtilizador.PENDENTE.getCodigo(), 2);
             if (estado == Tools.estadoUtilizador.INATIVO.getCodigo()) UtilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
-            System.out.println("-".repeat(245));
+            System.out.println("-----------------------------------------------------------------");
             System.out.println(MessageFormat.format("1. {0} todos", menuMSG));
             System.out.println(MessageFormat.format("2. {0} Cliente especifico", menuMSG));
             System.out.println("0. Sair...");

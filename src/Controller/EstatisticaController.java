@@ -3,6 +3,7 @@ package Controller;
 import BLL.EstatisticaBLL;
 import BLL.LeilaoBLL;
 import Model.Leilao;
+import Model.ResultadoOperacao;
 
 import java.time.Period;
 import java.util.List;
@@ -41,7 +42,7 @@ public class EstatisticaController {
     }
 
     public static double calcularMediaTempoEntreLances() {
-        return EstatisticaBLL.calcularMediaTempoEntreLancesGeral();
+        return EstatisticaBLL.calcularMediaTempoEntreLancesEmMinutos();
     }
 
     public static double calcularMediaTempoEntreLancesPorTipo(int tipo) {

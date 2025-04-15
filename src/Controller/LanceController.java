@@ -2,10 +2,12 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
+import DAL.ImportDal;
 import Model.ClienteSessao;
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
+import View.LeilaoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,42 +16,32 @@ public class LanceController {
 
     public static ResultadoOperacao adicionarLanceEletronico(int idLeilao, int numLance, double multiploLance) {
         int idCliente = ClienteSessao.getIdCliente();
-        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
-
-        int tipoLeilao = leilao.getTipoLeilao();
+        List<Leilao> leiloesAtivos = LeilaoBLL.listarLeiloes(true);
 
         double valorLance = 0;
         int valorLanceAtual = 0;
 
-        ResultadoOperacao resultado = LanceBLL.adicionarLanceEletronico(0, idLeilao, valorLance, numLance, multiploLance, idCliente, valorLanceAtual, tipoLeilao);
-
-
+        ResultadoOperacao resultado = LanceBLL.adicionarLanceEletronico(0, idLeilao, valorLance, numLance, multiploLance, idCliente, valorLanceAtual);
         return resultado;
     }
-
 
     public static ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance) {
         int idCliente = ClienteSessao.getIdCliente();
         Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
         valorLance = leilao.getValorMinimo();
-        int tipoLeilao = leilao.getTipoLeilao();
 
-        ResultadoOperacao resultado = LanceBLL.adicionarLanceDireto(0, idLeilao, valorLance, idCliente, tipoLeilao);
+        ResultadoOperacao resultado = LanceBLL.adicionarLanceDireto(0, idLeilao, valorLance, idCliente);
 
         return resultado;
     }
 
     public static ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance) {
         int idCliente = ClienteSessao.getIdCliente();
-        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
+        List<Leilao> leiloesAtivos = LeilaoBLL.listarLeiloes(true);
 
-        int tipoLeilao = leilao.getTipoLeilao();
-
-        ResultadoOperacao resultado = LanceBLL.adicionarLanceCartaFechada(0, idLeilao, valorLance, idCliente, tipoLeilao);
-
+        ResultadoOperacao resultado = LanceBLL.adicionarLanceCartaFechada(0, idLeilao, valorLance, idCliente);
         return resultado;
     }
-
 
     public static List<Lance> listarLancesDoCliente() {
         int idCliente = ClienteSessao.getIdCliente();
