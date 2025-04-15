@@ -79,7 +79,6 @@ public class UtilizadorBLL {
             if (u.getEmail().equals(utilizador.getEmail())) {
                 index = soma;
                 if (!nome.isEmpty()) utilizador.setNomeUtilizador(nome);
-                if (nascimento != null) utilizador.setDataNascimento(nascimento);
                 if (!morada.isBlank()) utilizador.setMorada(morada);
                 if (!password.isBlank()) utilizador.setPassword(password);
             }

@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 public class LanceBLL {
     private static List<Lance> lances = new ArrayList<>();
-    private static List<Utilizador> utilizadors = new ArrayList<>();
 
     public static List<Lance> carregarLance() {
         lances = ImportDal.carregarLance();

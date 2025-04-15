@@ -85,24 +85,8 @@ public class UtilizadorView {
             String nome = Tools.scanner.nextLine();
             if (Tools.verificarSaida(nome)) return;
 
-            LocalDate nascimento = null;
-            boolean dataValida = false;
-            do {
-                System.out.print("Data de Nascimento (dd/MM/yyyy) " + Tools.alertaCancelar());
-                try {
-                    String data = Tools.scanner.nextLine();
-                    if (Tools.verificarSaida(data)) return;
-                    else if (data.isEmpty()) {
-                        dataValida = true;
-                        break;
-                    } else {
-                        nascimento = LocalDate.parse(data, Tools.FORMATTER);
-                        dataValida = true;
-                    }
-                } catch (Exception e) {
-                    System.out.println("Tipo de data inválida, tente novamente...\n");
-                }
-            } while (!dataValida);
+            LocalDate nascimento = utilizador.getDataNascimento();
+
             System.out.print("Morada " + Tools.alertaCancelar());
             String morada = Tools.scanner.nextLine();
             if (Tools.verificarSaida(morada)) return;
@@ -124,6 +108,7 @@ public class UtilizadorView {
             ResultadoOperacao resultado = UtilizadorController.verificarDados(utilizador, nome, utilizador.getEmail(), nascimento, morada, passwordFirst, passwordSecound);
             if (resultado.Sucesso) System.out.println("Cliente alterado com sucesso");
             else System.out.println(resultado.msgErro);
+            break;
         }
     }
 
@@ -181,7 +166,7 @@ public class UtilizadorView {
         System.out.println("-".repeat(245));
         for (Utilizador utilizador : utilizadores) {
             String estadoStr = Tools.estadoUtilizador.fromCodigo(utilizador.getEstado()).name();
-            String tipoUtilizadorStr = Tools.tipoLeilao.fromCodigo(utilizador.getTipoUtilizador()).name();
+            String tipoUtilizadorStr = Tools.tipoUtilizador.fromCodigo(utilizador.getTipoUtilizador()).name();
             System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %-10s\n",
                     utilizador.getId(),
                     utilizador.getNomeUtilizador(),
