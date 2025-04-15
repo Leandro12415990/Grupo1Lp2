@@ -1,19 +1,20 @@
 package View;
 
-import BLL.LanceBLL;
-import BLL.UtilizadorBLL;
+import BLL.LeilaoBLL;
 import Controller.ProdutoController;
-import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
 import Utils.Tools;
 import Controller.LeilaoController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static BLL.LeilaoBLL.carregarLeiloes;
+import static BLL.LeilaoBLL.listarLeiloes;
 
 public class LeilaoView {
     public static void exibirMenuLeiloes() {
@@ -88,6 +89,7 @@ public class LeilaoView {
 
                 LocalDateTime dataInicio = null;
                 LocalDateTime dataFim = null;
+                // No caso de ser um Leilão Eletronico, pede DateTime
                 if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
                     while (true) {
                         System.out.print("\nInsira a data de início (dd/MM/yyyy hh:mm) (-1 para cancelar): ");
@@ -438,8 +440,7 @@ public class LeilaoView {
                             isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
                             if (isCorrect.Sucesso) break;
                             else System.out.println(isCorrect.msgErro);
-                        }
-                        break;
+                        } break;
                     }
                 }
             }
@@ -501,7 +502,7 @@ public class LeilaoView {
                                 if (resultadoValores.Sucesso) {
                                     break;
                                 } else {
-                                    System.out.println(resultadoValores.msgErro);
+                                    System.out.println(resultadoValores.msgErro);  // Exibe erro de validação
                                     valorMax = 0.0;
                                 }
                             } else {
@@ -516,7 +517,7 @@ public class LeilaoView {
                             if (resultadoValores.Sucesso) {
                                 break;
                             } else {
-                                System.out.println(resultadoValores.msgErro);
+                                System.out.println(resultadoValores.msgErro);  // Exibe erro de validação
                                 valorMax = 0.0;
                             }
                         }
@@ -538,8 +539,7 @@ public class LeilaoView {
                         if (multiploLance <= 0) {
                             System.out.println("O múltiplo de lance deve ser maior que zero. Tente novamente.");
                             continue;
-                        }
-                        break;
+                        } break;
                     } catch (NumberFormatException e) {
                         System.out.println("Entrada inválida. Insira um número válido.");
                     }
@@ -592,6 +592,8 @@ public class LeilaoView {
         if (Tools.verificarSaida(imput2)) return;
         char confirmacaoData = Character.toUpperCase(imput2.charAt(0));
 
+        Tools.scanner.nextLine();
+
         if (confirmacaoData != 'S') {
             System.out.println("Insira a data que quer fechar o leilão (formato dd/MM/yyyy): " + Tools.alertaCancelar());
             String dataFimManual = Tools.scanner.nextLine().trim();
@@ -616,14 +618,11 @@ public class LeilaoView {
 
         if (sucesso) {
             System.out.println("Leilão fechado com sucesso!");
-            String vencedor = LanceBLL.obterNomeVencedor(LanceBLL.selecionarLanceVencedor(idLeilao));
-            if (vencedor != null) {
-                System.out.println("O vencedor do Leilão é: " + LanceBLL.obterNomeVencedor(LanceBLL.selecionarLanceVencedor(idLeilao)));
-            } else System.out.println("Não existem vencedores");
         } else {
             System.out.println("Leilão não encontrado!");
         }
     }
+
 
 
 }
