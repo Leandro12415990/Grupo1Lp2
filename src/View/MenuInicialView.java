@@ -15,9 +15,9 @@ public class MenuInicialView {
             System.out.println("1. Efetuar Login");
             System.out.println("2. Efetuar Registo");
             System.out.println("0. Sair...");
-            System.out.print("Escolha uma opção: ");
 
-            opcao = scanner.nextInt();
+            opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
+
             scanner.nextLine().trim();
 
             switch (opcao) {
