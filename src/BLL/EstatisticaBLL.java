@@ -537,11 +537,14 @@ public class EstatisticaBLL {
     }
 
     public static Period calcularTempoAtivoLeilao(Leilao leilao) {
-        if (leilao.getDataInicio() == null || leilao.getDataFim() == null) {
-            return Period.ZERO;
+
+        LocalDateTime dataFim = leilao.getDataFim();
+        if (dataFim == null) {
+            dataFim = LocalDateTime.now();
         }
-        return Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
+        return Period.between(leilao.getDataInicio().toLocalDate(), dataFim.toLocalDate());
     }
+
 
 
 
