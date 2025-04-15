@@ -1,5 +1,6 @@
 package BLL;
 
+import Controller.LeilaoController;
 import Model.Lance;
 import Model.Leilao;
 import DAL.ImportDal;
@@ -115,9 +116,5 @@ public class LeilaoBLL {
         }
         ImportDal.gravarLeilao(leilaos);
     }
-
-
-
-
 
 }

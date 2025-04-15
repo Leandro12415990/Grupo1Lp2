@@ -370,7 +370,7 @@ public class EstatisticaView {
         }
 
         System.out.println("\n=== Média de tempo entre lances ===");
-        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutos(media));
+        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutosESegundos(media));
     }
 
     public static void mostrarMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
@@ -384,7 +384,7 @@ public class EstatisticaView {
         System.out.println("\n=== Média de tempo entre lances para tipo " +
                 Tools.tipoLeilao.fromCodigo(idTipoLeilao).name() + " ===");
 
-        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutos(media));
+        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutosESegundos(media));
     }
 
     public static void mostrarLeiloesSemLances() {
@@ -399,10 +399,11 @@ public class EstatisticaView {
         System.out.println("Quantidade: " + semLances.size());
         System.out.println("Lista de leilões sem lances:\n");
 
+
         for (Leilao leilao : semLances) {
             System.out.println("ID: " + leilao.getId() +
                     " | Descrição: " + leilao.getDescricao() +
-                    " | Tipo: " + leilao.getTipoLeilao());
+                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()));
         }
     }
 

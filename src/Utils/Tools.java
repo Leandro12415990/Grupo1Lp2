@@ -209,12 +209,16 @@ public class Tools {
         return resultado;
     }
 
-    public static String formatarMinutosParaHorasEMinutos(double minutosTotal) {
-        long horas = (long) minutosTotal / 60;
-        long minutos = (long) minutosTotal % 60;
+    public static String formatarMinutosParaHorasEMinutosESegundos(double minutosTotal) {
+        long totalSegundos = (long) (minutosTotal * 60);
 
-        return horas + " horas e " + minutos + " minutos";
+        long horas = totalSegundos / 3600;
+        long minutos = (totalSegundos % 3600) / 60;
+        long segundos = totalSegundos % 60;
+
+        return horas + " horas e " + minutos + " minutos e " + segundos + " segundos";
     }
+
 
     public static int pedirOpcaoMenu(String mensagem) {
         while (true) {

@@ -228,25 +228,27 @@ public class EstatisticaBLL {
 
     public static double calcularMediaTempoEntreLancesEmMinutos() {
             List<Lance> lances = LanceBLL.carregarLance();
-            if (lances == null || lances.isEmpty()) return -1;
 
-            List<Integer> idsVerificados = new ArrayList<>();
-            double somaMinutos = 0;
-            int totalIntervalos = 0;
+        if (lances == null) {
+            return -1;
+        }
 
-            for (Lance l : lances) {
-                int idLeilao = l.getIdLeilao();
-                if (idsVerificados.contains(idLeilao)) continue;
+        if (lances.isEmpty()) {
+            return -1;
+        }
                 idsVerificados.add(idLeilao);
 
-                List<Lance> lancesDoLeilao = new ArrayList<>();
                 for (Lance outro : lances) {
-                    if (outro.getIdLeilao() == idLeilao) {
+            return -1;
                         lancesDoLeilao.add(outro);
                     }
                 }
 
-                if (lancesDoLeilao.size() < 2) continue;
+        lancesValidos.sort(Comparator.comparing(Lance::getDataLance));
+
+        double somaSegundos = 0;
+        int totalIntervalos = 0;
+
 
                 for (int i = 0; i < lancesDoLeilao.size() - 1; i++) {
                     for (int j = i + 1; j < lancesDoLeilao.size(); j++) {
@@ -258,19 +260,17 @@ public class EstatisticaBLL {
                     }
                 }
 
-                for (int i = 1; i < lancesDoLeilao.size(); i++) {
-                    LocalDateTime anterior = lancesDoLeilao.get(i - 1).getDataLance();
-                    LocalDateTime atual = lancesDoLeilao.get(i).getDataLance();
-                    long minutos = Duration.between(anterior, atual).toMinutes();
+            long segundos = Duration.between(anterior, atual).getSeconds();
 
-                    somaMinutos += minutos;
+            somaSegundos += segundos;
+
                     totalIntervalos++;
                 }
             }
 
-            if (totalIntervalos == 0) return -1;
+        double mediaMinutos = (somaSegundos / 60.0) / totalIntervalos;
 
-            return somaMinutos / totalIntervalos;
+        return mediaMinutos;
         }
 
     public static double calcularMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
@@ -280,7 +280,7 @@ public class EstatisticaBLL {
         if (lances == null || lances.isEmpty() || leiloes == null || leiloes.isEmpty()) return -1;
 
         List<Integer> idsVerificados = new ArrayList<>();
-        double somaMinutos = 0;
+        double somaSegundos = 0;
         int totalIntervalos = 0;
 
         for (Leilao leilao : leiloes) {
@@ -312,16 +312,16 @@ public class EstatisticaBLL {
             for (int i = 1; i < lancesDoLeilao.size(); i++) {
                 LocalDateTime anterior = lancesDoLeilao.get(i - 1).getDataLance();
                 LocalDateTime atual = lancesDoLeilao.get(i).getDataLance();
-                long minutos = Duration.between(anterior, atual).toMinutes();
+                long segundos = Duration.between(anterior, atual).getSeconds();
+                somaSegundos += segundos;
 
-                somaMinutos += minutos;
                 totalIntervalos++;
             }
         }
 
         if (totalIntervalos == 0) return -1;
-
-        return somaMinutos / totalIntervalos;
+        double mediaMinutos = (somaSegundos / 60.0) / totalIntervalos;
+        return mediaMinutos;
     }
 
     /** Calcular a quantidade de leiloes sem lance */
