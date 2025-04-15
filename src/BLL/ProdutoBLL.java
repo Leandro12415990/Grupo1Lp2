@@ -95,7 +95,7 @@ public class ProdutoBLL {
         }
 
         if (produtoRemovido) {
-            ProdutoDal.salvarProdutos(produtos);
+            ProdutoDal.gravarProdutos(produtos);
         }
 
         return produtoRemovido;
