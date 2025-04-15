@@ -1,9 +1,9 @@
 package BLL;
 
 import DAL.ImportDal;
-import Model.*;
-import Utils.Constantes;
-import Utils.Tools;
+import Model.Lance;
+import Model.Leilao;
+import Model.ResultadoOperacao;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,17 +18,12 @@ public class LanceBLL {
         return lances;
     }
 
-    public static ResultadoOperacao adicionarLanceDireto(int idLance, int idLeilao, double valorLance, int idCliente, int idTipoLeilao) {
+    public static ResultadoOperacao adicionarLanceDireto(int idLance, int idLeilao, double valorLance, int idCliente) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-
-
-        ResultadoOperacao saldoVerificado = verificarSaldoEAtualizar(idCliente, valorLance, idTipoLeilao);
-        if (!saldoVerificado.Sucesso) {
-            return saldoVerificado;
-        }
 
         List<Lance> lances = carregarLance();
         idLance = verUltimoId(lances) + 1;
+
         Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
 
         int numLance = 0;
@@ -44,21 +39,16 @@ public class LanceBLL {
         }
 
         resultado.Sucesso = true;
-        resultado.Objeto = lance;
+        resultado.Objeto = resultado;
         return resultado;
     }
 
-    public static ResultadoOperacao adicionarLanceCartaFechada(int idLance, int idLeilao, double valorLance, int idCliente, int idTipoLeilao) {
+    public static ResultadoOperacao adicionarLanceCartaFechada(int idLance, int idLeilao, double valorLance, int idCliente) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-
-        ResultadoOperacao saldoVerificado = verificarSaldoEAtualizar(idCliente, valorLance, idTipoLeilao);
-        if (!saldoVerificado.Sucesso) {
-            return saldoVerificado;
-        }
 
         List<Lance> lances = carregarLance();
         idLance = verUltimoId(lances) + 1;
-        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
+
 
         int numLance = 0;
         int pontosUtilizados = 0;
@@ -69,36 +59,31 @@ public class LanceBLL {
         ImportDal.gravarLance(lances);
 
         resultado.Sucesso = true;
-        resultado.Objeto = lance;
+        resultado.Objeto = resultado;
         return resultado;
     }
 
-    public static ResultadoOperacao adicionarLanceEletronico(int idLance, int idLeilao, double valorLance, int numLance, double multiploLance, int idCliente, int valorLanceAtual, int idtipoLeilao) {
+    public static ResultadoOperacao adicionarLanceEletronico(int idLance, int idLeilao, double valorLance, int numLance, double multiploLance, int idCliente, int valorLanceAtual) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-
-        valorLance += (multiploLance * numLance);
-
-        ResultadoOperacao saldoVerificado = verificarSaldoEAtualizar(idCliente, valorLance, idtipoLeilao);
-        if (!saldoVerificado.Sucesso) {
-            return saldoVerificado;
-        }
 
         List<Lance> lances = carregarLance();
         idLance = verUltimoId(lances) + 1;
-        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idtipoLeilao);
+
+        valorLance = (valorLance + (multiploLance * numLance));
 
         int pontosUtilizados = 0;
         LocalDateTime dataLance = LocalDateTime.now();
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
+
         ImportDal.gravarLance(lances);
 
         resultado.Sucesso = true;
-        resultado.Objeto = lance;
+        resultado.Objeto = resultado;
         return resultado;
-    }
 
+    }
 
     public static int verUltimoId(List<Lance> lances) {
         int ultimoId = 0;
@@ -134,85 +119,9 @@ public class LanceBLL {
                 .collect(Collectors.toList());
     }
 
-    public static void fimLeilao(int idLeilao, LocalDateTime dataFim) {
+    public static void fimLeilao(int idLeilao, LocalDateTime dataFim){
 
         LeilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
     }
 
-    public static ResultadoOperacao verificarSaldoEAtualizar(int idCliente, double valor, int idTipoLeilao) {
-        ResultadoOperacao resultado = new ResultadoOperacao();
-        Utilizador utilizador = UtilizadorBLL.procurarUtilizadorPorId(idCliente);
-
-        if (utilizador.getSaldo() < valor) {
-            resultado.Sucesso = false;
-            resultado.msgErro = "Saldo insuficiente.";
-            return resultado;
-        }
-
-        double novoSaldo = utilizador.getSaldo() - valor;
-        utilizador.setSaldo(novoSaldo);
-
-        List<Utilizador> utilizadores = Tools.utilizadores;
-        for (int i = 0; i < utilizadores.size(); i++) {
-            if (utilizadores.get(i).getId() == idCliente) {
-                utilizadores.set(i, utilizador);
-                break;
-            }
-        }
-        Transacao transacao = obterTipoEEstadoPorLeilao(idCliente, novoSaldo, valor, idTipoLeilao);
-
-        TransacaoBLL.criarTransacao(transacao);
-
-        ImportDal.gravarUtilizador(utilizadores);
-
-        resultado.Sucesso = true;
-        resultado.msgErro = null;
-        return resultado;
-    }
-
-    public static Transacao obterTipoEEstadoPorLeilao(int idCliente, double saldo, double valorTransacao, int tipoLeilao) {
-        int idEstadoTransacao = 0;
-        int idTipoTransacao = 0;
-        switch (tipoLeilao) {
-            case Constantes.tiposLeilao.VENDA_DIRETA, Constantes.tiposLeilao.ELETRONICO,
-                 Constantes.tiposLeilao.CARTA_FECHADA:
-                idTipoTransacao = Constantes.tiposTransacao.LANCE_DEBITO;
-                idEstadoTransacao = Constantes.estadosTransacao.ACEITE;
-                break;
-            default:
-                break;
-        }
-        return new Transacao(0, idCliente, saldo, valorTransacao, LocalDateTime.now(), idTipoTransacao, idEstadoTransacao);
-    }
-
-    public static int selecionarLanceVencedor(int idLeilao) {
-        List<Lance> lances1 = LanceBLL.obterLancesPorLeilao(idLeilao);
-
-        if (lances1 == null || lances1.isEmpty()) {
-            return 0;
-        }
-
-        Lance lanceVencedor = lances1.getFirst();
-
-        for (Lance lance : lances1) {
-            if (lance.getValorLance() > lanceVencedor.getValorLance()) {
-                lanceVencedor = lance;
-            }
-        }
-
-        return lanceVencedor.getIdLance();
-
-    }
-
-    public static String obterNomeVencedor(int idLance) {
-        for (Lance lance : lances) {
-            if (lance.getIdLance() == idLance) {
-                Utilizador utilizadorVencedor = UtilizadorBLL.procurarUtilizadorPorId(lance.getIdCliente());
-                return utilizadorVencedor.getNomeUtilizador();
-            }
-        }
-        return null;
-    }
 }
-
-

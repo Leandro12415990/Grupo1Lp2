@@ -1,6 +1,5 @@
 package BLL;
 
-import Controller.LeilaoController;
 import Model.Lance;
 import Model.Leilao;
 import DAL.ImportDal;
@@ -20,8 +19,6 @@ public class LeilaoBLL {
         int idEstado;
         for (Leilao leilao : leiloes) {
             idEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
-            if (leilao.getEstado() != idEstado && idEstado == Constantes.estadosLeilao.FECHADO && leilao.getTipoLeilao() == Constantes.tiposLeilao.CARTA_FECHADA)
-                LeilaoController.fecharLeilao(leilao.getId(), leilao.getDataFim());
             leilao.setEstado(idEstado);
             ImportDal.gravarLeilao(leiloes);
         }
@@ -109,19 +106,15 @@ public class LeilaoBLL {
         } else return idEstado;
     }
 
-    public static void colocarDataFimLeilao(int idLeilao, LocalDateTime dataFim) {
-        List<Leilao> leiloes = ImportDal.carregarLeilao();
-        for (Leilao leilao : leiloes) {
-            if (leilao.getId() == idLeilao) {
+    public static void colocarDataFimLeilao(int idLeilao, LocalDateTime dataFim){
+        List<Leilao> leilaos = LeilaoBLL.carregarLeiloes();
+        for (Leilao leilao : leilaos){
+            if (leilao.getId() == idLeilao){
                 leilao.setDataFim(dataFim);
-                int novoEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), dataFim, leilao.getEstado());
-                leilao.setEstado(novoEstado);
-                break;
             }
         }
-        ImportDal.gravarLeilao(leiloes);
+        ImportDal.gravarLeilao(leilaos);
     }
-
 
 
 

@@ -1,13 +1,14 @@
 package Controller;
 
-import BLL.LanceBLL;
 import BLL.ProdutoBLL;
-import BLL.TransacaoBLL;
-import Model.*;
+import Model.Leilao;
+import Model.Produto;
+import Model.ResultadoOperacao;
 import BLL.LeilaoBLL;
 import Utils.Constantes;
 import View.LeilaoView;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -102,9 +103,6 @@ public class LeilaoController {
         if (leilao == null) return false;
 
         LeilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
-        int idLanceVencedor = LanceBLL.selecionarLanceVencedor(idLeilao);
-        TransacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
-
         return true;
     }
 

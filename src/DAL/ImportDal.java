@@ -2,7 +2,6 @@ package DAL;
 
 import Model.Lance;
 import Model.Leilao;
-import Model.Transacao;
 import Model.Utilizador;
 import Utils.Tools;
 
@@ -13,16 +12,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ImportDal {
     private static final String CSV_FILE = "data\\Leilao.csv";
     private static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
     private static final String CSV_FILE_LANCE = "data\\Lance.csv";
-    private static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
-
-    private static final Logger logger = Logger.getLogger(ImportDal.class.getName());
 
     public static List<Lance> carregarLance() {
         List<Lance> lances = new ArrayList<>();
@@ -40,7 +34,7 @@ public class ImportDal {
                 String[] dados = linha.split(Tools.separador(), -1);
 
                 if (dados.length < 7) {
-                    logger.log(Level.WARNING, "Linha inválida no CSV de Lances: {0}", linha);
+                    System.err.println("Linha inválida no CSV: " + linha);
                     continue;
                 }
 
@@ -51,19 +45,19 @@ public class ImportDal {
                     double valorLance = Double.parseDouble(dados[3]);
                     int numLance = dados[4].isEmpty() ? 0 : Integer.parseInt(dados[4]);
                     int pontosUtilizados = dados[5].isEmpty() ? 0 : Integer.parseInt(dados[5]);
-                    LocalDateTime dataLance = Tools.parseDateTimeByDate(dados[6]);
+                    LocalDateTime dataLance = LocalDateTime.parse(dados[6], Tools.DATA_HORA);
 
                     Lance lance = new Lance(idLance, idLeilao, idCliente,
                             valorLance, numLance, pontosUtilizados, dataLance);
                     lances.add(lance);
                 } catch (NumberFormatException e) {
-                    logger.log(Level.WARNING, "Erro ao converter valores numéricos: {0}", linha);
+                    System.err.println("Erro ao converter valores numéricos: " + linha);
                 } catch (Exception e) {
-                    logger.log(Level.SEVERE, "Erro ao processar linha do CSV: " + linha, e);
+                    System.err.println("Erro ao processar linha do CSV: " + linha);
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao ler o ficheiro CSV de Lances", e);
+            System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
         }
         return lances;
     }
@@ -84,7 +78,7 @@ public class ImportDal {
                 String[] dados = linha.split(Tools.separador(), -1);
 
                 if (dados.length < 8) {
-                    logger.log(Level.WARNING, "Linha inválida no CSV: {0}", linha);
+                    System.err.println("Linha inválida no CSV: " + linha);
                     continue;
                 }
 
@@ -104,7 +98,7 @@ public class ImportDal {
                 leiloes.add(leilao);
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao ler o ficheiro CSV de Leilões", e);
+            System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
         }
         return leiloes;
     }
@@ -125,7 +119,7 @@ public class ImportDal {
                 String[] dados = linha.split(Tools.separador(), -1);
 
                 if (dados.length < 10) {
-                    logger.log(Level.WARNING, "Linha inválida no CSV de Utilizadores: {0}", linha);
+                    System.err.println("Linha inválida no CSV: " + linha);
                     continue;
                 }
 
@@ -139,50 +133,14 @@ public class ImportDal {
                 LocalDate ultimoLogin = dados[7].isEmpty() ? null : Tools.parseDate(dados[7]);
                 int tipoUtilizador = Integer.parseInt(dados[8]);
                 int estado = Integer.parseInt(dados[9]);
-                Double saldo = Double.parseDouble(dados[10]);
 
-                Utilizador utilizador = new Utilizador(id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto, ultimoLogin, tipoUtilizador, estado, saldo);
+                Utilizador utilizador = new Utilizador(id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto, ultimoLogin, tipoUtilizador, estado);
                 utilizadores.add(utilizador);
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao ler o ficheiro CSV de Utilizadores", e);
+            System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
         }
         return utilizadores;
-    }
-
-    public static List<Transacao> carregarTransacao() {
-        List<Transacao> transacaoList = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_TRANSACAO))) {
-            String linha;
-            boolean primeiraLinha = true;
-            while ((linha = br.readLine()) != null) {
-                if (primeiraLinha) {
-                    primeiraLinha = false;
-                    continue;
-                }
-                String[] dados = linha.split(Tools.separador(), -1);
-
-                if (dados.length < 6) {
-                    logger.log(Level.WARNING, "Linha inválida no CSV de Transações: {0}", linha);
-                    continue;
-                }
-
-                int idTransacao = Integer.parseInt(dados[0]);
-                int idCliente = Integer.parseInt(dados[1]);
-                Double valorTotal = Double.parseDouble(dados[2]);
-                Double valorTransacao = Double.parseDouble(dados[3]);
-                LocalDateTime dataTransacao = Tools.parseDateTimeByDate(dados[4]);
-                int idTipoTransacao = Integer.parseInt(dados[5]);
-                int idEstadoTransacao = Integer.parseInt(dados[6]);
-
-                Transacao transacao = new Transacao(idTransacao, idCliente, valorTotal, valorTransacao, dataTransacao, idTipoTransacao, idEstadoTransacao);
-                transacaoList.add(transacao);
-            }
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao ler o ficheiro CSV de Transações", e);
-        }
-        return transacaoList;
     }
 
     public static void gravarLeilao(List<Leilao> leiloes) {
@@ -210,13 +168,13 @@ public class ImportDal {
             }
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao gravar o ficheiro CSV de Leilões", e);
+            System.err.println("Erro ao gravar o ficheiro CSV de Leilões: " + e.getMessage());
         }
     }
 
     public static void gravarUtilizador(List<Utilizador> utilizadores) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_UTILIZADOR))) {
-            bw.write("ID;NOME;EMAIL;DATA NASCIMENTO;MORADA;PASSWORD;DATA REGISTO;ULTIMO LOGIN;TIPO UTILIZADOR;ESTADO;SALDO");
+            bw.write("ID;NOME;EMAIL;DATA NASCIMENTO;MORADA;PASSWORD;DATA REGISTO;ULTIMO LOGIN;TIPO UTILIZADOR;ESTADO");
             bw.newLine();
 
             for (Utilizador utilizador : utilizadores) {
@@ -233,13 +191,12 @@ public class ImportDal {
                         dataRegisto + Tools.separador() +
                         ultimoLogin + Tools.separador() +
                         utilizador.getTipoUtilizador() + Tools.separador() +
-                        utilizador.getEstado() + Tools.separador() +
-                        utilizador.getSaldo());
+                        utilizador.getEstado());
                 bw.newLine();
             }
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao gravar o ficheiro CSV de Utilizadores", e);
+            System.err.println("Erro ao gravar o ficheiro CSV Utilizadores: " + e.getMessage());
         }
     }
 
@@ -261,32 +218,7 @@ public class ImportDal {
                 bw.newLine();
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao gravar o ficheiro CSV de Lances", e);
+            System.err.println("Erro ao gravar o ficheiro CSV Lances: " + e.getMessage());
         }
     }
-
-    public static void gravarTransacao(List<Transacao> transacaoList) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_TRANSACAO))) {
-            bw.write("ID_TRANSACAO;ID_CLIENTE;VALOR_TOTAL;VALOR_TRANSACAO;DATA_TRANSACAO;ID_TIPO;ID_ESTADO");
-            bw.newLine();
-
-            for (Transacao transacao : transacaoList) {
-                String dataTransacao = Tools.formatDateTime(transacao.getDataTransacao());
-
-                bw.write(transacao.getIdTransacao() + Tools.separador() +
-                        transacao.getIdCliente() + Tools.separador() +
-                        transacao.getValorTotal() + Tools.separador() +
-                        transacao.getValorTransacao() + Tools.separador() +
-                        dataTransacao + Tools.separador() +
-                        transacao.getIdTipoTransacao() + Tools.separador() +
-                        transacao.getIdEstadoTransacao());
-                bw.newLine();
-            }
-
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao gravar o ficheiro CSV de Transações", e);
-        }
-    }
-
-
 }
