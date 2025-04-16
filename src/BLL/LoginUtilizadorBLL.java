@@ -2,32 +2,41 @@ package BLL;
 
 import DAL.ImportDal;
 import Model.Utilizador;
-import Utils.Tools;
 import Model.ClienteSessao;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class LoginUtilizadorBLL {
 
-    public static Utilizador login(String email, String password)
-    {
-        for (Utilizador u : Tools.utilizadores)
-        {
-            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
-            {
+    private List<Utilizador> utilizadores;
+    private final ImportDal importDal;
+
+    public LoginUtilizadorBLL(ImportDal importDal) {
+        this.importDal = importDal;
+        this.utilizadores = importDal.carregarUtilizador();
+    }
+
+    public Utilizador login(String email, String password) {
+        for (Utilizador u : utilizadores) {
+            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword())) {
                 u.setUltimoLogin(LocalDate.now());
-                ImportDal.gravarUtilizador(Tools.utilizadores);
+                importDal.gravarUtilizador(utilizadores);
                 ClienteSessao.setIdCliente(u.getId());
 
-                if (u.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo() || u.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) return u;
-
+                int tipo = u.getTipoUtilizador();
+                if (tipo == 1 || tipo == 2) return u; // 1 = GESTOR, 2 = CLIENTE (ajustar conforme o enum)
             }
         }
         return null;
     }
 
-    public static boolean lerDados() {
-        Tools.utilizadores = ImportDal.carregarUtilizador();
-        return Tools.utilizadores != null;
+    public boolean lerDados() {
+        this.utilizadores = importDal.carregarUtilizador();
+        return this.utilizadores != null;
+    }
+
+    public List<Utilizador> getUtilizadores() {
+        return utilizadores;
     }
 }
