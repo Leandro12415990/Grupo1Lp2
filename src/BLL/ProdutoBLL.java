@@ -9,80 +9,75 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoBLL {
-    private static List<Produto> produtos = new ArrayList<>();
+    private final ProdutoDal produtoDal;
+    private final LeilaoBLL leilaoBLL;
 
-    public static List<Produto> carregarProdutos() {
-        produtos = ProdutoDal.carregarProdutos();
+    public ProdutoBLL(ProdutoDal produtoDal, LeilaoBLL leilaoBLL) {
+        this.produtoDal = produtoDal;
+        this.leilaoBLL = leilaoBLL;
+    }
+
+    public List<Produto> carregarProdutos() {
+        List<Produto> produtos = produtoDal.carregarProdutos();
         int idEstado;
         for (Produto produto : produtos) {
             idEstado = determinarEstadoProduto(produto);
             produto.setEstado(idEstado);
-            ProdutoDal.gravarProdutos(produtos);
+            produtoDal.gravarProdutos(produtos);
         }
         return produtos;
     }
 
-    public static void adicionarProduto(Produto produto) {
-        carregarProdutos();
+    public void adicionarProduto(Produto produto) {
+        List<Produto> produtos = carregarProdutos();
         produto.setIdProduto(verificarUltimoId(produtos) + 1);
         produtos.add(produto);
-        ProdutoDal.gravarProdutos(produtos);
+        produtoDal.gravarProdutos(produtos);
     }
 
-    public static List<Produto> obterTodosProdutos() {
-        return ProdutoDal.carregarProdutos();
+    public List<Produto> obterTodosProdutos() {
+        return produtoDal.carregarProdutos();
     }
 
-    public static List<Produto> listarProdutos(boolean apenasDisponiveis) {
-        carregarProdutos();
-        if (!apenasDisponiveis) {
-            return produtos;
-        }
+    public List<Produto> listarProdutos(boolean apenasDisponiveis) {
+        List<Produto> produtos = carregarProdutos();
+        if (!apenasDisponiveis) return produtos;
         List<Produto> produtosAtivos = new ArrayList<>();
         for (Produto produto : produtos) {
-            if (produto.getEstado() == 1) {
-                produtosAtivos.add(produto);
-            }
+            if (produto.getEstado() == 1) produtosAtivos.add(produto);
         }
-
         return produtosAtivos;
     }
 
-    public static Produto procurarProduto(int id) {
+    public Produto procurarProduto(int id) {
         List<Produto> produtos = obterTodosProdutos();
         for (Produto produto : produtos) {
-            if (produto.getIdProduto() == id) {
-                return produto;
-            }
+            if (produto.getIdProduto() == id) return produto;
         }
         return null;
-
     }
 
-    private static int verificarUltimoId(List<Produto> produtos) {
+    private int verificarUltimoId(List<Produto> produtos) {
         int ultimoId = 0;
-
         for (Produto produto : produtos) {
-            if (produto.getIdProduto() > ultimoId) {
-                ultimoId = produto.getIdProduto();
-            }
+            if (produto.getIdProduto() > ultimoId) ultimoId = produto.getIdProduto();
         }
         return ultimoId;
     }
 
-    public static boolean editarProduto(int idProduto, String nome, String descricao, int idEstado) {
+    public boolean editarProduto(int idProduto, String nome, String descricao, int idEstado) {
         Produto produto = procurarProduto(idProduto);
         if (produto != null) {
             produto.setNome(nome);
             produto.setDescricao(descricao);
             produto.setEstado(idEstado);
-            ProdutoDal.gravarProdutos(produtos);
+            produtoDal.gravarProdutos(obterTodosProdutos());
             return true;
         }
         return false;
     }
 
-    public static boolean eliminarProduto(Produto produto) {
+    public boolean eliminarProduto(Produto produto) {
         List<Produto> produtos = obterTodosProdutos();
         boolean produtoRemovido = false;
 
@@ -93,26 +88,20 @@ public class ProdutoBLL {
                 break;
             }
         }
-
-        if (produtoRemovido) {
-            ProdutoDal.gravarProdutos(produtos);
-        }
-
+        if (produtoRemovido) produtoDal.gravarProdutos(produtos);
         return produtoRemovido;
     }
 
-    public static String getNomeProdutoById(int idProduto) {
-        carregarProdutos();
+    public String getNomeProdutoById(int idProduto) {
+        List<Produto> produtos = carregarProdutos();
         for (Produto produto : produtos) {
-            if (produto.getIdProduto() == idProduto) {
-                return produto.getNome().toUpperCase();
-            }
+            if (produto.getIdProduto() == idProduto) return produto.getNome().toUpperCase();
         }
         return null;
     }
 
-    public static boolean verificarDisponibilidadeProduto(int idProduto) {
-        List<Produto> produtos = ProdutoDal.carregarProdutos();
+    public boolean verificarDisponibilidadeProduto(int idProduto) {
+        List<Produto> produtos = produtoDal.carregarProdutos();
         for (Produto produto : produtos) {
             if (produto.getIdProduto() == idProduto) {
                 if (produto.getEstado() == Constantes.estadosProduto.ATIVO) return true;
@@ -122,32 +111,26 @@ public class ProdutoBLL {
         return false;
     }
 
-    public static void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
-        carregarProdutos();
+    public void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
+        List<Produto> produtos = carregarProdutos();
         for (Produto produto : produtos) {
-            if (produto.getIdProduto() == idProduto) {
-                produto.setEstado(novoIdEstado);
-            }
+            if (produto.getIdProduto() == idProduto) produto.setEstado(novoIdEstado);
         }
-        ProdutoDal.gravarProdutos(produtos);
+        produtoDal.gravarProdutos(produtos);
     }
 
-    public static int determinarEstadoProduto(Produto produto) {
+    public int determinarEstadoProduto(Produto produto) {
         if (produto.getEstado() != Constantes.estadosProduto.INATIVO) {
-            for (Leilao leilao : LeilaoBLL.carregarLeiloes()) {
-                if (leilao.getIdProduto() == produto.getIdProduto()) {
-                    return Constantes.estadosProduto.RESERVADO;
-                }
+            for (Leilao leilao : leilaoBLL.listarLeiloes(false)) {
+                if (leilao.getIdProduto() == produto.getIdProduto()) return Constantes.estadosProduto.RESERVADO;
             }
         }
         return Constantes.estadosProduto.ATIVO;
     }
 
-    public static boolean verificarProdutoEmLeilao(int idProduto) {
-        for (Leilao leilao : LeilaoBLL.carregarLeiloes()) {
-            if (leilao.getIdProduto() == idProduto) {
-                return false;
-            }
+    public boolean verificarProdutoEmLeilao(int idProduto) {
+        for (Leilao leilao : leilaoBLL.listarLeiloes(false)) {
+            if (leilao.getIdProduto() == idProduto) return false;
         }
         return true;
     }
