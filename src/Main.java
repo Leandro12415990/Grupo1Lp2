@@ -1,31 +1,34 @@
 import BLL.*;
 import DAL.*;
 import Controller.*;
-import Model.Lance;
 import View.*;
 
 public class Main {
 
     public static void main(String[] args) {
         // DAL
-        ImportDal importDal = new ImportDal();
-        ProdutoDal produtoDal = new ProdutoDal();
+        ImportDAL importDal = new ImportDAL();
+        ProdutoDAL produtoDal = new ProdutoDAL(importDal);
+        LeilaoDAL leilaoDal = new LeilaoDAL(importDal);
+        LanceDAL lanceDal = new LanceDAL(importDal);
+        TransacaoDAL transacaoDAL = new TransacaoDAL(importDal);
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL(importDal);
 
         // BLL
-        UtilizadorBLL utilizadorBLL = new UtilizadorBLL(importDal);
-        LeilaoBLL leilaoBLL = new LeilaoBLL(importDal);
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL(utilizadorDAL);
+        LeilaoBLL leilaoBLL = new LeilaoBLL(leilaoDal);
         ProdutoBLL produtoBLL = new ProdutoBLL(produtoDal, leilaoBLL);
-        LoginUtilizadorBLL loginBLL = new LoginUtilizadorBLL(importDal);
+        LoginUtilizadorBLL loginBLL = new LoginUtilizadorBLL(utilizadorDAL);
 
-        LanceBLL lanceBLL = new LanceBLL(importDal, leilaoBLL,utilizadorBLL); // sem transacaoBLL e utilizadorBLL por agora
-        TransacaoBLL transacaoBLL = new TransacaoBLL(importDal,lanceBLL); // sem lanceBLL por agora
+        LanceBLL lanceBLL = new LanceBLL(lanceDal, utilizadorDAL, leilaoBLL,utilizadorBLL);
+        TransacaoBLL transacaoBLL = new TransacaoBLL(transacaoDAL,utilizadorDAL,lanceBLL);
 
         lanceBLL.setTransacaoBLL(transacaoBLL);
 
-        EstatisticaBLL estatisticaBLL = new EstatisticaBLL(leilaoBLL, lanceBLL);
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL(utilizadorDAL, leilaoBLL, lanceBLL);
 
         //CONTROLLERS
-        UtilizadorController utilizadorController = new UtilizadorController(utilizadorBLL,importDal);
+        UtilizadorController utilizadorController = new UtilizadorController(utilizadorBLL);
         LeilaoController leilaoController = new LeilaoController(leilaoBLL,lanceBLL,produtoBLL,transacaoBLL);
         ProdutoController produtoController = new ProdutoController(produtoBLL);
         EstatisticaController estatisticaController = new EstatisticaController(estatisticaBLL,leilaoBLL);
@@ -40,7 +43,7 @@ public class Main {
         UtilizadorView utilizadorView = new UtilizadorView(utilizadorController);
         LeilaoView leilaoView = new LeilaoView(leilaoController,produtoController,lanceController);
         ProdutoView produtoView = new ProdutoView(produtoController);
-        EstatisticaView estatisticaView = new EstatisticaView(estatisticaController,leilaoView);
+        EstatisticaView estatisticaView = new EstatisticaView(estatisticaController,leilaoView,utilizadorView);
         TransacaoView transacaoView = new TransacaoView(transacaoController);
         LoginView loginView = new LoginView(loginController);
         LanceView lanceView = new LanceView(lanceController,leilaoController,produtoController);
