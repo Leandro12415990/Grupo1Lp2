@@ -4,7 +4,7 @@ import BLL.*;
 import Controller.LanceController;
 import Controller.LeilaoController;
 import Controller.ProdutoController;
-import DAL.ImportDal;
+import DAL.ImportDAL;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
@@ -16,8 +16,6 @@ import java.util.List;
 
 
 public class LeilaoView {
-    private ImportDal importDal = new ImportDal();
-    private LeilaoBLL leilaoBLL = new LeilaoBLL(importDal);
     private final ProdutoController produtoController;
     private final LeilaoController leilaoController;
     private final LanceController lanceController;

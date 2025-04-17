@@ -1,6 +1,7 @@
 package BLL;
 
-import DAL.ImportDal;
+import DAL.ImportDAL;
+import DAL.LeilaoDAL;
 import Model.Leilao;
 import Utils.Constantes;
 
@@ -9,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LeilaoBLL {
-    private final ImportDal importDal;
+    private final LeilaoDAL leilaoDAL;
     private final List<Leilao> leiloes;
 
-    public LeilaoBLL(ImportDal importDal) {
-        this.importDal = importDal;
-        this.leiloes = importDal.carregarLeilao();
+    public LeilaoBLL(LeilaoDAL leilaoDAL) {
+        this.leilaoDAL = leilaoDAL;
+        this.leiloes = leilaoDAL.carregaLeiloes();
         atualizarEstados();
     }
 
@@ -25,13 +26,13 @@ public class LeilaoBLL {
                 leilao.setEstado(novoEstado);
             }
         }
-        importDal.gravarLeilao(leiloes);
+        leilaoDAL.gravarLeiloes(leiloes);
     }
 
     public void adicionarLeilao(Leilao leilao) {
         leilao.setId(verificarUltimoId() + 1);
         leiloes.add(leilao);
-        importDal.gravarLeilao(leiloes);
+        leilaoDAL.gravarLeiloes(leiloes);
     }
 
     private int verificarUltimoId() {
@@ -67,7 +68,7 @@ public class LeilaoBLL {
 
     public void eliminarLeilao(Leilao leilao) {
         leiloes.remove(leilao);
-        importDal.gravarLeilao(leiloes);
+        leilaoDAL.gravarLeiloes(leiloes);
     }
 
     public boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
@@ -82,7 +83,7 @@ public class LeilaoBLL {
             leilao.setValorMaximo(valorMax);
             leilao.setMultiploLance(multiploLance);
             leilao.setEstado(idEstado);
-            importDal.gravarLeilao(leiloes);
+            leilaoDAL.gravarLeiloes(leiloes);
             return true;
         }
         return false;
@@ -106,7 +107,7 @@ public class LeilaoBLL {
         if (leilao != null) {
             leilao.setDataFim(dataFim);
             leilao.setEstado(determinarEstadoLeilaoByDatas(leilao.getDataInicio(), dataFim, leilao.getEstado()));
-            importDal.gravarLeilao(leiloes);
+            leilaoDAL.gravarLeiloes(leiloes);
         }
     }
 
