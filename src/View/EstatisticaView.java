@@ -1,8 +1,7 @@
 package View;
 
-import BLL.LeilaoBLL;
 import Controller.EstatisticaController;
-import DAL.ImportDal;
+import DAL.ImportDAL;
 import Model.Leilao;
 import Model.Utilizador;
 import Utils.Constantes;
@@ -14,10 +13,12 @@ import java.util.List;
 public class EstatisticaView {
     private final EstatisticaController estatisticaController;
     private final LeilaoView leilaoView;
+    private final UtilizadorView utilizadorView;
 
-    public EstatisticaView(EstatisticaController estatisticaController, LeilaoView leilaoView) {
+    public EstatisticaView(EstatisticaController estatisticaController, LeilaoView leilaoView, UtilizadorView utilizadorView) {
         this.estatisticaController = estatisticaController;
         this.leilaoView = leilaoView;
+        this.utilizadorView = utilizadorView;
     }
 
 
@@ -443,22 +444,7 @@ public class EstatisticaView {
     }
 
     public void mostrarTodosClientes() {
-        List<Utilizador> clientes = ImportDal.carregarUtilizador();
-
-        if (clientes == null || clientes.isEmpty()) {
-            System.out.println("Não existem clientes registados.");
-            return;
-        }
-
-        System.out.println("\n=== Lista de Clientes ===");
-
-        for (Utilizador u : clientes) {
-            System.out.println("ID: " + u.getId() +
-                    " | Nome: " + u.getNomeUtilizador() +
-                    " | Email: " + u.getEmail() + "\n");
-        }
-
-        System.out.println("Total de clientes: " + clientes.size() + "\n");
+        utilizadorView.mostrarUtilizador(0,2);
     }
 
     public void mostrarMediaIdadeUtilizadores() {

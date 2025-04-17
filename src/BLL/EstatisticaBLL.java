@@ -1,9 +1,9 @@
 package BLL;
 
-import DAL.ImportDal;
+import DAL.ImportDAL;
+import DAL.UtilizadorDAL;
 import Model.Lance;
 import Model.Leilao;
-import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Constantes;
 
@@ -19,8 +19,10 @@ public class EstatisticaBLL {
 
     private LeilaoBLL leilaoBLL;
     private LanceBLL lanceBLL;
+    private final UtilizadorDAL utilizadorDAL;
 
-    public EstatisticaBLL(LeilaoBLL leilaoBLL, LanceBLL lanceBLL) {
+    public EstatisticaBLL(UtilizadorDAL utilizadorDAL, LeilaoBLL leilaoBLL, LanceBLL lanceBLL) {
+        this.utilizadorDAL = utilizadorDAL;
         this.leilaoBLL = leilaoBLL;
         this.lanceBLL = lanceBLL;
     }
@@ -410,7 +412,7 @@ public class EstatisticaBLL {
      */
 
     public double calcularMediaIdadeUtilizadores() {
-        List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
         if (utilizadores == null || utilizadores.isEmpty()) return -1;
 
         int somaIdades = 0;
@@ -434,7 +436,7 @@ public class EstatisticaBLL {
      */
 
     public String[] calcularDominioMaisUsadoEPercentagem() {
-        List<Utilizador> todos = ImportDal.carregarUtilizador();
+        List<Utilizador> todos = utilizadorDAL.carregarUtilizadores();
         if (todos == null || todos.isEmpty()) return null;
 
         List<Utilizador> clientes = new ArrayList<>();
@@ -540,7 +542,7 @@ public class EstatisticaBLL {
 
 
     private Utilizador procurarUtilizadorPorId(int id) {
-        List<Utilizador> utilizadores = ImportDal.carregarUtilizador(); // ou onde carregas
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores(); // ou onde carregas
 
         if (utilizadores == null) return null;
 
