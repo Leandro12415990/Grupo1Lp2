@@ -1,6 +1,8 @@
 package BLL;
 
-import DAL.ImportDal;
+import DAL.ImportDAL;
+import DAL.LanceDAL;
+import DAL.UtilizadorDAL;
 import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
@@ -8,20 +10,21 @@ import Utils.Tools;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LanceBLL {
-    private final ImportDal importDal;
+    private final LanceDAL lanceDAL;
+    private final UtilizadorDAL utilizadorDAL;
     private final List<Lance> lances;
     private final LeilaoBLL leilaoBLL;
     private final UtilizadorBLL utilizadorBLL;
     private TransacaoBLL transacaoBLL;
 
-    public LanceBLL(ImportDal importDal, LeilaoBLL leilaoBLL, UtilizadorBLL utilizadorBLL) {
-        this.importDal = importDal;
+    public LanceBLL(LanceDAL lanceDAL, UtilizadorDAL utilizadorDAL, LeilaoBLL leilaoBLL, UtilizadorBLL utilizadorBLL) {
+        this.lanceDAL = lanceDAL;
+        this.utilizadorDAL = utilizadorDAL;
         this.leilaoBLL = leilaoBLL;
         this.utilizadorBLL = utilizadorBLL;
-        this.lances = importDal.carregarLance();
+        this.lances = lanceDAL.carregarLances();
     }
 
     public void setTransacaoBLL(TransacaoBLL transacaoBLL) {
@@ -45,7 +48,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        importDal.gravarLance(lances);
+        lanceDAL.gravarLances(lances);
 
         if (valorLance == leilao.getValorMinimo()) {
             fimLeilao(idLeilao, dataLance);
@@ -73,7 +76,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        importDal.gravarLance(lances);
+        lanceDAL.gravarLances(lances);
 
         resultado.Sucesso = true;
         resultado.Objeto = lance;
@@ -98,7 +101,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        importDal.gravarLance(lances);
+        lanceDAL.gravarLances(lances);
 
         resultado.Sucesso = true;
         resultado.Objeto = lance;
@@ -165,7 +168,7 @@ public class LanceBLL {
 
         transacaoBLL.criarTransacao(transacao);
 
-        importDal.gravarUtilizador(utilizadores);
+        utilizadorDAL.gravarUtilizadores(utilizadores);
 
         resultado.Sucesso = true;
         resultado.msgErro = null;

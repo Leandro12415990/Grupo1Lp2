@@ -1,7 +1,7 @@
 package View;
 
 import Controller.ProdutoController;
-import DAL.ImportDal;
+import DAL.ImportDAL;
 import Controller.LanceController;
 import Controller.LeilaoController;
 import Model.*;
@@ -65,7 +65,6 @@ public class LanceView {
         ResultadoOperacao resultado;
         System.out.println("\n===== LEILÕES VENDA DIRETA =====");
 
-        List<Utilizador> cliente = ImportDal.carregarUtilizador();
         List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
         List<Leilao> leiloesLanceDireto = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
         if (!leiloesLanceDireto.isEmpty()) {
