@@ -1,6 +1,6 @@
 package BLL;
 
-import DAL.ProdutoDal;
+import DAL.ProdutoDAL;
 import Model.Leilao;
 import Model.Produto;
 import Utils.Constantes;
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoBLL {
-    private final ProdutoDal produtoDal;
+    private final ProdutoDAL produtoDal;
     private final LeilaoBLL leilaoBLL;
 
-    public ProdutoBLL(ProdutoDal produtoDal, LeilaoBLL leilaoBLL) {
+    public ProdutoBLL(ProdutoDAL produtoDal, LeilaoBLL leilaoBLL) {
         this.produtoDal = produtoDal;
         this.leilaoBLL = leilaoBLL;
     }
