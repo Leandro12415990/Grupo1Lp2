@@ -1,11 +1,10 @@
 package Controller;
 
 import BLL.*;
-import DAL.ImportDal;
+import DAL.ImportDAL;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Tools;
-import View.UtilizadorView;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -16,11 +15,9 @@ public class UtilizadorController {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
 
     private final UtilizadorBLL utilizadorBLL;
-    private final ImportDal importDal;
 
-    public UtilizadorController(UtilizadorBLL utilizadorBLL, ImportDal importDal) {
+    public UtilizadorController(UtilizadorBLL utilizadorBLL) {
         this.utilizadorBLL = utilizadorBLL;
-        this.importDal = importDal;
     }
 
     public List<Utilizador> mostrarUtilizador(int estado, int tipo) {
@@ -75,7 +72,7 @@ public class UtilizadorController {
                     : u.getEstado() != Tools.estadoUtilizador.INATIVO.getCodigo();
             if (estadoIncorreto) return false;
         }
-        if (aprovouAlguem) importDal.gravarUtilizador(Tools.utilizadores);
+        if (aprovouAlguem) utilizadorBLL.gravarUtilizadores(Tools.utilizadores);
         return true;
     }
 

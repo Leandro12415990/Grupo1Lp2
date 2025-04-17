@@ -1,6 +1,7 @@
 package BLL;
 
-import DAL.ImportDal;
+import DAL.ImportDAL;
+import DAL.UtilizadorDAL;
 import Model.Utilizador;
 import Model.ClienteSessao;
 
@@ -10,18 +11,18 @@ import java.util.List;
 public class LoginUtilizadorBLL {
 
     private List<Utilizador> utilizadores;
-    private final ImportDal importDal;
+    private final UtilizadorDAL utilizadorDAL;
 
-    public LoginUtilizadorBLL(ImportDal importDal) {
-        this.importDal = importDal;
-        this.utilizadores = importDal.carregarUtilizador();
+    public LoginUtilizadorBLL(UtilizadorDAL utilizadorDAL) {
+        this.utilizadorDAL = utilizadorDAL;
+        this.utilizadores = utilizadorDAL.carregarUtilizadores();
     }
 
     public Utilizador login(String email, String password) {
         for (Utilizador u : utilizadores) {
             if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword())) {
                 u.setUltimoLogin(LocalDate.now());
-                importDal.gravarUtilizador(utilizadores);
+                utilizadorDAL.gravarUtilizadores(utilizadores);
                 ClienteSessao.setIdCliente(u.getId());
 
                 int tipo = u.getTipoUtilizador();
@@ -32,7 +33,7 @@ public class LoginUtilizadorBLL {
     }
 
     public boolean lerDados() {
-        this.utilizadores = importDal.carregarUtilizador();
+        this.utilizadores = utilizadorDAL.carregarUtilizadores();
         return this.utilizadores != null;
     }
 
