@@ -92,7 +92,7 @@ public class Tools {
     }
 
     public enum estadoProduto {
-        ATIVO(1), RESERVADO(2), INATIVO(3);
+        DISPONIVEL(1), RESERVADO(2), INATIVO(3);
 
         private final int codigo;
         private int estado;

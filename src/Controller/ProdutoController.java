@@ -49,9 +49,8 @@ public class ProdutoController {
         if (produtos.isEmpty()) {
             resultado.msgErro = "Não existem produtos disponíveis para leiloar!";
         } else {
-            //ProdutoView.exibirProduto(produtos);
             resultado.Sucesso = true;
-            resultado.Objeto = resultado;
+            resultado.Objeto = produtos;
         }
         return resultado;
     }
