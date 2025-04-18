@@ -6,6 +6,7 @@ import Controller.LeilaoController;
 import Controller.ProdutoController;
 import DAL.ImportDAL;
 import Model.Leilao;
+import Model.Produto;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
 import Utils.Tools;
@@ -71,15 +72,20 @@ public class LeilaoView {
         System.out.println("\nCRIAÇÃO DE UM LEILÃO\n");
         ResultadoOperacao resultadoProdutos = produtoController.listarProduto(true);
         if (resultadoProdutos.Sucesso) {
+            List<Produto> produtosDisponiveis = (List<Produto>) resultadoProdutos.Objeto;
+            ProdutoView produtoView = new ProdutoView(produtoController); // ou usar uma instância existente
+            produtoView.exibirProduto(produtosDisponiveis);
+
             System.out.print("\nIntroduza o ID do produto que pretende leiloar " + Tools.alertaCancelar());
 
             int idProduto = Tools.scanner.nextInt();
+            Tools.scanner.nextLine();
             if (Tools.verificarSaida(String.valueOf(idProduto))) return;
 
             ResultadoOperacao isAvailable = leilaoController.verificarDisponibilidadeProduto(idProduto);
             if (isAvailable.Sucesso) {
-                System.out.print("Insira a descrição do leilão " + Tools.alertaCancelar());
-                String descricao = Tools.scanner.next();
+                System.out.print("\nInsira a descrição do leilão " + Tools.alertaCancelar());
+                String descricao = Tools.scanner.nextLine().trim();
                 if (Tools.verificarSaida(descricao)) return;
 
                 int idTipoLeilao;
@@ -100,16 +106,16 @@ public class LeilaoView {
                 LocalDateTime dataFim = null;
                 if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
                     while (true) {
-                        System.out.print("\nInsira a data de início (dd/MM/yyyy hh:mm) (-1 para cancelar): ");
+                        System.out.print("\nInsira a data de início (dd/MM/yyyy HH:mm) (-1 para cancelar): ");
                         String dataInicioStr = Tools.scanner.nextLine().trim();
                         if (Tools.verificarSaida(dataInicioStr)) return;
                         dataInicio = Tools.parseDateTime(dataInicioStr);
 
                         if (dataInicio != null) break;
-                        else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm.");
+                        else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy HH:mm.");
                     }
                     while (true) {
-                        System.out.print("Insira a data de fim do leilão (dd/MM/yyyy hh:mm) ou pressione ENTER para não definir " + Tools.alertaCancelar());
+                        System.out.print("Insira a data de fim do leilão (dd/MM/yyyy HH:mm) ou pressione ENTER para não definir " + Tools.alertaCancelar());
                         String dataFimStr = Tools.scanner.nextLine().trim();
                         if (Tools.verificarSaida(dataFimStr)) return;
                         if (!dataFimStr.isEmpty()) {
@@ -119,12 +125,12 @@ public class LeilaoView {
                                 ResultadoOperacao isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
                                 if (isCorrect.Sucesso) break;
                                 else System.out.println(isCorrect.msgErro);
-                            } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm.\n");
+                            } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy HH:mm.\n");
                         } else break;
                     }
                 } else {
                     while (true) {
-                        System.out.print("\nInsira a data de início (dd/MM/yyyy) (-1 para cancelar): ");
+                        System.out.print("\nInsira a data de início (dd/MM/yyyy HH:mm.) (-1 para cancelar): ");
                         String dataInicioStr = Tools.scanner.nextLine().trim();
                         if (Tools.verificarSaida(dataInicioStr)) return;
                         dataInicio = Tools.parseDateTimeByDate(dataInicioStr);
@@ -132,11 +138,11 @@ public class LeilaoView {
                         if (dataInicio != null) {
                             dataInicio = dataInicio.withHour(0).withMinute(0).withSecond(0).withNano(0);
                             break;
-                        } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
+                        } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy HH:mm.\n");
                     }
 
                     while (true) {
-                        System.out.print("Insira a data de fim do leilão (dd/MM/yyyy) ou pressione ENTER para não definir " + Tools.alertaCancelar());
+                        System.out.print("Insira a data de fim do leilão (dd/MM/yyyy HH:mm) ou pressione ENTER para não definir " + Tools.alertaCancelar());
                         String dataFimStr = Tools.scanner.nextLine().trim();
                         if (Tools.verificarSaida(dataFimStr)) return;
                         if (!dataFimStr.isEmpty()) {
@@ -147,7 +153,7 @@ public class LeilaoView {
                                 ResultadoOperacao isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
                                 if (isCorrect.Sucesso) break;
                                 else System.out.println(isCorrect.msgErro);
-                            } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.\n");
+                            } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy HH:mm.\n");
                         } else break;
                     }
                 }

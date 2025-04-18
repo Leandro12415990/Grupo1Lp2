@@ -6,6 +6,7 @@ import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
 import Utils.Constantes;
+import Utils.Tools;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -78,7 +79,7 @@ public class EstatisticaBLL {
         for (Leilao l : fechados) {
             resultado.add("ID: " + l.getId() +
                     " | Descrição: " + l.getDescricao() +
-                    " | Tipo: " + l.getTipoLeilao());
+                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(l.getTipoLeilao()));
         }
 
         return resultado;

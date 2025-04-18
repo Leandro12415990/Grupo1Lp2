@@ -1,5 +1,6 @@
 package View;
 
+import Model.ClienteSessao;
 import Model.Utilizador;
 import Utils.Tools;
 
@@ -7,7 +8,7 @@ import static Utils.Tools.scanner;
 
 public class MenuInicialView {
 
-    public void menuInicial(LoginView loginView,MenuGestorView menuGestorView, MenuClienteView menuClienteView,UtilizadorView utilizadorView, LeilaoView leilaoView, ProdutoView produtoView, EstatisticaView estatisticaView, TransacaoView transacaoView, LanceView lanceView) {
+    public void menuInicial(LoginView loginView, MenuGestorView menuGestorView, MenuClienteView menuClienteView, UtilizadorView utilizadorView, LeilaoView leilaoView, ProdutoView produtoView, EstatisticaView estatisticaView, TransacaoView transacaoView, LanceView lanceView, ClienteSessao clienteSessao) {
         int opcao;
         do {
             System.out.println("\nBem-vindo à leiloeira Valor em Alta!\n");
@@ -26,9 +27,9 @@ public class MenuInicialView {
                     if (utilizador == null) {
                         System.out.println("Erro a fazer Login");
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo()) {
-                        menuGestorView.exibirMenu(utilizadorView, leilaoView, produtoView, estatisticaView, transacaoView);
+                        menuGestorView.exibirMenu(utilizadorView, leilaoView, produtoView, estatisticaView, transacaoView, clienteSessao);
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) {
-                        menuClienteView.exibirMenu(utilizador,utilizadorView,transacaoView,lanceView);
+                        menuClienteView.exibirMenu(utilizador,utilizadorView,transacaoView,lanceView, clienteSessao);
                     }
                     break;
                 case 2:
