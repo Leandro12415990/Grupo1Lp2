@@ -36,7 +36,6 @@ public class MenuInicialView {
                     utilizadorView.registarCliente();
                     break;
                 case 0:
-                    // Fecha o scanner e termina o sistema
                     System.out.println("A desligar sistema...");
                     scanner.close();
                     return;

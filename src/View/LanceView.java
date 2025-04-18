@@ -26,11 +26,11 @@ public class LanceView {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LANCES " + "=".repeat(5));
-            System.out.println("1. Ver os meus Lances");
+            System.out.println("1. Ver os Meus Lances");
             System.out.println("2. Ver Leilões Terminados");
-            System.out.println("3. Dar Lance direto");
+            System.out.println("3. Dar Lance Direto");
             System.out.println("4. Dar Lance Carta Fechada");
-            System.out.println("5. Dar Lance Eletronico");
+            System.out.println("5. Dar Lance Eletrónico");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
             opc = Tools.scanner.nextInt();

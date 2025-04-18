@@ -1,10 +1,8 @@
 package View;
 
-import BLL.*;
 import Controller.LanceController;
 import Controller.LeilaoController;
 import Controller.ProdutoController;
-import DAL.ImportDAL;
 import Model.Leilao;
 import Model.Produto;
 import Model.ResultadoOperacao;
@@ -21,7 +19,7 @@ public class LeilaoView {
     private final LeilaoController leilaoController;
     private final LanceController lanceController;
 
-    public LeilaoView(LeilaoController leilaoController, ProdutoController produtoController,LanceController lanceController) {
+    public LeilaoView(LeilaoController leilaoController, ProdutoController produtoController, LanceController lanceController) {
         this.leilaoController = leilaoController;
         this.produtoController = produtoController;
         this.lanceController = lanceController;
@@ -73,7 +71,7 @@ public class LeilaoView {
         ResultadoOperacao resultadoProdutos = produtoController.listarProduto(true);
         if (resultadoProdutos.Sucesso) {
             List<Produto> produtosDisponiveis = (List<Produto>) resultadoProdutos.Objeto;
-            ProdutoView produtoView = new ProdutoView(produtoController); // ou usar uma instância existente
+            ProdutoView produtoView = new ProdutoView(produtoController);
             produtoView.exibirProduto(produtosDisponiveis);
 
             System.out.print("\nIntroduza o ID do produto que pretende leiloar " + Tools.alertaCancelar());

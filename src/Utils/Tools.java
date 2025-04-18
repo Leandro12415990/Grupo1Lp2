@@ -272,7 +272,7 @@ public class Tools {
             try {
                 return scanner.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println(" Entrada inválida. Por favor insira um número inteiro.");
+                System.out.println("⚠ Entrada inválida. Por favor insira um número inteiro.");
                 scanner.nextLine();
             }
         }

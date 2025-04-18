@@ -15,7 +15,7 @@ public class LoginView {
     public Utilizador login() {
         Utilizador utilizador = null;
 
-        System.out.println("\n" + "-".repeat(7) + " LOGIN " + "-".repeat(7));
+        System.out.println("\n" + "=".repeat(10) + " LOGIN " + "=".repeat(10));
 
         while (true) {
             System.out.print("Email " + Tools.alertaCancelar());
