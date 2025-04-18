@@ -8,10 +8,14 @@ import Utils.Tools;
 
 import java.util.List;
 
-
 public class ProdutoView {
+    private final ProdutoController produtoController;
 
-    public static void exibirProduto() {
+    public ProdutoView(ProdutoController produtoController) {
+        this.produtoController = produtoController;
+    }
+
+    public void exibirProduto() {
         int opcao;
         do {
             System.out.println("\nMenu:");
@@ -46,7 +50,7 @@ public class ProdutoView {
         } while (opcao != 0);
     }
 
-    public static void criarProduto() {
+    public void criarProduto() {
         System.out.println("\nCRIAÇÃO DE UM PRODUTO\n");
 
         System.out.println("Insira o nome do produto " + Tools.alertaCancelar());
@@ -56,7 +60,8 @@ public class ProdutoView {
         System.out.println("Insira uma descrição do produto " + Tools.alertaCancelar());
         String descricao = Tools.scanner.nextLine();
         if (Tools.verificarSaida(descricao)) return;
-        ResultadoOperacao resultado = ProdutoController.criarProduto(0, Constantes.estadosProduto.ATIVO, nome, descricao);
+
+        ResultadoOperacao resultado = produtoController.criarProduto(0, Constantes.estadosProduto.ATIVO, nome, descricao);
         if (resultado.Sucesso) {
             System.out.println("Produto criado com sucesso!");
         } else {
@@ -64,7 +69,7 @@ public class ProdutoView {
         }
     }
 
-    public static void editarProduto() {
+    public void editarProduto() {
         listarProduto(false);
 
         System.out.println("\nEDIÇÃO DE UM PRODUTO");
@@ -73,7 +78,7 @@ public class ProdutoView {
         Tools.scanner.nextLine();
         if (Tools.verificarSaida(String.valueOf(id))) return;
 
-        Produto produto = ProdutoController.procurarProduto(id);
+        Produto produto = produtoController.procurarProduto(id);
         if (produto != null) {
             exibirDetalhesProduto(produto);
 
@@ -88,7 +93,7 @@ public class ProdutoView {
             if (descricao.isEmpty()) descricao = produto.getDescricao();
 
             int idEstado = produto.getEstado();
-            if (ProdutoController.verificarProdutoEmLeilao(id)) {
+            if (produtoController.verificarProdutoEmLeilao(id)) {
                 System.out.println("O produto já se encontra associado a um leilão, deste modo não será possível alterar o estado.");
             } else {
                 while (true) {
@@ -110,7 +115,7 @@ public class ProdutoView {
                     }
                 }
             }
-            boolean sucesso = ProdutoController.editarProduto(id, nome, descricao, idEstado);
+            boolean sucesso = produtoController.editarProduto(id, nome, descricao, idEstado);
             if (sucesso) {
                 System.out.println("Produto editado com sucesso!");
             } else {
@@ -121,8 +126,7 @@ public class ProdutoView {
         }
     }
 
-    public static void eliminarProduto() {
-
+    public void eliminarProduto() {
         listarProduto(false);
 
         System.out.println("\nELIMINAÇÃO DE UM PRODUTO");
@@ -130,7 +134,7 @@ public class ProdutoView {
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
         if (Tools.verificarSaida(String.valueOf(id))) return;
-        Produto produto = ProdutoController.procurarProduto(id);
+        Produto produto = produtoController.procurarProduto(id);
 
         if (produto != null) {
             if (produto.getEstado() == Constantes.estadosProduto.RESERVADO) {
@@ -143,7 +147,7 @@ public class ProdutoView {
 
             switch (opcao) {
                 case "S":
-                    boolean sucesso = ProdutoController.eliminarProduto(produto);
+                    boolean sucesso = produtoController.eliminarProduto(produto);
                     if (sucesso) System.out.println("Produto eliminado com sucesso!");
                     else System.out.println("Não foi possível eliminar o produto.");
                     break;
@@ -158,11 +162,17 @@ public class ProdutoView {
         }
     }
 
-    public static void listarProduto(boolean apenasDisponiveis) {
-        ProdutoController.listarProduto(apenasDisponiveis);
+    public void listarProduto(boolean apenasDisponiveis) {
+        ResultadoOperacao resultado = produtoController.listarProduto(apenasDisponiveis);
+        if (resultado.Sucesso) {
+            List<Produto> produtos = (List<Produto>) resultado.Objeto;
+            exibirProduto(produtos);
+        } else {
+            System.out.println(resultado.msgErro);
+        }
     }
 
-    public static void exibirProduto(List<Produto> produtos) {
+    public void exibirProduto(List<Produto> produtos) {
         if (!produtos.isEmpty()) {
             System.out.println("\n" + "=".repeat(5) + " LISTAGEM DOS PRODUTOS " + "=".repeat(5));
             System.out.printf("%-8s %-20s %-30s %-40s\n",
@@ -181,7 +191,7 @@ public class ProdutoView {
         }
     }
 
-    public static void exibirDetalhesProduto(Produto produto) {
+    public void exibirDetalhesProduto(Produto produto) {
         System.out.println("\nDETALHES DO LEILÃO COM O ID " + produto.getIdProduto());
         System.out.println("Estado: " + produto.getEstado());
         System.out.println("Nome: " + produto.getNome());

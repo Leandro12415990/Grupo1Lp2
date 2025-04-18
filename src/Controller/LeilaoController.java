@@ -1,10 +1,12 @@
 package Controller;
 
 import BLL.LanceBLL;
+import BLL.LeilaoBLL;
 import BLL.ProdutoBLL;
 import BLL.TransacaoBLL;
-import Model.*;
-import BLL.LeilaoBLL;
+import Model.Leilao;
+import Model.Produto;
+import Model.ResultadoOperacao;
 import Utils.Constantes;
 import View.LeilaoView;
 
@@ -13,7 +15,19 @@ import java.util.List;
 
 public class LeilaoController {
 
-    public static ResultadoOperacao criarLeiloes(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, Double valorMax, Double multiploLance, int idEstado) {
+    private final LeilaoBLL leilaoBLL;
+    private final LanceBLL lanceBLL;
+    private final ProdutoBLL produtoBLL;
+    private final TransacaoBLL transacaoBLL;
+
+    public LeilaoController(LeilaoBLL leilaoBLL, LanceBLL lanceBLL, ProdutoBLL produtoBLL, TransacaoBLL transacaoBLL) {
+        this.leilaoBLL = leilaoBLL;
+        this.lanceBLL = lanceBLL;
+        this.produtoBLL = produtoBLL;
+        this.transacaoBLL = transacaoBLL;
+    }
+
+    public ResultadoOperacao criarLeiloes(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, Double valorMax, Double multiploLance, int idEstado) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (descricao == null || descricao.isEmpty()) {
             resultado.msgErro = "A descrição não pode ser nula.";
@@ -29,7 +43,7 @@ public class LeilaoController {
             resultado.msgErro = "A data de fim deve ser superior à data de inicio.";
         } else {
             Leilao leilao = new Leilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
-            LeilaoBLL.adicionarLeilao(leilao);
+            leilaoBLL.adicionarLeilao(leilao);
 
             resultado.Objeto = resultado;
             resultado.Sucesso = true;
@@ -37,41 +51,39 @@ public class LeilaoController {
         return resultado;
     }
 
-    public static void listarLeiloes(boolean apenasDisponiveis) {
-        List<Leilao> leiloes = LeilaoBLL.listarLeiloes(apenasDisponiveis);
-
-        LeilaoView.exibirLeiloes(leiloes);
+    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
+        return leilaoBLL.listarLeiloes(apenasDisponiveis);
     }
 
-    public static Leilao procurarLeilaoPorId(int Id) {
+    public Leilao procurarLeilaoPorId(int Id) {
         if (Id > 0) {
-            return LeilaoBLL.procurarLeilaoPorId(Id);
+            return leilaoBLL.procurarLeilaoPorId(Id);
         }
         return null;
     }
 
-    public static boolean eliminarLeilao(int Id) {
+    public boolean eliminarLeilao(int Id) {
         if (Id > 0) {
             Leilao leilao = procurarLeilaoPorId(Id);
             if (leilao != null) {
-                LeilaoBLL.eliminarLeilao(leilao);
+                leilaoBLL.eliminarLeilao(leilao);
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
-        return LeilaoBLL.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
+    public boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
+        return leilaoBLL.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
     }
 
-    public static ResultadoOperacao verificarDisponibilidadeProduto(int idProduto) {
+    public ResultadoOperacao verificarDisponibilidadeProduto(int idProduto) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        Produto produto = ProdutoBLL.procurarProduto(idProduto);
+        Produto produto = produtoBLL.procurarProduto(idProduto);
         if (produto == null) {
             resultado.msgErro = "O Produto que introduziu não existe no sistema.";
         } else {
-            boolean isAvailable = ProdutoBLL.verificarDisponibilidadeProduto(idProduto);
+            boolean isAvailable = produtoBLL.verificarDisponibilidadeProduto(idProduto);
             if (isAvailable) {
                 resultado.Objeto = resultado;
                 resultado.Sucesso = true;
@@ -82,7 +94,7 @@ public class LeilaoController {
         return resultado;
     }
 
-    public static ResultadoOperacao verificarValorMax(double valorMin, double valorMax) {
+    public ResultadoOperacao verificarValorMax(double valorMin, double valorMax) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (valorMax < valorMin) {
             resultado.msgErro = "O valor máximo não pode ser inferior ao valor minimo.\n";
@@ -93,17 +105,17 @@ public class LeilaoController {
         return resultado;
     }
 
-    public static int determinarEstadoLeilaoByDatas(LocalDateTime dataInicio, LocalDateTime dataFim, int idEstado) {
-        return LeilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
+    public int determinarEstadoLeilaoByDatas(LocalDateTime dataInicio, LocalDateTime dataFim, int idEstado) {
+        return leilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
     }
 
-    public static boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) {
-        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
+    public boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) {
+        Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         if (leilao == null) return false;
 
-        LeilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
-        int idLanceVencedor = LanceBLL.selecionarLanceVencedor(idLeilao);
-        TransacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
+        leilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
+        int idLanceVencedor = lanceBLL.selecionarLanceVencedor(idLeilao);
+        transacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
 
         return true;
     }

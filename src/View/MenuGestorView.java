@@ -2,12 +2,11 @@ package View;
 
 import Utils.Tools;
 
-import static Utils.Tools.scanner;
 
 public class MenuGestorView {
-    public static void exibirMenu() {
+    public void exibirMenu(UtilizadorView utilizadorView, LeilaoView leilaoView, ProdutoView produtoView, EstatisticaView estatisticaView, TransacaoView transacaoView) {
         while (true) {
-            System.out.println("\n"+"=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
+            System.out.println("\n" + "=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
             System.out.println("1. Listagem de Utilizadores");
             System.out.println("2. Aprovar Clientes");
             System.out.println("3. Inativar Clientes");
@@ -18,29 +17,29 @@ public class MenuGestorView {
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine().trim();
+            int opcao = Tools.scanner.nextInt();
+            Tools.scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    UtilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
+                    utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
                     break;
                 case 2:
-                    UtilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
+                    utilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
                     break;
                 case 3:
-                    UtilizadorView.aprovarCliente(Tools.estadoUtilizador.INATIVO.getCodigo());
+                    utilizadorView.aprovarCliente(Tools.estadoUtilizador.INATIVO.getCodigo());
                     break;
                 case 4:
-                    LeilaoView.exibirMenuLeiloes();
+                    leilaoView.exibirMenuLeiloes();
                     break;
                 case 5:
-                    ProdutoView.exibirProduto();
+                    produtoView.exibirProduto();
                     break;
-                case  6:
-                    EstatisticaView.exibirMenuListagem();
+                case 6:
+                    estatisticaView.exibirMenuListagem();
                     break;
                 case 7:
-                    TransacaoView.aprovarDepositos();
+                    transacaoView.aprovarDepositos();
                     break;
                 case 0:
                     System.out.println("A sair...");

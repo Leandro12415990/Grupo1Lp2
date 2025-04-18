@@ -3,80 +3,81 @@ package Controller;
 import BLL.EstatisticaBLL;
 import BLL.LeilaoBLL;
 import Model.Leilao;
-
 import java.time.Period;
 import java.util.List;
 
 public class EstatisticaController {
-    public static int contarLeilaoGlobal() {
-        return EstatisticaBLL.contarLeilaoFechados();
+
+    private final EstatisticaBLL estatisticaBLL;
+    private final LeilaoBLL leilaoBLL;
+
+    public EstatisticaController(EstatisticaBLL estatisticaBLL, LeilaoBLL leilaoBLL) {
+        this.estatisticaBLL = estatisticaBLL;
+        this.leilaoBLL = leilaoBLL;
     }
 
-    public static int contarLeiloesFechadosPorTipo(int idTipo) {
-        return EstatisticaBLL.contarLeiloesFechadosPorTipo(idTipo);
+    public int contarLeilaoGlobal() {
+        return estatisticaBLL.contarLeilaoFechados();
     }
 
-    public static List<String> listarLeiloesFechadosFormatados() {
-        return EstatisticaBLL.obterLeiloesFechadosFormatados();
+    public int contarLeiloesFechadosPorTipo(int idTipo) {
+        return estatisticaBLL.contarLeiloesFechadosPorTipo(idTipo);
     }
 
-    public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
-        return EstatisticaBLL.listarLeiloesFechadosFormatadosPorTipo(idTipo);
+    public List<String> listarLeiloesFechadosFormatados() {
+        return estatisticaBLL.obterLeiloesFechadosFormatados();
     }
 
-    public static Leilao getLeilaoMaisTempoAtivo() {
-        return EstatisticaBLL.obterLeilaoMaisTempoAtivo();
+    public List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
+        return estatisticaBLL.listarLeiloesFechadosFormatadosPorTipo(idTipo);
     }
 
-    public static Leilao getLeilaoTipoMaisTempoAtivo(int idTipo) {
-        return EstatisticaBLL.obterLeilaoTipoMaisTempoAtivo(idTipo);
+    public Leilao getLeilaoMaisTempoAtivo() {
+        return estatisticaBLL.obterLeilaoMaisTempoAtivo();
     }
 
-    public static String[] getDadosLeilaoComMaisLances() {
-        return EstatisticaBLL.getDadosLeilaoComMaisLances();
+    public Leilao getLeilaoTipoMaisTempoAtivo(int idTipo) {
+        return estatisticaBLL.obterLeilaoTipoMaisTempoAtivo(idTipo);
     }
 
-    public static String[] getDadosLeilaoComMaisLancesPorTipo(int idTipo) {
-        return EstatisticaBLL.getDadosLeilaoComMaisLancesPorTipo(idTipo);
+    public String[] getDadosLeilaoComMaisLances() {
+        return estatisticaBLL.getDadosLeilaoComMaisLances();
     }
 
-    public static double calcularMediaTempoEntreLances() {
-        return EstatisticaBLL.calcularMediaTempoEntreLancesGeral();
+    public String[] getDadosLeilaoComMaisLancesPorTipo(int idTipo) {
+        return estatisticaBLL.getDadosLeilaoComMaisLancesPorTipo(idTipo);
     }
 
-    public static double calcularMediaTempoEntreLancesPorTipo(int tipo) {
-        return EstatisticaBLL.calcularMediaTempoEntreLancesPorTipo(tipo);
+    public double calcularMediaTempoEntreLances() {
+        return estatisticaBLL.calcularMediaTempoEntreLancesGeral();
     }
 
-    public static List<Leilao> getLeiloesSemLances() {
-        return EstatisticaBLL.obterLeiloesSemLances();
+    public double calcularMediaTempoEntreLancesPorTipo(int tipo) {
+        return estatisticaBLL.calcularMediaTempoEntreLancesPorTipo(tipo);
     }
 
-    public static List<Leilao> getLeiloesSemLancesPorTipo(int idTipoLeilao) {
-        return EstatisticaBLL.obterLeiloesSemLancesPorTipo(idTipoLeilao);
+    public List<Leilao> getLeiloesSemLances() {
+        return estatisticaBLL.obterLeiloesSemLances();
     }
 
-    public static double getMediaIdadeUtilizadores() {
-        return EstatisticaBLL.calcularMediaIdadeUtilizadores();
+    public List<Leilao> getLeiloesSemLancesPorTipo(int idTipoLeilao) {
+        return estatisticaBLL.obterLeiloesSemLancesPorTipo(idTipoLeilao);
     }
 
-    public static String[] getDominioMaisUsadoEPercentagem() {
-        return EstatisticaBLL.calcularDominioMaisUsadoEPercentagem();
+    public double getMediaIdadeUtilizadores() {
+        return estatisticaBLL.calcularMediaIdadeUtilizadores();
     }
 
-    public static List<String> getClientesOrdenadosPorValorMaisAlto(int idLeilao) {
-        return EstatisticaBLL.listarClientesOrdenadosPorMaiorLance(idLeilao);
+    public String[] getDominioMaisUsadoEPercentagem() {
+        return estatisticaBLL.calcularDominioMaisUsadoEPercentagem();
     }
 
-    public static Period getTempoAtivoLeilao(int idLeilao) {
-        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
-        return EstatisticaBLL.calcularTempoAtivoLeilao(leilao);
+    public List<String> getClientesOrdenadosPorValorMaisAlto(int idLeilao) {
+        return estatisticaBLL.listarClientesOrdenadosPorMaiorLance(idLeilao);
     }
 
-
-
-
-
-
-
+    public Period getTempoAtivoLeilao(int idLeilao) {
+        Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
+        return estatisticaBLL.calcularTempoAtivoLeilao(leilao);
+    }
 }
