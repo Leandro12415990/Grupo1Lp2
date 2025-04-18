@@ -186,4 +186,26 @@ public class UtilizadorView {
                     utilizador.getSaldo());
         }
     }
+
+    public void verDadosCliente(Utilizador utilizador) {
+        System.out.println("\n" + "=".repeat(10) + " OS SEUS DADOS " + "=".repeat(10));
+
+        String estadoStr = Tools.estadoUtilizador.fromCodigo(utilizador.getEstado()).name();
+        String tipoUtilizadorStr = Tools.tipoUtilizador.fromCodigo(utilizador.getTipoUtilizador()).name();
+
+        System.out.println("ID: " + utilizador.getId());
+        System.out.println("Nome: " + utilizador.getNomeUtilizador());
+        System.out.println("Email: " + utilizador.getEmail());
+        System.out.println("Data de Nascimento: " + Tools.formatDate(utilizador.getDataNascimento()));
+        System.out.println("Morada: " + utilizador.getMorada());
+        System.out.println("Data de Registo: " + Tools.formatDate(utilizador.getDataRegisto()));
+        System.out.println("Último Login: " + Tools.formatDate(utilizador.getUltimoLogin()));
+        System.out.println("Tipo de Utilizador: " + tipoUtilizadorStr);
+        System.out.println("Estado: " + estadoStr);
+        System.out.printf("Saldo atual: %.2f€\n", utilizador.getSaldo());
+
+        System.out.println("=".repeat(35));
+    }
+
+
 }
