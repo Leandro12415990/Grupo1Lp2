@@ -16,10 +16,11 @@ import java.util.List;
 
 public class TransacaoView {
     private final TransacaoController transacaoController;
-    private final int idCliente = ClienteSessao.getIdCliente();
+    private ClienteSessao clienteSessao;
 
-    public TransacaoView(TransacaoController transacaoController) {
+    public TransacaoView(TransacaoController transacaoController, ClienteSessao clienteSessao) {
         this.transacaoController = transacaoController;
+        this.clienteSessao = clienteSessao;
     }
 
     public void exibirMenuTransacao() {
@@ -37,16 +38,16 @@ public class TransacaoView {
 
             switch (opc) {
                 case 1:
-                    adicionarCreditos(ClienteSessao.idCliente);
+                    adicionarCreditos(clienteSessao.getIdCliente());
                     break;
                 case 2:
-                    verCarteira(ClienteSessao.idCliente);
+                    verCarteira(clienteSessao.getIdCliente());
                     break;
                 case 3:
-                    verDepositos(ClienteSessao.idCliente);
+                    verDepositos(clienteSessao.getIdCliente());
                     break;
                 case 4:
-                    verMovimentos(ClienteSessao.idCliente);
+                    verMovimentos(clienteSessao.getIdCliente());
                     break;
                 case 0:
                     System.out.println("\nVoltando ao menu anterior...");
