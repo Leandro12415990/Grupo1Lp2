@@ -1,6 +1,5 @@
 package BLL;
 
-import DAL.ImportDAL;
 import DAL.UtilizadorDAL;
 import Model.Utilizador;
 import Model.ClienteSessao;
@@ -23,10 +22,7 @@ public class LoginUtilizadorBLL {
             if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword())) {
                 u.setUltimoLogin(LocalDate.now());
                 utilizadorDAL.gravarUtilizadores(utilizadores);
-                ClienteSessao.setIdCliente(u.getId());
-
-                int tipo = u.getTipoUtilizador();
-                if (tipo == 1 || tipo == 2) return u; // 1 = GESTOR, 2 = CLIENTE (ajustar conforme o enum)
+                return u;
             }
         }
         return null;

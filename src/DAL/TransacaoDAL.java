@@ -29,7 +29,7 @@ public class TransacaoDAL {
 
     public void gravarTransacoes(List<Transacao> transacoes) {
         String cabecalho = "ID_TRANSACAO;ID_CLIENTE;VALOR_TOTAL;VALOR_TRANSACAO;DATA_TRANSACAO;ID_TIPO;ID_ESTADO";
-        importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_PRODUTO, cabecalho, transacoes, transacao ->
+        importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_TRANSACAO, cabecalho, transacoes, transacao ->
                 transacao.getIdTransacao() + Tools.separador() +
                         transacao.getIdCliente() + Tools.separador() +
                         transacao.getValorTotal() + Tools.separador() +

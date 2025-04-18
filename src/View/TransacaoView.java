@@ -1,6 +1,8 @@
 package View;
 
 import BLL.TransacaoBLL;
+import BLL.UtilizadorBLL;
+import DAL.UtilizadorDAL;
 import Model.Transacao;
 import Model.ResultadoOperacao;
 import Model.ClienteSessao;
@@ -9,14 +11,16 @@ import Controller.TransacaoController;
 import Utils.Constantes;
 import Utils.Tools;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 public class TransacaoView {
     private final TransacaoController transacaoController;
-    private final int idCliente = ClienteSessao.getIdCliente();
+    private ClienteSessao clienteSessao;
 
-    public TransacaoView(TransacaoController transacaoController) {
+    public TransacaoView(TransacaoController transacaoController, ClienteSessao clienteSessao) {
         this.transacaoController = transacaoController;
+        this.clienteSessao = clienteSessao;
     }
 
     public void exibirMenuTransacao() {
@@ -34,16 +38,16 @@ public class TransacaoView {
 
             switch (opc) {
                 case 1:
-                    adicionarCreditos();
+                    adicionarCreditos(clienteSessao.getIdCliente());
                     break;
                 case 2:
-                    verCarteira(idCliente);
+                    verCarteira(clienteSessao.getIdCliente());
                     break;
                 case 3:
-                    verDepositos(idCliente);
+                    verDepositos(clienteSessao.getIdCliente());
                     break;
                 case 4:
-                    verMovimentos(idCliente);
+                    verMovimentos(clienteSessao.getIdCliente());
                     break;
                 case 0:
                     System.out.println("\nVoltando ao menu anterior...");
@@ -54,7 +58,7 @@ public class TransacaoView {
         } while (opc != 0);
     }
 
-    private void adicionarCreditos() {
+    private void adicionarCreditos(int idCliente) {
         System.out.println("\nADICIONAR CRÉDITOS");
 
         verCarteira(idCliente);
@@ -200,7 +204,8 @@ public class TransacaoView {
         Double saldoAtual = buscarValorTotalAtual(idCliente);
         Double saldoPendente = valorPendente(idCliente);
         System.out.println("\n" + "=".repeat(5) + " SALDO " + "=".repeat(5));
-        System.out.println("Saldo atual: " + saldoAtual + "€");
-        System.out.println("Saldo pendente de aprovação: " + saldoPendente + "€");
+        System.out.printf("Saldo atual: %.2f€\n", saldoAtual);
+        System.out.printf("Saldo pendente de aprovação: %.2f€\n", saldoPendente);
+
     }
 }

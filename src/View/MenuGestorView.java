@@ -1,10 +1,11 @@
 package View;
 
+import Model.ClienteSessao;
 import Utils.Tools;
 
 
 public class MenuGestorView {
-    public void exibirMenu(UtilizadorView utilizadorView, LeilaoView leilaoView, ProdutoView produtoView, EstatisticaView estatisticaView, TransacaoView transacaoView) {
+    public void exibirMenu(UtilizadorView utilizadorView, LeilaoView leilaoView, ProdutoView produtoView, EstatisticaView estatisticaView, TransacaoView transacaoView, ClienteSessao clienteSessao) {
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
             System.out.println("1. Listagem de Utilizadores");
@@ -43,6 +44,7 @@ public class MenuGestorView {
                     break;
                 case 0:
                     System.out.println("A sair...");
+                    clienteSessao.logout();
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");

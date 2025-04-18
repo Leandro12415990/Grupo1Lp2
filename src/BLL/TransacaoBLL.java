@@ -7,6 +7,7 @@ import Model.Lance;
 import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
+import Utils.Tools;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class TransacaoBLL {
     }
 
     public double atualizarSaldo(int idCliente, double creditos) {
-        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
+        List<Utilizador> utilizadores = Tools.utilizadores;
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == idCliente) {
                 double saldoAtual = utilizador.getSaldo();

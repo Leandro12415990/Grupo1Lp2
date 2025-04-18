@@ -10,14 +10,16 @@ import java.util.List;
 public class LanceController {
     private final LanceBLL lanceBLL;
     private final LeilaoBLL leilaoBLL;
+    private ClienteSessao clienteSessao;
 
-    public LanceController(LanceBLL lanceBLL, LeilaoBLL leilaoBLL) {
+    public LanceController(LanceBLL lanceBLL, LeilaoBLL leilaoBLL, ClienteSessao clienteSessao) {
         this.lanceBLL = lanceBLL;
         this.leilaoBLL = leilaoBLL;
+        this.clienteSessao = clienteSessao;
     }
 
     public ResultadoOperacao adicionarLanceEletronico(int idLeilao, int numLance, double multiploLance) {
-        int idCliente = ClienteSessao.getIdCliente();
+        int idCliente = clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
 
         int tipoLeilao = leilao.getTipoLeilao();
@@ -31,7 +33,7 @@ public class LanceController {
 
 
     public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance) {
-        int idCliente = ClienteSessao.getIdCliente();
+        int idCliente = clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         valorLance = leilao.getValorMinimo();
         int tipoLeilao = leilao.getTipoLeilao();
@@ -41,7 +43,7 @@ public class LanceController {
     }
 
     public ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance) {
-        int idCliente = ClienteSessao.getIdCliente();
+        int idCliente = clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
 
         int tipoLeilao = leilao.getTipoLeilao();
@@ -52,7 +54,7 @@ public class LanceController {
 
 
     public List<Lance> listarLancesDoCliente() {
-        int idCliente = ClienteSessao.getIdCliente();
+        int idCliente = clienteSessao.getIdCliente();
         return lanceBLL.listarMeuLance(idCliente);
     }
 
