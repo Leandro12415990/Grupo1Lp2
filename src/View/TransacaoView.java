@@ -1,6 +1,8 @@
 package View;
 
 import BLL.TransacaoBLL;
+import BLL.UtilizadorBLL;
+import DAL.UtilizadorDAL;
 import Model.Transacao;
 import Model.ResultadoOperacao;
 import Model.ClienteSessao;
@@ -9,6 +11,7 @@ import Controller.TransacaoController;
 import Utils.Constantes;
 import Utils.Tools;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 public class TransacaoView {
@@ -34,16 +37,16 @@ public class TransacaoView {
 
             switch (opc) {
                 case 1:
-                    adicionarCreditos();
+                    adicionarCreditos(ClienteSessao.idCliente);
                     break;
                 case 2:
-                    verCarteira(idCliente);
+                    verCarteira(ClienteSessao.idCliente);
                     break;
                 case 3:
-                    verDepositos(idCliente);
+                    verDepositos(ClienteSessao.idCliente);
                     break;
                 case 4:
-                    verMovimentos(idCliente);
+                    verMovimentos(ClienteSessao.idCliente);
                     break;
                 case 0:
                     System.out.println("\nVoltando ao menu anterior...");
@@ -54,7 +57,7 @@ public class TransacaoView {
         } while (opc != 0);
     }
 
-    private void adicionarCreditos() {
+    private void adicionarCreditos(int idCliente) {
         System.out.println("\nADICIONAR CRÉDITOS");
 
         verCarteira(idCliente);
@@ -202,5 +205,6 @@ public class TransacaoView {
         System.out.println("\n" + "=".repeat(5) + " SALDO " + "=".repeat(5));
         System.out.println("Saldo atual: " + saldoAtual + "€");
         System.out.println("Saldo pendente de aprovação: " + saldoPendente + "€");
+
     }
 }

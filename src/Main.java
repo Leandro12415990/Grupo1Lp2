@@ -1,6 +1,7 @@
 import BLL.*;
 import DAL.*;
 import Controller.*;
+import Utils.Tools;
 import View.*;
 
 public class Main {
@@ -13,6 +14,9 @@ public class Main {
         LanceDAL lanceDal = new LanceDAL(importDal);
         TransacaoDAL transacaoDAL = new TransacaoDAL(importDal);
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL(importDal);
+
+        Tools.utilizadores = utilizadorDAL.carregarUtilizadores();
+
 
         // BLL
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL(utilizadorDAL);
