@@ -204,8 +204,8 @@ public class TransacaoView {
         Double saldoAtual = buscarValorTotalAtual(idCliente);
         Double saldoPendente = valorPendente(idCliente);
         System.out.println("\n" + "=".repeat(5) + " SALDO " + "=".repeat(5));
-        System.out.println("Saldo atual: " + saldoAtual + "€");
-        System.out.println("Saldo pendente de aprovação: " + saldoPendente + "€");
+        System.out.printf("Saldo atual: %.2f€\n", saldoAtual);
+        System.out.printf("Saldo pendente de aprovação: %.2f€\n", saldoPendente);
 
     }
 }
