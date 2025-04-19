@@ -24,7 +24,7 @@ public class ImportDal {
 
     private static final Logger logger = Logger.getLogger(ImportDal.class.getName());
 
-    public static List<Lance> carregarLance() {
+    public List<Lance> carregarLance() {
         List<Lance> lances = new ArrayList<>();
 
         try (BufferedReader br = Files.newBufferedReader(Paths.get(CSV_FILE_LANCE))) {
@@ -68,7 +68,7 @@ public class ImportDal {
         return lances;
     }
 
-    public static List<Leilao> carregarLeilao() {
+    public List<Leilao> carregarLeilao() {
         List<Leilao> leiloes = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
@@ -109,7 +109,7 @@ public class ImportDal {
         return leiloes;
     }
 
-    public static List<Utilizador> carregarUtilizador() {
+    public List<Utilizador> carregarUtilizador() {
         List<Utilizador> utilizadores = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_UTILIZADOR))) {
@@ -150,7 +150,7 @@ public class ImportDal {
         return utilizadores;
     }
 
-    public static List<Transacao> carregarTransacao() {
+    public List<Transacao> carregarTransacao() {
         List<Transacao> transacaoList = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_TRANSACAO))) {
@@ -185,7 +185,7 @@ public class ImportDal {
         return transacaoList;
     }
 
-    public static void gravarLeilao(List<Leilao> leiloes) {
+    public void gravarLeilao(List<Leilao> leiloes) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE))) {
             bw.write("ID;ID_PRODUTO;DESCRICAO;ID_TIPO_LEILAO;DATA_INICIO;DATA_FIM;VALOR_MINIMO;VALOR_MAXIMO;MULTIPLO_LANCE;ID_ESTADO");
             bw.newLine();
@@ -214,7 +214,7 @@ public class ImportDal {
         }
     }
 
-    public static void gravarUtilizador(List<Utilizador> utilizadores) {
+    public void gravarUtilizador(List<Utilizador> utilizadores) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_UTILIZADOR))) {
             bw.write("ID;NOME;EMAIL;DATA NASCIMENTO;MORADA;PASSWORD;DATA REGISTO;ULTIMO LOGIN;TIPO UTILIZADOR;ESTADO;SALDO");
             bw.newLine();
@@ -243,7 +243,7 @@ public class ImportDal {
         }
     }
 
-    public static void gravarLance(List<Lance> lances) {
+    public void gravarLance(List<Lance> lances) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_LANCE))) {
             bw.write("ID APOSTA;ID LEILÃO;ID CLIENTE;VALOR APOSTA;MULTIPLOS UTILIZADOS;PONTOS UTILIZADOS;DATA APOSTA");
             bw.newLine();
@@ -265,7 +265,7 @@ public class ImportDal {
         }
     }
 
-    public static void gravarTransacao(List<Transacao> transacaoList) {
+    public void gravarTransacao(List<Transacao> transacaoList) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE_TRANSACAO))) {
             bw.write("ID_TRANSACAO;ID_CLIENTE;VALOR_TOTAL;VALOR_TRANSACAO;DATA_TRANSACAO;ID_TIPO;ID_ESTADO");
             bw.newLine();

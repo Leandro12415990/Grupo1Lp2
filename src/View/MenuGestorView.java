@@ -6,6 +6,11 @@ import static Utils.Tools.scanner;
 
 public class MenuGestorView {
     public static void exibirMenu() {
+        UtilizadorView utilizadorView = new UtilizadorView();
+        TransacaoView transacaoView = new TransacaoView();
+        EstatisticaView estatisticaView = new EstatisticaView();
+        LeilaoView leilaoView = new LeilaoView();
+        ProdutoView produtoView = new ProdutoView();
         while (true) {
             System.out.println("\n"+"=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
             System.out.println("1. Listagem de Utilizadores");
@@ -22,25 +27,25 @@ public class MenuGestorView {
             scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    UtilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
+                    utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
                     break;
                 case 2:
-                    UtilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
+                    utilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
                     break;
                 case 3:
-                    UtilizadorView.aprovarCliente(Tools.estadoUtilizador.INATIVO.getCodigo());
+                    utilizadorView.aprovarCliente(Tools.estadoUtilizador.INATIVO.getCodigo());
                     break;
                 case 4:
-                    LeilaoView.exibirMenuLeiloes();
+                    leilaoView.exibirMenuLeiloes();
                     break;
                 case 5:
-                    ProdutoView.exibirProduto();
+                    produtoView.exibirProduto();
                     break;
                 case  6:
-                    EstatisticaView.exibirMenuListagem();
+                    estatisticaView.exibirMenuListagem();
                     break;
                 case 7:
-                    TransacaoView.aprovarDepositos();
+                    transacaoView.aprovarDepositos();
                     break;
                 case 0:
                     System.out.println("A sair...");

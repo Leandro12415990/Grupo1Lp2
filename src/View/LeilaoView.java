@@ -16,7 +16,7 @@ import java.util.List;
 
 
 public class LeilaoView {
-    public static void exibirMenuLeiloes() {
+    public void exibirMenuLeiloes() {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LEILÕES " + "=".repeat(5));

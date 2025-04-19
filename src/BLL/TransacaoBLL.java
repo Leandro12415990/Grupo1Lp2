@@ -11,19 +11,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransacaoBLL {
+    private static ImportDal importDal = new ImportDal();
     private static List<Transacao> transacaoList = new ArrayList<>();
-    private static List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
+    private static List<Utilizador> utilizadores = importDal.carregarUtilizador();
 
     public static List<Transacao> carregarTransacao() {
-        transacaoList = ImportDal.carregarTransacao();
+        ImportDal importDal = new ImportDal();
+        transacaoList = importDal.carregarTransacao();
         return transacaoList;
     }
 
     public static void criarTransacao(Transacao transacao) {
+        ImportDal importDal = new ImportDal();
         carregarTransacao();
         transacao.setIdTransacao(verificarUltimoIdCarteira(transacaoList) + 1);
         transacaoList.add(transacao);
-        ImportDal.gravarTransacao(transacaoList);
+        importDal.gravarTransacao(transacaoList);
     }
 
     private static int verificarUltimoIdCarteira(List<Transacao> transacaoList) {
@@ -35,7 +38,8 @@ public class TransacaoBLL {
     }
 
     public static Double buscarValorTotalAtual(int IdCliente) {
-        List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> utilizadores = importDal.carregarUtilizador();
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == IdCliente) return utilizador.getSaldo();
         }
@@ -43,13 +47,14 @@ public class TransacaoBLL {
     }
 
     public static double atualizarSaldo(int idCliente, double creditos) {
+        ImportDal importDal = new ImportDal();
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == idCliente) {
                 double saldoAtual = utilizador.getSaldo();
                 saldoAtual += creditos;
                 utilizador.setSaldo(saldoAtual);
 
-                ImportDal.gravarUtilizador(utilizadores);
+                importDal.gravarUtilizador(utilizadores);
                 return saldoAtual;
             }
         }
@@ -58,7 +63,8 @@ public class TransacaoBLL {
 
 
     public static Double valorPendente(int idCliente) {
-        transacaoList = ImportDal.carregarTransacao();
+        ImportDal importDal = new ImportDal();
+        transacaoList = importDal.carregarTransacao();
         double valorTotalPendente = 0;
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdCliente() == idCliente && transacao.getIdTipoTransacao() == Constantes.tiposTransacao.DEPOSITO) {
@@ -107,10 +113,11 @@ public class TransacaoBLL {
     }
 
     public static void atualizarEstadosTransacao(int idTransacao, int idEstado) {
+        ImportDal importDal = new ImportDal();
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdTransacao() == idTransacao) transacao.setIdEstadoTransacao(idEstado);
         }
-        ImportDal.gravarTransacao(transacaoList);
+        importDal.gravarTransacao(transacaoList);
     }
 
     public static void devolverSaldo(int idLeilao, int idLanceVencedor) {

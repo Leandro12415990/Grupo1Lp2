@@ -10,21 +10,27 @@ import java.util.List;
 
 public class ImportController {
 
-    public static void mostrarUtilizador(int estado, int tipo) {
-        ImportBLL.listarUtilizador(estado, tipo);
+    public void mostrarUtilizador(int estado, int tipo) {
+        ImportBLL importBLL = new ImportBLL();
+        importBLL.listarUtilizador(estado, tipo);
     }
 
-    public static void gravarLeiloes(List<Leilao> leiloes) {
-        ImportBLL.gravarLeiloes(leiloes);
+    public void gravarLeiloes(List<Leilao> leiloes) {
+        ImportBLL importBLL = new ImportBLL();
+        importBLL.gravarLeiloes(leiloes);
     }
 
-    public static void gravarUtilizadores(List<Utilizador> utilizadores) {
-        ImportBLL.gravarUtilizadores(utilizadores);
+    public void gravarUtilizadores(List<Utilizador> utilizadores) {
+        ImportBLL importBLL = new ImportBLL();
+        importBLL.gravarUtilizadores(utilizadores);
     }
 
-    public static void mostrarLance(){
-        ImportBLL.listarLance();}
+    public void mostrarLance(){
+        ImportBLL importBLL = new ImportBLL();
+        importBLL.listarLance();
+    }
 
-    public static void gravarLance(List<Lance> lances){
-        ImportBLL.gravarLance(lances);}
+    public void gravarLance(List<Lance> lances){
+        ImportBLL importBLL = new ImportBLL();
+        importBLL.gravarLance(lances);}
 }

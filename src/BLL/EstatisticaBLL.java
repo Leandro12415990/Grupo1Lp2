@@ -45,17 +45,17 @@ public class EstatisticaBLL {
     }
 
     /** Contagem dos leilões fechados */
-    public static int contarLeilaoFechados() {
+    public int contarLeilaoFechados() {
         return filtrarLeiloesFechados().size();
     }
 
-    public static int contarLeiloesFechadosPorTipo(int idTipoLeilao) {
+    public int contarLeiloesFechadosPorTipo(int idTipoLeilao) {
         return filtrarLeiloesFechadosPorTipo(idTipoLeilao).size();
     }
 
     /** Listagem de leilões por tipo */
 
-    public static List<String> obterLeiloesFechadosFormatados() {
+    public List<String> obterLeiloesFechadosFormatados() {
         List<Leilao> fechados = filtrarLeiloesFechados();
         List<String> resultado = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class EstatisticaBLL {
         return resultado;
     }
 
-    public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipoLeilao) {
+    public List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipoLeilao) {
         List<Leilao> leiloes = filtrarLeiloesFechadosPorTipo(idTipoLeilao);
         List<String> resultado = new ArrayList<>();
 
@@ -85,7 +85,7 @@ public class EstatisticaBLL {
 
     /** Obter o leilão mais tempo ativo */
 
-    public static Leilao obterLeilaoTipoMaisTempoAtivo(int idTipoLeilao) {
+    public Leilao obterLeilaoTipoMaisTempoAtivo(int idTipoLeilao) {
         List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
         if (leiloes == null || leiloes.isEmpty()) return null;
 
@@ -108,7 +108,7 @@ public class EstatisticaBLL {
         return leilaoMaisTempo;
     }
 
-    public static Leilao obterLeilaoMaisTempoAtivo() {
+    public Leilao obterLeilaoMaisTempoAtivo() {
         List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
         if (leiloes == null || leiloes.isEmpty()) return null;
 
@@ -139,7 +139,7 @@ public class EstatisticaBLL {
 
     /** Obter o leilão com mais lances feitos */
 
-    public static String[] getDadosLeilaoComMaisLances() {
+    public String[] getDadosLeilaoComMaisLances() {
         List<Lance> lances = LanceBLL.carregarLance();
         if (lances == null || lances.isEmpty()) return null;
 
@@ -388,7 +388,8 @@ public class EstatisticaBLL {
     /** Calcular a media de idades dos clientes */
 
     public static double calcularMediaIdadeUtilizadores() {
-        List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> utilizadores = importDal.carregarUtilizador();
         if (utilizadores == null || utilizadores.isEmpty()) return -1;
 
         int somaIdades = 0;
@@ -410,7 +411,8 @@ public class EstatisticaBLL {
     /** Calcular percentagem de clientes que usam o maior domínio de e-mail  */
 
     public static String[] calcularDominioMaisUsadoEPercentagem() {
-        List<Utilizador> todos = ImportDal.carregarUtilizador();
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> todos = importDal.carregarUtilizador();
         if (todos == null || todos.isEmpty()) return null;
 
         List<Utilizador> clientes = new ArrayList<>();
@@ -515,7 +517,8 @@ public class EstatisticaBLL {
 
 
     private static Utilizador procurarUtilizadorPorId(int id) {
-        List<Utilizador> utilizadores = ImportDal.carregarUtilizador(); // ou onde carregas
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> utilizadores = importDal.carregarUtilizador(); // ou onde carregas
 
         if (utilizadores == null) return null;
 

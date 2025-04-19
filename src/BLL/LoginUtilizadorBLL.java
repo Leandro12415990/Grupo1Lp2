@@ -9,14 +9,15 @@ import java.time.LocalDate;
 
 public class LoginUtilizadorBLL {
 
-    public static Utilizador login(String email, String password)
+    public Utilizador login(String email, String password)
     {
+        ImportDal importDal = new ImportDal();
         for (Utilizador u : Tools.utilizadores)
         {
             if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
             {
                 u.setUltimoLogin(LocalDate.now());
-                ImportDal.gravarUtilizador(Tools.utilizadores);
+                importDal.gravarUtilizador(Tools.utilizadores);
                 ClienteSessao.setIdCliente(u.getId());
 
                 if (u.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo() || u.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) return u;
@@ -26,8 +27,9 @@ public class LoginUtilizadorBLL {
         return null;
     }
 
-    public static boolean lerDados() {
-        Tools.utilizadores = ImportDal.carregarUtilizador();
+    public boolean lerDados() {
+        ImportDal importDal = new ImportDal();
+        Tools.utilizadores = importDal.carregarUtilizador();
         return Tools.utilizadores != null;
     }
 }

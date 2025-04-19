@@ -7,7 +7,10 @@ import Utils.Tools;
 import static Utils.Tools.scanner;
 
 public class MenuInicialView {
-    public static void menuInicial() {
+    public void menuInicial() {
+        LoginView loginView = new LoginView();
+        MenuClienteView menuClienteView = new MenuClienteView();
+        UtilizadorView utilizadorView = new UtilizadorView();
         int opcao;
         do {
             System.out.println("\nBem-vindo à leiloeira Valor em Alta!\n");
@@ -22,17 +25,17 @@ public class MenuInicialView {
 
             switch (opcao) {
                 case 1:
-                    Utilizador utilizador = LoginView.login();
+                    Utilizador utilizador = loginView.login();
                     if (utilizador == null) {
                         System.out.println("Erro a fazer Login");
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo()) {
                         MenuGestorView.exibirMenu();
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) {
-                        MenuClienteView.exibirMenu(utilizador);
+                        menuClienteView.exibirMenu(utilizador);
                     }
                     break;
                 case 2:
-                    UtilizadorView.registarCliente();
+                    utilizadorView.registarCliente();
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");

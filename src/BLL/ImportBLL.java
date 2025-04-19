@@ -10,15 +10,17 @@ import java.util.List;
 
 public class ImportBLL {
 
-    public static List<Leilao> obterTodosLeiloes() {
-        return ImportDal.carregarLeilao();
+    public List<Leilao> obterTodosLeiloes() {
+        ImportDal importDal = new ImportDal();
+        return importDal.carregarLeilao();
     }
 
-    public static List<Utilizador> obterTodosUtilizadores() {
-        return ImportDal.carregarUtilizador();
+    public List<Utilizador> obterTodosUtilizadores() {
+        ImportDal importDal = new ImportDal();
+        return importDal.carregarUtilizador();
     }
 
-    public static void listarUtilizador(int estado, int tipo) {
+    public void listarUtilizador(int estado, int tipo) {
         List<Utilizador> utilizadors = obterTodosUtilizadores();
         if (estado == Tools.estadoUtilizador.getDefault().getCodigo()) {
             for (Utilizador utilizador : utilizadors) {
@@ -44,22 +46,30 @@ public class ImportBLL {
         }
     }
 
-    public static void gravarLeiloes(List<Leilao> leiloes) {
-        ImportDal.gravarLeilao(leiloes);
+    public void gravarLeiloes(List<Leilao> leiloes) {
+        ImportDal importDal = new ImportDal();
+        importDal.gravarLeilao(leiloes);
     }
 
-    public static void gravarUtilizadores(List<Utilizador> utilizadores) {
-        ImportDal.gravarUtilizador(utilizadores);
+    public void gravarUtilizadores(List<Utilizador> utilizadores) {
+        ImportDal importDal = new ImportDal();
+        importDal.gravarUtilizador(utilizadores);
     }
 
-    public static List<Lance> obterTodosLances(){return ImportDal.carregarLance();}
+    public List<Lance> obterTodosLances() {
+        ImportDal importDal = new ImportDal();
+        return importDal.carregarLance();
+    }
 
-    public static void listarLance(){
+    public void listarLance(){
         List<Lance> lances = obterTodosLances();
         for (Lance lance : lances){
             System.out.print("ID: " + lance.getIdLance() + " - ID LEILAO: " + lance.getIdLeilao());
         }
     }
 
-    public static void gravarLance(List<Lance> lances){ImportDal.gravarLance(lances);}
+    public void gravarLance(List<Lance> lances) {
+        ImportDal importDal = new ImportDal();
+        importDal.gravarLance(lances);
+    }
 }

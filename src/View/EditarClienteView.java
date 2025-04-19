@@ -19,7 +19,8 @@ import java.time.LocalDate;
 import static Utils.Tools.scanner;
 
 public class EditarClienteView {
-    public static void exibirMenu(int idCliente) {
+    public void exibirMenu(int idCliente) {
+        MenuInicialView menuInicialView = new MenuInicialView();
         while (true) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String passwordFirst, passwordSecound;
@@ -56,7 +57,7 @@ public class EditarClienteView {
                 System.out.print("Insira a Password (-1 para cancelar): ");
                 passwordFirst = Tools.scanner.nextLine();
                 if (passwordFirst.equals("-1")) {
-                    MenuInicialView.menuInicial();
+                    menuInicialView.menuInicial();
                 }
                 if (!passwordFirst.isEmpty()) {
                     System.out.print("Repita a Password: ");

@@ -11,12 +11,13 @@ public class RegistarClienteBLL {
 
     public static boolean criarCliente(String nome, String email, LocalDate nascimento, String morada, String password)
     {
+        ImportDal importDal = new ImportDal();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         Utilizador utilizador = null;
         LocalDate hora = LocalDate.now();
 
-        Tools.utilizadores = ImportDal.carregarUtilizador();
+        Tools.utilizadores = importDal.carregarUtilizador();
         int max = -1;
 
         for (Utilizador u : Tools.utilizadores)
@@ -36,7 +37,7 @@ public class RegistarClienteBLL {
 
         Tools.utilizadores.add(utilizador);
 
-        ImportDal.gravarUtilizador(Tools.utilizadores);
+        importDal.gravarUtilizador(Tools.utilizadores);
 
         return true;
     }

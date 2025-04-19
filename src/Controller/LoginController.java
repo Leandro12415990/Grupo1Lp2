@@ -5,8 +5,9 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class LoginController {
-    public static Utilizador verificarLogin(String email, String password)
+    public Utilizador verificarLogin(String email, String password)
     {
+        LoginUtilizadorBLL loginUtilizadorBLL = new LoginUtilizadorBLL();
         boolean respLerDados = lerDados();
         Utilizador utilizador = null;
         if (!respLerDados) return utilizador;
@@ -17,7 +18,7 @@ public class LoginController {
             {
                 if (u.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo())
                 {
-                    utilizador = LoginUtilizadorBLL.login(email, password);
+                    utilizador = loginUtilizadorBLL.login(email, password);
                     return utilizador;
                 }
                 else
@@ -30,9 +31,10 @@ public class LoginController {
         return null;
     }
 
-    public static boolean lerDados()
+    public boolean lerDados()
     {
-        boolean respLerDados = LoginUtilizadorBLL.lerDados();
+        LoginUtilizadorBLL loginUtilizadorBLL = new LoginUtilizadorBLL();
+        boolean respLerDados = loginUtilizadorBLL.lerDados();
         if (respLerDados) return true;
         else return false;
     }

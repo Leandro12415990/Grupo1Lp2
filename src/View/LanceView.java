@@ -14,7 +14,7 @@ import static BLL.LeilaoBLL.listarLeiloes;
 
 
 public class LanceView {
-    public static void exibirMenuLance() {
+    public void exibirMenuLance() {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LANCES " + "=".repeat(5));
@@ -53,11 +53,13 @@ public class LanceView {
 
     }
 
-    public static void lanceDireto() {
+    public void lanceDireto() {
+        ImportDal importDal = new ImportDal();
+
         ResultadoOperacao resultado;
         System.out.println("\n===== LEILÕES VENDA DIRETA =====");
 
-        List<Utilizador> cliente = ImportDal.carregarUtilizador();
+        List<Utilizador> cliente = importDal.carregarUtilizador();
         List<Leilao> leiloesAtivos = listarLeiloes(true);
         List<Leilao> leiloesLanceDireto = LanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
         if (!leiloesLanceDireto.isEmpty()) {
@@ -99,7 +101,7 @@ public class LanceView {
         }
     }
 
-    public static void lanceCartaFechada() {
+    public void lanceCartaFechada() {
         System.out.println("\n===== LEILÕES CARTA FECHADA =====");
 
         List<Leilao> leiloesAtivos = listarLeiloes(true);
@@ -134,7 +136,8 @@ public class LanceView {
         }
     }
 
-    public static void lanceEletronico() {
+    public void lanceEletronico() {
+        LanceController lanceController = new LanceController();
         System.out.println("\n===== LEILÕES ELETRONICO =====");
 
         List<Leilao> leiloesAtivos = listarLeiloes(true);
@@ -156,7 +159,7 @@ public class LanceView {
                 int numLance = Tools.scanner.nextInt();
                 if (Tools.verificarSaida(String.valueOf(numLance))) return;
 
-                ResultadoOperacao resultado = LanceController.adicionarLanceEletronico(idLeilao, numLance, multiploLance);
+                ResultadoOperacao resultado = lanceController.adicionarLanceEletronico(idLeilao, numLance, multiploLance);
 
                 if (resultado.Sucesso) {
                     System.out.println("O seu Lance foi aceite");
@@ -171,7 +174,7 @@ public class LanceView {
         }
     }
 
-    public static void listarMeuLance() {
+    public void listarMeuLance() {
         List<Lance> meusLances = LanceController.listarLancesDoCliente();
 
         if (meusLances.isEmpty()) {
@@ -190,7 +193,7 @@ public class LanceView {
         }
     }
 
-    public static void listarLancesPorLeilao() { // PARA SER USADO PELO GESTOR
+    public void listarLancesPorLeilao() { // PARA SER USADO PELO GESTOR
         List<Leilao> leiloesAtivos = listarLeiloes(true);
         List<Leilao> leilaoEletronicoAtivo = LanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.ELETRONICO);
         LeilaoView.exibirLeiloes(leilaoEletronicoAtivo);

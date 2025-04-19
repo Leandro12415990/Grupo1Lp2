@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ProdutoView {
 
-    public static void exibirProduto() {
+    public void exibirProduto() {
         int opcao;
         do {
             System.out.println("\nMenu:");
@@ -47,6 +47,7 @@ public class ProdutoView {
     }
 
     public static void criarProduto() {
+        ProdutoController produtoController = new ProdutoController();
         System.out.println("\nCRIAÇÃO DE UM PRODUTO\n");
 
         System.out.println("Insira o nome do produto " + Tools.alertaCancelar());
@@ -56,7 +57,7 @@ public class ProdutoView {
         System.out.println("Insira uma descrição do produto " + Tools.alertaCancelar());
         String descricao = Tools.scanner.nextLine();
         if (Tools.verificarSaida(descricao)) return;
-        ResultadoOperacao resultado = ProdutoController.criarProduto(0, Constantes.estadosProduto.ATIVO, nome, descricao);
+        ResultadoOperacao resultado = produtoController.criarProduto(0, Constantes.estadosProduto.ATIVO, nome, descricao);
         if (resultado.Sucesso) {
             System.out.println("Produto criado com sucesso!");
         } else {

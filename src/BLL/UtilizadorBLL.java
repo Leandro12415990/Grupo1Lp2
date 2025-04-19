@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UtilizadorBLL {
-    public static List<Utilizador> listarUtilizador(int estado, int tipo) {
-        ImportDal.carregarUtilizador();
+    public List<Utilizador> listarUtilizador(int estado, int tipo) {
+        ImportDal importDal = new ImportDal();
+        importDal.carregarUtilizador();
         List<Utilizador> utilizadoresList = new ArrayList<>();
         if (estado != 0) {
             for (Utilizador utilizador : Tools.utilizadores) {
@@ -28,11 +29,12 @@ public class UtilizadorBLL {
         return utilizadoresList;
     }
 
-    public static boolean criarCliente(String nome, String email, LocalDate nascimento, String morada, String password) {
+    public boolean criarCliente(String nome, String email, LocalDate nascimento, String morada, String password) {
+        ImportDal importDal = new ImportDal();
         Utilizador utilizador;
         LocalDate data = LocalDate.now();
 
-        Tools.utilizadores = ImportDal.carregarUtilizador();
+        Tools.utilizadores = importDal.carregarUtilizador();
         int max = -1;
 
         for (Utilizador u : Tools.utilizadores) {
@@ -47,11 +49,12 @@ public class UtilizadorBLL {
         }
 
         Tools.utilizadores.add(utilizador);
-        ImportDal.gravarUtilizador(Tools.utilizadores);
+        importDal.gravarUtilizador(Tools.utilizadores);
         return true;
     }
 
-    public static boolean aprovarCliente(Utilizador u, int estado) {
+    public boolean aprovarCliente(Utilizador u, int estado) {
+        ImportDal importDal = new ImportDal();
         // Define o novo estado do utilizador
         int novoEstado = (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
                 ? Tools.estadoUtilizador.ATIVO.getCodigo()
@@ -62,7 +65,7 @@ public class UtilizadorBLL {
         // Procura o utilizador correspondente e verifica se o estado foi aplicado
         for (Utilizador uti : Tools.utilizadores) {
             if (u.getEmail().equalsIgnoreCase(uti.getEmail()) && uti.getEstado() == novoEstado) {
-                ImportDal.gravarUtilizador(Tools.utilizadores);
+                importDal.gravarUtilizador(Tools.utilizadores);
                 return true;
             }
         }
@@ -70,12 +73,13 @@ public class UtilizadorBLL {
         return false;
     }
 
-    public static boolean editarCliente(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
+    public boolean editarCliente(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
+        ImportDal importDal = new ImportDal();
         int soma = 0, index = 0;
 
-        Tools.utilizadores = ImportDal.carregarUtilizador();
+        Tools.utilizadores = importDal.carregarUtilizador();
 
-        for (Utilizador u : ImportDal.carregarUtilizador()) {
+        for (Utilizador u : importDal.carregarUtilizador()) {
             if (u.getEmail().equals(utilizador.getEmail())) {
                 index = soma;
                 if (!nome.isEmpty()) utilizador.setNomeUtilizador(nome);
@@ -87,18 +91,19 @@ public class UtilizadorBLL {
 
         Tools.utilizadores.set(index, utilizador);
 
-        ImportDal.gravarUtilizador(Tools.utilizadores);
+        importDal.gravarUtilizador(Tools.utilizadores);
 
         return true;
     }
 
-    public static void aprovarTodosClientes(Utilizador u, int estado) {
+    public void aprovarTodosClientes(Utilizador u, int estado) {
         if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
         else u.setEstado(Tools.estadoUtilizador.INATIVO.getCodigo());
     }
 
-    public static Utilizador procurarUtilizadorPorId(int idCliente) {
-        List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
+    public Utilizador procurarUtilizadorPorId(int idCliente) {
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> utilizadores = importDal.carregarUtilizador();
         for (Utilizador u : utilizadores) {
             if (u.getId() == idCliente) {
                 return u;

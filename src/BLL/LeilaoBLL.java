@@ -16,23 +16,25 @@ public class LeilaoBLL {
     private static List<Leilao> leiloes = new ArrayList<>();
 
     public static List<Leilao> carregarLeiloes() {
-        leiloes = ImportDal.carregarLeilao();
+        ImportDal importDal = new ImportDal();
+        leiloes = importDal.carregarLeilao();
         int idEstado;
         for (Leilao leilao : leiloes) {
             idEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
             if (leilao.getEstado() != idEstado && idEstado == Constantes.estadosLeilao.FECHADO && leilao.getTipoLeilao() == Constantes.tiposLeilao.CARTA_FECHADA)
                 LeilaoController.fecharLeilao(leilao.getId(), leilao.getDataFim());
             leilao.setEstado(idEstado);
-            ImportDal.gravarLeilao(leiloes);
+            importDal.gravarLeilao(leiloes);
         }
         return leiloes;
     }
 
     public static void adicionarLeilao(Leilao leilao) {
+        ImportDal importDal = new ImportDal();
         carregarLeiloes();
         leilao.setId(verificarUltimoId(leiloes) + 1);
         leiloes.add(leilao);
-        ImportDal.gravarLeilao(leiloes);
+        importDal.gravarLeilao(leiloes);
     }
 
     private static int verificarUltimoId(List<Leilao> leiloes) {
@@ -70,11 +72,13 @@ public class LeilaoBLL {
     }
 
     public static void eliminarLeilao(Leilao leilao) {
+        ImportDal importDal = new ImportDal();
         leiloes.remove(leilao);
-        ImportDal.gravarLeilao(leiloes);
+        importDal.gravarLeilao(leiloes);
     }
 
     public static boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
+        ImportDal importDal = new ImportDal();
         Leilao leilao = procurarLeilaoPorId(id);
         if (leilao != null) {
             leilao.setIdProduto(idProduto);
@@ -86,7 +90,7 @@ public class LeilaoBLL {
             leilao.setValorMaximo(valorMax);
             leilao.setMultiploLance(multiploLance);
             leilao.setEstado(idEstado);
-            ImportDal.gravarLeilao(leiloes);
+            importDal.gravarLeilao(leiloes);
             return true;
         }
         return false;
@@ -110,7 +114,8 @@ public class LeilaoBLL {
     }
 
     public static void colocarDataFimLeilao(int idLeilao, LocalDateTime dataFim) {
-        List<Leilao> leiloes = ImportDal.carregarLeilao();
+        ImportDal importDal = new ImportDal();
+        List<Leilao> leiloes = importDal.carregarLeilao();
         for (Leilao leilao : leiloes) {
             if (leilao.getId() == idLeilao) {
                 leilao.setDataFim(dataFim);
@@ -119,7 +124,7 @@ public class LeilaoBLL {
                 break;
             }
         }
-        ImportDal.gravarLeilao(leiloes);
+        importDal.gravarLeilao(leiloes);
     }
 
 }

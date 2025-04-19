@@ -8,11 +8,13 @@ import Utils.Tools;
 public class AprovarClienteController {
     public static boolean AprovarTodos()
     {
+        AprovarClienteBLL aprovarClienteBLL = new AprovarClienteBLL();
+        ImportDal importDal = new ImportDal();
         for (Utilizador u : Tools.utilizadores)
         {
             if (u.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo())
             {
-                AprovarClienteBLL.AprovarTodos(u);
+                aprovarClienteBLL.AprovarTodos(u);
             }
         }
 
@@ -24,7 +26,7 @@ public class AprovarClienteController {
             }
         }
 
-        ImportDal.gravarUtilizador(Tools.utilizadores);
+        importDal.gravarUtilizador(Tools.utilizadores);
 
         return true;
     }

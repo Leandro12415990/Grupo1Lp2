@@ -14,11 +14,13 @@ public class LanceBLL {
     private static List<Lance> lances = new ArrayList<>();
 
     public static List<Lance> carregarLance() {
-        lances = ImportDal.carregarLance();
+        ImportDal importDal = new ImportDal();
+        lances = importDal.carregarLance();
         return lances;
     }
 
     public static ResultadoOperacao adicionarLanceDireto(int idLance, int idLeilao, double valorLance, int idCliente, int idTipoLeilao) {
+        ImportDal importDal = new ImportDal();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
 
@@ -37,7 +39,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        ImportDal.gravarLance(lances);
+        importDal.gravarLance(lances);
 
         if (valorLance == leilao.getValorMinimo()) {
             fimLeilao(idLeilao, dataLance);
@@ -49,6 +51,7 @@ public class LanceBLL {
     }
 
     public static ResultadoOperacao adicionarLanceCartaFechada(int idLance, int idLeilao, double valorLance, int idCliente, int idTipoLeilao) {
+        ImportDal importDal = new ImportDal();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
         ResultadoOperacao saldoVerificado = verificarSaldoEAtualizar(idCliente, valorLance, idTipoLeilao);
@@ -66,7 +69,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        ImportDal.gravarLance(lances);
+        importDal.gravarLance(lances);
 
         resultado.Sucesso = true;
         resultado.Objeto = lance;
@@ -74,6 +77,7 @@ public class LanceBLL {
     }
 
     public static ResultadoOperacao adicionarLanceEletronico(int idLance, int idLeilao, double valorLance, int numLance, double multiploLance, int idCliente, int valorLanceAtual, int idtipoLeilao) {
+        ImportDal importDal = new ImportDal();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
         valorLance += (multiploLance * numLance);
@@ -92,7 +96,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        ImportDal.gravarLance(lances);
+        importDal.gravarLance(lances);
 
         resultado.Sucesso = true;
         resultado.Objeto = lance;
@@ -141,7 +145,9 @@ public class LanceBLL {
 
     public static ResultadoOperacao verificarSaldoEAtualizar(int idCliente, double valor, int idTipoLeilao) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        Utilizador utilizador = UtilizadorBLL.procurarUtilizadorPorId(idCliente);
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        ImportDal importDal = new ImportDal();
+        Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
 
         if (utilizador.getSaldo() < valor) {
             resultado.Sucesso = false;
@@ -163,7 +169,7 @@ public class LanceBLL {
 
         TransacaoBLL.criarTransacao(transacao);
 
-        ImportDal.gravarUtilizador(utilizadores);
+        importDal.gravarUtilizador(utilizadores);
 
         resultado.Sucesso = true;
         resultado.msgErro = null;
@@ -205,9 +211,10 @@ public class LanceBLL {
     }
 
     public static String obterNomeVencedor(int idLance) {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         for (Lance lance : lances) {
             if (lance.getIdLance() == idLance) {
-                Utilizador utilizadorVencedor = UtilizadorBLL.procurarUtilizadorPorId(lance.getIdCliente());
+                Utilizador utilizadorVencedor = utilizadorBLL.procurarUtilizadorPorId(lance.getIdCliente());
                 return utilizadorVencedor.getNomeUtilizador();
             }
         }

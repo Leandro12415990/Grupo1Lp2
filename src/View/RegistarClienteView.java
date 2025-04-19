@@ -9,8 +9,10 @@ import java.time.format.DateTimeFormatter;
 
 public class RegistarClienteView {
     private static int validate = 0;
-    public static void MenuRegistarCliente()
+    public void MenuRegistarCliente()
     {
+        MenuInicialView menuInicialView = new MenuInicialView();
+        RegistarClienteController registarClienteController = new RegistarClienteController();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String passwordFirst, passwordSecound;
 
@@ -19,12 +21,12 @@ public class RegistarClienteView {
         System.out.print("Nome (-1 para cancelar): ");
         String nome = Tools.scanner.nextLine();
         if(nome.equals("-1")) {
-            MenuInicialView.menuInicial();
+            menuInicialView.menuInicial();
         }
         System.out.print("E-mail (-1 para cancelar): ");
         String email = Tools.scanner.nextLine();
         if(email.equals("-1")) {
-            MenuInicialView.menuInicial();
+            menuInicialView.menuInicial();
         }
         LocalDate nascimento = null;
         boolean dataValida = false;
@@ -33,7 +35,7 @@ public class RegistarClienteView {
             try {
                 String data = Tools.scanner.nextLine();
                 if(data.equals("-1")) {
-                    MenuInicialView.menuInicial();
+                    menuInicialView.menuInicial();
                 } else {
                     nascimento = LocalDate.parse(data, formatter);
                     dataValida = true;
@@ -46,7 +48,7 @@ public class RegistarClienteView {
         System.out.print("Morada (-1 para cancelar): ");
         String morada = Tools.scanner.nextLine();
         if(morada.equals("-1")) {
-            MenuInicialView.menuInicial();
+            menuInicialView.menuInicial();
         }
         boolean respVerificarPassword = false;
         do
@@ -54,7 +56,7 @@ public class RegistarClienteView {
             System.out.print("Insira a Password (-1 para cancelar): ");
             passwordFirst = Tools.scanner.nextLine();
             if(passwordFirst.equals("-1")) {
-                MenuInicialView.menuInicial();
+                menuInicialView.menuInicial();
             }
             System.out.print("Repita a Password: ");
             passwordSecound = Tools.scanner.nextLine();
@@ -62,7 +64,7 @@ public class RegistarClienteView {
             if (!respVerificarPassword) System.out.println("Erro, passwords não coincidem, tente novamente...\n");
         } while (!respVerificarPassword);
 
-        ResultadoOperacao resultado = RegistarClienteController.verificarDados(nome, email, nascimento, morada, passwordFirst, passwordSecound);
+        ResultadoOperacao resultado = registarClienteController.verificarDados(nome, email, nascimento, morada, passwordFirst, passwordSecound);
         if (resultado.Sucesso) {
             System.out.println("Cliente registado com sucesso");
         } else {

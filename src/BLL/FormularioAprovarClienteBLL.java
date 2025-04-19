@@ -5,8 +5,9 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class FormularioAprovarClienteBLL {
-    public static boolean aprovarCliente(Utilizador u)
+    public boolean aprovarCliente(Utilizador u)
     {
+        ImportDal importDal = new ImportDal();
         u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
 
         for (Utilizador uti : Tools.utilizadores)
@@ -15,7 +16,7 @@ public class FormularioAprovarClienteBLL {
             {
                 if (uti.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo())
                 {
-                    ImportDal.gravarUtilizador(Tools.utilizadores);
+                    importDal.gravarUtilizador(Tools.utilizadores);
                     return true;
                 }
             }

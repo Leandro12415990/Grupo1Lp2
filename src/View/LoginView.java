@@ -5,8 +5,9 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class LoginView {
-    public static Utilizador login() {
+    public Utilizador login() {
         Utilizador utilizador = null;
+        LoginController loginController = new LoginController();
 
         System.out.println("\n" + "-".repeat(7) + " LOGIN " + "-".repeat(7));
 
@@ -19,7 +20,7 @@ public class LoginView {
             String password = Tools.scanner.nextLine();
             if (Tools.verificarSaida(email)) return null;
 
-            utilizador = LoginController.verificarLogin(email, password);
+            utilizador = loginController.verificarLogin(email, password);
 
             if (utilizador != null && utilizador.getTipoUtilizador() > 0) {
                 System.out.println("Login realizado com sucesso!");

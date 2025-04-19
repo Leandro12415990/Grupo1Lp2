@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class TransacaoController {
-    public static ResultadoOperacao criarTransacao(int idCliente, Double saldoAtual, Double creditos) {
+    public ResultadoOperacao criarTransacao(int idCliente, Double saldoAtual, Double creditos) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (creditos <= 0) {
             resultado.msgErro = "O crédito deve ser positivo.";
@@ -24,20 +24,21 @@ public class TransacaoController {
         } return resultado;
     }
 
-    public static Double buscarValorTotalAtual(int idCliente) {
+    public Double buscarValorTotalAtual(int idCliente) {
         if (idCliente > 0) return TransacaoBLL.buscarValorTotalAtual(idCliente);
         return 0.0;
     }
 
-    public static Double valorPendente(int idCliente) {
+    public Double valorPendente(int idCliente) {
         if (idCliente > 0) return TransacaoBLL.valorPendente(idCliente);
         return 0.0;
     }
 
     public static void listarDepositos(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
+        TransacaoView transacaoView = new TransacaoView();
         List<Transacao> transacaoList = TransacaoBLL.listarTransacoes(apenasPendentes, idTipoTransacao, idCliente);
-        if (idCliente != 0) TransacaoView.exibirTransacoes(transacaoList, true);
-        else TransacaoView.exibirTransacoes(transacaoList, false);
+        if (idCliente != 0) transacaoView.exibirTransacoes(transacaoList, true);
+        else transacaoView.exibirTransacoes(transacaoList, false);
     }
 
     public static Utilizador getUtilizador(int idCliente) {

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class LanceController {
 
-    public static ResultadoOperacao adicionarLanceEletronico(int idLeilao, int numLance, double multiploLance) {
+    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, int numLance, double multiploLance) {
         int idCliente = ClienteSessao.getIdCliente();
         Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
 

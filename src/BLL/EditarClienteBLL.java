@@ -8,13 +8,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class EditarClienteBLL {
-    public static boolean EditarCliente(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
+    public boolean EditarCliente(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
+        ImportDal importDal = new ImportDal();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         int soma = 0, index = 0;
 
-        Tools.utilizadores = ImportDal.carregarUtilizador();
+        Tools.utilizadores = importDal.carregarUtilizador();
 
-        for (Utilizador u : ImportDal.carregarUtilizador())
+        for (Utilizador u : importDal.carregarUtilizador())
         {
             if (u.getEmail().equals(utilizador.getEmail()))
             {
@@ -29,7 +30,7 @@ public class EditarClienteBLL {
 
         Tools.utilizadores.set(index, utilizador);
 
-        ImportDal.gravarUtilizador(Tools.utilizadores);
+        importDal.gravarUtilizador(Tools.utilizadores);
 
         return true;
     }

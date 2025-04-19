@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ProdutoController {
 
-    public static ResultadoOperacao criarProduto(int idProduto,int estado, String nome, String descricao) {
+    public ResultadoOperacao criarProduto(int idProduto,int estado, String nome, String descricao) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (nome == null || nome.isEmpty()) {
             resultado.msgErro = "O nome do produto é de preenchimento obrigatório!";

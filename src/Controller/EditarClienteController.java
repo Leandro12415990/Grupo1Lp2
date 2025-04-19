@@ -12,12 +12,13 @@ public class EditarClienteController {
 
     public static ResultadoOperacao verificarDados(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
         ResultadoOperacao resultado = new ResultadoOperacao();
+        EditarClienteBLL editarClienteBLL = new EditarClienteBLL();
         boolean respValidaDataNascimento = validaDataNascimento(nascimento);
 
         if (!respValidaDataNascimento) {
             resultado.msgErro = "Deve ter mais de 18 anos para se registar.";
         } else {
-            EditarClienteBLL.EditarCliente(utilizador, nome, nascimento, morada, password);
+            editarClienteBLL.EditarCliente(utilizador, nome, nascimento, morada, password);
             resultado.Objeto = resultado;
             resultado.Sucesso = true;
         }
