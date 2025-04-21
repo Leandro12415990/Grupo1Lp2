@@ -15,15 +15,8 @@ import java.sql.SQLOutput;
 import java.util.List;
 
 public class TransacaoView {
-    private final TransacaoController transacaoController;
-    private ClienteSessao clienteSessao;
-
     public void exibirMenuTransacao() {
-        this.transacaoController = transacaoController;
-        this.clienteSessao = clienteSessao;
-    }
-
-    public void exibirMenuTransacao() {
+        ClienteSessao clienteSessao = new ClienteSessao();
         int opc;
         do {
             System.out.println("\n" + "=".repeat(8) + " CARTEIRA " + "=".repeat(8));
@@ -86,6 +79,7 @@ public class TransacaoView {
     }
 
     private void listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
         List<Transacao> transacoesList = transacaoController.listarDepositos(apenasPendentes, idTipoTransacao, idCliente);
         if (idCliente != 0) {
             exibirTransacoes(transacoesList,true);
@@ -96,6 +90,7 @@ public class TransacaoView {
     }
 
     public void aprovarDepositos() {
+        TransacaoController transacaoController = new TransacaoController();
         List<Transacao> pendentes = transacaoController.listarDepositos(true, Constantes.tiposTransacao.DEPOSITO, 0);
 
         if (pendentes.isEmpty()) {
@@ -190,6 +185,7 @@ public class TransacaoView {
     }
 
     public Utilizador getUtilizador(int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
         return transacaoController.getUtilizador(idCliente);
     }
 

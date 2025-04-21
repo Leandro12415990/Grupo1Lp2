@@ -11,14 +11,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class TransacaoController {
-    public ResultadoOperacao criarTransacao(int idCliente, Double saldoAtual, Double creditos) {
-
-    public TransacaoController(TransacaoBLL transacaoBLL) {
-        this.transacaoBLL = transacaoBLL;
-    }
 
     public ResultadoOperacao criarTransacao(int idCliente, Double saldoAtual, Double creditos) {
         ResultadoOperacao resultado = new ResultadoOperacao();
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         if (creditos <= 0) {
             resultado.msgErro = "O crédito deve ser positivo.";
         } else {
@@ -32,26 +28,30 @@ public class TransacaoController {
     }
 
     public Double buscarValorTotalAtual(int idCliente) {
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         if (idCliente > 0) return transacaoBLL.buscarValorTotalAtual(idCliente);
         return 0.0;
     }
 
     public Double valorPendente(int idCliente) {
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         if (idCliente > 0) return transacaoBLL.valorPendente(idCliente);
         return 0.0;
     }
 
     public List<Transacao> listarDepositos(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
-        TransacaoView transacaoView = new TransacaoView();
-        if (idCliente != 0) transacaoView.exibirTransacoes(transacaoList, true);
-        else transacaoView.exibirTransacoes(transacaoList, false);
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
+        List<Transacao> transacaoList = transacaoBLL.listarTransacoes(apenasPendentes, idTipoTransacao, idCliente);
+        return transacaoList;
     }
 
     public Utilizador getUtilizador(int idCliente) {
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         return transacaoBLL.getUtilizador(idCliente);
     }
 
     public ResultadoOperacao verificarTransacao(int idTransacao) {
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
         List<Transacao> transacaoList = transacaoBLL.listarTransacoes(true, 0, 0);
         for (Transacao transacao : transacaoList) {
@@ -66,14 +66,17 @@ public class TransacaoController {
     }
 
     public void atualizarSaldo(int idCliente, Double valorTransacao) {
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         transacaoBLL.atualizarSaldo(idCliente, valorTransacao);
     }
 
     public Transacao buscarTransacao(int idTransacao) {
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         return transacaoBLL.buscarTransacao(idTransacao);
     }
 
     public void atualizarEstadosTransacao(int idTransacao, int idEstado) {
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         transacaoBLL.atualizarEstadosTransacao(idTransacao, idEstado);
     }
 }

@@ -12,6 +12,7 @@ public class MenuClienteView {
         UtilizadorView utilizadorView = new UtilizadorView();
         TransacaoView transacaoView = new TransacaoView();
         LanceView lanceView = new LanceView();
+        ClienteSessao clienteSessao = new ClienteSessao();
 
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));

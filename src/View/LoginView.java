@@ -6,13 +6,6 @@ import Utils.Tools;
 
 public class LoginView {
     public Utilizador login() {
-    private final LoginController loginController;
-
-    public LoginView(LoginController loginController) {
-        this.loginController = loginController;
-    }
-
-    public Utilizador login() {
         Utilizador utilizador = null;
         LoginController loginController = new LoginController();
 

@@ -8,13 +8,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class TransacaoDAL {
-    private final ImportDAL importDal;
-
-    public TransacaoDAL(ImportDAL importDal) {
-        this.importDal = importDal;
-    }
-
     public List<Transacao> carregarTransacoes() {
+        ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(Constantes.caminhosFicheiros.CSV_FILE_TRANSACAO, 7, dados -> {
             int idTransacao = Integer.parseInt(dados[0]);
             int idCliente = Integer.parseInt(dados[1]);
@@ -28,6 +23,7 @@ public class TransacaoDAL {
     }
 
     public void gravarTransacoes(List<Transacao> transacoes) {
+        ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID_TRANSACAO;ID_CLIENTE;VALOR_TOTAL;VALOR_TRANSACAO;DATA_TRANSACAO;ID_TIPO;ID_ESTADO";
         importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_TRANSACAO, cabecalho, transacoes, transacao ->
                 transacao.getIdTransacao() + Tools.separador() +

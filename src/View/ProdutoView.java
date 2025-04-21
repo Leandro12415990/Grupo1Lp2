@@ -9,12 +9,6 @@ import Utils.Tools;
 import java.util.List;
 
 public class ProdutoView {
-    private final ProdutoController produtoController;
-
-    public void exibirProduto() {
-        this.produtoController = produtoController;
-    }
-
     public void exibirProduto() {
         int opcao;
         do {
@@ -62,7 +56,6 @@ public class ProdutoView {
         String descricao = Tools.scanner.nextLine();
         if (Tools.verificarSaida(descricao)) return;
         ResultadoOperacao resultado = produtoController.criarProduto(0, Constantes.estadosProduto.ATIVO, nome, descricao);
-        ResultadoOperacao resultado = produtoController.criarProduto(0, Constantes.estadosProduto.ATIVO, nome, descricao);
         if (resultado.Sucesso) {
             System.out.println("Produto criado com sucesso!");
         } else {
@@ -71,6 +64,7 @@ public class ProdutoView {
     }
 
     public void editarProduto() {
+        ProdutoController produtoController = new ProdutoController();
         listarProduto(false);
 
         System.out.println("\nEDIÇÃO DE UM PRODUTO");
@@ -128,6 +122,7 @@ public class ProdutoView {
     }
 
     public void eliminarProduto() {
+        ProdutoController produtoController = new ProdutoController();
         listarProduto(false);
 
         System.out.println("\nELIMINAÇÃO DE UM PRODUTO");
@@ -164,6 +159,7 @@ public class ProdutoView {
     }
 
     public void listarProduto(boolean apenasDisponiveis) {
+        ProdutoController produtoController = new ProdutoController();
         ResultadoOperacao resultado = produtoController.listarProduto(apenasDisponiveis);
         if (resultado.Sucesso) {
             List<Produto> produtos = (List<Produto>) resultado.Objeto;

@@ -17,21 +17,11 @@ import java.util.Comparator;
 import java.util.List;
 
 public class EstatisticaBLL {
-
-    private LeilaoBLL leilaoBLL;
-    private LanceBLL lanceBLL;
-    private final UtilizadorDAL utilizadorDAL;
-
-    public EstatisticaBLL(UtilizadorDAL utilizadorDAL, LeilaoBLL leilaoBLL, LanceBLL lanceBLL) {
-        this.utilizadorDAL = utilizadorDAL;
-        this.leilaoBLL = leilaoBLL;
-        this.lanceBLL = lanceBLL;
-    }
-
     /**
      * Filtragem dos Leilões
      */
     private List<Leilao> filtrarLeiloesFechados() {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> todos = leilaoBLL.listarLeiloes(false);
         List<Leilao> fechados = new ArrayList<>();
 
@@ -53,7 +43,6 @@ public class EstatisticaBLL {
                 resultado.add(l);
             }
         }
-
         return resultado;
     }
 
@@ -81,7 +70,6 @@ public class EstatisticaBLL {
                     " | Descrição: " + l.getDescricao() +
                     " | Tipo: " + Tools.tipoLeilao.fromCodigo(l.getTipoLeilao()));
         }
-
         return resultado;
     }
 
@@ -105,6 +93,7 @@ public class EstatisticaBLL {
      */
 
     public Leilao obterLeilaoTipoMaisTempoAtivo(int idTipoLeilao) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
         if (leiloes == null || leiloes.isEmpty()) return null;
 
@@ -128,6 +117,7 @@ public class EstatisticaBLL {
     }
 
     public Leilao obterLeilaoMaisTempoAtivo() {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
         if (leiloes == null || leiloes.isEmpty()) return null;
 
@@ -161,6 +151,8 @@ public class EstatisticaBLL {
      */
 
     public String[] getDadosLeilaoComMaisLances() {
+        LanceBLL lanceBLL = new LanceBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
         if (lances == null || lances.isEmpty()) return null;
 
@@ -197,6 +189,8 @@ public class EstatisticaBLL {
     }
 
     public String[] getDadosLeilaoComMaisLancesPorTipo(int idTipoLeilao) {
+        LanceBLL lanceBLL = new LanceBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
 
@@ -253,6 +247,7 @@ public class EstatisticaBLL {
      */
 
     public double calcularMediaTempoEntreLancesGeral() {
+        LanceBLL lanceBLL = new LanceBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
 
         if (lances == null || lances.isEmpty()) {
@@ -295,6 +290,8 @@ public class EstatisticaBLL {
     }
 
     public double calcularMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
+        LanceBLL lanceBLL = new LanceBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
 
@@ -355,6 +352,8 @@ public class EstatisticaBLL {
      */
 
     public List<Leilao> obterLeiloesSemLances() {
+        LanceBLL lanceBLL = new LanceBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
 
@@ -381,6 +380,8 @@ public class EstatisticaBLL {
     }
 
     public List<Leilao> obterLeiloesSemLancesPorTipo(int idTipoLeilao) {
+        LanceBLL lanceBLL = new LanceBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
 
@@ -413,8 +414,8 @@ public class EstatisticaBLL {
      */
 
     public double calcularMediaIdadeUtilizadores() {
-        ImportDal importDal = new ImportDal();
-        List<Utilizador> utilizadores = importDal.carregarUtilizador();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
         if (utilizadores == null || utilizadores.isEmpty()) return -1;
 
         int somaIdades = 0;
@@ -438,8 +439,8 @@ public class EstatisticaBLL {
      */
 
     public String[] calcularDominioMaisUsadoEPercentagem() {
-        ImportDal importDal = new ImportDal();
-        List<Utilizador> todos = importDal.carregarUtilizador();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> todos = utilizadorDAL.carregarUtilizadores();
         if (todos == null || todos.isEmpty()) return null;
 
         List<Utilizador> clientes = new ArrayList<>();
@@ -492,6 +493,7 @@ public class EstatisticaBLL {
      */
 
     public List<String> listarClientesOrdenadosPorMaiorLance(int idLeilao) {
+        LanceBLL lanceBLL = new LanceBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
         if (lances == null || lances.isEmpty()) return new ArrayList<>();
 
@@ -545,9 +547,8 @@ public class EstatisticaBLL {
 
 
     private Utilizador procurarUtilizadorPorId(int id) {
-        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores(); // ou onde carregas
-        ImportDal importDal = new ImportDal();
-        List<Utilizador> utilizadores = importDal.carregarUtilizador(); // ou onde carregas
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
 
         if (utilizadores == null) return null;
 

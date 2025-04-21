@@ -1,5 +1,6 @@
 package BLL;
 
+import Controller.LeilaoController;
 import DAL.ImportDAL;
 import DAL.LeilaoDAL;
 import Model.Leilao;
@@ -10,30 +11,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LeilaoBLL {
-    private final LeilaoDAL leilaoDAL;
-    private final List<Leilao> leiloes;
+    private static List<Leilao> leiloes = new ArrayList<>();
 
-    public LeilaoBLL(LeilaoDAL leilaoDAL) {
-        ImportDal importDal = new ImportDal();
-        leiloes = importDal.carregarLeilao();
-        atualizarEstados();
+    public List<Leilao> carregarLeiloes() {
+        LeilaoDAL leilaoDAL = new LeilaoDAL();
+        LeilaoController leilaoController = new LeilaoController();
+        leiloes = leilaoDAL.carregaLeiloes();
+        int idEstado;
+        for (Leilao leilao : leiloes) {
+            idEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
+            if (leilao.getEstado() != idEstado && idEstado == Constantes.estadosLeilao.FECHADO && leilao.getTipoLeilao() == Constantes.tiposLeilao.CARTA_FECHADA)
+                leilaoController.fecharLeilao(leilao.getId(), leilao.getDataFim());
+            leilao.setEstado(idEstado);
+            leilaoDAL.gravarLeiloes(leiloes);
+        }
+        return leiloes;
     }
 
     private void atualizarEstados() {
+        LeilaoDAL leilaoDAL = new LeilaoDAL();
         for (Leilao leilao : leiloes) {
             int novoEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
             if (leilao.getEstado() != novoEstado) {
                 leilao.setEstado(novoEstado);
-            importDal.gravarLeilao(leiloes);
+                leilaoDAL.gravarLeiloes(leiloes);
             }
         }
         leilaoDAL.gravarLeiloes(leiloes);
     }
 
     public void adicionarLeilao(Leilao leilao) {
-        ImportDal importDal = new ImportDal();
+        LeilaoDAL leilaoDAL = new LeilaoDAL();
         leiloes.add(leilao);
-        importDal.gravarLeilao(leiloes);
+        leilaoDAL.gravarLeiloes(leiloes);
     }
 
     private int verificarUltimoId() {
@@ -68,13 +78,13 @@ public class LeilaoBLL {
     }
 
     public void eliminarLeilao(Leilao leilao) {
-        ImportDal importDal = new ImportDal();
+        LeilaoDAL leilaoDAL = new LeilaoDAL();
         leiloes.remove(leilao);
-        importDal.gravarLeilao(leiloes);
+        leilaoDAL.gravarLeiloes(leiloes);
     }
 
     public boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
-        ImportDal importDal = new ImportDal();
+        LeilaoDAL leilaoDAL = new LeilaoDAL();
         Leilao leilao = procurarLeilaoPorId(id);
         if (leilao != null) {
             leilao.setIdProduto(idProduto);
@@ -86,7 +96,7 @@ public class LeilaoBLL {
             leilao.setValorMaximo(valorMax);
             leilao.setMultiploLance(multiploLance);
             leilao.setEstado(idEstado);
-            importDal.gravarLeilao(leiloes);
+            leilaoDAL.gravarLeiloes(leiloes);
             return true;
         }
         return false;
@@ -106,13 +116,16 @@ public class LeilaoBLL {
     }
 
     public void colocarDataFimLeilao(int idLeilao, LocalDateTime dataFim) {
-        ImportDal importDal = new ImportDal();
-        List<Leilao> leiloes = importDal.carregarLeilao();
-            leilao.setDataFim(dataFim);
-            leilao.setEstado(determinarEstadoLeilaoByDatas(leilao.getDataInicio(), dataFim, leilao.getEstado()));
-            leilaoDAL.gravarLeiloes(leiloes);
+        LeilaoDAL leilaoDAL = new LeilaoDAL();
+        List<Leilao> leiloes = leilaoDAL.carregaLeiloes();
+        for (Leilao leilao : leiloes) {
+            if (leilao.getId() == idLeilao) {
+                leilao.setDataFim(dataFim);
+                int novoEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), dataFim, leilao.getEstado());
+                leilao.setEstado(novoEstado);
+                break;
+            }
         }
-        importDal.gravarLeilao(leiloes);
+        leilaoDAL.gravarLeiloes(leiloes);
     }
-
 }

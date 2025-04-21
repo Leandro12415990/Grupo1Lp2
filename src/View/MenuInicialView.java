@@ -10,6 +10,7 @@ public class MenuInicialView {
     public void menuInicial() {
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
+        MenuGestorView menuGestorView = new MenuGestorView();
         UtilizadorView utilizadorView = new UtilizadorView();
         int opcao;
         do {
@@ -29,7 +30,7 @@ public class MenuInicialView {
                     if (utilizador == null) {
                         System.out.println("Erro a fazer Login");
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo()) {
-                        menuGestorView.exibirMenu(utilizadorView, leilaoView, produtoView, estatisticaView, transacaoView, clienteSessao);
+                        menuGestorView.exibirMenu();
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) {
                         menuClienteView.exibirMenu(utilizador);
                     }

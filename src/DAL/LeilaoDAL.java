@@ -9,13 +9,8 @@ import java.util.List;
 
 
 public class LeilaoDAL {
-    private final ImportDAL importDal;
-
-    public LeilaoDAL(ImportDAL importDal) {
-        this.importDal = importDal;
-    }
-
     public List<Leilao> carregaLeiloes() {
+        ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(caminhosFicheiros.CSV_FILE_LEILAO, 10, dados -> {
             int id = Integer.parseInt(dados[0]);
             int idProduto = Integer.parseInt(dados[1]);
@@ -33,6 +28,7 @@ public class LeilaoDAL {
     }
 
     public void gravarLeiloes(List<Leilao> leiloes) {
+        ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID;ID_PRODUTO;DESCRICAO;ID_TIPO_LEILAO;DATA_INICIO;DATA_FIM;VALOR_MINIMO;VALOR_MAXIMO;MULTIPLO_LANCE;ID_ESTADO";
         importDal.gravarRegistos(caminhosFicheiros.CSV_FILE_LEILAO, cabecalho, leiloes, leilao ->
                 leilao.getId() + Tools.separador() +

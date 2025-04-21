@@ -13,11 +13,6 @@ public class UtilizadorView {
 
     public void registarCliente() {
         UtilizadorController utilizadorController = new UtilizadorController();
-    public UtilizadorView(UtilizadorController utilizadorController) {
-        this.utilizadorController = utilizadorController;
-    }
-
-    public void registarCliente() {
         String passwordFirst, passwordSecound;
 
         System.out.println("\n" + "-".repeat(7) + " REGISTO " + "-".repeat(7));

@@ -11,14 +11,8 @@ import java.util.List;
 
 public class UtilizadorBLL {
     public List<Utilizador> listarUtilizador(int estado, int tipo) {
-        ImportDal importDal = new ImportDal();
-        importDal.carregarUtilizador();
-        this.utilizadorDAL = utilizadorDAL;
-    }
-
-    public List<Utilizador> listarUtilizador(int estado, int tipo) {
-        utilizadorDAL.carregarUtilizadores();
-        List<Utilizador> utilizadoresList = new ArrayList<>();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadoresList = utilizadorDAL.carregarUtilizadores();
         if (estado != 0) {
             for (Utilizador utilizador : Tools.utilizadores) {
                 if (utilizador.getEstado() == estado && utilizador.getTipoUtilizador() == tipo) {
@@ -36,11 +30,11 @@ public class UtilizadorBLL {
     }
 
     public boolean criarCliente(String nome, String email, LocalDate nascimento, String morada, String password) {
-        ImportDal importDal = new ImportDal();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         Utilizador utilizador;
         LocalDate data = LocalDate.now();
 
-        Tools.utilizadores = importDal.carregarUtilizador();
+        Tools.utilizadores = utilizadorDAL.carregarUtilizadores();
         int max = -1;
 
         for (Utilizador u : Tools.utilizadores) {
@@ -55,12 +49,12 @@ public class UtilizadorBLL {
         }
 
         Tools.utilizadores.add(utilizador);
-        importDal.gravarUtilizador(Tools.utilizadores);
+        utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
         return true;
     }
 
     public boolean aprovarCliente(Utilizador u, int estado) {
-        ImportDal importDal = new ImportDal();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         int novoEstado = (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
                 ? Tools.estadoUtilizador.ATIVO.getCodigo()
                 : Tools.estadoUtilizador.INATIVO.getCodigo();
@@ -69,7 +63,7 @@ public class UtilizadorBLL {
 
         for (Utilizador uti : Tools.utilizadores) {
             if (u.getEmail().equalsIgnoreCase(uti.getEmail()) && uti.getEstado() == novoEstado) {
-                importDal.gravarUtilizador(Tools.utilizadores);
+                utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
                 return true;
             }
         }
@@ -78,12 +72,10 @@ public class UtilizadorBLL {
     }
 
     public boolean editarCliente(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
-        ImportDal importDal = new ImportDal();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         int soma = 0, index = 0;
 
-        Tools.utilizadores = importDal.carregarUtilizador();
-
-        for (Utilizador u : importDal.carregarUtilizador()) {
+        for (Utilizador u : Tools.utilizadores) {
             if (u.getEmail().equals(utilizador.getEmail())) {
                 index = soma;
                 if (!nome.isEmpty()) utilizador.setNomeUtilizador(nome);
@@ -95,7 +87,6 @@ public class UtilizadorBLL {
 
         Tools.utilizadores.set(index, utilizador);
         utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
-        importDal.gravarUtilizador(Tools.utilizadores);
         return true;
     }
 
@@ -105,8 +96,8 @@ public class UtilizadorBLL {
     }
 
     public Utilizador procurarUtilizadorPorId(int idCliente) {
-        ImportDal importDal = new ImportDal();
-        List<Utilizador> utilizadores = importDal.carregarUtilizador();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
         for (Utilizador u : utilizadores) {
             if (u.getId() == idCliente) {
                 return u;
@@ -116,6 +107,7 @@ public class UtilizadorBLL {
     }
 
     public void gravarUtilizadores(List<Utilizador> utilizadores) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         utilizadorDAL.gravarUtilizadores(utilizadores);
     }
 }

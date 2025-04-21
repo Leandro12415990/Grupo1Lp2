@@ -12,26 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LanceBLL {
-    private final LanceDAL lanceDAL;
-    private final UtilizadorDAL utilizadorDAL;
-    private final List<Lance> lances;
-    private final LeilaoBLL leilaoBLL;
-    private final UtilizadorBLL utilizadorBLL;
-    private TransacaoBLL transacaoBLL;
-
-    public LanceBLL(LanceDAL lanceDAL, UtilizadorDAL utilizadorDAL, LeilaoBLL leilaoBLL, UtilizadorBLL utilizadorBLL) {
-        ImportDal importDal = new ImportDal();
-        lances = importDal.carregarLance();
-        this.leilaoBLL = leilaoBLL;
-        this.utilizadorBLL = utilizadorBLL;
-        this.lances = lanceDAL.carregarLances();
-    }
-
-    public void setTransacaoBLL(TransacaoBLL transacaoBLL) {
-        ImportDal importDal = new ImportDal();
-    }
+    private static final List<Lance> lances = new ArrayList<>();
 
     public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance, int idCliente, int idTipoLeilao) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        LanceDAL lanceDAL = new LanceDAL();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
         ResultadoOperacao saldoVerificado = verificarSaldoEAtualizar(idCliente, valorLance, idTipoLeilao);
@@ -48,7 +33,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        importDal.gravarLance(lances);
+        lanceDAL.gravarLances(lances);
 
         if (valorLance == leilao.getValorMinimo()) {
             fimLeilao(idLeilao, dataLance);
@@ -60,7 +45,8 @@ public class LanceBLL {
     }
 
     public ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance, int idCliente, int idTipoLeilao) {
-        ImportDal importDal = new ImportDal();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        LanceDAL lanceDAL = new LanceDAL();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
         ResultadoOperacao saldoVerificado = verificarSaldoEAtualizar(idCliente, valorLance, idTipoLeilao);
@@ -77,7 +63,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        importDal.gravarLance(lances);
+        lanceDAL.gravarLances(lances);
 
         resultado.Sucesso = true;
         resultado.Objeto = lance;
@@ -85,7 +71,8 @@ public class LanceBLL {
     }
 
     public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double valorLance, int numLance, double multiploLance, int idCliente, int valorLanceAtual, int idTipoLeilao) {
-        ImportDal importDal = new ImportDal();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        LanceDAL lanceDAL = new LanceDAL();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
         valorLance += (multiploLance * numLance);
@@ -103,7 +90,7 @@ public class LanceBLL {
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
         lances.add(lance);
-        importDal.gravarLance(lances);
+        lanceDAL.gravarLances(lances);
 
         resultado.Sucesso = true;
         resultado.Objeto = lance;
@@ -143,13 +130,15 @@ public class LanceBLL {
     }
 
     public void fimLeilao(int idLeilao, LocalDateTime dataFim) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         leilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
     }
 
     private ResultadoOperacao verificarSaldoEAtualizar(int idCliente, double valor, int idTipoLeilao) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
-        ImportDal importDal = new ImportDal();
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
 
         if (utilizador.getSaldo() < valor) {
@@ -172,7 +161,7 @@ public class LanceBLL {
 
         transacaoBLL.criarTransacao(transacao);
 
-        importDal.gravarUtilizador(utilizadores);
+        utilizadorDAL.gravarUtilizadores(utilizadores);
 
         resultado.Sucesso = true;
         resultado.msgErro = null;

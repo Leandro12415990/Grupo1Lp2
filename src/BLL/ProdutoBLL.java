@@ -9,15 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoBLL {
-    private final ProdutoDAL produtoDal;
-    private final LeilaoBLL leilaoBLL;
-
-    public ProdutoBLL(ProdutoDAL produtoDal, LeilaoBLL leilaoBLL) {
-        this.produtoDal = produtoDal;
-        this.leilaoBLL = leilaoBLL;
-    }
-
     public List<Produto> carregarProdutos() {
+        ProdutoDAL produtoDal = new ProdutoDAL();
         List<Produto> produtos = produtoDal.carregarProdutos();
         int idEstado;
         for (Produto produto : produtos) {
@@ -29,6 +22,7 @@ public class ProdutoBLL {
     }
 
     public void adicionarProduto(Produto produto) {
+        ProdutoDAL produtoDal = new ProdutoDAL();
         List<Produto> produtos = carregarProdutos();
         produto.setIdProduto(verificarUltimoId(produtos) + 1);
         produtos.add(produto);
@@ -36,6 +30,7 @@ public class ProdutoBLL {
     }
 
     public List<Produto> obterTodosProdutos() {
+        ProdutoDAL produtoDal = new ProdutoDAL();
         return produtoDal.carregarProdutos();
     }
 
@@ -66,6 +61,7 @@ public class ProdutoBLL {
     }
 
     public boolean editarProduto(int idProduto, String nome, String descricao, int idEstado) {
+        ProdutoDAL produtoDal = new ProdutoDAL();
         Produto produto = procurarProduto(idProduto);
         if (produto != null) {
             produto.setNome(nome);
@@ -78,6 +74,7 @@ public class ProdutoBLL {
     }
 
     public boolean eliminarProduto(Produto produto) {
+        ProdutoDAL produtoDal = new ProdutoDAL();
         List<Produto> produtos = obterTodosProdutos();
         boolean produtoRemovido = false;
 
@@ -101,6 +98,7 @@ public class ProdutoBLL {
     }
 
     public boolean verificarDisponibilidadeProduto(int idProduto) {
+        ProdutoDAL produtoDal = new ProdutoDAL();
         List<Produto> produtos = produtoDal.carregarProdutos();
         for (Produto produto : produtos) {
             if (produto.getIdProduto() == idProduto) {
@@ -112,6 +110,7 @@ public class ProdutoBLL {
     }
 
     public void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
+        ProdutoDAL produtoDal = new ProdutoDAL();
         List<Produto> produtos = carregarProdutos();
         for (Produto produto : produtos) {
             if (produto.getIdProduto() == idProduto) produto.setEstado(novoIdEstado);
@@ -120,6 +119,7 @@ public class ProdutoBLL {
     }
 
     public int determinarEstadoProduto(Produto produto) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         if (produto.getEstado() != Constantes.estadosProduto.INATIVO) {
             for (Leilao leilao : leilaoBLL.listarLeiloes(false)) {
                 if (leilao.getIdProduto() == produto.getIdProduto()) return Constantes.estadosProduto.RESERVADO;
@@ -129,6 +129,7 @@ public class ProdutoBLL {
     }
 
     public boolean verificarProdutoEmLeilao(int idProduto) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         for (Leilao leilao : leilaoBLL.listarLeiloes(false)) {
             if (leilao.getIdProduto() == idProduto) return false;
         }

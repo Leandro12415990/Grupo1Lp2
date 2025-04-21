@@ -1,7 +1,9 @@
 package View;
 
+import BLL.LeilaoBLL;
 import Controller.EstatisticaController;
 import DAL.ImportDAL;
+import DAL.UtilizadorDAL;
 import Model.Leilao;
 import Model.Utilizador;
 import Utils.Constantes;
@@ -11,17 +13,6 @@ import java.time.Period;
 import java.util.List;
 
 public class EstatisticaView {
-    private final EstatisticaController estatisticaController;
-    private final LeilaoView leilaoView;
-    private final UtilizadorView utilizadorView;
-
-    public EstatisticaView(EstatisticaController estatisticaController, LeilaoView leilaoView, UtilizadorView utilizadorView) {
-    public void exibirMenuListagem() {
-        this.leilaoView = leilaoView;
-        this.utilizadorView = utilizadorView;
-    }
-
-
     /**
      * Exibição dos menus
      */
@@ -454,8 +445,8 @@ public class EstatisticaView {
     }
 
     public void mostrarTodosClientes() {
-        ImportDal importDal = new ImportDal();
-        List<Utilizador> clientes = importDal.carregarUtilizador();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> clientes = utilizadorDAL.carregarUtilizadores();
     }
 
     public void mostrarMediaIdadeUtilizadores() {
@@ -485,18 +476,24 @@ public class EstatisticaView {
         System.out.println("Percentagem de clientes: " + resultado[1] + "%");
     }
 
-    public void estatisticasPorLeilao() {
+    public static void estatisticasPorLeilao() {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        LeilaoView leilaoView = new LeilaoView();
         EstatisticaController estatisticaController = new EstatisticaController();
-        leilaoView.listaLeiloes(false);
-        int id = Tools.pedirOpcaoMenu("Insira o ID do leilão que deseja analisar " + Tools.alertaCancelar());
+        List<Leilao> leiloes = leilaoBLL.carregarLeiloes();
+
+        if (leiloes == null || leiloes.isEmpty()) {
+            System.out.println("Não há leilões registados.");
+            return;
+        }
+
+        leilaoView.exibirLeiloes(leiloes);
+
+        int id = Tools.pedirOpcaoMenu("Insira o ID do leilão que deseja analisar "+ Tools.alertaCancelar());
 
         if (Tools.verificarSaida(String.valueOf(id))) return;
 
-        Leilao leilao = null;
-        for (Leilao l : leiloesList)
-            if (l.getId() == id) {
-                leilao = l;
-            }
+        Leilao leilao = leilaoBLL.procurarLeilaoPorId(id);
         if (leilao == null) {
             System.out.println("Leilão não encontrado.");
             return;

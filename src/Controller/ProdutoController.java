@@ -8,13 +8,8 @@ import View.ProdutoView;
 import java.util.List;
 
 public class ProdutoController {
-    private final ProdutoBLL produtoBLL;
-
-    public ResultadoOperacao criarProduto(int idProduto,int estado, String nome, String descricao) {
-        this.produtoBLL = produtoBLL;
-    }
-
     public ResultadoOperacao criarProduto(int idProduto, int estado, String nome, String descricao) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (nome == null || nome.isEmpty()) {
             resultado.msgErro = "O nome do produto é de preenchimento obrigatório!";
@@ -31,10 +26,12 @@ public class ProdutoController {
     }
 
     public boolean editarProduto(int idProduto, String nome, String descricao, int idEstado) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         return produtoBLL.editarProduto(idProduto, nome, descricao, idEstado);
     }
 
     public boolean eliminarProduto(Produto produto) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         boolean sucesso = produtoBLL.eliminarProduto(produto);
 
         if (sucesso) {
@@ -45,6 +42,7 @@ public class ProdutoController {
 
     public ResultadoOperacao listarProduto(boolean apenasDisponiveis) {
         ResultadoOperacao resultado = new ResultadoOperacao();
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         List<Produto> produtos = produtoBLL.listarProdutos(apenasDisponiveis);
         if (produtos.isEmpty()) {
             resultado.msgErro = "Não existem produtos disponíveis para leiloar!";
@@ -56,6 +54,7 @@ public class ProdutoController {
     }
 
     public Produto procurarProduto(int id) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         if (id > 0) {
             return produtoBLL.procurarProduto(id);
         }
@@ -63,14 +62,17 @@ public class ProdutoController {
     }
 
     public String getNomeProdutoById(int idProduto) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         return produtoBLL.getNomeProdutoById(idProduto);
     }
 
     public void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         produtoBLL.atualizarEstadoProduto(idProduto, novoIdEstado);
     }
 
     public boolean verificarProdutoEmLeilao(int idProduto) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         return produtoBLL.verificarProdutoEmLeilao(idProduto);
     }
 }

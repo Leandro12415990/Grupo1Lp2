@@ -14,25 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransacaoBLL {
-    private static ImportDal importDal = new ImportDal();
-    private final UtilizadorDAL utilizadorDAL;
-    private static List<Utilizador> utilizadores = importDal.carregarUtilizador();
+    private static List<Transacao> transacaoList = new ArrayList<>();
 
-    public TransacaoBLL(TransacaoDAL transacaoDAL, UtilizadorDAL utilizadorDAL, LanceBLL lanceBLL) {
-        ImportDal importDal = new ImportDal();
-        transacaoList = importDal.carregarTransacao();
-        this.lanceBLL = lanceBLL;
-    }
-
-    public List<Transacao> carregarTransacao() {
-        ImportDal importDal = new ImportDal();
+    public static List<Transacao> carregarTransacao() {
+        TransacaoDAL transacaoDAL = new TransacaoDAL();
+        transacaoList = transacaoDAL.carregarTransacoes();
+        return transacaoList;
     }
 
     public void criarTransacao(Transacao transacao) {
+        TransacaoDAL transacaoDAL = new TransacaoDAL();
         List<Transacao> transacaoList = carregarTransacao();
         transacao.setIdTransacao(verificarUltimoIdCarteira(transacaoList) + 1);
         transacaoList.add(transacao);
-        importDal.gravarTransacao(transacaoList);
+        transacaoDAL.gravarTransacoes(transacaoList);
     }
 
     private int verificarUltimoIdCarteira(List<Transacao> transacaoList) {
@@ -44,8 +39,8 @@ public class TransacaoBLL {
     }
 
     public Double buscarValorTotalAtual(int IdCliente) {
-        ImportDal importDal = new ImportDal();
-        List<Utilizador> utilizadores = importDal.carregarUtilizador();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == IdCliente) return utilizador.getSaldo();
         }
@@ -53,14 +48,13 @@ public class TransacaoBLL {
     }
 
     public double atualizarSaldo(int idCliente, double creditos) {
-        ImportDal importDal = new ImportDal();
-        for (Utilizador utilizador : utilizadores) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        for (Utilizador utilizador : Tools.utilizadores) {
             if (utilizador.getId() == idCliente) {
                 double saldoAtual = utilizador.getSaldo();
                 saldoAtual += creditos;
                 utilizador.setSaldo(saldoAtual);
-                utilizadorDAL.gravarUtilizadores(utilizadores);
-                importDal.gravarUtilizador(utilizadores);
+                utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
                 return saldoAtual;
             }
         }
@@ -69,8 +63,6 @@ public class TransacaoBLL {
 
     public Double valorPendente(int idCliente) {
         List<Transacao> transacaoList = carregarTransacao();
-        ImportDal importDal = new ImportDal();
-        transacaoList = importDal.carregarTransacao();
         double valorTotalPendente = 0;
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdCliente() == idCliente && transacao.getIdTipoTransacao() == Constantes.tiposTransacao.DEPOSITO) {
@@ -105,6 +97,7 @@ public class TransacaoBLL {
     }
 
     public Utilizador getUtilizador(int idCliente) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == idCliente) return utilizador;
@@ -121,14 +114,15 @@ public class TransacaoBLL {
     }
 
     public void atualizarEstadosTransacao(int idTransacao, int idEstado) {
-        ImportDal importDal = new ImportDal();
+        TransacaoDAL transacaoDAL = new TransacaoDAL();
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdTransacao() == idTransacao) transacao.setIdEstadoTransacao(idEstado);
         }
-        importDal.gravarTransacao(transacaoList);
+        transacaoDAL.gravarTransacoes(transacaoList);
     }
 
     public void devolverSaldo(int idLeilao, int idLanceVencedor) {
+        LanceBLL lanceBLL = new LanceBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);
 
         for (Lance lance : lances) {

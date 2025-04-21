@@ -8,26 +8,14 @@ import Model.Leilao;
 import Model.Produto;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
-import View.LeilaoView;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class LeilaoController {
 
-    private final LeilaoBLL leilaoBLL;
-    private final LanceBLL lanceBLL;
-    private final ProdutoBLL produtoBLL;
-    private final TransacaoBLL transacaoBLL;
-
-    public LeilaoController(LeilaoBLL leilaoBLL, LanceBLL lanceBLL, ProdutoBLL produtoBLL, TransacaoBLL transacaoBLL) {
-        this.leilaoBLL = leilaoBLL;
-        this.lanceBLL = lanceBLL;
-        this.produtoBLL = produtoBLL;
-        this.transacaoBLL = transacaoBLL;
-    }
-
     public ResultadoOperacao criarLeiloes(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, Double valorMax, Double multiploLance, int idEstado) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (descricao == null || descricao.isEmpty()) {
             resultado.msgErro = "A descrição não pode ser nula.";
@@ -52,10 +40,12 @@ public class LeilaoController {
     }
 
     public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         return leilaoBLL.listarLeiloes(apenasDisponiveis);
     }
 
     public Leilao procurarLeilaoPorId(int Id) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         if (Id > 0) {
             return leilaoBLL.procurarLeilaoPorId(Id);
         }
@@ -63,6 +53,7 @@ public class LeilaoController {
     }
 
     public boolean eliminarLeilao(int Id) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         if (Id > 0) {
             Leilao leilao = procurarLeilaoPorId(Id);
             if (leilao != null) {
@@ -74,10 +65,12 @@ public class LeilaoController {
     }
 
     public boolean editarLeilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, double valorMax, double multiploLance, int idEstado) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         return leilaoBLL.editarLeilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
     }
 
     public ResultadoOperacao verificarDisponibilidadeProduto(int idProduto) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
         Produto produto = produtoBLL.procurarProduto(idProduto);
         if (produto == null) {
@@ -106,10 +99,14 @@ public class LeilaoController {
     }
 
     public int determinarEstadoLeilaoByDatas(LocalDateTime dataInicio, LocalDateTime dataFim, int idEstado) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
         return leilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
     }
 
     public boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        LanceBLL lanceBLL = new LanceBLL();
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         if (leilao == null) return false;
 

@@ -8,13 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class UtilizadorDAL {
-    private final ImportDAL importDal;
-
-    public UtilizadorDAL(ImportDAL importDal) {
-        this.importDal = importDal;
-    }
-
     public List<Utilizador> carregarUtilizadores() {
+        ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(Constantes.caminhosFicheiros.CSV_FILE_UTILIZADOR, 11, dados -> {
             int id = Integer.parseInt(dados[0]);
             String nomeUtilizador = dados[1];
@@ -32,6 +27,7 @@ public class UtilizadorDAL {
     }
 
     public void gravarUtilizadores(List<Utilizador> utilizadores) {
+        ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID;NOME;EMAIL;DATA NASCIMENTO;MORADA;PASSWORD;DATA REGISTO;ULTIMO LOGIN;TIPO UTILIZADOR;ESTADO;SALDO";
         importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_UTILIZADOR, cabecalho, utilizadores, utilizador ->
                 utilizador.getId() + Tools.separador() +

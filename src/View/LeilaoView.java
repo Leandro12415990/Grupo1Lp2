@@ -16,16 +16,6 @@ import java.util.List;
 
 public class LeilaoView {
     public void exibirMenuLeiloes() {
-    private final LeilaoController leilaoController;
-    private final LanceController lanceController;
-
-    public LeilaoView(LeilaoController leilaoController, ProdutoController produtoController, LanceController lanceController) {
-        this.leilaoController = leilaoController;
-        this.produtoController = produtoController;
-        this.lanceController = lanceController;
-    }
-
-    public void exibirMenuLeiloes() {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LEILÕES " + "=".repeat(5));
@@ -67,11 +57,14 @@ public class LeilaoView {
     }
 
     private void criarLeilao() {
+        ProdutoView produtoView = new ProdutoView();
+        ProdutoController produtoController = new ProdutoController();
+        LeilaoController leilaoController = new LeilaoController();
+
         System.out.println("\nCRIAÇÃO DE UM LEILÃO\n");
         ResultadoOperacao resultadoProdutos = produtoController.listarProduto(true);
         if (resultadoProdutos.Sucesso) {
             List<Produto> produtosDisponiveis = (List<Produto>) resultadoProdutos.Objeto;
-            ProdutoView produtoView = new ProdutoView(produtoController);
             produtoView.exibirProduto(produtosDisponiveis);
 
             System.out.print("\nIntroduza o ID do produto que pretende leiloar " + Tools.alertaCancelar());
@@ -225,6 +218,7 @@ public class LeilaoView {
     }
 
     public List<Leilao> listaLeiloes(boolean apenasDisponiveis) {
+        LeilaoController leilaoController = new LeilaoController();
         List<Leilao> leiloesList = leilaoController.listarLeiloes(apenasDisponiveis);
         exibirLeiloes(leiloesList);
         return leiloesList;
@@ -258,6 +252,7 @@ public class LeilaoView {
     }
 
     private void procurarLeilao() {
+        LeilaoController leilaoController = new LeilaoController();
         System.out.println("\nPROCURAR UM LEILÃO");
         listaLeiloes(false);
         System.out.print("\nIntroduza o ID do Leilão que pretende consultar " + Tools.alertaCancelar());
@@ -289,6 +284,7 @@ public class LeilaoView {
     }
 
     private void eliminarLeilao() {
+        LeilaoController leilaoController = new LeilaoController();
         System.out.println("\nELIMINAÇÃO DE UM LEILÃO");
         listaLeiloes(false);
         System.out.print("\nIntroduza o ID do Leilão que pretende eliminar " + Tools.alertaCancelar());
@@ -316,6 +312,8 @@ public class LeilaoView {
     }
 
     private void editarLeilao() {
+        LeilaoController leilaoController = new LeilaoController();
+        ProdutoController produtoController = new ProdutoController();
         System.out.println("\nEDIÇÃO DE UM LEILÃO");
         listaLeiloes(false);
         System.out.print("\nIntroduza o ID do Leilão que pretende editar " + Tools.alertaCancelar());
@@ -581,10 +579,13 @@ public class LeilaoView {
     }
 
     private String nomeProduto(int idProduto) {
+        ProdutoController produtoController = new ProdutoController();
         return produtoController.getNomeProdutoById(idProduto);
     }
 
     public void fecharLeilaoManual() {
+        LeilaoController leilaoController = new LeilaoController();
+        LanceController lanceController = new LanceController();
         System.out.println("\n===== LEILÕES ATIVOS =====");
 
         listaLeiloes(true);

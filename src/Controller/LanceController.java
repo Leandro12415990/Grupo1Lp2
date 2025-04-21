@@ -2,23 +2,21 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
-import Model.*;
+import Model.ClienteSessao;
+import Model.Lance;
+import Model.Leilao;
+import Model.ResultadoOperacao;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LanceController {
-    private final LanceBLL lanceBLL;
-    private final LeilaoBLL leilaoBLL;
-    private ClienteSessao clienteSessao;
 
     public ResultadoOperacao adicionarLanceEletronico(int idLeilao, int numLance, double multiploLance) {
-        this.lanceBLL = lanceBLL;
-        this.leilaoBLL = leilaoBLL;
-        this.clienteSessao = clienteSessao;
-    }
+        LanceBLL lanceBLL = new LanceBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        ClienteSessao clienteSessao = new ClienteSessao();
 
-    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, int numLance, double multiploLance) {
         int idCliente = clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
 
@@ -31,8 +29,11 @@ public class LanceController {
         return resultado;
     }
 
-
     public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance) {
+        LanceBLL lanceBLL = new LanceBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        ClienteSessao clienteSessao = new ClienteSessao();
+
         int idCliente = clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         valorLance = leilao.getValorMinimo();
@@ -43,6 +44,10 @@ public class LanceController {
     }
 
     public ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance) {
+        LanceBLL lanceBLL = new LanceBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        ClienteSessao clienteSessao = new ClienteSessao();
+
         int idCliente = clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
 
@@ -54,11 +59,15 @@ public class LanceController {
 
 
     public List<Lance> listarLancesDoCliente() {
+        LanceBLL lanceBLL = new LanceBLL();
+        ClienteSessao clienteSessao = new ClienteSessao();
+
         int idCliente = clienteSessao.getIdCliente();
         return lanceBLL.listarMeuLance(idCliente);
     }
 
     public List<Lance> obterLancesPorLeilao(int idLeilao) {
+        LanceBLL lanceBLL = new LanceBLL();
         return lanceBLL.obterLancesPorLeilao(idLeilao);
     }
 
@@ -82,10 +91,12 @@ public class LanceController {
     }
 
     public String obterNomeVencedor(int idLance) {
+        LanceBLL lanceBLL = new LanceBLL();
         return lanceBLL.obterNomeVencedor(idLance);
     }
 
     public int selecionarLanceVencedor(int idLeilao) {
+        LanceBLL lanceBLL = new LanceBLL();
         return lanceBLL.selecionarLanceVencedor(idLeilao);
     }
 
