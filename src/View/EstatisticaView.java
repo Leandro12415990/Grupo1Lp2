@@ -16,7 +16,7 @@ public class EstatisticaView {
     private final UtilizadorView utilizadorView;
 
     public EstatisticaView(EstatisticaController estatisticaController, LeilaoView leilaoView, UtilizadorView utilizadorView) {
-        this.estatisticaController = estatisticaController;
+    public void exibirMenuListagem() {
         this.leilaoView = leilaoView;
         this.utilizadorView = utilizadorView;
     }
@@ -278,6 +278,7 @@ public class EstatisticaView {
      */
 
     public void exibirContagemPorTipo(int idTipo) {
+        EstatisticaController estatisticaController = new EstatisticaController();
         System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
 
         int total = estatisticaController.contarLeiloesFechadosPorTipo(idTipo);
@@ -295,9 +296,10 @@ public class EstatisticaView {
     }
 
     public void exibirLeiloesFinalizados() {
+        EstatisticaController estatisticaController = new EstatisticaController();
         System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
 
-        int total = estatisticaController.contarLeilaoGlobal();
+            int total = estatisticaController.contarLeilaoGlobal();
 
         if (total == 0) {
             System.out.println("Não existem leilões com estado 'Fechado'.");
@@ -305,7 +307,7 @@ public class EstatisticaView {
             System.out.println("A quantidade de leilões terminados é: " + total);
             System.out.println("\n Lista de leilões fechados:\n");
 
-            List<String> linhas = estatisticaController.listarLeiloesFechadosFormatados();
+                List<String> linhas = estatisticaController.listarLeiloesFechadosFormatados();
             for (String linha : linhas) {
                 System.out.println(linha);
             }
@@ -313,6 +315,7 @@ public class EstatisticaView {
     }
 
     public void mostrarLeilaoMaisTempoAtivo() {
+        EstatisticaController estatisticaController = new EstatisticaController();
         Leilao leilao = estatisticaController.getLeilaoMaisTempoAtivo();
 
         if (leilao == null) {
@@ -331,6 +334,7 @@ public class EstatisticaView {
     }
 
     public void mostrarLeilaoMaisTempoPorTipo(int idTipo) {
+        EstatisticaController estatisticaController = new EstatisticaController();
         Leilao leilao = estatisticaController.getLeilaoTipoMaisTempoAtivo(idTipo);
 
         if (leilao == null) {
@@ -348,6 +352,7 @@ public class EstatisticaView {
     }
 
     public void mostrarLeilaoComMaisLances() {
+        EstatisticaController estatisticaController = new EstatisticaController();
         String[] dados = estatisticaController.getDadosLeilaoComMaisLances();
 
         if (dados == null) {
@@ -362,6 +367,7 @@ public class EstatisticaView {
     }
 
     public void mostrarLeilaoComMaisLancesPorTipo(int idTipo) {
+        EstatisticaController estatisticaController = new EstatisticaController();
         String[] dados = estatisticaController.getDadosLeilaoComMaisLancesPorTipo(idTipo);
 
         if (dados == null) {
@@ -378,6 +384,7 @@ public class EstatisticaView {
     }
 
     public void mostrarMediaTempoEntreLances() {
+        EstatisticaController estatisticaController = new EstatisticaController();
         double media = estatisticaController.calcularMediaTempoEntreLances();
 
         if (media == -1) {
@@ -390,6 +397,7 @@ public class EstatisticaView {
     }
 
     public void mostrarMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
+        EstatisticaController estatisticaController = new EstatisticaController();
         double media = estatisticaController.calcularMediaTempoEntreLancesPorTipo(idTipoLeilao);
 
         if (media == -1) {
@@ -404,6 +412,7 @@ public class EstatisticaView {
     }
 
     public void mostrarLeiloesSemLances() {
+        EstatisticaController estatisticaController = new EstatisticaController();
         List<Leilao> semLances = estatisticaController.getLeiloesSemLances();
 
         if (semLances.isEmpty()) {
@@ -424,6 +433,7 @@ public class EstatisticaView {
     }
 
     public void mostrarLeiloesSemLancesPorTipo(int idTipoLeilao) {
+        EstatisticaController estatisticaController = new EstatisticaController();
         List<Leilao> semLances = estatisticaController.getLeiloesSemLancesPorTipo(idTipoLeilao);
 
         String tipoStr = Tools.tipoLeilao.fromCodigo(idTipoLeilao).name();
@@ -444,10 +454,12 @@ public class EstatisticaView {
     }
 
     public void mostrarTodosClientes() {
-        utilizadorView.mostrarUtilizador(0,2);
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> clientes = importDal.carregarUtilizador();
     }
 
     public void mostrarMediaIdadeUtilizadores() {
+        EstatisticaController estatisticaController = new EstatisticaController();
         double media = estatisticaController.getMediaIdadeUtilizadores();
 
         if (media == -1) {
@@ -460,6 +472,7 @@ public class EstatisticaView {
     }
 
     public void mostrarDominioMaisUsadoEPercentagem() {
+        EstatisticaController estatisticaController = new EstatisticaController();
         String[] resultado = estatisticaController.getDominioMaisUsadoEPercentagem();
 
         if (resultado == null) {
@@ -473,7 +486,7 @@ public class EstatisticaView {
     }
 
     public void estatisticasPorLeilao() {
-        List<Leilao> leiloesList = leilaoView.listaLeiloes(false);
+        EstatisticaController estatisticaController = new EstatisticaController();
         leilaoView.listaLeiloes(false);
         int id = Tools.pedirOpcaoMenu("Insira o ID do leilão que deseja analisar " + Tools.alertaCancelar());
 

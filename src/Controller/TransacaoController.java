@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class TransacaoController {
-    private final TransacaoBLL transacaoBLL;
+    public ResultadoOperacao criarTransacao(int idCliente, Double saldoAtual, Double creditos) {
 
     public TransacaoController(TransacaoBLL transacaoBLL) {
         this.transacaoBLL = transacaoBLL;
@@ -42,7 +42,9 @@ public class TransacaoController {
     }
 
     public List<Transacao> listarDepositos(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
-        return transacaoBLL.listarTransacoes(apenasPendentes, idTipoTransacao, idCliente);
+        TransacaoView transacaoView = new TransacaoView();
+        if (idCliente != 0) transacaoView.exibirTransacoes(transacaoList, true);
+        else transacaoView.exibirTransacoes(transacaoList, false);
     }
 
     public Utilizador getUtilizador(int idCliente) {

@@ -7,8 +7,12 @@ import Utils.Tools;
 import static Utils.Tools.scanner;
 
 public class MenuClienteView {
+    public void exibirMenu(Utilizador utilizador) {
+        //
+        UtilizadorView utilizadorView = new UtilizadorView();
+        TransacaoView transacaoView = new TransacaoView();
+        LanceView lanceView = new LanceView();
 
-    public void exibirMenu(Utilizador utilizador, UtilizadorView utilizadorView, TransacaoView transacaoView, LanceView lanceView, ClienteSessao clienteSessao) {
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));
             System.out.println("1. Ver os Meus Dados");

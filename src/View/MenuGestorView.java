@@ -1,11 +1,15 @@
 package View;
 
-import Model.ClienteSessao;
 import Utils.Tools;
 
 
 public class MenuGestorView {
     public void exibirMenu(UtilizadorView utilizadorView, LeilaoView leilaoView, ProdutoView produtoView, EstatisticaView estatisticaView, TransacaoView transacaoView, ClienteSessao clienteSessao) {
+        UtilizadorView utilizadorView = new UtilizadorView();
+        TransacaoView transacaoView = new TransacaoView();
+        EstatisticaView estatisticaView = new EstatisticaView();
+        LeilaoView leilaoView = new LeilaoView();
+        ProdutoView produtoView = new ProdutoView();
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
             System.out.println("1. Listagem de Utilizadores");

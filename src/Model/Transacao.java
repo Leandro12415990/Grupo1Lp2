@@ -1,7 +1,7 @@
 package Model;
 
 import java.time.LocalDateTime;
-//TRANSAÇÕES
+
 public class Transacao {
     private int idTransacao;
     private int idCliente;

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class UtilizadorView {
 
-    private final UtilizadorController utilizadorController;
-
+    public void registarCliente() {
+        UtilizadorController utilizadorController = new UtilizadorController();
     public UtilizadorView(UtilizadorController utilizadorController) {
         this.utilizadorController = utilizadorController;
     }
@@ -68,6 +68,7 @@ public class UtilizadorView {
     }
 
     public void formularioAprovarCliente(int estado) {
+        UtilizadorController utilizadorController = new UtilizadorController();
         while (true) {
             System.out.println("Email do cliente " + Tools.alertaCancelar());
             String email = Tools.scanner.nextLine();
@@ -80,6 +81,7 @@ public class UtilizadorView {
     }
 
     public void editarCliente(Utilizador utilizador) {
+        UtilizadorController utilizadorController = new UtilizadorController();
         while (true) {
             String passwordFirst;
             String passwordSecound = "";
@@ -118,6 +120,8 @@ public class UtilizadorView {
     }
 
     public void aprovarCliente(int estado) {
+        UtilizadorView utilizadorView = new UtilizadorView();
+        UtilizadorController utilizadorController = new UtilizadorController();
         String menuMSG = "", responseMSG = "";
         if (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
         {
@@ -131,8 +135,8 @@ public class UtilizadorView {
         }
         while (true) {
             System.out.println("Menu Aprovar Clientes");
-            if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) mostrarUtilizador(Tools.estadoUtilizador.PENDENTE.getCodigo(), 2);
-            if (estado == Tools.estadoUtilizador.INATIVO.getCodigo()) mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
+            if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.PENDENTE.getCodigo(), 2);
+            if (estado == Tools.estadoUtilizador.INATIVO.getCodigo()) utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
             System.out.println("-".repeat(245));
             System.out.println(MessageFormat.format("1. {0} todos", menuMSG));
             System.out.println(MessageFormat.format("2. {0} Cliente especifico", menuMSG));
@@ -149,7 +153,7 @@ public class UtilizadorView {
                             "liste os utilizadores no menu para verificar quais não foram {0}!", responseMSG));
                     break;
                 case 2:
-                    formularioAprovarCliente(estado);
+                    utilizadorView.formularioAprovarCliente(estado);
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");
@@ -161,8 +165,8 @@ public class UtilizadorView {
     }
 
     public void mostrarUtilizador(int estado, int tipo) {
-        List<Utilizador> utilizadoresList = utilizadorController.mostrarUtilizador(estado, tipo);
-        exibirUtilizadores(utilizadoresList);
+        UtilizadorController utilizadorController = new UtilizadorController();
+        utilizadorController.mostrarUtilizador(estado, tipo);
     }
 
     public void exibirUtilizadores(List<Utilizador> utilizadores) {

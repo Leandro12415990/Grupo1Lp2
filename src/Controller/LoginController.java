@@ -5,6 +5,8 @@ import Model.Utilizador;
 import Model.ClienteSessao; // Importando a classe ClienteSessao
 
 public class LoginController {
+    public Utilizador verificarLogin(String email, String password)
+        LoginUtilizadorBLL loginUtilizadorBLL = new LoginUtilizadorBLL();
 
     private final LoginUtilizadorBLL loginUtilizadorBLL;
     private final ClienteSessao clienteSessao;
@@ -12,6 +14,7 @@ public class LoginController {
     public LoginController(LoginUtilizadorBLL loginUtilizadorBLL, ClienteSessao clienteSessao) {
         this.loginUtilizadorBLL = loginUtilizadorBLL;
         this.clienteSessao = clienteSessao;
+                    utilizador = loginUtilizadorBLL.login(email, password);
     }
 
     public Utilizador verificarLogin(String email, String password) {
@@ -32,4 +35,7 @@ public class LoginController {
         }
         return null;
     }
+    public boolean lerDados()
+        LoginUtilizadorBLL loginUtilizadorBLL = new LoginUtilizadorBLL();
+        boolean respLerDados = loginUtilizadorBLL.lerDados();
 }

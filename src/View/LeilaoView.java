@@ -15,7 +15,7 @@ import java.util.List;
 
 
 public class LeilaoView {
-    private final ProdutoController produtoController;
+    public void exibirMenuLeiloes() {
     private final LeilaoController leilaoController;
     private final LanceController lanceController;
 

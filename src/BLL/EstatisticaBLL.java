@@ -413,7 +413,8 @@ public class EstatisticaBLL {
      */
 
     public double calcularMediaIdadeUtilizadores() {
-        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> utilizadores = importDal.carregarUtilizador();
         if (utilizadores == null || utilizadores.isEmpty()) return -1;
 
         int somaIdades = 0;
@@ -437,7 +438,8 @@ public class EstatisticaBLL {
      */
 
     public String[] calcularDominioMaisUsadoEPercentagem() {
-        List<Utilizador> todos = utilizadorDAL.carregarUtilizadores();
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> todos = importDal.carregarUtilizador();
         if (todos == null || todos.isEmpty()) return null;
 
         List<Utilizador> clientes = new ArrayList<>();
@@ -544,6 +546,8 @@ public class EstatisticaBLL {
 
     private Utilizador procurarUtilizadorPorId(int id) {
         List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores(); // ou onde carregas
+        ImportDal importDal = new ImportDal();
+        List<Utilizador> utilizadores = importDal.carregarUtilizador(); // ou onde carregas
 
         if (utilizadores == null) return null;
 
@@ -564,4 +568,5 @@ public class EstatisticaBLL {
         }
         return Period.between(leilao.getDataInicio().toLocalDate(), dataFim.toLocalDate());
     }
+
 }

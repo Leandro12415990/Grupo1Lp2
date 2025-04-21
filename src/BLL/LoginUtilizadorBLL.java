@@ -9,8 +9,10 @@ import java.util.List;
 
 public class LoginUtilizadorBLL {
 
-    private List<Utilizador> utilizadores;
+    public Utilizador login(String email, String password)
     private final UtilizadorDAL utilizadorDAL;
+        ImportDal importDal = new ImportDal();
+                importDal.gravarUtilizador(Tools.utilizadores);
 
     public LoginUtilizadorBLL(UtilizadorDAL utilizadorDAL) {
         this.utilizadorDAL = utilizadorDAL;
@@ -29,8 +31,8 @@ public class LoginUtilizadorBLL {
     }
 
     public boolean lerDados() {
-        this.utilizadores = utilizadorDAL.carregarUtilizadores();
-        return this.utilizadores != null;
+        ImportDal importDal = new ImportDal();
+        Tools.utilizadores = importDal.carregarUtilizador();
     }
 
     public List<Utilizador> getUtilizadores() {

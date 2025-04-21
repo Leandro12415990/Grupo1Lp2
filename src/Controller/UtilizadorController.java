@@ -14,14 +14,17 @@ import java.util.regex.Pattern;
 public class UtilizadorController {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
 
-    private final UtilizadorBLL utilizadorBLL;
+    public void mostrarUtilizador(int estado, int tipo) {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        UtilizadorView utilizadorView = new UtilizadorView();
+        List<Utilizador> utilizadores = utilizadorBLL.listarUtilizador(estado, tipo);
 
-    public UtilizadorController(UtilizadorBLL utilizadorBLL) {
+        utilizadorView.exibirUtilizadores(utilizadores);
         this.utilizadorBLL = utilizadorBLL;
     }
 
-    public List<Utilizador> mostrarUtilizador(int estado, int tipo) {
-        return utilizadorBLL.listarUtilizador(estado, tipo);
+    public ResultadoOperacao verificarDados(Utilizador utilizador, String nome, String email, LocalDate nascimento, String morada, String passwordFirst, String passwordSecond) {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
     }
 
     public ResultadoOperacao verificarDados(Utilizador utilizador, String nome, String email, LocalDate nascimento, String morada, String passwordFirst, String passwordSecond) {
@@ -52,6 +55,8 @@ public class UtilizadorController {
     }
 
     public boolean aprovarTodosClientes(int estado) {
+        ImportDal importDal = new ImportDal();
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         boolean aprovouAlguem = false;
 
         for (Utilizador u : Tools.utilizadores) {
@@ -72,10 +77,11 @@ public class UtilizadorController {
                     : u.getEstado() != Tools.estadoUtilizador.INATIVO.getCodigo();
             if (estadoIncorreto) return false;
         }
-        if (aprovouAlguem) utilizadorBLL.gravarUtilizadores(Tools.utilizadores);
+        if (aprovouAlguem) importDal.gravarUtilizador(Tools.utilizadores);
         return true;
     }
 
+    private boolean validaDataNascimento(LocalDate nascimento) {
     private boolean validaDataNascimento(LocalDate nascimento) {
         if (nascimento.isAfter(LocalDate.now()) || calcularIdade(nascimento) < 18) return false;
         else return true;
@@ -91,6 +97,7 @@ public class UtilizadorController {
     }
 
     public boolean aprovarCliente(String email, int estado) {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         for (Utilizador u : Tools.utilizadores) {
             if (u.getEmail().equalsIgnoreCase(email)) {
                 boolean respFormularioAprovarClienteBLL = utilizadorBLL.aprovarCliente(u, estado);
@@ -100,7 +107,7 @@ public class UtilizadorController {
         return false;
     }
 
-    public boolean verificarPassword(String passwordFirst, String passwordSecond) {
+    public boolean verificarPassword(String passwordFirst, String passwordSecound) {
         return passwordFirst.equals(passwordSecond);
     }
 }

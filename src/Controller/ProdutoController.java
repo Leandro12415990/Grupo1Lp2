@@ -10,7 +10,7 @@ import java.util.List;
 public class ProdutoController {
     private final ProdutoBLL produtoBLL;
 
-    public ProdutoController(ProdutoBLL produtoBLL) {
+    public ResultadoOperacao criarProduto(int idProduto,int estado, String nome, String descricao) {
         this.produtoBLL = produtoBLL;
     }
 

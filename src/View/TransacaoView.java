@@ -18,7 +18,7 @@ public class TransacaoView {
     private final TransacaoController transacaoController;
     private ClienteSessao clienteSessao;
 
-    public TransacaoView(TransacaoController transacaoController, ClienteSessao clienteSessao) {
+    public void exibirMenuTransacao() {
         this.transacaoController = transacaoController;
         this.clienteSessao = clienteSessao;
     }
@@ -59,6 +59,7 @@ public class TransacaoView {
     }
 
     private void adicionarCreditos(int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
         System.out.println("\nADICIONAR CRÉDITOS");
 
         verCarteira(idCliente);
@@ -75,10 +76,12 @@ public class TransacaoView {
     }
 
     private Double buscarValorTotalAtual(int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
         return transacaoController.buscarValorTotalAtual(idCliente);
     }
 
     private Double valorPendente(int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
         return transacaoController.valorPendente(idCliente);
     }
 

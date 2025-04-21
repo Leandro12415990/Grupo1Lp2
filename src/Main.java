@@ -8,8 +8,8 @@ import View.*;
 public class Main {
 
     public static void main(String[] args) {
-        // DAL
-        ImportDAL importDal = new ImportDAL();
+        MenuInicialView menuInicialView = new MenuInicialView();
+        menuInicialView.menuInicial();
         ProdutoDAL produtoDal = new ProdutoDAL(importDal);
         LeilaoDAL leilaoDal = new LeilaoDAL(importDal);
         LanceDAL lanceDal = new LanceDAL(importDal);

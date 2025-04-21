@@ -5,7 +5,7 @@ import Model.Utilizador;
 import Utils.Tools;
 
 public class LoginView {
-
+    public Utilizador login() {
     private final LoginController loginController;
 
     public LoginView(LoginController loginController) {
@@ -14,6 +14,7 @@ public class LoginView {
 
     public Utilizador login() {
         Utilizador utilizador = null;
+        LoginController loginController = new LoginController();
 
         System.out.println("\n" + "=".repeat(10) + " LOGIN " + "=".repeat(10));
 

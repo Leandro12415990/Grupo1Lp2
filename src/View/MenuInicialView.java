@@ -7,8 +7,10 @@ import Utils.Tools;
 import static Utils.Tools.scanner;
 
 public class MenuInicialView {
-
-    public void menuInicial(LoginView loginView, MenuGestorView menuGestorView, MenuClienteView menuClienteView, UtilizadorView utilizadorView, LeilaoView leilaoView, ProdutoView produtoView, EstatisticaView estatisticaView, TransacaoView transacaoView, LanceView lanceView, ClienteSessao clienteSessao) {
+    public void menuInicial() {
+        LoginView loginView = new LoginView();
+        MenuClienteView menuClienteView = new MenuClienteView();
+        UtilizadorView utilizadorView = new UtilizadorView();
         int opcao;
         do {
             System.out.println("\nBem-vindo à leiloeira Valor em Alta!\n");
@@ -29,7 +31,7 @@ public class MenuInicialView {
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo()) {
                         menuGestorView.exibirMenu(utilizadorView, leilaoView, produtoView, estatisticaView, transacaoView, clienteSessao);
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) {
-                        menuClienteView.exibirMenu(utilizador,utilizadorView,transacaoView,lanceView, clienteSessao);
+                        menuClienteView.exibirMenu(utilizador);
                     }
                     break;
                 case 2:

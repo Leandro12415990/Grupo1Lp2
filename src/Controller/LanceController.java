@@ -12,7 +12,7 @@ public class LanceController {
     private final LeilaoBLL leilaoBLL;
     private ClienteSessao clienteSessao;
 
-    public LanceController(LanceBLL lanceBLL, LeilaoBLL leilaoBLL, ClienteSessao clienteSessao) {
+    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, int numLance, double multiploLance) {
         this.lanceBLL = lanceBLL;
         this.leilaoBLL = leilaoBLL;
         this.clienteSessao = clienteSessao;

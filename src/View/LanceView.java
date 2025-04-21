@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class LanceView {
-    private final LanceController lanceController;
+    public void exibirMenuLance() {
     private final LeilaoController leilaoController;
     private final ProdutoController produtoController;
 
@@ -62,10 +62,12 @@ public class LanceView {
     }
 
     public void lanceDireto() {
+        ImportDal importDal = new ImportDal();
+
         ResultadoOperacao resultado;
         System.out.println("\n===== LEILÕES VENDA DIRETA =====");
 
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Utilizador> cliente = importDal.carregarUtilizador();
         List<Leilao> leiloesLanceDireto = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
         if (!leiloesLanceDireto.isEmpty()) {
             for (Leilao leilao : leiloesLanceDireto) {
@@ -142,6 +144,7 @@ public class LanceView {
     }
 
     public void lanceEletronico() {
+        LanceController lanceController = new LanceController();
         System.out.println("\n===== LEILÕES ELETRONICO =====");
 
         List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
