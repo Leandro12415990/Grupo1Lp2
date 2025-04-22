@@ -1,12 +1,10 @@
 package BLL;
 
-import DAL.ImportDAL;
 import DAL.UtilizadorDAL;
 import Model.Utilizador;
 import Utils.Tools;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UtilizadorBLL {

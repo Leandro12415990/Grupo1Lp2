@@ -2,7 +2,6 @@ package View;
 
 import BLL.LeilaoBLL;
 import Controller.EstatisticaController;
-import DAL.ImportDAL;
 import DAL.UtilizadorDAL;
 import Model.Leilao;
 import Model.Utilizador;

@@ -28,11 +28,4 @@ public class LoginController {
         }
         return null;
     }
-
-    public boolean lerDados() {
-        LoginUtilizadorBLL loginUtilizadorBLL = new LoginUtilizadorBLL();
-        boolean respLerDados = loginUtilizadorBLL.lerDados();
-        if (respLerDados) return true;
-        else return false;
-    }
 }

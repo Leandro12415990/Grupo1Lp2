@@ -1,6 +1,5 @@
 package View;
 
-import Model.ClienteSessao;
 import Model.Utilizador;
 import Utils.Tools;
 
@@ -12,7 +11,6 @@ public class MenuClienteView {
         UtilizadorView utilizadorView = new UtilizadorView();
         TransacaoView transacaoView = new TransacaoView();
         LanceView lanceView = new LanceView();
-        ClienteSessao clienteSessao = new ClienteSessao();
 
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));
@@ -40,7 +38,7 @@ public class MenuClienteView {
                     break;
                 case 0:
                     System.out.println("A sair...");
-                    clienteSessao.logout();
+                    Tools.clienteSessao.logout();
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");

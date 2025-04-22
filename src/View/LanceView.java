@@ -1,7 +1,6 @@
 package View;
 
 import Controller.ProdutoController;
-import DAL.ImportDAL;
 import Controller.LanceController;
 import Controller.LeilaoController;
 import DAL.UtilizadorDAL;

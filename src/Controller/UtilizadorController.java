@@ -1,7 +1,6 @@
 package Controller;
 
 import BLL.*;
-import DAL.ImportDAL;
 import DAL.UtilizadorDAL;
 import Model.ResultadoOperacao;
 import Model.Utilizador;

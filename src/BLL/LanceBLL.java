@@ -1,6 +1,5 @@
 package BLL;
 
-import DAL.ImportDAL;
 import DAL.LanceDAL;
 import DAL.UtilizadorDAL;
 import Model.*;

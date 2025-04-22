@@ -1,5 +1,6 @@
 package Utils;
 
+import Model.ClienteSessao;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 
@@ -15,6 +16,7 @@ import java.util.Scanner;
 public class Tools {
     public static Scanner scanner = new Scanner(System.in);
     public static List<Utilizador> utilizadores = new ArrayList<>();
+    public static ClienteSessao clienteSessao = new ClienteSessao();
 
     public static String separador() {
         return ";";

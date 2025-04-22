@@ -1,7 +1,6 @@
 package BLL;
 
 import Controller.LeilaoController;
-import DAL.ImportDAL;
 import DAL.LeilaoDAL;
 import Model.Leilao;
 import Utils.Constantes;

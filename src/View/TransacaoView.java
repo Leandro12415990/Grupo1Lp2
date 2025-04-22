@@ -1,8 +1,5 @@
 package View;
 
-import BLL.TransacaoBLL;
-import BLL.UtilizadorBLL;
-import DAL.UtilizadorDAL;
 import Model.Transacao;
 import Model.ResultadoOperacao;
 import Model.ClienteSessao;
@@ -11,12 +8,10 @@ import Controller.TransacaoController;
 import Utils.Constantes;
 import Utils.Tools;
 
-import java.sql.SQLOutput;
 import java.util.List;
 
 public class TransacaoView {
     public void exibirMenuTransacao() {
-        ClienteSessao clienteSessao = new ClienteSessao();
         int opc;
         do {
             System.out.println("\n" + "=".repeat(8) + " CARTEIRA " + "=".repeat(8));
@@ -31,16 +26,16 @@ public class TransacaoView {
 
             switch (opc) {
                 case 1:
-                    adicionarCreditos(clienteSessao.getIdCliente());
+                    adicionarCreditos(Tools.clienteSessao.getIdCliente());
                     break;
                 case 2:
-                    verCarteira(clienteSessao.getIdCliente());
+                    verCarteira(Tools.clienteSessao.getIdCliente());
                     break;
                 case 3:
-                    verDepositos(clienteSessao.getIdCliente());
+                    verDepositos(Tools.clienteSessao.getIdCliente());
                     break;
                 case 4:
-                    verMovimentos(clienteSessao.getIdCliente());
+                    verMovimentos(Tools.clienteSessao.getIdCliente());
                     break;
                 case 0:
                     System.out.println("\nVoltando ao menu anterior...");
