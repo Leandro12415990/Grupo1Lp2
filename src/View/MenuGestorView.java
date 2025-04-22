@@ -32,10 +32,10 @@ public class MenuGestorView {
                     utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
                     break;
                 case 2:
-                    utilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
+                    utilizadorView.alterarEstadoClientes(Tools.estadoUtilizador.ATIVO.getCodigo(), "Aprovar", Tools.tipoUtilizador.CLIENTE.getCodigo());
                     break;
                 case 3:
-                    utilizadorView.aprovarCliente(Tools.estadoUtilizador.INATIVO.getCodigo());
+                    utilizadorView.alterarEstadoClientes(Tools.estadoUtilizador.INATIVO.getCodigo(), "Inativar", Tools.tipoUtilizador.CLIENTE.getCodigo());
                     break;
                 case 4:
                     leilaoView.exibirMenuLeiloes();

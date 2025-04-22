@@ -1,24 +1,26 @@
 package BLL;
 
 import DAL.UtilizadorDAL;
+import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Tools;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UtilizadorBLL {
     public List<Utilizador> listarUtilizador(int estado, int tipo) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
-        List<Utilizador> utilizadoresList = utilizadorDAL.carregarUtilizadores();
+        List<Utilizador> utilizadoresList = new ArrayList<>();
         if (estado != 0) {
-            for (Utilizador utilizador : Tools.utilizadores) {
+            for (Utilizador utilizador : utilizadorDAL.carregarUtilizadores()) {
                 if (utilizador.getEstado() == estado && utilizador.getTipoUtilizador() == tipo) {
                     utilizadoresList.add(utilizador);
                 }
             }
         } else {
-            for (Utilizador utilizador : Tools.utilizadores) {
+            for (Utilizador utilizador : utilizadorDAL.carregarUtilizadores()) {
                 if (utilizador.getTipoUtilizador() == tipo) {
                     utilizadoresList.add(utilizador);
                 }
@@ -88,9 +90,17 @@ public class UtilizadorBLL {
         return true;
     }
 
-    public void aprovarTodosClientes(Utilizador u, int estado) {
-        if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
-        else u.setEstado(Tools.estadoUtilizador.INATIVO.getCodigo());
+    public ResultadoOperacao alterarEstadoUtilizador(Utilizador u, int estado) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        if (u == null || estado == 0) {
+            resultado.msgErro = "Erro a alterar estado do utilizador";
+        } else {
+            u.setEstado(estado);
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+            gravarUtilizadores(Tools.utilizadores);
+        }
+        return resultado;
     }
 
     public Utilizador procurarUtilizadorPorId(int idCliente) {

@@ -171,8 +171,9 @@ public class LanceBLL {
         int idEstadoTransacao = 0;
         int idTipoTransacao = 0;
         switch (tipoLeilao) {
-            case Constantes.tiposLeilao.VENDA_DIRETA, Constantes.tiposLeilao.ELETRONICO,
-                 Constantes.tiposLeilao.CARTA_FECHADA:
+            case Constantes.tiposLeilao.VENDA_DIRETA:
+            case Constantes.tiposLeilao.ELETRONICO:
+            case Constantes.tiposLeilao.CARTA_FECHADA:
                 idTipoTransacao = Constantes.tiposTransacao.LANCE_DEBITO;
                 idEstadoTransacao = Constantes.estadosTransacao.ACEITE;
                 break;
