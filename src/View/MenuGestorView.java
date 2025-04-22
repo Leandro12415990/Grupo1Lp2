@@ -1,50 +1,57 @@
 package View;
 
-import Model.Transacao;
+import Model.ClienteSessao;
 import Utils.Tools;
 
-import static Utils.Tools.scanner;
 
 public class MenuGestorView {
-    public static void exibirMenu() {
+    public void exibirMenu() {
+        UtilizadorView utilizadorView = new UtilizadorView();
+        TransacaoView transacaoView = new TransacaoView();
+        EstatisticaView estatisticaView = new EstatisticaView();
+        LeilaoView leilaoView = new LeilaoView();
+        ProdutoView produtoView = new ProdutoView();
+        ClienteSessao clienteSessao = new ClienteSessao();
+
         while (true) {
-            System.out.println("\n"+"=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
+            System.out.println("\n" + "=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
             System.out.println("1. Listagem de Utilizadores");
             System.out.println("2. Aprovar Clientes");
             System.out.println("3. Inativar Clientes");
-            System.out.println("4. Aprovar Depósitos");
+            System.out.println("4. Menu Leilões");
             System.out.println("5. Menu Produtos");
-            System.out.println("6. Menu Leilões");
-            System.out.println("7. Listagens");
+            System.out.println("6. Listagens");
+            System.out.println("7. Aprovar Despósitos");
             System.out.println("0. Sair...");
             System.out.print("Escolha uma opção: ");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine().trim();
+            int opcao = Tools.scanner.nextInt();
+            Tools.scanner.nextLine().trim();
             switch (opcao) {
                 case 1:
-                    ImportView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
+                    utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
                     break;
                 case 2:
-                    AprovarClienteView.exibirMenu(Tools.estadoUtilizador.ATIVO.getCodigo());
+                    utilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
                     break;
                 case 3:
-                    AprovarClienteView.exibirMenu(Tools.estadoUtilizador.INATIVO.getCodigo());
+                    utilizadorView.aprovarCliente(Tools.estadoUtilizador.INATIVO.getCodigo());
                     break;
                 case 4:
-                    TransacaoView.exibirMenuTransacao();
+                    leilaoView.exibirMenuLeiloes();
                     break;
                 case 5:
-                    ProdutoView.exibirProduto();
+                    produtoView.exibirProduto();
                     break;
                 case 6:
-                    LeilaoView.exibirMenuLeiloes();
+                    estatisticaView.exibirMenuListagem();
                     break;
                 case 7:
-                    EstatisticaView.exibirMenuListagem();
+                    transacaoView.aprovarDepositos();
                     break;
                 case 0:
-                    System.out.println("A desligar sistema...");
+                    System.out.println("A sair...");
+                    clienteSessao.logout();
                     return;
                 default:
                     System.out.println("Opção inválida, tenta novamente.");

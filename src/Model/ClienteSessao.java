@@ -1,21 +1,21 @@
 package Model;
 
 public class ClienteSessao {
-    public static int idCliente = -1;
+    private int idCliente = -1;
 
-    public static int getIdCliente() {
+    public int getIdCliente() {
         return idCliente;
     }
 
-    public static void setIdCliente(int id) {
-        idCliente = id;
+    public void setIdCliente(int id) {
+        this.idCliente = id;
     }
 
-    public static boolean isClienteLogado() {
+    public boolean isClienteLogado() {
         return idCliente != -1;
     }
 
-    public static void logout() {
-        idCliente = -1;
+    public void logout() {
+        idCliente = -1;  // Limpar o id do cliente
     }
 }

@@ -1,19 +1,15 @@
 package Controller;
 
-import BLL.LeilaoBLL;
 import BLL.ProdutoBLL;
-import Model.Leilao;
 import Model.Produto;
 import Model.ResultadoOperacao;
-import Utils.Tools;
-import View.LeilaoView;
 import View.ProdutoView;
 
 import java.util.List;
 
 public class ProdutoController {
-
-    public static ResultadoOperacao criarProduto(int idProduto,int estado, String nome, String descricao) {
+    public ResultadoOperacao criarProduto(int idProduto, int estado, String nome, String descricao) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (nome == null || nome.isEmpty()) {
             resultado.msgErro = "O nome do produto é de preenchimento obrigatório!";
@@ -21,7 +17,7 @@ public class ProdutoController {
             resultado.msgErro = "A descrição do produto é de preenchimento obrigatório!";
         } else {
             Produto novoProduto = new Produto(idProduto, estado, nome, descricao);
-            ProdutoBLL.adicionarProduto(novoProduto);
+            produtoBLL.adicionarProduto(novoProduto);
 
             resultado.Objeto = resultado;
             resultado.Sucesso = true;
@@ -29,50 +25,54 @@ public class ProdutoController {
         return resultado;
     }
 
-    public static boolean editarProduto(int idProduto, String nome, String descricao, int idEstado) {
-        return ProdutoBLL.editarProduto(idProduto, nome, descricao, idEstado);
+    public boolean editarProduto(int idProduto, String nome, String descricao, int idEstado) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
+        return produtoBLL.editarProduto(idProduto, nome, descricao, idEstado);
     }
 
-    public static boolean eliminarProduto(Produto produto) {
-
-        boolean sucesso = ProdutoBLL.eliminarProduto(produto);
-
+    public boolean eliminarProduto(Produto produto) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
+        boolean sucesso = produtoBLL.eliminarProduto(produto);
 
         if (sucesso) {
-            ProdutoBLL.obterTodosProdutos();
+            produtoBLL.obterTodosProdutos();
         }
         return sucesso;
     }
 
-    public static ResultadoOperacao listarProduto(boolean apenasDisponiveis) {
+    public ResultadoOperacao listarProduto(boolean apenasDisponiveis) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        List<Produto> produtos = ProdutoBLL.listarProdutos(apenasDisponiveis);
-        if(produtos.isEmpty()) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
+        List<Produto> produtos = produtoBLL.listarProdutos(apenasDisponiveis);
+        if (produtos.isEmpty()) {
             resultado.msgErro = "Não existem produtos disponíveis para leiloar!";
         } else {
-            ProdutoView.exibirProduto(produtos);
             resultado.Sucesso = true;
-            resultado.Objeto = resultado;
+            resultado.Objeto = produtos;
         }
         return resultado;
     }
 
-    public static Produto procurarProduto(int Id) {
-        if (Id > 0) {
-            return ProdutoBLL.procurarProduto(Id);
+    public Produto procurarProduto(int id) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
+        if (id > 0) {
+            return produtoBLL.procurarProduto(id);
         }
         return null;
     }
 
-    public static String getNomeProdutoById(int idProduto) {
-        return ProdutoBLL.getNomeProdutoById(idProduto);
+    public String getNomeProdutoById(int idProduto) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
+        return produtoBLL.getNomeProdutoById(idProduto);
     }
 
-    public static void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
-        ProdutoBLL.atualizarEstadoProduto(idProduto, novoIdEstado);
+    public void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
+        produtoBLL.atualizarEstadoProduto(idProduto, novoIdEstado);
     }
 
-    public static boolean verificarProdutoEmLeilao(int idProduto) {
-        return ProdutoBLL.verificarProdutoEmLeilao(idProduto);
+    public boolean verificarProdutoEmLeilao(int idProduto) {
+        ProdutoBLL produtoBLL = new ProdutoBLL();
+        return produtoBLL.verificarProdutoEmLeilao(idProduto);
     }
 }

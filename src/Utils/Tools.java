@@ -1,13 +1,9 @@
 package Utils;
 
+import Model.ClienteSessao;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +16,7 @@ import java.util.Scanner;
 public class Tools {
     public static Scanner scanner = new Scanner(System.in);
     public static List<Utilizador> utilizadores = new ArrayList<>();
+    public static ClienteSessao clienteSessao = new ClienteSessao();
 
     public static String separador() {
         return ";";
@@ -46,30 +43,6 @@ public class Tools {
         return (date != null) ? date.format(FORMATTER) : "";
     }
 
-    public static List<String[]> lerCSV(String caminho) {
-        List<String[]> linhas = new ArrayList<>();
-        try (BufferedReader br = Files.newBufferedReader(Paths.get(caminho))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                linhas.add(linha.split(";"));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return linhas;
-    }
-
-    public static void escreverCSV(String caminho, List<String[]> linhas) {
-        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(caminho))) {
-            for (String[] linha : linhas) {
-                bw.write(String.join(";", linha));
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public enum tipoUtilizador {
         GESTOR(1), CLIENTE(2);
 
@@ -81,6 +54,15 @@ public class Tools {
 
         public int getCodigo() {
             return codigo;
+        }
+
+        public static tipoUtilizador fromCodigo(int codigo) {
+            for (tipoUtilizador tipo : tipoUtilizador.values()) {
+                if (tipo.getCodigo() == codigo) {
+                    return tipo;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
         }
     }
 
@@ -97,13 +79,22 @@ public class Tools {
             return codigo;
         }
 
+        public static estadoUtilizador fromCodigo(int codigo) {
+            for (estadoUtilizador estado : estadoUtilizador.values()) {
+                if (estado.getCodigo() == codigo) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
+        }
+
         public static estadoUtilizador getDefault() {
             return DEFAULT; // Valor Default do enum estadoUtilizador
         }
     }
 
     public enum estadoProduto {
-        ATIVO(1), RESERVADO(2), INATIVO(3);
+        DISPONIVEL(1), RESERVADO(2), INATIVO(3);
 
         private final int codigo;
         private int estado;
@@ -246,7 +237,7 @@ public class Tools {
             return LocalDateTime.parse(dateStr, DATA_HORA);
         } catch (DateTimeParseException e) {
             try {
-                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atStartOfDay();
             } catch (DateTimeParseException ex) {
                 return null;
             }
@@ -266,12 +257,16 @@ public class Tools {
         }
     }
 
-    public static String formatarMinutosParaHorasEMinutos(double minutosTotal) {
-        long horas = (long) minutosTotal / 60;
-        long minutos = (long) minutosTotal % 60;
+    public static String formatarMinutosParaHorasEMinutosESegundos(double minutosTotal) {
+        long totalSegundos = (long) (minutosTotal * 60);
 
-        return horas + " horas e " + minutos + " minutos";
+        long horas = totalSegundos / 3600;
+        long minutos = (totalSegundos % 3600) / 60;
+        long segundos = totalSegundos % 60;
+
+        return horas + " horas e " + minutos + " minutos e " + segundos + " segundos";
     }
+
 
     public static int pedirOpcaoMenu(String mensagem) {
         while (true) {
@@ -279,7 +274,7 @@ public class Tools {
             try {
                 return scanner.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println(" Entrada inválida. Por favor insira um número inteiro.");
+                System.out.println("⚠ Entrada inválida. Por favor insira um número inteiro.");
                 scanner.nextLine();
             }
         }

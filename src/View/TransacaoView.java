@@ -11,9 +11,7 @@ import Utils.Tools;
 import java.util.List;
 
 public class TransacaoView {
-    private static final int idCliente = ClienteSessao.getIdCliente();
-
-    public static void exibirMenuTransacao() {
+    public void exibirMenuTransacao() {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(8) + " CARTEIRA " + "=".repeat(8));
@@ -28,16 +26,16 @@ public class TransacaoView {
 
             switch (opc) {
                 case 1:
-                    adicionarCreditos();
+                    adicionarCreditos(Tools.clienteSessao.getIdCliente());
                     break;
                 case 2:
-                    verCarteira(idCliente);
+                    verCarteira(Tools.clienteSessao.getIdCliente());
                     break;
                 case 3:
-                    verDepositos(idCliente);
+                    verDepositos(Tools.clienteSessao.getIdCliente());
                     break;
                 case 4:
-                    verMovimentos(idCliente);
+                    verMovimentos(Tools.clienteSessao.getIdCliente());
                     break;
                 case 0:
                     System.out.println("\nVoltando ao menu anterior...");
@@ -48,75 +46,101 @@ public class TransacaoView {
         } while (opc != 0);
     }
 
-    private static void adicionarCreditos() {
+    private void adicionarCreditos(int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
         System.out.println("\nADICIONAR CRÉDITOS");
 
         verCarteira(idCliente);
-        double saldoAtual =  buscarValorTotalAtual(idCliente);
+        double saldoAtual = buscarValorTotalAtual(idCliente);
 
         System.out.print("\nInsira a quantidade de créditos que pretende depositar " + Tools.alertaCancelar());
         Double creditos = Tools.scanner.nextDouble();
         if (Tools.verificarSaida(String.valueOf(creditos))) return;
 
-        ResultadoOperacao resultado = TransacaoController.criarTransacao(idCliente, saldoAtual, creditos);
-        if (resultado.Sucesso) System.out.println("\n⚠ Os créditos serão adicionados à sua conta aquando da aprovação do gestor!");
+        ResultadoOperacao resultado = transacaoController.criarTransacao(idCliente, saldoAtual, creditos);
+        if (resultado.Sucesso)
+            System.out.println("\n Os créditos serão adicionados à sua conta aquando da aprovação do gestor!");
         else System.out.println(resultado.msgErro);
     }
 
-    private static Double buscarValorTotalAtual(int idCliente) {
-        return TransacaoController.buscarValorTotalAtual(idCliente);
+    private Double buscarValorTotalAtual(int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
+        return transacaoController.buscarValorTotalAtual(idCliente);
     }
 
-    private static Double valorPendente(int idCliente) {
-        return TransacaoController.valorPendente(idCliente);
+    private Double valorPendente(int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
+        return transacaoController.valorPendente(idCliente);
     }
 
-    private static void listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
-        TransacaoController.listarDepositos(apenasPendentes, idTipoTransacao, idCliente);
-    }
-
-    public static void aprovarDepositos() {
-        System.out.println("\nDEPÓSITOS PENDENTES DE APROVAÇÃO!");
-        listarTransacoes(true, 0, 0);
-
-        System.out.print("Insira o ID do Depósito que pretende aprovar/negar " + Tools.alertaCancelar());
-        if (!Tools.scanner.hasNextInt()) {
-            System.out.println("Entrada inválida. Por favor, insira um número.");
-            Tools.scanner.next();
-            return;
+    private void listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
+        List<Transacao> transacoesList = transacaoController.listarDepositos(apenasPendentes, idTipoTransacao, idCliente);
+        if (idCliente != 0) {
+            exibirTransacoes(transacoesList,true);
+        } else {
+            exibirTransacoes(transacoesList,false);
         }
 
-        int idDeposito = Tools.scanner.nextInt();
-        Tools.scanner.nextLine();
-        if (Tools.verificarSaida(String.valueOf(idDeposito))) return;
-
-        ResultadoOperacao resultado = TransacaoController.verificarTransacao(idDeposito);
-        if (resultado.Sucesso) {
-            Transacao deposito = TransacaoController.buscarTransacao(idDeposito);
-            while (true) {
-                System.out.printf("Pretende aprovar(A) ou negar(N)? " + Tools.alertaCancelar());
-                String input = Tools.scanner.nextLine().trim();
-                if (Tools.verificarSaida(input)) return;
-                char opc = Character.toUpperCase(input.charAt(0));
-
-                switch (opc) {
-                    case 'A':
-                        System.out.println("O depósito " + deposito.getIdTransacao() + " foi aprovado com sucesso!");
-                        TransacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao());
-                        TransacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.ACEITE);
-                        return;
-                    case 'N':
-                        System.out.println("O depósito " + deposito.getIdTransacao() + " foi negado!");
-                        TransacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.NEGADO);
-                        return;
-                    default:
-                        System.out.println("Opção inválida. Tente novamente...");
-                }
-            }
-        } else System.out.println(resultado.msgErro);
     }
 
-    public static void exibirTransacoes(List<Transacao> transacaoList, boolean vistaCliente) {
+    public void aprovarDepositos() {
+        TransacaoController transacaoController = new TransacaoController();
+        List<Transacao> pendentes = transacaoController.listarDepositos(true, Constantes.tiposTransacao.DEPOSITO, 0);
+
+        if (pendentes.isEmpty()) {
+            System.out.println("\n Não há depósitos pendentes de aprovação.");
+            return;
+        }
+        while (true) {
+            System.out.println("\nDEPÓSITOS PENDENTES DE APROVAÇÃO!");
+            listarTransacoes(true, Constantes.tiposTransacao.DEPOSITO, 0);
+
+            System.out.print("Insira o ID do Depósito que pretende aprovar/negar " + Tools.alertaCancelar());
+            if (!Tools.scanner.hasNextInt()) {
+                System.out.println("Entrada inválida. Por favor, insira um número.");
+                Tools.scanner.next();
+                continue;
+            }
+
+            int idDeposito = Tools.scanner.nextInt();
+            Tools.scanner.nextLine();
+
+            if (Tools.verificarSaida(String.valueOf(idDeposito))) break;
+
+            ResultadoOperacao resultado = transacaoController.verificarTransacao(idDeposito);
+            if (resultado.Sucesso) {
+                Transacao deposito = transacaoController.buscarTransacao(idDeposito);
+                while (true) {
+                    System.out.printf("Pretende aprovar(A) ou negar(N)? " + Tools.alertaCancelar());
+                    String input = Tools.scanner.nextLine().trim();
+                    if (Tools.verificarSaida(input)) return;
+
+                    char opc = Character.toUpperCase(input.charAt(0));
+
+                    switch (opc) {
+                        case 'A':
+                            System.out.println("O depósito " + deposito.getIdTransacao() + " foi aprovado com sucesso!");
+                            transacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao());
+                            transacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.ACEITE);
+                            break;
+                        case 'N':
+                            System.out.println("O depósito " + deposito.getIdTransacao() + " foi negado!");
+                            transacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.NEGADO);
+                            break;
+                        default:
+                            System.out.println("Opção inválida. Tente novamente...");
+                            continue;
+                    }
+                    return;
+                }
+            } else {
+                System.out.println(resultado.msgErro);
+            }
+        }
+    }
+
+    public void exibirTransacoes(List<Transacao> transacaoList, boolean vistaCliente) {
         if (!vistaCliente) {
             System.out.println("\n" + "=".repeat(5) + " DEPÓSITOS PENDENTES " + "=".repeat(5));
             System.out.printf("%-18s %-45s %-25s %-25s %-25s %-18s %-30s\n",
@@ -138,15 +162,16 @@ public class TransacaoView {
             }
         } else {
             System.out.printf("%-18s %-25s %-20s %-30s %-20s %-30s\n",
-                    "IdTransação", "Valor Total Conta", "Valor Depósito", "Data Depósito", "TipoTransação", "Estado");
+                    "IdTransação", "Valor Total Conta", "Valor Transação", "Data Transação", "Tipo Transação", "Estado");
             System.out.println("-".repeat(130));
             for (Transacao transacao : transacaoList) {
                 String estadoStr = Tools.estadoDeposito.fromCodigo(transacao.getIdEstadoTransacao()).name();
                 String tipoStr = Tools.tipoTransacao.fromCodigo(transacao.getIdTipoTransacao()).name();
+                String valorTransacao = (transacao.getIdTipoTransacao() == Constantes.tiposTransacao.LANCE_DEBITO ? "-" : "+") + transacao.getValorTransacao() + "€";
                 System.out.printf("%-18s %-25s %-20s %-30s %-20s %-30s\n",
                         transacao.getIdTransacao(),
                         transacao.getValorTotal() + "€",
-                        transacao.getValorTransacao() + "€",
+                        valorTransacao,
                         transacao.getDataTransacao() != null ? Tools.DATA_HORA.format(transacao.getDataTransacao()) : "N/A",
                         tipoStr,
                         estadoStr);
@@ -154,26 +179,27 @@ public class TransacaoView {
         }
     }
 
-    public static Utilizador getUtilizador(int idCliente) {
-        return TransacaoController.getUtilizador(idCliente);
+    public Utilizador getUtilizador(int idCliente) {
+        TransacaoController transacaoController = new TransacaoController();
+        return transacaoController.getUtilizador(idCliente);
     }
 
-    public static void verDepositos(int idCliente) {
+    public void verDepositos(int idCliente) {
         System.out.println("\n" + "=".repeat(5) + " DEPÓSITOS " + "=".repeat(5));
         listarTransacoes(false, Constantes.tiposTransacao.DEPOSITO, idCliente);
     }
 
-    public static void verMovimentos(int idCliente) {
+    public void verMovimentos(int idCliente) {
         System.out.println("\n" + "=".repeat(5) + " MOVIMENTOS " + "=".repeat(5));
         listarTransacoes(false, 0, idCliente);
     }
 
-    public static void verCarteira(int idCliente) {
+    public void verCarteira(int idCliente) {
         Double saldoAtual = buscarValorTotalAtual(idCliente);
         Double saldoPendente = valorPendente(idCliente);
         System.out.println("\n" + "=".repeat(5) + " SALDO " + "=".repeat(5));
-        System.out.println("Saldo atual: " + saldoAtual + "€");
-        System.out.println("Saldo pendente de aprovação: " + saldoPendente + "€");
-    }
+        System.out.printf("Saldo atual: %.2f€\n", saldoAtual);
+        System.out.printf("Saldo pendente de aprovação: %.2f€\n", saldoPendente);
 
+    }
 }

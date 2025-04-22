@@ -2,38 +2,30 @@ package Controller;
 
 import BLL.LoginUtilizadorBLL;
 import Model.Utilizador;
+import Model.ClienteSessao; // Importando a classe ClienteSessao
 import Utils.Tools;
 
 public class LoginController {
-    public static Utilizador verificarLogin(String email, String password)
-    {
-        boolean respLerDados = lerDados();
-        Utilizador utilizador = null;
-        if (!respLerDados) return utilizador;
 
-        for (Utilizador u : Tools.utilizadores)
-        {
-            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
-            {
-                if (u.getEstado() == Tools.estadoUtilizador.ATIVO.getCodigo())
-                {
-                    utilizador = LoginUtilizadorBLL.login(email, password);
+    public Utilizador verificarLogin(String email, String password) {
+        LoginUtilizadorBLL loginUtilizadorBLL = new LoginUtilizadorBLL();
+        ClienteSessao clienteSessao = new ClienteSessao();
+
+        boolean dadosCarregados = loginUtilizadorBLL.lerDados();
+        if (!dadosCarregados) return null;
+
+        for (Utilizador u : Tools.utilizadores) {
+            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword())) {
+                if (u.getEstado() == 2) {
+                    Utilizador utilizador = loginUtilizadorBLL.login(email, password);
+
+                    clienteSessao.setIdCliente(u.getId());
                     return utilizador;
-                }
-                else
-                {
+                } else {
                     return null;
                 }
             }
         }
-
         return null;
-    }
-
-    public static boolean lerDados()
-    {
-        boolean respLerDados = LoginUtilizadorBLL.lerDados();
-        if (respLerDados) return true;
-        else return false;
     }
 }

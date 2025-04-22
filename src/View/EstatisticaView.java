@@ -2,18 +2,20 @@ package View;
 
 import BLL.LeilaoBLL;
 import Controller.EstatisticaController;
-import DAL.ImportDal;
+import DAL.UtilizadorDAL;
 import Model.Leilao;
 import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+
 import java.time.Period;
 import java.util.List;
 
 public class EstatisticaView {
-
-    /** Exibição dos menus */
-    public static void exibirMenuListagem() {
+    /**
+     * Exibição dos menus
+     */
+    public void exibirMenuListagem() {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LISTAGEM " + "=".repeat(5));
@@ -46,7 +48,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public static void exibirMenuGlobal() {
+    public void exibirMenuGlobal() {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LISTAGEM " + "=".repeat(5));
@@ -83,7 +85,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public static void exibirMenuPorTipo() {
+    public void exibirMenuPorTipo() {
         int opc;
         do {
             System.out.println("\n=== ESCOLHA O TIPO DE LEILÃO ===");
@@ -107,13 +109,14 @@ public class EstatisticaView {
                 case 0:
                     System.out.println("A sair...");
                     break;
-                default: System.out.println("Opção inválida.");
+                default:
+                    System.out.println("Opção inválida.");
             }
 
         } while (opc != 0);
     }
 
-    public static void exibirMenuEstatisticaCliente() {
+    public void exibirMenuEstatisticaCliente() {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LISTAGEM " + "=".repeat(5));
@@ -142,7 +145,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public static void menuAcoesEletronico() {
+    public void menuAcoesEletronico() {
         int opc;
         do {
             System.out.println("\n=== AÇÕES - LEILÕES ELETRÓNICOS ===");
@@ -175,13 +178,14 @@ public class EstatisticaView {
                 case 0:
                     System.out.println("A voltar...");
                     break;
-                default: System.out.println(" Opção inválida.");
+                default:
+                    System.out.println(" Opção inválida.");
             }
 
         } while (opc != 0);
     }
 
-    public static void menuAcoesCartaFechada() {
+    public void menuAcoesCartaFechada() {
         int opc;
         do {
             System.out.println("\n=== AÇÕES - LEILÕES CARTA FECHADA ===");
@@ -220,7 +224,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public static void menuAcoesVendaDireta() {
+    public void menuAcoesVendaDireta() {
         int opc;
         do {
             System.out.println("\n=== AÇÕES - LEILÕES VENDA DIRETA ===");
@@ -259,12 +263,15 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    /** metodos da view */
+    /**
+     * metodos da view
+     */
 
-    public static void exibirContagemPorTipo(int idTipo) {
+    public void exibirContagemPorTipo(int idTipo) {
+        EstatisticaController estatisticaController = new EstatisticaController();
         System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
 
-        int total = EstatisticaController.contarLeiloesFechadosPorTipo(idTipo);
+        int total = estatisticaController.contarLeiloesFechadosPorTipo(idTipo);
         String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(idTipo).name();
         if (total == 0) {
             System.out.println("Não existem leilões fechados do tipo \"" + tipoLeilaoStr + "\".");
@@ -272,32 +279,34 @@ public class EstatisticaView {
             System.out.println("Total de leilões fechados do tipo \"" + tipoLeilaoStr + "\": " + total);
             System.out.println("\n Lista de leilões fechados:\n");
         }
-        List<String> linhas = EstatisticaController.listarLeiloesFechadosFormatadosPorTipo(idTipo);
+        List<String> linhas = estatisticaController.listarLeiloesFechadosFormatadosPorTipo(idTipo);
         for (String linha : linhas) {
             System.out.println(linha);
         }
     }
 
-    public static void exibirLeiloesFinalizados() {
-            System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
+    public void exibirLeiloesFinalizados() {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
 
-            int total = EstatisticaController.contarLeilaoGlobal();
+            int total = estatisticaController.contarLeilaoGlobal();
 
-            if (total == 0) {
-                System.out.println("Não existem leilões com estado 'Fechado'.");
-            } else {
-                System.out.println("A quantidade de leilões terminados é: " + total);
-                System.out.println("\n Lista de leilões fechados:\n");
+        if (total == 0) {
+            System.out.println("Não existem leilões com estado 'Fechado'.");
+        } else {
+            System.out.println("A quantidade de leilões terminados é: " + total);
+            System.out.println("\n Lista de leilões fechados:\n");
 
-                List<String> linhas = EstatisticaController.listarLeiloesFechadosFormatados();
-                for (String linha : linhas) {
-                    System.out.println(linha);
-                }
+                List<String> linhas = estatisticaController.listarLeiloesFechadosFormatados();
+            for (String linha : linhas) {
+                System.out.println(linha);
             }
         }
+    }
 
-    public static void mostrarLeilaoMaisTempoAtivo() {
-        Leilao leilao = EstatisticaController.getLeilaoMaisTempoAtivo();
+    public void mostrarLeilaoMaisTempoAtivo() {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        Leilao leilao = estatisticaController.getLeilaoMaisTempoAtivo();
 
         if (leilao == null) {
             System.out.println("Não existem leilões válidos.");
@@ -314,8 +323,9 @@ public class EstatisticaView {
                 tempo.getDays() + " dias");
     }
 
-    public static void mostrarLeilaoMaisTempoPorTipo(int idTipo) {
-        Leilao leilao = EstatisticaController.getLeilaoTipoMaisTempoAtivo(idTipo);
+    public void mostrarLeilaoMaisTempoPorTipo(int idTipo) {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        Leilao leilao = estatisticaController.getLeilaoTipoMaisTempoAtivo(idTipo);
 
         if (leilao == null) {
             System.out.println("Nenhum leilão válido encontrado para este tipo.");
@@ -331,8 +341,9 @@ public class EstatisticaView {
                 tempo.getMonths() + " meses, " + tempo.getDays() + " dias");
     }
 
-    public static void mostrarLeilaoComMaisLances() {
-        String[] dados = EstatisticaController.getDadosLeilaoComMaisLances();
+    public void mostrarLeilaoComMaisLances() {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        String[] dados = estatisticaController.getDadosLeilaoComMaisLances();
 
         if (dados == null) {
             System.out.println("Não existem lances registados.");
@@ -345,8 +356,9 @@ public class EstatisticaView {
         System.out.println("Total de lances: " + dados[2]);
     }
 
-    public static void mostrarLeilaoComMaisLancesPorTipo(int idTipo) {
-        String[] dados = EstatisticaController.getDadosLeilaoComMaisLancesPorTipo(idTipo);
+    public void mostrarLeilaoComMaisLancesPorTipo(int idTipo) {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        String[] dados = estatisticaController.getDadosLeilaoComMaisLancesPorTipo(idTipo);
 
         if (dados == null) {
             System.out.println("Nenhum leilão com lances encontrado para esse tipo.");
@@ -361,8 +373,9 @@ public class EstatisticaView {
         System.out.println("Total de lances: " + dados[2]);
     }
 
-    public static void mostrarMediaTempoEntreLances() {
-        double media = EstatisticaController.calcularMediaTempoEntreLances();
+    public void mostrarMediaTempoEntreLances() {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        double media = estatisticaController.calcularMediaTempoEntreLances();
 
         if (media == -1) {
             System.out.println("Não foi possível calcular a média (faltam lances suficientes).");
@@ -370,11 +383,12 @@ public class EstatisticaView {
         }
 
         System.out.println("\n=== Média de tempo entre lances ===");
-        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutos(media));
+        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutosESegundos(media));
     }
 
-    public static void mostrarMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
-        double media = EstatisticaController.calcularMediaTempoEntreLancesPorTipo(idTipoLeilao);
+    public void mostrarMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        double media = estatisticaController.calcularMediaTempoEntreLancesPorTipo(idTipoLeilao);
 
         if (media == -1) {
             System.out.println("Não há lances suficientes para calcular a média.");
@@ -384,11 +398,12 @@ public class EstatisticaView {
         System.out.println("\n=== Média de tempo entre lances para tipo " +
                 Tools.tipoLeilao.fromCodigo(idTipoLeilao).name() + " ===");
 
-        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutos(media));
+        System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutosESegundos(media));
     }
 
-    public static void mostrarLeiloesSemLances() {
-        List<Leilao> semLances = EstatisticaController.getLeiloesSemLances();
+    public void mostrarLeiloesSemLances() {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        List<Leilao> semLances = estatisticaController.getLeiloesSemLances();
 
         if (semLances.isEmpty()) {
             System.out.println("Todos os leilões têm pelo menos um lance.");
@@ -399,15 +414,17 @@ public class EstatisticaView {
         System.out.println("Quantidade: " + semLances.size());
         System.out.println("Lista de leilões sem lances:\n");
 
+
         for (Leilao leilao : semLances) {
             System.out.println("ID: " + leilao.getId() +
                     " | Descrição: " + leilao.getDescricao() +
-                    " | Tipo: " + leilao.getTipoLeilao());
+                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()));
         }
     }
 
-    public static void mostrarLeiloesSemLancesPorTipo(int idTipoLeilao) {
-        List<Leilao> semLances = EstatisticaController.getLeiloesSemLancesPorTipo(idTipoLeilao);
+    public void mostrarLeiloesSemLancesPorTipo(int idTipoLeilao) {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        List<Leilao> semLances = estatisticaController.getLeiloesSemLancesPorTipo(idTipoLeilao);
 
         String tipoStr = Tools.tipoLeilao.fromCodigo(idTipoLeilao).name();
 
@@ -426,27 +443,14 @@ public class EstatisticaView {
         }
     }
 
-    public static void mostrarTodosClientes() {
-        List<Utilizador> clientes = ImportDal.carregarUtilizador();
-
-        if (clientes == null || clientes.isEmpty()) {
-            System.out.println("Não existem clientes registados.");
-            return;
-        }
-
-        System.out.println("\n=== Lista de Clientes ===");
-
-        for (Utilizador u : clientes) {
-            System.out.println("ID: " + u.getId() +
-                    " | Nome: " + u.getNomeUtilizador() +
-                    " | Email: " + u.getEmail() + "\n");
-        }
-
-        System.out.println("Total de clientes: " + clientes.size() + "\n");
+    public void mostrarTodosClientes() {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> clientes = utilizadorDAL.carregarUtilizadores();
     }
 
-    public static void mostrarMediaIdadeUtilizadores() {
-        double media = EstatisticaController.getMediaIdadeUtilizadores();
+    public void mostrarMediaIdadeUtilizadores() {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        double media = estatisticaController.getMediaIdadeUtilizadores();
 
         if (media == -1) {
             System.out.println("Não foi possível calcular a média de idades.");
@@ -457,8 +461,9 @@ public class EstatisticaView {
         System.out.printf("Média: %.2f anos\n", media);
     }
 
-    public static void mostrarDominioMaisUsadoEPercentagem() {
-        String[] resultado = EstatisticaController.getDominioMaisUsadoEPercentagem();
+    public void mostrarDominioMaisUsadoEPercentagem() {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        String[] resultado = estatisticaController.getDominioMaisUsadoEPercentagem();
 
         if (resultado == null) {
             System.out.println("Não foi possível calcular (sem clientes ou emails válidos).");
@@ -471,35 +476,36 @@ public class EstatisticaView {
     }
 
     public static void estatisticasPorLeilao() {
-        List<Leilao> leiloes = LeilaoBLL.carregarLeiloes();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        LeilaoView leilaoView = new LeilaoView();
+        EstatisticaController estatisticaController = new EstatisticaController();
+        List<Leilao> leiloes = leilaoBLL.carregarLeiloes();
 
         if (leiloes == null || leiloes.isEmpty()) {
             System.out.println("Não há leilões registados.");
             return;
         }
 
-        LeilaoView.exibirLeiloes(leiloes);
+        leilaoView.exibirLeiloes(leiloes);
 
-        System.out.print("\nInsira o ID do leilão que deseja analisar "+ Tools.alertaCancelar());
-        int id = Tools.scanner.nextInt();
-        Tools.scanner.nextLine();
+        int id = Tools.pedirOpcaoMenu("Insira o ID do leilão que deseja analisar "+ Tools.alertaCancelar());
 
         if (Tools.verificarSaida(String.valueOf(id))) return;
 
-        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(id);
+        Leilao leilao = leilaoBLL.procurarLeilaoPorId(id);
         if (leilao == null) {
             System.out.println("Leilão não encontrado.");
             return;
         }
 
-        Period tempo = EstatisticaController.getTempoAtivoLeilao(id);
+        Period tempo = estatisticaController.getTempoAtivoLeilao(id);
         System.out.println("\n=== Tempo total ativo do leilão ===");
         System.out.println("Duração: " + tempo.getYears() + " anos, "
                 + tempo.getMonths() + " meses, "
                 + tempo.getDays() + " dias");
 
         System.out.println("\n=== Clientes ordenados pelo maior lance no leilão \"" + leilao.getDescricao() + "\" ===");
-        List<String> lista = EstatisticaController.getClientesOrdenadosPorValorMaisAlto(id);
+        List<String> lista = estatisticaController.getClientesOrdenadosPorValorMaisAlto(id);
         if (lista.isEmpty()) {
             System.out.println("Nenhum cliente participou neste leilão.");
         } else {

@@ -1,15 +1,17 @@
 package View;
 
-
+import Model.ClienteSessao;
 import Model.Utilizador;
 import Utils.Tools;
-import BLL.LanceBLL;
-
 
 import static Utils.Tools.scanner;
 
 public class MenuInicialView {
-    public static void menuInicial() {
+    public void menuInicial() {
+        LoginView loginView = new LoginView();
+        MenuClienteView menuClienteView = new MenuClienteView();
+        MenuGestorView menuGestorView = new MenuGestorView();
+        UtilizadorView utilizadorView = new UtilizadorView();
         int opcao;
         do {
             System.out.println("\nBem-vindo à leiloeira Valor em Alta!\n");
@@ -17,24 +19,24 @@ public class MenuInicialView {
             System.out.println("1. Efetuar Login");
             System.out.println("2. Efetuar Registo");
             System.out.println("0. Sair...");
-            System.out.print("Escolha uma opção: ");
 
-            opcao = scanner.nextInt();
+            opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             scanner.nextLine().trim();
 
             switch (opcao) {
                 case 1:
-                    Utilizador utilizador = LoginView.login();
+                    Utilizador utilizador = loginView.login();
+
                     if (utilizador == null) {
                         System.out.println("Erro a fazer Login");
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo()) {
-                        MenuGestorView.exibirMenu();
+                        menuGestorView.exibirMenu();
                     } else if (utilizador.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) {
-                        MenuClienteView.exibirMenu(utilizador);
+                        menuClienteView.exibirMenu(utilizador);
                     }
                     break;
                 case 2:
-                    RegistarClienteView.MenuRegistarCliente();
+                    utilizadorView.registarCliente();
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");

@@ -3,81 +3,90 @@ package Controller;
 import BLL.EstatisticaBLL;
 import BLL.LeilaoBLL;
 import Model.Leilao;
-import Model.ResultadoOperacao;
 
 import java.time.Period;
 import java.util.List;
 
 public class EstatisticaController {
-    public static int contarLeilaoGlobal() {
-        return EstatisticaBLL.contarLeilaoFechados();
+    public int contarLeilaoGlobal() {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.contarLeilaoFechados();
     }
 
-    public static int contarLeiloesFechadosPorTipo(int idTipo) {
-        return EstatisticaBLL.contarLeiloesFechadosPorTipo(idTipo);
+    public int contarLeiloesFechadosPorTipo(int idTipo) {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.contarLeiloesFechadosPorTipo(idTipo);
     }
 
-    public static List<String> listarLeiloesFechadosFormatados() {
-        return EstatisticaBLL.obterLeiloesFechadosFormatados();
+    public List<String> listarLeiloesFechadosFormatados() {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.obterLeiloesFechadosFormatados();
     }
 
-    public static List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
-        return EstatisticaBLL.listarLeiloesFechadosFormatadosPorTipo(idTipo);
+    public List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipo) {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.listarLeiloesFechadosFormatadosPorTipo(idTipo);
     }
 
-    public static Leilao getLeilaoMaisTempoAtivo() {
-        return EstatisticaBLL.obterLeilaoMaisTempoAtivo();
+    public Leilao getLeilaoMaisTempoAtivo() {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.obterLeilaoMaisTempoAtivo();
     }
 
-    public static Leilao getLeilaoTipoMaisTempoAtivo(int idTipo) {
-        return EstatisticaBLL.obterLeilaoTipoMaisTempoAtivo(idTipo);
+    public Leilao getLeilaoTipoMaisTempoAtivo(int idTipo) {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.obterLeilaoTipoMaisTempoAtivo(idTipo);
     }
 
-    public static String[] getDadosLeilaoComMaisLances() {
-        return EstatisticaBLL.getDadosLeilaoComMaisLances();
+    public String[] getDadosLeilaoComMaisLances() {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.getDadosLeilaoComMaisLances();
     }
 
-    public static String[] getDadosLeilaoComMaisLancesPorTipo(int idTipo) {
-        return EstatisticaBLL.getDadosLeilaoComMaisLancesPorTipo(idTipo);
+    public String[] getDadosLeilaoComMaisLancesPorTipo(int idTipo) {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.getDadosLeilaoComMaisLancesPorTipo(idTipo);
     }
 
-    public static double calcularMediaTempoEntreLances() {
-        return EstatisticaBLL.calcularMediaTempoEntreLancesEmMinutos();
+    public double calcularMediaTempoEntreLances() {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.calcularMediaTempoEntreLancesGeral();
     }
 
-    public static double calcularMediaTempoEntreLancesPorTipo(int tipo) {
-        return EstatisticaBLL.calcularMediaTempoEntreLancesPorTipo(tipo);
+    public double calcularMediaTempoEntreLancesPorTipo(int tipo) {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.calcularMediaTempoEntreLancesPorTipo(tipo);
     }
 
-    public static List<Leilao> getLeiloesSemLances() {
-        return EstatisticaBLL.obterLeiloesSemLances();
+    public List<Leilao> getLeiloesSemLances() {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.obterLeiloesSemLances();
     }
 
-    public static List<Leilao> getLeiloesSemLancesPorTipo(int idTipoLeilao) {
-        return EstatisticaBLL.obterLeiloesSemLancesPorTipo(idTipoLeilao);
+    public List<Leilao> getLeiloesSemLancesPorTipo(int idTipoLeilao) {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.obterLeiloesSemLancesPorTipo(idTipoLeilao);
     }
 
-    public static double getMediaIdadeUtilizadores() {
-        return EstatisticaBLL.calcularMediaIdadeUtilizadores();
+    public double getMediaIdadeUtilizadores() {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.calcularMediaIdadeUtilizadores();
     }
 
-    public static String[] getDominioMaisUsadoEPercentagem() {
-        return EstatisticaBLL.calcularDominioMaisUsadoEPercentagem();
+    public String[] getDominioMaisUsadoEPercentagem() {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.calcularDominioMaisUsadoEPercentagem();
     }
 
-    public static List<String> getClientesOrdenadosPorValorMaisAlto(int idLeilao) {
-        return EstatisticaBLL.listarClientesOrdenadosPorMaiorLance(idLeilao);
+    public List<String> getClientesOrdenadosPorValorMaisAlto(int idLeilao) {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.listarClientesOrdenadosPorMaiorLance(idLeilao);
     }
 
-    public static Period getTempoAtivoLeilao(int idLeilao) {
-        Leilao leilao = LeilaoBLL.procurarLeilaoPorId(idLeilao);
-        return EstatisticaBLL.calcularTempoAtivoLeilao(leilao);
+    public Period getTempoAtivoLeilao(int idLeilao) {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
+        return estatisticaBLL.calcularTempoAtivoLeilao(leilao);
     }
-
-
-
-
-
-
-
 }

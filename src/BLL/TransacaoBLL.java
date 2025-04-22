@@ -1,67 +1,79 @@
 package BLL;
 
-import DAL.ImportDal;
+import DAL.TransacaoDAL;
+import DAL.UtilizadorDAL;
+import Model.Lance;
 import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
+import Utils.Tools;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransacaoBLL {
     private static List<Transacao> transacaoList = new ArrayList<>();
-    private static List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
 
     public static List<Transacao> carregarTransacao() {
-        transacaoList = ImportDal.carregarTransacao();
+        TransacaoDAL transacaoDAL = new TransacaoDAL();
+        transacaoList = transacaoDAL.carregarTransacoes();
         return transacaoList;
     }
 
-    public static void criarTransacao(Transacao transacao) {
-        carregarTransacao();
+    public void criarTransacao(Transacao transacao) {
+        TransacaoDAL transacaoDAL = new TransacaoDAL();
+        List<Transacao> transacaoList = carregarTransacao();
         transacao.setIdTransacao(verificarUltimoIdCarteira(transacaoList) + 1);
         transacaoList.add(transacao);
-        ImportDal.gravarTransacao(transacaoList);
+        transacaoDAL.gravarTransacoes(transacaoList);
     }
 
-    private static int verificarUltimoIdCarteira(List<Transacao> transacaoList) {
+    private int verificarUltimoIdCarteira(List<Transacao> transacaoList) {
         int ultimoId = 0;
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdTransacao() > ultimoId) ultimoId = transacao.getIdTransacao();
-        } return ultimoId;
+        }
+        return ultimoId;
     }
 
-    public static Double buscarValorTotalAtual(int IdCliente) {
-        List<Utilizador> utilizadores = ImportDal.carregarUtilizador();
+    public Double buscarValorTotalAtual(int IdCliente) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == IdCliente) return utilizador.getSaldo();
-        } return 0.0;
+        }
+        return 0.0;
     }
 
-    public static void atualizarSaldo(int idCliente, double creditos) {
-        for (Utilizador utilizador : utilizadores) {
+    public double atualizarSaldo(int idCliente, double creditos) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        for (Utilizador utilizador : Tools.utilizadores) {
             if (utilizador.getId() == idCliente) {
                 double saldoAtual = utilizador.getSaldo();
                 saldoAtual += creditos;
                 utilizador.setSaldo(saldoAtual);
+                utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
+                return saldoAtual;
             }
         }
-        ImportDal.gravarUtilizador(utilizadores);
+        return 0.0;
     }
 
-    public static Double valorPendente(int idCliente) {
-        transacaoList = ImportDal.carregarTransacao();
+    public Double valorPendente(int idCliente) {
+        List<Transacao> transacaoList = carregarTransacao();
         double valorTotalPendente = 0;
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdCliente() == idCliente && transacao.getIdTipoTransacao() == Constantes.tiposTransacao.DEPOSITO) {
                 if (transacao.getIdEstadoTransacao() == Constantes.estadosTransacao.PENDENTE)
                     valorTotalPendente += transacao.getValorTransacao();
             }
-        } return valorTotalPendente;
+        }
+        return valorTotalPendente;
     }
 
-    public static List<Transacao> listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
-        carregarTransacao();
+    public List<Transacao> listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
+        List<Transacao> transacaoList = carregarTransacao();
         if (!apenasPendentes && idTipoTransacao == 0 && idCliente == 0) return transacaoList;
         List<Transacao> transacoesFiltradas = new ArrayList<>();
 
@@ -79,25 +91,47 @@ public class TransacaoBLL {
 
             if (adicionar)
                 transacoesFiltradas.add(transacao);
-        } return transacoesFiltradas;
+        }
+        return transacoesFiltradas;
     }
 
-    public static Utilizador getUtilizador(int idCliente) {
+    public Utilizador getUtilizador(int idCliente) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
         for (Utilizador utilizador : utilizadores) {
             if (utilizador.getId() == idCliente) return utilizador;
-        } return null;
+        }
+        return null;
     }
 
-    public static Transacao buscarTransacao(int idTransacao) {
+    public Transacao buscarTransacao(int idTransacao) {
+        List<Transacao> transacaoList = carregarTransacao();
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdTransacao() == idTransacao) return transacao;
-        } return null;
+        }
+        return null;
     }
 
-    public static void atualizarEstadosTransacao(int idTransacao, int idEstado) {
+    public void atualizarEstadosTransacao(int idTransacao, int idEstado) {
+        TransacaoDAL transacaoDAL = new TransacaoDAL();
         for (Transacao transacao : transacaoList) {
             if (transacao.getIdTransacao() == idTransacao) transacao.setIdEstadoTransacao(idEstado);
         }
-        ImportDal.gravarTransacao(transacaoList);
+        transacaoDAL.gravarTransacoes(transacaoList);
+    }
+
+    public void devolverSaldo(int idLeilao, int idLanceVencedor) {
+        LanceBLL lanceBLL = new LanceBLL();
+        List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);
+
+        for (Lance lance : lances) {
+            if (lance.getIdLance() != idLanceVencedor) {
+                double saldoAtual = atualizarSaldo(lance.getIdCliente(), lance.getValorLance());
+                if (saldoAtual != 0.0) {
+                    Transacao transacao = new Transacao(0, lance.getIdCliente(), saldoAtual, lance.getValorLance(), LocalDateTime.now(), Constantes.tiposTransacao.LANCE_REEMBOLSO, Constantes.estadosTransacao.ACEITE);
+                    criarTransacao(transacao);
+                }
+            }
+        }
     }
 }

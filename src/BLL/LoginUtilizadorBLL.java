@@ -1,34 +1,31 @@
 package BLL;
 
-import DAL.ImportDal;
 import Model.Utilizador;
+import DAL.UtilizadorDAL;
 import Utils.Tools;
-import Model.ClienteSessao;
 
 import java.time.LocalDate;
 
 public class LoginUtilizadorBLL {
 
-    public static Utilizador login(String email, String password)
-    {
-        for (Utilizador u : Tools.utilizadores)
-        {
-            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword()))
-            {
+    public Utilizador login(String email, String password) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        for (Utilizador u : Tools.utilizadores) {
+            if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword())) {
                 u.setUltimoLogin(LocalDate.now());
-                ImportDal.gravarUtilizador(Tools.utilizadores);
+                utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
 
-                if (u.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo() || u.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo()) return u;
+                Tools.clienteSessao.setIdCliente(u.getId());
 
-                ClienteSessao.setIdCliente(u.getId());
-               
+                if (u.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo() || u.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo())
+                    return u;
             }
-        }
-        return null;
+        } return null;
     }
 
-    public static boolean lerDados() {
-        Tools.utilizadores = ImportDal.carregarUtilizador();
+    public boolean lerDados() {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        Tools.utilizadores = utilizadorDAL.carregarUtilizadores();
         return Tools.utilizadores != null;
     }
 }

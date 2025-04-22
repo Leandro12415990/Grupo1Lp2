@@ -1,6 +1,15 @@
 package Utils;
 
 public class Constantes {
+    public static class caminhosFicheiros{
+        public static final String CSV_FILE_LEILAO = "data\\Leilao.csv";
+        public static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
+        public static final String CSV_FILE_LANCE = "data\\Lance.csv";
+        public static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
+        public static final String CSV_FILE_PRODUTO = "data\\Produto.csv";
+
+    }
+    
     // Secção: Estados Leilões
     public static class estadosLeilao {
         public static final int ATIVO = 1;
