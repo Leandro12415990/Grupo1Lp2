@@ -57,12 +57,12 @@ public class MenuGestorView {
                     transacaoView.aprovarDepositos();
                     break;
                 case 8:
-                    TemplateView editor = new TemplateView();
-                    editor.editarTemplateContaCriada();
+                    TemplateView view = new TemplateView();
+                    view.editarTemplate(); // sem parâmetros
                     break;
                 case 9:
                     TemplateDAL dal = new TemplateDAL();
-                    TemplateModel template = dal.carregarTemplate("data\\EmailRegisto.txt");
+                    TemplateModel template = dal.carregarTemplate();
 
                     // 2. Preenche as variáveis a substituir
                     Map<String, String> variaveis = new HashMap<>();

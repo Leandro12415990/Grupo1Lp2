@@ -7,13 +7,12 @@ import java.util.Scanner;
 
 public class TemplateView {
     private final TemplateDAL dal = new TemplateDAL();
-    private final String caminho = "data\\EmailRegisto.txt";
 
-    public void editarTemplateContaCriada() {
+    public void editarTemplate() {
         Scanner sc = new Scanner(System.in);
 
         try {
-            TemplateModel template = dal.carregarTemplate(caminho);
+            TemplateModel template = dal.carregarTemplate();
 
             System.out.println("\n=== Template Atual ===");
             System.out.println("Assunto: " + template.getAssunto());
@@ -21,7 +20,7 @@ public class TemplateView {
 
             System.out.print("\nNovo assunto (ENTER para manter): ");
             String novoAssunto = sc.nextLine();
-            if (!novoAssunto.isEmpty()) {
+            if (!novoAssunto.isBlank()) {
                 template.setAssunto(novoAssunto);
             }
 
@@ -36,7 +35,7 @@ public class TemplateView {
                 template.setCorpo(novoCorpo.toString().trim());
             }
 
-            dal.guardarTemplate(caminho, template);
+            dal.guardarTemplate(template);
             System.out.println("Template atualizado com sucesso!");
 
         } catch (Exception e) {
