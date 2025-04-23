@@ -4,10 +4,12 @@ import Model.ClienteSessao;
 import Model.Utilizador;
 import Utils.Tools;
 
+import java.io.IOException;
+
 import static Utils.Tools.scanner;
 
 public class MenuInicialView {
-    public void menuInicial() {
+    public void menuInicial() throws IOException {
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
         MenuGestorView menuGestorView = new MenuGestorView();
