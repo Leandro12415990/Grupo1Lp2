@@ -6,8 +6,13 @@ import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Tools;
 
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -17,7 +22,6 @@ public class UtilizadorController {
     public List<Utilizador> mostrarUtilizador(int estado, int tipo) {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         return utilizadorBLL.listarUtilizador(estado, tipo);
-
     }
 
     public ResultadoOperacao verificarDados(Utilizador utilizador, String nome, String email, LocalDate nascimento, String morada, String passwordFirst, String passwordSecond) {
@@ -29,7 +33,7 @@ public class UtilizadorController {
             resultado.msgErro = "Deve ter mais de 18 anos para se registar.";
         } else if (utilizador == null) {
             // Caso de registo
-            if (!isValidEmail(email)) {
+            if (!isValidEmail(email) || !validarDominioEmail(email)) {
                 resultado.msgErro = "O email inserido não é valido.";
             } else if (!passwordFirst.equals(passwordSecond)) {
                 resultado.msgErro = "As palavras-passe não coincidem.";
@@ -83,7 +87,24 @@ public class UtilizadorController {
         return Pattern.matches(EMAIL_REGEX, email);
     }
 
+    public boolean validarDominioEmail(String email) {
+        try {
+            String dominio = email.substring(email.indexOf("@") + 1);
 
+            Hashtable<String, String> env = new Hashtable<>();
+            env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
+
+            DirContext dirContext = new InitialDirContext(env);
+            Attributes attrs = dirContext.getAttributes(dominio, new String[]{"MX"});
+
+            Attribute attr = attrs.get("MX");
+
+            return attr != null && attr.size() > 0;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     public boolean verificarPassword(String passwordFirst, String passwordSecound) {
         if (!passwordFirst.equals(passwordSecound)) return false;

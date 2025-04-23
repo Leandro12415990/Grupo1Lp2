@@ -147,8 +147,13 @@ public class Tools {
 
         private final int idTipoLeilao;
 
-        tipoLeilao(int idTipoLeilao) { this.idTipoLeilao = idTipoLeilao; }
-        public int getIdTipoLeilao() { return idTipoLeilao; }
+        tipoLeilao(int idTipoLeilao) {
+            this.idTipoLeilao = idTipoLeilao;
+        }
+
+        public int getIdTipoLeilao() {
+            return idTipoLeilao;
+        }
 
         public static tipoLeilao fromCodigo(int idTipoLeilao) {
             for (tipoLeilao tipo : tipoLeilao.values()) {
@@ -215,18 +220,19 @@ public class Tools {
         return false;
     }
 
-    public static String alertaCancelar(){
+    public static String alertaCancelar() {
         return "(-1 para cancelar): ";
     }
 
-    public static ResultadoOperacao verificarDatasAnteriores (LocalDateTime dataInicial, LocalDateTime dataFinal) {
+    public static ResultadoOperacao verificarDatasAnteriores(LocalDateTime dataInicial, LocalDateTime dataFinal) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        if (dataFinal.isBefore(dataInicial)) resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
-            else {
-                resultado.Objeto = resultado;
-                resultado.Sucesso = true;
-            }
-            return resultado;
+        if (dataFinal.isBefore(dataInicial))
+            resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
+        else {
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+        }
+        return resultado;
     }
 
     public static LocalDateTime parseDateTimeByDate(String dateStr) {
@@ -266,7 +272,6 @@ public class Tools {
 
         return horas + " horas e " + minutos + " minutos e " + segundos + " segundos";
     }
-
 
     public static int pedirOpcaoMenu(String mensagem) {
         while (true) {

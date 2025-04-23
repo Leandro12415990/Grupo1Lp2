@@ -1,15 +1,27 @@
 package Utils;
 
 public class Constantes {
-    public static class caminhosFicheiros{
+    // Secção: Configurações Email
+    public static class configEmail {
+        public static final String fromEmail = "valoraltaleiloes@gmail.com";
+        public static final String fromName = "Valor em Alta - Leiloeira";
+        public static final String keyPassword = "zwgz xnzn kznc iieo";
+        public static final String host = "smtp.gmail.com";
+        public static final int portSimple = 587;
+        public static final int portHtml = 465;
+    }
+
+    // Secção: Caminhos Ficheiros
+    public static class caminhosFicheiros {
         public static final String CSV_FILE_LEILAO = "data\\Leilao.csv";
         public static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
         public static final String CSV_FILE_LANCE = "data\\Lance.csv";
         public static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
         public static final String CSV_FILE_PRODUTO = "data\\Produto.csv";
+        public static final String CSV_FILE_TEMPLATE = "data\\Template.csv";
 
     }
-    
+
     // Secção: Estados Leilões
     public static class estadosLeilao {
         public static final int ATIVO = 1;

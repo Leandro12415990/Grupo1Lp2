@@ -2,12 +2,15 @@ package BLL;
 
 import DAL.UtilizadorDAL;
 import Model.ResultadoOperacao;
+import Model.Template;
 import Model.Utilizador;
+import Utils.EmailSender;
 import Utils.Tools;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UtilizadorBLL {
     public List<Utilizador> listarUtilizador(int estado, int tipo) {
@@ -53,24 +56,6 @@ public class UtilizadorBLL {
         return true;
     }
 
-    public boolean aprovarCliente(Utilizador u, int estado) {
-        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
-        int novoEstado = (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
-                ? Tools.estadoUtilizador.ATIVO.getCodigo()
-                : Tools.estadoUtilizador.INATIVO.getCodigo();
-
-        u.setEstado(novoEstado);
-
-        for (Utilizador uti : Tools.utilizadores) {
-            if (u.getEmail().equalsIgnoreCase(uti.getEmail()) && uti.getEstado() == novoEstado) {
-                utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public boolean editarCliente(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         int soma = 0, index = 0;
@@ -96,6 +81,33 @@ public class UtilizadorBLL {
             resultado.msgErro = "Erro a alterar estado do utilizador";
         } else {
             u.setEstado(estado);
+            if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
+                String assunto = "Bem-vindo à ValorAlta Leilões!";
+                String mensagem = String.format("""
+                <html>
+                    <body style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Olá %s,</h2>
+                        <p>É com enorme satisfação que informamos que a sua conta foi <strong>aprovada</strong> na <strong>Valor em Alta Leilões</strong>!</p>
+                        <p>Agora você pode:</p>
+                        <ul>
+                            <li>Aceder aos nossos leilões exclusivos</li>
+                            <li>Fazer lances em tempo real</li>
+                            <li>Gerir o seu perfil e histórico</li>
+                        </ul>
+                        <p>Estamos felizes por tê-lo connosco! Se precisar de ajuda, não hesite em contactar-nos.</p>
+                        <p style="margin-top: 20px;">Cumprimentos,<br><strong>Equipa Valor em Alta Leilões</strong></p>
+                    </body>
+                </html>
+                """, u.getNomeUtilizador());
+
+                    EmailSender.enviarEmailHtml(
+                            u.getNomeUtilizador(),
+                            u.getEmail(),
+                            assunto,
+                            mensagem
+                    );
+
+            }
             resultado.Objeto = resultado;
             resultado.Sucesso = true;
             gravarUtilizadores(Tools.utilizadores);
