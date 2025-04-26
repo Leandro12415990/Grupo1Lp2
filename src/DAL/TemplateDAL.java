@@ -5,44 +5,90 @@ import Model.TemplateModel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.*;
 
 public class TemplateDAL {
     private final String CAMINHO_CSV = "data\\EmailRegisto.csv";
+    private Map<String, TemplateModel> templatesCache = null;
+    private final String CABECALHO = "\"ID\",\"Assunto\",\"Corpo\"";
 
-    public TemplateModel carregarTemplate() throws IOException {
-        BufferedReader reader = Files.newBufferedReader(Paths.get(CAMINHO_CSV));
-        String linha = reader.readLine();
+    private void carregarTodosTemplates() throws IOException {
+        templatesCache = new HashMap<>();
+
+        Path caminho = Paths.get(CAMINHO_CSV);
+        if (!Files.exists(caminho)) {
+            throw new IOException("Ficheiro de templates não encontrado: " + CAMINHO_CSV);
+        }
+
+        BufferedReader reader = Files.newBufferedReader(caminho);
+        String linha;
+        boolean primeiraLinha = true;
+
+        while ((linha = reader.readLine()) != null) {
+            if (primeiraLinha) {
+                primeiraLinha = false;
+                if (!linha.equals(CABECALHO)) {
+                    throw new IOException("Cabeçalho do ficheiro inválido.");
+                }
+                continue;
+            }
+
+            if (linha.isBlank()) continue;
+
+            String[] partes = linha.split(",", 3);
+            if (partes.length < 3) continue;
+
+            String id = partes[0].trim().replaceAll("^\"|\"$", "");
+            String assunto = partes[1].trim().replaceAll("^\"|\"$", "").replace("\"\"", "\"");
+            String corpo = partes[2].trim()
+                    .replaceAll("^\"|\"$", "")
+                    .replace("\"\"", "\"")
+                    .replace("\\n", "\n")
+                    .replace("\\t", "\t");
+
+            templatesCache.put(id, new TemplateModel(id, assunto, corpo));
+        }
+
         reader.close();
-
-        if (linha == null || linha.isBlank()) {
-            throw new IOException("Ficheiro de template vazio.");
-        }
-
-        // Remover aspas e converter \n e \t para reais
-        String[] partes = linha.split(",", 2);
-        if (partes.length < 2) {
-            throw new IOException("Formato inválido no ficheiro.");
-        }
-
-        String assunto = partes[0].trim().replaceAll("^\"|\"$", "").replace("\"\"", "\"");
-        String corpo = partes[1].trim()
-                .replaceAll("^\"|\"$", "")  // remove aspas exteriores
-                .replace("\"\"", "\"")      // repõe aspas duplas reais
-                .replace("\\n", "\n")       // converte \n para quebra de linha real
-                .replace("\\t", "\t");      // converte \t para tab real
-
-        return new TemplateModel(assunto, corpo);
     }
 
-    public void guardarTemplate(TemplateModel template) throws IOException {
-        String assunto = "\"" + template.getAssunto().replace("\"", "\"\"") + "\"";
-        String corpo = "\"" + template.getCorpo()
-                .replace("\n", "\\n")
-                .replace("\t", "\\t")
-                .replace("\"", "\"\"") + "\"";
+    public TemplateModel carregarTemplatePorId(String idProcurado) throws IOException {
+        if (templatesCache == null) {
+            carregarTodosTemplates();
+        }
 
-        String linha = assunto + "," + corpo;
+        TemplateModel template = templatesCache.get(idProcurado);
+        if (template == null) {
+            throw new IOException("Template com ID " + idProcurado + " não encontrado.");
+        }
 
-        Files.writeString(Paths.get(CAMINHO_CSV), linha);
+        return template;
+    }
+
+    public void guardarTemplate(String id, TemplateModel template) throws IOException {
+        if (templatesCache == null) {
+            carregarTodosTemplates();
+        }
+
+        templatesCache.put(id, template);
+
+        List<String> linhasParaGravar = new ArrayList<>();
+        linhasParaGravar.add(CABECALHO);
+
+        for (Map.Entry<String, TemplateModel> entry : templatesCache.entrySet()) {
+            String idAtual = entry.getKey();
+            TemplateModel t = entry.getValue();
+
+            String assunto = "\"" + t.getAssunto().replace("\"", "\"\"") + "\"";
+            String corpo = "\"" + t.getCorpo()
+                    .replace("\n", "\\n")
+                    .replace("\t", "\\t")
+                    .replace("\"", "\"\"") + "\"";
+            String linha = "\"" + idAtual + "\"," + assunto + "," + corpo;
+
+            linhasParaGravar.add(linha);
+        }
+
+        Files.write(Paths.get(CAMINHO_CSV), linhasParaGravar);
     }
 }

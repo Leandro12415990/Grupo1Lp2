@@ -1,9 +1,11 @@
 package BLL;
 
+import DAL.TemplateDAL;
 import Model.TemplateModel;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 
+import java.io.IOException;
 import java.util.*;
 
 public class EmailBLL {
@@ -12,11 +14,9 @@ public class EmailBLL {
         final String fromEmail = "projeto.lp2.v2@gmail.com";
         final String password = "spyt jzsy lylo yzeg";
 
-        // Substituir variáveis no texto
         String assunto = substituirTags(template.getAssunto(), variaveis);
         String corpo = substituirTags(template.getCorpo(), variaveis);
 
-        // Configuração do envio
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
@@ -42,6 +42,12 @@ public class EmailBLL {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void enviarEmail(String templateId, String toEmail, Map<String, String> variaveis) throws IOException {
+        TemplateDAL templateDAL = new TemplateDAL();
+        TemplateModel template = templateDAL.carregarTemplatePorId(templateId);
+        enviarEmail(template, toEmail, variaveis);
     }
 
     private String substituirTags(String texto, Map<String, String> variaveis) {

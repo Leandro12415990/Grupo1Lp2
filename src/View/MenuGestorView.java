@@ -34,6 +34,7 @@ public class MenuGestorView {
 
             int opcao = Tools.scanner.nextInt();
             Tools.scanner.nextLine().trim();
+            String idTemplate = "";
             switch (opcao) {
                 case 1:
                     utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
@@ -62,7 +63,7 @@ public class MenuGestorView {
                     break;
                 case 9:
                     TemplateDAL dal = new TemplateDAL();
-                    TemplateModel template = dal.carregarTemplate();
+                    TemplateModel template = dal.carregarTemplatePorId(idTemplate);
 
                     // 2. Preenche as variáveis a substituir
                     Map<String, String> variaveis = new HashMap<>();
@@ -72,7 +73,7 @@ public class MenuGestorView {
 
                     // 3. Envia o e-mail
                     EmailBLL emailBLL = new EmailBLL();
-                    emailBLL.enviarEmail(template, "pedromgp06@gmail.com", variaveis);
+                    emailBLL.enviarEmail(template, "oliveira4797@gmail.com", variaveis);
                     break;
                 case 0:
                     System.out.println("A sair...");

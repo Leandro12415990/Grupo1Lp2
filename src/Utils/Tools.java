@@ -279,4 +279,30 @@ public class Tools {
             }
         }
     }
+
+    public enum tipoEmail {
+        EMAIL_REGISTO(1),
+        EMAIL_VENCEDOR_LEILAO(2),
+        EMAIL_CLIENTE_OFFLINE(3),
+        EMAIL_SEM_CREDITOS(4);
+
+        private final int idTipoEmail;
+
+        tipoEmail(int idTipoEmail) {
+            this.idTipoEmail = idTipoEmail;
+        }
+
+        public int getIdTipoEmail() {
+            return idTipoEmail;
+        }
+
+        public static tipoEmail fromCodigo(int idTipoEmail) {
+            for (tipoEmail tipo : tipoEmail.values()) {
+                if (tipo.getIdTipoEmail() == idTipoEmail) {
+                    return tipo;
+                }
+            }
+            throw new IllegalArgumentException("Tipo inválido: " + idTipoEmail);
+        }
+    }
 }

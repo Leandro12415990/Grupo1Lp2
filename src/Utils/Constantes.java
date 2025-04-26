@@ -7,7 +7,7 @@ public class Constantes {
         public static final String CSV_FILE_LANCE = "data\\Lance.csv";
         public static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
         public static final String CSV_FILE_PRODUTO = "data\\Produto.csv";
-
+        public static final String CSV_FILE_EMAIL = "data\\EmailRegisto";
     }
     
     // Secção: Estados Leilões
@@ -47,5 +47,13 @@ public class Constantes {
         public static final int LANCE_DEBITO = 2;
         public static final int LANCE_DEPOSITO = 3;
         public static final int LANCE_REEMBOLSO = 4;
+    }
+
+    // Secção: Tipos Email's
+    public static class templateIds {
+        public static final String EMAIL_REGISTO = "1";
+        public static final String EMAIL_VENCEDOR_LEILAO = "2";
+        public static final String EMAIL_CLIENTE_OFFLINE = "3";
+        public static final String EMAIL_SEM_CREDITOS = "4";
     }
 }

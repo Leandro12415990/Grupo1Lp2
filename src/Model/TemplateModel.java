@@ -1,12 +1,22 @@
 package Model;
 
 public class TemplateModel {
+    private String id;
     private String assunto;
     private String corpo;
 
-    public TemplateModel(String assunto, String corpo) {
+    public TemplateModel(String id, String assunto, String corpo) {
+        this.id = id;
         this.assunto = assunto;
         this.corpo = corpo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAssunto() {
