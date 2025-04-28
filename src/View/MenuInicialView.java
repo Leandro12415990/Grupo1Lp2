@@ -3,13 +3,14 @@ package View;
 import Model.ClienteSessao;
 import Model.Utilizador;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 
 import static Utils.Tools.scanner;
 
 public class MenuInicialView {
-    public void menuInicial() throws IOException {
+    public void menuInicial() throws IOException, MessagingException {
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
         MenuGestorView menuGestorView = new MenuGestorView();

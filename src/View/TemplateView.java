@@ -1,6 +1,6 @@
 package View;
 
-import DAL.TemplateDAL;
+import Controller.TemplateController;
 import Model.TemplateModel;
 import Utils.Constantes;
 import Utils.Tools;
@@ -8,13 +8,13 @@ import Utils.Tools;
 import java.util.Scanner;
 
 public class TemplateView {
-    private final TemplateDAL dal = new TemplateDAL();
+    private final TemplateController controller = new TemplateController();
 
     public void editarTemplate() {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("\nEscolha o template para editar:");
-        System.out.println("1 - " + Tools.tipoEmail.fromCodigo(1).name());  // Exibindo o nome do enum
+        System.out.println("1 - " + Tools.tipoEmail.fromCodigo(1).name());
         System.out.println("2 - " + Tools.tipoEmail.fromCodigo(2).name());
         System.out.println("3 - " + Tools.tipoEmail.fromCodigo(3).name());
         System.out.println("4 - " + Tools.tipoEmail.fromCodigo(4).name());
@@ -23,27 +23,14 @@ public class TemplateView {
         int escolha = sc.nextInt();
         sc.nextLine();
 
-        String idTemplate = "";
-        switch (escolha) {
-            case 1:
-                idTemplate = Constantes.templateIds.EMAIL_REGISTO;
-                break;
-            case 2:
-                idTemplate = Constantes.templateIds.EMAIL_VENCEDOR_LEILAO;
-                break;
-            case 3:
-                idTemplate = Constantes.templateIds.EMAIL_CLIENTE_OFFLINE;
-                break;
-            case 4:
-                idTemplate = Constantes.templateIds.EMAIL_SEM_CREDITOS;
-                break;
-            default:
-                System.out.println("Escolha inválida!");
-                return;
+        String idTemplate = obterIdTemplatePorEscolha(escolha);
+        if (idTemplate == null) {
+            System.out.println("Escolha inválida!");
+            return;
         }
 
         try {
-            TemplateModel template = dal.carregarTemplatePorId(idTemplate);
+            TemplateModel template = controller.obterTemplatePorId(idTemplate);
 
             if (template == null) {
                 System.out.println("Template com ID " + idTemplate + " não encontrado.");
@@ -72,11 +59,26 @@ public class TemplateView {
                 template.setCorpo(novoCorpo.toString().trim());
             }
 
-            dal.guardarTemplate(idTemplate, template);
+            controller.guardarTemplate(idTemplate, template);
             System.out.println("Template atualizado com sucesso!");
 
         } catch (Exception e) {
             System.out.println("Erro ao editar template: " + e.getMessage());
+        }
+    }
+
+    private String obterIdTemplatePorEscolha(int escolha) {
+        switch (escolha) {
+            case 1:
+                return Constantes.templateIds.EMAIL_REGISTO;
+            case 2:
+                return Constantes.templateIds.EMAIL_VENCEDOR_LEILAO;
+            case 3:
+                return Constantes.templateIds.EMAIL_CLIENTE_OFFLINE;
+            case 4:
+                return Constantes.templateIds.EMAIL_SEM_CREDITOS;
+            default:
+                return null;
         }
     }
 

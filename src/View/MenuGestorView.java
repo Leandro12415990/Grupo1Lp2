@@ -4,6 +4,7 @@ import BLL.EmailBLL;
 import DAL.TemplateDAL;
 import Model.TemplateModel;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 
 public class MenuGestorView {
-    public void exibirMenu() throws IOException {
+    public void exibirMenu() throws IOException, MessagingException {
         UtilizadorView utilizadorView = new UtilizadorView();
         TransacaoView transacaoView = new TransacaoView();
         EstatisticaView estatisticaView = new EstatisticaView();

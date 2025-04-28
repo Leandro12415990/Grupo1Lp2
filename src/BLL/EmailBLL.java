@@ -10,7 +10,7 @@ import java.util.*;
 
 public class EmailBLL {
 
-    public void enviarEmail(TemplateModel template, String toEmail, Map<String, String> variaveis) {
+    public void enviarEmail(TemplateModel template, String toEmail, Map<String, String> variaveis) throws MessagingException {
         final String fromEmail = "projeto.lp2.v2@gmail.com";
         final String password = "spyt jzsy lylo yzeg";
 
@@ -29,22 +29,16 @@ public class EmailBLL {
             }
         });
 
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(fromEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject(assunto);
-            message.setText(corpo);
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(fromEmail));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+        message.setSubject(assunto);
+        message.setText(corpo);
 
-            Transport.send(message);
-            System.out.println("E-mail enviado com sucesso!");
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        Transport.send(message);
     }
 
-    public void enviarEmail(String templateId, String toEmail, Map<String, String> variaveis) throws IOException {
+    public void enviarEmail(String templateId, String toEmail, Map<String, String> variaveis) throws IOException, MessagingException {
         TemplateDAL templateDAL = new TemplateDAL();
         TemplateModel template = templateDAL.carregarTemplatePorId(templateId);
         enviarEmail(template, toEmail, variaveis);

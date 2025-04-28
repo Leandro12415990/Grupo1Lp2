@@ -1,6 +1,7 @@
 package DAL;
 
 import Model.TemplateModel;
+import Utils.Tools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class TemplateDAL {
 
             if (linha.isBlank()) continue;
 
-            String[] partes = linha.split(",", 3);
+            String[] partes = linha.split(Tools.separador(), 3);
             if (partes.length < 3) continue;
 
             String id = partes[0].trim().replaceAll("^\"|\"$", "");
@@ -84,7 +85,7 @@ public class TemplateDAL {
                     .replace("\n", "\\n")
                     .replace("\t", "\\t")
                     .replace("\"", "\"\"") + "\"";
-            String linha = "\"" + idAtual + "\"," + assunto + "," + corpo;
+            String linha = "\"" + idAtual + "\"," + assunto + Tools.separador() + corpo;
 
             linhasParaGravar.add(linha);
         }
