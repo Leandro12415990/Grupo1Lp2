@@ -1,0 +1,4 @@
+"ID","Assunto","Corpo"
+"1","CONTA CRIADA COM SUCESSO!","Olá Pedro,\n\nBem vindo aos leilões mais macabros que alguma vez existiu!\nAqui podes,\n\t\t--> Roubar dinheiro\n\t\t--> Apostar o Sandro\n\t\t--> Vender o Leandro!\n\nAgora fora de brincadeira, só tens de esperar que o teu gestor aceite o teu pedido!\n\nA equipa,\n\nMangas à Solta!"
+"2","FOI O VENCEDOR DO LEILAO","OLÁ {NOME},\n\nÉs o vencedor do leilao {NOME_LEILAO} .\n\nEntra em contacto com a leiloeira para sabes como levantar o prémio.\n\nA equipa,\n\n{EQUIPA}"
+"3","SENTIMOS A SUA FALTA","Olá {NOME},\n\nReparamos que não o vemos há 3 meses! Está tudo bem consigo?\n\nAnsiamos por voltar a vê lo!\n\nA equipa,\n\n{EQUIPA}"

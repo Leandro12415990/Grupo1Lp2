@@ -1,3 +1,4 @@
+import Utils.EmailSender;
 import View.MenuInicialView;
 import jakarta.mail.MessagingException;
 
@@ -5,8 +6,12 @@ import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, MessagingException {
+<<<<<<< HEAD
+    public static void main(String[] args) {
         EmailSender.enviarEmailSimples("Pedro","pedromgp06@gmail.com", "Teste", "Este é um e-mail de teste FINAL para o andré");
+=======
+    public static void main(String[] args) throws IOException, MessagingException {
+>>>>>>> quality
         MenuInicialView menuInicialView = new MenuInicialView();
         menuInicialView.menuInicial();
         //System.out.println("Email enviado com sucesso!");
