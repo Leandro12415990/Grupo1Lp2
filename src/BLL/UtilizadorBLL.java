@@ -62,18 +62,16 @@ public class UtilizadorBLL {
         EmailBLL emailBLL = new EmailBLL();
         TemplateDAL dal = new TemplateDAL();
 
-        TemplateModel template = dal.carregarTemplatePorId("1");
 
         if (u == null || estado == 0) {
             resultado.msgErro = "Erro a alterar estado do utilizador";
         } else {
             u.setEstado(estado);
             if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
-
+                TemplateModel template = dal.carregarTemplatePorId("1");
                 Map<String, String> variaveis = new HashMap<>();
                 variaveis.put("NOME", u.getNomeUtilizador());
-                String toEmail = u.getEmail();
-                emailBLL.enviarEmail(template, toEmail, variaveis);
+                emailBLL.enviarEmail(template, u.getEmail(), variaveis);
 
             }
             resultado.Objeto = resultado;
