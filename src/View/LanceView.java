@@ -140,41 +140,51 @@ public class LanceView {
     public void lanceEletronico() {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
-        System.out.println("\n===== LEILÕES ELETRONICO =====");
+        System.out.println("\n===== LEILÕES ELETRÔNICOS =====");
 
         List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
         List<Leilao> leilaoEletronico = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.ELETRONICO);
+
         if (!leilaoEletronico.isEmpty()) {
             for (Leilao leilao : leilaoEletronico) {
-                System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getDescricao() + " | " + "Valor Lance: " + leilao.getMultiploLance());
+                System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getDescricao() +
+                        " | Valor Atual do Lance: " + leilao.getValorAtualLanceEletronico());
             }
 
             System.out.print("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
             int idLeilao = Tools.scanner.nextInt();
             if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
+
             boolean verificarID = lanceController.verificarDisponibilidadeLeilao(leilaoEletronico, idLeilao);
 
             if (verificarID) {
-                System.out.printf("O valor do Lance é de: " + leilaoController.procurarLeilaoPorId(idLeilao).getMultiploLance());
-                System.out.print("\nInsira o número de lances que deseja dar" + Tools.alertaCancelar());
-                double multiploLance = leilaoController.procurarLeilaoPorId(idLeilao).getMultiploLance();
-                int numLance = Tools.scanner.nextInt();
-                if (Tools.verificarSaida(String.valueOf(numLance))) return;
+                Leilao leilaoSelecionado = leilaoController.procurarLeilaoPorId(idLeilao);
+                double valorAtual = leilaoSelecionado.getValorAtualLanceEletronico();
 
-                ResultadoOperacao resultado = lanceController.adicionarLanceEletronico(idLeilao, numLance, multiploLance);
+                System.out.printf("O valor atual do lance é: %.2f\n", valorAtual);
+                System.out.print("Digite o novo valor do seu lance (deve ser maior que o atual)" + Tools.alertaCancelar());
+                double novoValorLance = Tools.scanner.nextDouble();
+                if (Tools.verificarSaida(String.valueOf(novoValorLance))) return;
 
-                if (resultado.Sucesso) {
-                    System.out.println("O seu Lance foi aceite");
+                if (novoValorLance > valorAtual) {
+                    ResultadoOperacao resultado = lanceController.adicionarLanceEletronico(idLeilao, novoValorLance);
+
+                    if (resultado.Sucesso) {
+                        System.out.println("Seu lance foi aceito!");
+                    } else {
+                        System.out.println("Erro ao registrar o lance: " + resultado.msgErro);
+                    }
                 } else {
-                    System.out.println("O lance não foi aceite! " + resultado.msgErro);
+                    System.out.println("Erro: O novo lance deve ser maior que o lance atual!");
                 }
             } else {
-                System.out.printf("Leilão indisponível!");
+                System.out.println("Leilão indisponível!");
             }
         } else {
-            System.out.printf("Não existem leilões disponíveis do tipo Eletronico.\n");
+            System.out.println("Não existem leilões disponíveis do tipo Eletrônico.\n");
         }
     }
+
 
     public void listarMeuLance() {
         LanceController lanceController = new LanceController();

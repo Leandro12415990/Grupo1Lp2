@@ -41,6 +41,7 @@ public class LeilaoController {
 
     public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
+        leilaoBLL.carregarLeiloes();
         return leilaoBLL.listarLeiloes(apenasDisponiveis);
     }
 

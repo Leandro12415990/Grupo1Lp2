@@ -5,6 +5,7 @@ import Utils.Constantes.caminhosFicheiros;
 import Utils.Tools;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -22,6 +23,7 @@ public class LeilaoDAL {
             Double valorMaximo = dados[7].isEmpty() ? null : Double.parseDouble(dados[7]);
             Double multiploLance = (dados.length > 8 && !dados[8].isEmpty()) ? Double.parseDouble(dados[8]) : null;
             int idEstado = Integer.parseInt(dados[9]);
+
             return new Leilao(id, idProduto, descricao, idTipoLeilao, dataInicio, dataFim,
                     valorMinimo, valorMaximo, multiploLance, idEstado);
         });
@@ -39,7 +41,7 @@ public class LeilaoDAL {
                         (leilao.getDataFim() != null ? Tools.formatDateTime(leilao.getDataFim()) : "") + Tools.separador() +
                         leilao.getValorMinimo() + Tools.separador() +
                         (leilao.getValorMaximo() != null ? leilao.getValorMaximo() : "") + Tools.separador() +
-                        (leilao.getMultiploLance() != null ? leilao.getMultiploLance() : "") + Tools.separador() +
+                        (leilao.getValorAtualLanceEletronico() != null ? leilao.getValorAtualLanceEletronico() : "") + Tools.separador() +
                         leilao.getEstado()
         );
     }

@@ -1,13 +1,16 @@
 package View;
 
 import BLL.EmailBLL;
+import BLL.UtilizadorBLL;
 import DAL.TemplateDAL;
 import Model.TemplateModel;
+import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -18,6 +21,9 @@ public class MenuGestorView {
         EstatisticaView estatisticaView = new EstatisticaView();
         LeilaoView leilaoView = new LeilaoView();
         ProdutoView produtoView = new ProdutoView();
+
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        List<Utilizador> lista = utilizadorBLL.listarUtilizador(0, 0);
 
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));
@@ -38,7 +44,7 @@ public class MenuGestorView {
             String idTemplate = "";
             switch (opcao) {
                 case 1:
-                    utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
+                    utilizadorView.exibirUtilizadores(lista);
                     break;
                 case 2:
                     utilizadorView.aprovarCliente(Tools.estadoUtilizador.ATIVO.getCodigo());
@@ -63,19 +69,37 @@ public class MenuGestorView {
                     view.editarTemplate(); // sem parâmetros
                     break;
                 case 9:
+                    System.out.println("\nEscolha o template para enviar:");
+                    System.out.println("1 - " + Tools.tipoEmail.fromCodigo(1).name());
+                    System.out.println("2 - " + Tools.tipoEmail.fromCodigo(2).name());
+                    System.out.println("3 - " + Tools.tipoEmail.fromCodigo(3).name());
+                    System.out.println("4 - " + Tools.tipoEmail.fromCodigo(4).name());
+                    System.out.print("Digite o número do template: ");
+                    idTemplate = Tools.scanner.nextLine().trim();
+
+                    if (idTemplate.isEmpty()) {
+                        System.out.println("ID do template não pode ser vazio.");
+                        break;
+                    }
+
                     TemplateDAL dal = new TemplateDAL();
                     TemplateModel template = dal.carregarTemplatePorId(idTemplate);
 
-                    // 2. Preenche as variáveis a substituir
+                    if (template == null) {
+                        System.out.println("Template com ID " + idTemplate + " não encontrado.");
+                        break;
+                    }
+
                     Map<String, String> variaveis = new HashMap<>();
-                    variaveis.put("nome", String.valueOf(Tools.clienteSessao.getIdCliente()));  // Conversão de int para String
-                    variaveis.put("email", "o Sandro é gay");
+                    variaveis.put("nome", "Exemplo Nome");
+                    variaveis.put("email", "exemplo@dominio.com");
 
-
-                    // 3. Envia o e-mail
                     EmailBLL emailBLL = new EmailBLL();
                     emailBLL.enviarEmail(template, "oliveira4797@gmail.com", variaveis);
+
+                    System.out.println("Email enviado com sucesso!");
                     break;
+
                 case 0:
                     System.out.println("A sair...");
                     Tools.clienteSessao.logout();

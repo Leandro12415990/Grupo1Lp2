@@ -93,7 +93,7 @@ public class LeilaoBLL {
             leilao.setDataFim(dataFim);
             leilao.setValorMinimo(valorMin);
             leilao.setValorMaximo(valorMax);
-            leilao.setMultiploLance(multiploLance);
+            leilao.setValorAtualLanceEletronico(multiploLance);
             leilao.setEstado(idEstado);
             leilaoDAL.gravarLeiloes(leiloes);
             return true;
@@ -127,4 +127,25 @@ public class LeilaoBLL {
         }
         leilaoDAL.gravarLeiloes(leiloes);
     }
+
+    public boolean atualizarLeilao(Leilao leilaoAtualizado) {
+        LeilaoDAL leilaoDAL = new LeilaoDAL();
+        List<Leilao> leiloes = leilaoDAL.carregaLeiloes();
+
+        boolean atualizado = false;
+        for (int i = 0; i < leiloes.size(); i++) {
+            if (leiloes.get(i).getId() == leilaoAtualizado.getId()) {
+                leiloes.set(i, leilaoAtualizado);
+                atualizado = true;
+                break;
+            }
+        }
+
+        if (atualizado) {
+            leilaoDAL.gravarLeiloes(leiloes);
+        }
+
+        return atualizado;
+    }
+
 }

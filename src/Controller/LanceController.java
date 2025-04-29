@@ -2,32 +2,32 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
+import DAL.LanceDAL;
 import Model.ClienteSessao;
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
+import Utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LanceController {
 
-    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, int numLance, double multiploLance) {
+    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double novoValorLance) {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         ClienteSessao clienteSessao = new ClienteSessao();
 
         int idCliente = clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
-
         int tipoLeilao = leilao.getTipoLeilao();
 
-        double valorLance = 0;
-        int valorLanceAtual = 0;
+        ResultadoOperacao resultado = lanceBLL.adicionarLanceEletronico(idLeilao, novoValorLance, idCliente, tipoLeilao);
 
-        ResultadoOperacao resultado = lanceBLL.adicionarLanceEletronico(idLeilao, valorLance, numLance, multiploLance, idCliente, valorLanceAtual, tipoLeilao);
         return resultado;
     }
+
 
     public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance) {
         LanceBLL lanceBLL = new LanceBLL();
@@ -60,11 +60,13 @@ public class LanceController {
 
     public List<Lance> listarLancesDoCliente() {
         LanceBLL lanceBLL = new LanceBLL();
-        ClienteSessao clienteSessao = new ClienteSessao();
 
-        int idCliente = clienteSessao.getIdCliente();
+        lanceBLL.carregarLances();
+
+        int idCliente = Tools.clienteSessao.getIdCliente();
         return lanceBLL.listarMeuLance(idCliente);
     }
+
 
     public List<Lance> obterLancesPorLeilao(int idLeilao) {
         LanceBLL lanceBLL = new LanceBLL();
