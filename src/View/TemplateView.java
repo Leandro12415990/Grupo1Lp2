@@ -1,7 +1,7 @@
 package View;
 
 import Controller.TemplateController;
-import Model.TemplateModel;
+import Model.Template;
 import Utils.Constantes;
 import Utils.Tools;
 
@@ -30,7 +30,7 @@ public class TemplateView {
         }
 
         try {
-            TemplateModel template = controller.obterTemplatePorId(idTemplate);
+            Template template = controller.obterTemplatePorId(idTemplate);
 
             if (template == null) {
                 System.out.println("Template com ID " + idTemplate + " não encontrado.");

@@ -1,25 +1,30 @@
 package BLL;
 
+import DAL.EmailDAL;
 import DAL.TemplateDAL;
-import Model.TemplateModel;
+import Model.Email;
+import Model.Produto;
+import Model.Template;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static Utils.Constantes.configEmail;
 
 public class EmailBLL {
 
-    public void enviarEmail(String templateId, String toEmail, Map<String, String> variaveis)
+    public void enviarEmail(String templateId, String toEmail, Map<String, String> variaveis, int idCliente)
             throws IOException, MessagingException {
         TemplateDAL templateDAL = new TemplateDAL();
-        TemplateModel template = templateDAL.carregarTemplatePorId(templateId);
-        enviarEmail(template, toEmail, variaveis);
+        Template template = templateDAL.carregarTemplatePorId(templateId);
+        enviarEmail(template, toEmail, variaveis, idCliente);
     }
 
-    public void enviarEmail(TemplateModel template, String toEmail, Map<String, String> variaveis)
+    public void enviarEmail(Template template, String toEmail, Map<String, String> variaveis, int idCliente)
             throws MessagingException {
 
         String assunto = substituirTags(template.getAssunto(), variaveis);
@@ -27,7 +32,7 @@ public class EmailBLL {
 
         Session session = criarSessaoEmail();
 
-        Message message = criarMensagemEmail(session, toEmail, assunto, corpo);
+        Message message = criarMensagemEmail(session, toEmail, assunto, corpo, idCliente, template.getId());
 
         Transport.send(message);
     }
@@ -47,19 +52,36 @@ public class EmailBLL {
         });
     }
 
-    private Message criarMensagemEmail(Session session, String toEmail, String assunto, String corpo)
-            throws MessagingException {
+    private Message criarMensagemEmail(Session session, String toEmail, String assunto, String corpo, int idCliente, String idTipoEmail) throws MessagingException {
         Message message = new MimeMessage(session);
 
         try {
             message.setFrom(new InternetAddress(configEmail.fromEmail, configEmail.fromName));
-        } catch (java.io.UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException | MessagingException e) {
             message.setFrom(new InternetAddress(configEmail.fromEmail));
         }
 
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
         message.setSubject(assunto);
-        message.setContent(corpo, "text/html; charset=UTF-8"); // <-- HTML aqui
+        message.setContent(corpo, "text/html; charset=UTF-8");
+
+        String corpoTexto = removerTagsHtml(corpo);
+        Email email = new Email(
+                0,
+                configEmail.fromEmail,
+                idCliente,
+                toEmail,
+                assunto,
+                corpoTexto,
+                LocalDateTime.now(),
+                idTipoEmail
+        );
+
+        EmailDAL emailDAL = new EmailDAL();
+        List<Email> emailsExistentes = emailDAL.carregarEmails();
+        email.setIdEmail(verificarUltimoId(emailsExistentes) + 1);
+        emailsExistentes.add(email);
+        emailDAL.gravarEmails(emailsExistentes);
 
         return message;
     }
@@ -69,5 +91,25 @@ public class EmailBLL {
             texto = texto.replace("{" + entry.getKey() + "}", entry.getValue());
         }
         return texto;
+    }
+
+    private String removerTagsHtml(String html) {
+        return html.replaceAll("(?i)<br */?>", "\n")
+                .replaceAll("<[^>]+>", "")
+                .replaceAll("&nbsp;", " ")
+                .replaceAll("&lt;", "<")
+                .replaceAll("&gt;", ">")
+                .replaceAll("&amp;", "&")
+                .replaceAll("&quot;", "\"")
+                .replaceAll("(?m)^[ \t]*\r?\n", "") // remove linhas vazias
+                .trim();
+    }
+
+    private int verificarUltimoId(List<Email> emails) {
+        int ultimoId = 0;
+        for (Email email : emails) {
+            if (email.getIdEmail() > ultimoId) ultimoId = email.getIdEmail();
+        }
+        return ultimoId;
     }
 }

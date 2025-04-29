@@ -113,4 +113,9 @@ public class UtilizadorController {
         if (!passwordFirst.equals(passwordSecound)) return false;
         else return true;
     }
+
+    public void verificarLoginsUtilizadores() throws MessagingException, IOException {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        utilizadorBLL.verificarLoginsUtilizadores(utilizadorBLL.carregarUtilizadores());
+    }
 }

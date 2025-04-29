@@ -3,19 +3,26 @@ package BLL;
 import DAL.TemplateDAL;
 import DAL.UtilizadorDAL;
 import Model.ResultadoOperacao;
-import Model.TemplateModel;
+import Model.Template;
 import Model.Utilizador;
 import Utils.Tools;
+import View.UtilizadorView;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class UtilizadorBLL {
+    public List<Utilizador> carregarUtilizadores() {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        return utilizadorDAL.carregarUtilizadores();
+    }
+
     public List<Utilizador> listarUtilizador(int estado, int tipo) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         List<Utilizador> todosUtilizadores = utilizadorDAL.carregarUtilizadores();
@@ -60,19 +67,21 @@ public class UtilizadorBLL {
     public ResultadoOperacao alterarEstadoUtilizador(Utilizador u, int estado) throws MessagingException, IOException {
         ResultadoOperacao resultado = new ResultadoOperacao();
         EmailBLL emailBLL = new EmailBLL();
-        TemplateDAL dal = new TemplateDAL();
-
+        TemplateDAL templateDAL = new TemplateDAL();
 
         if (u == null || estado == 0) {
             resultado.msgErro = "Erro a alterar estado do utilizador";
         } else {
             u.setEstado(estado);
             if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
-                TemplateModel template = dal.carregarTemplatePorId("1");
-                Map<String, String> variaveis = new HashMap<>();
-                variaveis.put("NOME", u.getNomeUtilizador());
-                emailBLL.enviarEmail(template, u.getEmail(), variaveis);
-
+                Template template = templateDAL.carregarTemplatePorId("1");
+                if (template != null) {
+                    Map<String, String> variaveis = new HashMap<>();
+                    variaveis.put("NOME", u.getNomeUtilizador());
+                    emailBLL.enviarEmail(template, u.getEmail(), variaveis, u.getId());
+                } else {
+                    resultado.msgErro = "O Template não foi encontrado";
+                }
             }
             resultado.Objeto = resultado;
             resultado.Sucesso = true;
@@ -80,7 +89,6 @@ public class UtilizadorBLL {
         }
         return resultado;
     }
-
 
     public boolean editarCliente(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
@@ -116,4 +124,28 @@ public class UtilizadorBLL {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         utilizadorDAL.gravarUtilizadores(utilizadores);
     }
+
+    public void verificarLoginsUtilizadores(List<Utilizador> utilizadores) throws IOException, MessagingException {
+        EmailBLL emailBLL = new EmailBLL();
+        TemplateDAL templateDAL = new TemplateDAL();
+
+        LocalDateTime agora = LocalDateTime.now();
+        LocalDateTime tresMesesAtras = agora.minusMonths(3);
+
+        for (Utilizador u : utilizadores) {
+            if (u.getUltimoLogin() != null) {
+                LocalDateTime ultimoLogin = u.getUltimoLogin().atStartOfDay();
+
+                if (ultimoLogin.isBefore(tresMesesAtras)) {
+                    Template template = templateDAL.carregarTemplatePorId("4");
+                    if (template != null) {
+                        Map<String, String> variaveis = new HashMap<>();
+                        variaveis.put("NOME", u.getNomeUtilizador());
+                        emailBLL.enviarEmail(template, u.getEmail(), variaveis, u.getId());
+                    }
+                }
+            }
+        }
+    }
+
 }

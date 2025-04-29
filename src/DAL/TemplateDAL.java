@@ -1,7 +1,9 @@
 package DAL;
 
-import Model.TemplateModel;
+import Model.ResultadoOperacao;
+import Model.Template;
 import Utils.Tools;
+import Utils.Constantes.caminhosFicheiros;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,16 +11,17 @@ import java.nio.file.*;
 import java.util.*;
 
 public class TemplateDAL {
-    private final String CAMINHO_CSV = "data\\EmailRegisto.csv";
-    private Map<String, TemplateModel> templatesCache = null;
-    private final String CABECALHO = "\"ID\",\"Assunto\",\"Corpo\"";
+    private Map<String, Template> templatesCache = null;
+    private final String CABECALHO = "\"ID\"" + Tools.separador() +
+                                    "\"Assunto\"" + Tools.separador() + "\"Corpo\"";
 
-    private void carregarTodosTemplates() throws IOException {
+    private ResultadoOperacao carregarTodosTemplates() throws IOException {
         templatesCache = new HashMap<>();
+        ResultadoOperacao resultado = new ResultadoOperacao();
 
-        Path caminho = Paths.get(CAMINHO_CSV);
+        Path caminho = Paths.get(caminhosFicheiros.CSV_FILE_TEMPLATE);
         if (!Files.exists(caminho)) {
-            throw new IOException("Ficheiro de templates não encontrado: " + CAMINHO_CSV);
+            resultado.msgErro = "Ficheiro de templates não encontrado: " + caminhosFicheiros.CSV_FILE_TEMPLATE;
         }
 
         BufferedReader reader = Files.newBufferedReader(caminho);
@@ -29,7 +32,7 @@ public class TemplateDAL {
             if (primeiraLinha) {
                 primeiraLinha = false;
                 if (!linha.equals(CABECALHO)) {
-                    throw new IOException("Cabeçalho do ficheiro inválido.");
+                    resultado.msgErro = "Cabeçalho do ficheiro inválido.";
                 }
                 continue;
             }
@@ -47,38 +50,32 @@ public class TemplateDAL {
                     .replace("\\n", "\n")
                     .replace("\\t", "\t");
 
-            templatesCache.put(id, new TemplateModel(id, assunto, corpo));
+            templatesCache.put(id, new Template(id, assunto, corpo));
         }
+        if (resultado.msgErro == null) {
+            resultado.Sucesso = true;
+        }
+        resultado.Objeto = resultado;
 
         reader.close();
+        return resultado;
     }
 
-    public TemplateModel carregarTemplatePorId(String idProcurado) throws IOException {
-        if (templatesCache == null) {
-            carregarTodosTemplates();
-        }
-
-        TemplateModel template = templatesCache.get(idProcurado);
-        if (template == null) {
-            throw new IOException("Template com ID " + idProcurado + " não encontrado.");
-        }
-
-        return template;
+    public Template carregarTemplatePorId(String idProcurado) throws IOException {
+        if (templatesCache == null) carregarTodosTemplates();
+        return templatesCache.get(idProcurado);
     }
 
-    public void guardarTemplate(String id, TemplateModel template) throws IOException {
-        if (templatesCache == null) {
-            carregarTodosTemplates();
-        }
-
+    public void guardarTemplate(String id, Template template) throws IOException {
+        if (templatesCache == null) carregarTodosTemplates();
         templatesCache.put(id, template);
 
         List<String> linhasParaGravar = new ArrayList<>();
         linhasParaGravar.add(CABECALHO);
 
-        for (Map.Entry<String, TemplateModel> entry : templatesCache.entrySet()) {
+        for (Map.Entry<String, Template> entry : templatesCache.entrySet()) {
             String idAtual = entry.getKey();
-            TemplateModel t = entry.getValue();
+            Template t = entry.getValue();
 
             String assunto = "\"" + t.getAssunto().replace("\"", "\"\"") + "\"";
             String corpo = "\"" + t.getCorpo()
@@ -89,7 +86,6 @@ public class TemplateDAL {
 
             linhasParaGravar.add(linha);
         }
-
-        Files.write(Paths.get(CAMINHO_CSV), linhasParaGravar);
+        Files.write(Paths.get(caminhosFicheiros.CSV_FILE_TEMPLATE), linhasParaGravar);
     }
 }

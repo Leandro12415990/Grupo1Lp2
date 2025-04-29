@@ -184,26 +184,40 @@ public class UtilizadorView {
     }
 
     public void exibirUtilizadores(List<Utilizador> utilizadores) {
-        System.out.println("\n" + "=".repeat(5) + " LISTAGEM DE UTILIZADORES " + "=".repeat(5));
-        System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %-10s\n",
-                "Id", "Nome Utilizador", "Email", "Data Nascimento", "Morada", "Data Registo", "Ultimo Login", "Tipo Utilizador", "Estado", "Saldo");
-        System.out.println("-".repeat(245));
+        System.out.println("\n" + "=".repeat(20) + " LISTAGEM DE UTILIZADORES " + "=".repeat(20));
+        System.out.printf(
+                "%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %-10s\n",
+                "Id", "Nome Utilizador", "Email", "Data Nascimento", "Morada",
+                "Data Registo", "Último Login", "Tipo Utilizador", "Estado", "Saldo (€)"
+        );
+        System.out.println("-".repeat(250));
+
         for (Utilizador utilizador : utilizadores) {
             String estadoStr = Tools.estadoUtilizador.fromCodigo(utilizador.getEstado()).name();
             String tipoUtilizadorStr = Tools.tipoUtilizador.fromCodigo(utilizador.getTipoUtilizador()).name();
-            System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %-10.2f€\n",
+
+            String dataNascimento = utilizador.getDataNascimento() != null ? utilizador.getDataNascimento().toString() : "N/A";
+            String morada = utilizador.getMorada() != null ? utilizador.getMorada() : "N/A";
+            String dataRegisto = utilizador.getDataRegisto() != null ? utilizador.getDataRegisto().toString() : "N/A";
+            String ultimoLogin = utilizador.getUltimoLogin() != null ? utilizador.getUltimoLogin().toString() : "N/A";
+
+            System.out.printf(
+                    "%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %8.2f€\n",
                     utilizador.getId(),
                     utilizador.getNomeUtilizador(),
                     utilizador.getEmail(),
-                    utilizador.getDataNascimento(),
-                    utilizador.getMorada(),
-                    utilizador.getDataRegisto() != null ? utilizador.getDataRegisto().toString() : "N/A",
-                    utilizador.getUltimoLogin() != null ? utilizador.getUltimoLogin().toString() : "N/A",
+                    dataNascimento,
+                    morada,
+                    dataRegisto,
+                    ultimoLogin,
                     tipoUtilizadorStr,
                     estadoStr,
-                    utilizador.getSaldo());
+                    utilizador.getSaldo()
+            );
+
         }
     }
+
 
     public void verDadosCliente(Utilizador utilizador) {
         System.out.println("\n" + "=".repeat(10) + " FICHA CLIENTE " + "=".repeat(10));
@@ -221,5 +235,9 @@ public class UtilizadorView {
         System.out.println("=".repeat(35));
     }
 
+    public void verificarLoginsUtilizadores() throws MessagingException, IOException {
+        UtilizadorController utilizadorController = new UtilizadorController();
+        utilizadorController.verificarLoginsUtilizadores();
+    }
 
 }

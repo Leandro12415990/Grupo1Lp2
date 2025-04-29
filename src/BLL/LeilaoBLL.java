@@ -56,7 +56,7 @@ public class LeilaoBLL {
     }
 
     public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
-        if (!apenasDisponiveis) return new ArrayList<>(leiloes);
+        if (!apenasDisponiveis) return carregarLeiloes();
 
         List<Leilao> ativos = new ArrayList<>();
         for (Leilao leilao : leiloes) {
