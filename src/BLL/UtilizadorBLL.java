@@ -1,12 +1,19 @@
 package BLL;
 
+import DAL.TemplateDAL;
 import DAL.UtilizadorDAL;
+import Model.ResultadoOperacao;
+import Model.TemplateModel;
 import Model.Utilizador;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UtilizadorBLL {
     public List<Utilizador> listarUtilizador(int estado, int tipo) {
@@ -50,23 +57,32 @@ public class UtilizadorBLL {
         return true;
     }
 
-    public boolean aprovarCliente(Utilizador u, int estado) {
-        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
-        int novoEstado = (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
-                ? Tools.estadoUtilizador.ATIVO.getCodigo()
-                : Tools.estadoUtilizador.INATIVO.getCodigo();
+    public ResultadoOperacao alterarEstadoUtilizador(Utilizador u, int estado) throws MessagingException, IOException {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        EmailBLL emailBLL = new EmailBLL();
+        TemplateDAL dal = new TemplateDAL();
 
-        u.setEstado(novoEstado);
+        TemplateModel template = dal.carregarTemplatePorId("1");
 
-        for (Utilizador uti : Tools.utilizadores) {
-            if (u.getEmail().equalsIgnoreCase(uti.getEmail()) && uti.getEstado() == novoEstado) {
-                utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
-                return true;
+        if (u == null || estado == 0) {
+            resultado.msgErro = "Erro a alterar estado do utilizador";
+        } else {
+            u.setEstado(estado);
+            if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
+
+                Map<String, String> variaveis = new HashMap<>();
+                variaveis.put("NOME", u.getNomeUtilizador());
+                String toEmail = u.getEmail();
+                emailBLL.enviarEmail(template, toEmail, variaveis);
+
             }
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+            gravarUtilizadores(Tools.utilizadores);
         }
-
-        return false;
+        return resultado;
     }
+
 
     public boolean editarCliente(Utilizador utilizador, String nome, LocalDate nascimento, String morada, String password) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
@@ -85,11 +101,6 @@ public class UtilizadorBLL {
         Tools.utilizadores.set(index, utilizador);
         utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
         return true;
-    }
-
-    public void aprovarTodosClientes(Utilizador u, int estado) {
-        if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) u.setEstado(Tools.estadoUtilizador.ATIVO.getCodigo());
-        else u.setEstado(Tools.estadoUtilizador.INATIVO.getCodigo());
     }
 
     public Utilizador procurarUtilizadorPorId(int idCliente) {

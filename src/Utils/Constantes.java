@@ -1,6 +1,15 @@
 package Utils;
 
 public class Constantes {
+    // Secção: Configurações Email
+    public static class configEmail {
+        public static final String fromEmail = "valoraltaleiloes@gmail.com";
+        public static final String fromName = "Valor em Alta - Leiloeira";
+        public static final String keyPassword = "zwgz xnzn kznc iieo";
+        public static final String host = "smtp.gmail.com";
+        public static final int port = 587;
+    }
+
     public static class caminhosFicheiros{
         public static final String CSV_FILE_LEILAO = "data\\Leilao.csv";
         public static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";

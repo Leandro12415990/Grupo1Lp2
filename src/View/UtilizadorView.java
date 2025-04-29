@@ -4,9 +4,12 @@ import Controller.UtilizadorController;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UtilizadorView {
@@ -62,16 +65,77 @@ public class UtilizadorView {
         else System.out.println(resultado.msgErro);
     }
 
-    public void formularioAprovarCliente(int estado) {
+    public void alterarEstadoClientes(int estado, String acao, int idTipoUtilizador) throws MessagingException, IOException {
         UtilizadorController utilizadorController = new UtilizadorController();
         while (true) {
-            System.out.println("Email do cliente " + Tools.alertaCancelar());
+            List<Utilizador> utilizadoresAlterarEstado = new ArrayList<>();
+
+            if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
+                utilizadoresAlterarEstado = utilizadorController.mostrarUtilizador(Tools.estadoUtilizador.PENDENTE.getCodigo(), 2);
+            } else if (estado == Tools.estadoUtilizador.INATIVO.getCodigo()) {
+                utilizadoresAlterarEstado = utilizadorController.mostrarUtilizador(Tools.estadoUtilizador.ATIVO.getCodigo(), 2);
+            }
+
+            if (utilizadoresAlterarEstado == null || utilizadoresAlterarEstado.isEmpty()) {
+                System.out.println("Não existem utilizadores disponíveis para " + acao.toLowerCase() + "...");
+                return;
+            }
+
+            System.out.println("=".repeat(7) + "MENU " + acao.toUpperCase() + " CLIENTES" + "=".repeat(7) + "\n");
+            exibirUtilizadores(utilizadoresAlterarEstado);
+            System.out.println("\n1. " + acao + " Todos os Clientes");
+            System.out.println("2. " + acao + " Cliente Específico");
+            System.out.println("0. Sair...");
+            System.out.print("Escolha uma opção: ");
+
+            int opcao = Tools.scanner.nextInt();
+            Tools.scanner.nextLine().trim();
+
+            switch (opcao) {
+                case 1:
+                    ResultadoOperacao resultadoTodos = utilizadorController.alterarEstadoUtilizadores(null, estado, true, idTipoUtilizador);
+                    if (resultadoTodos.Sucesso) {
+                        String mensagemFinal = switch (acao.toLowerCase()) {
+                            case "aprovar" -> "Clientes aprovados com sucesso!";
+                            case "inativar" -> "Clientes inativados com sucesso!";
+                            default -> "Estado dos clientes alterado com sucesso!";
+                        };
+                        System.out.println(mensagemFinal);
+                    } else {
+                        System.out.println(resultadoTodos.msgErro);
+                    }
+                    return;
+                case 2:
+                    formularioAlterarEstadoCliente(estado, acao, idTipoUtilizador);
+                    break;
+                case 0:
+                    System.out.println("A desligar sistema...");
+                    return;
+                default:
+                    System.out.println("Opção inválida, tente novamente.");
+            }
+        }
+    }
+
+    public void formularioAlterarEstadoCliente(int estado, String acao, int idTipoUtilizador) throws MessagingException, IOException {
+        UtilizadorController utilizadorController = new UtilizadorController();
+
+        while (true) {
+            System.out.print("Email do cliente " + Tools.alertaCancelar());
             String email = Tools.scanner.nextLine();
             if (Tools.verificarSaida(email)) return;
 
-            boolean resFormularioAprovarClienteController = utilizadorController.aprovarCliente(email, estado);
-            if (resFormularioAprovarClienteController) System.out.println("Utilizador alterado com sucesso!");
-            else System.out.println("Email inválido");
+            ResultadoOperacao resultado = utilizadorController.alterarEstadoUtilizadores(email, estado, false, idTipoUtilizador);
+            if (resultado.Sucesso) {
+                String mensagemFinal = switch (acao.toLowerCase()) {
+                    case "aprovar" -> "Cliente aprovados com sucesso!";
+                    case "inativar" -> "Cliente inativados com sucesso!";
+                    default -> "Estado dos cliente alterado com sucesso!";
+                };
+                System.out.println(mensagemFinal);
+            } else {
+                System.out.println(resultado.msgErro);
+            }
         }
     }
 
@@ -111,51 +175,6 @@ public class UtilizadorView {
             if (resultado.Sucesso) System.out.println("Cliente alterado com sucesso");
             else System.out.println(resultado.msgErro);
             break;
-        }
-    }
-
-    public void aprovarCliente(int estado) {
-        UtilizadorView utilizadorView = new UtilizadorView();
-        UtilizadorController utilizadorController = new UtilizadorController();
-        String menuMSG = "", responseMSG = "";
-        if (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
-        {
-            menuMSG = "Aprovar";
-            responseMSG = "aprovados";
-        }
-        else
-        {
-            menuMSG = "Inativar";
-            responseMSG = "inativados";
-        }
-        while (true) {
-            System.out.println("Menu Aprovar Clientes");
-            if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.PENDENTE.getCodigo(), 2);
-            if (estado == Tools.estadoUtilizador.INATIVO.getCodigo()) utilizadorView.mostrarUtilizador(Tools.estadoUtilizador.getDefault().getCodigo(), 2);
-            System.out.println("-".repeat(245));
-            System.out.println(MessageFormat.format("1. {0} todos", menuMSG));
-            System.out.println(MessageFormat.format("2. {0} Cliente especifico", menuMSG));
-            System.out.println("0. Sair...");
-            System.out.print("Escolha uma opção: ");
-
-            int opcao = Tools.scanner.nextInt();
-            Tools.scanner.nextLine().trim();
-            switch (opcao) {
-                case 1:
-                    boolean respAprovarTodos = utilizadorController.aprovarTodosClientes(estado);
-                    if (respAprovarTodos) System.out.println(MessageFormat.format("Utilizadores {0} com sucesso!", responseMSG));
-                    else System.out.println(MessageFormat.format("Utilizadores não foram todos {0} com sucesso," +
-                            "liste os utilizadores no menu para verificar quais não foram {0}!", responseMSG));
-                    break;
-                case 2:
-                    utilizadorView.formularioAprovarCliente(estado);
-                    break;
-                case 0:
-                    System.out.println("A desligar sistema...");
-                    return;
-                default:
-                    System.out.println("Opção inválida, tente novamente.");
-            }
         }
     }
 

@@ -1,5 +1,5 @@
 "ID","Assunto","Corpo"
-"1","O LEANDRO É FEIO","Ola Pedro,\n\n\t\t\to leandro gosto do cu do sandro\n\na equipa"
+"1","Conta Aprovada na Valor em Alta Leilões","<html><body><strong>Olá {NOME},</strong><p>É com enorme satisfação que informamos que a sua conta foi <strong>aprovada</strong> na <strong>Valor em Alta Leilões</strong>!</p><p>Agora você pode:</p><ul><li>Aceder aos nossos leilões exclusivos</li><li>Fazer lances em tempo real</li><li>Gerir o seu perfil e histórico</li></ul><p>Estamos felizes por tê-lo connosco! Se precisar de ajuda, não hesite em contactar-nos.</p><p>Cumprimentos,<br><strong>Equipa Valor em Alta Leilões</strong></p></body></html>"
 "2","FOI O VENCEDOR DO LEILAO","OLÁ {NOME},\n\nÉs o vencedor do leilao {NOME_LEILAO} .\n\nEntra em contacto com a leiloeira para sabes como levantar o prémio.\n\nA equipa,\n\n{EQUIPA}"
 "3","SENTIMOS A SUA FALTA","Olá {NOME},\n\nReparamos que não o vemos há 3 meses! Está tudo bem consigo?\n\nAnsiamos por voltar a vê lo!\n\nA equipa,\n\n{EQUIPA}"
 "4","sabemos que tas teso","Ole {NOME},\n\nSabemos que tens de roubar um banco!\n\nA equipa"

@@ -5,9 +5,16 @@ import DAL.UtilizadorDAL;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -48,31 +55,44 @@ public class UtilizadorController {
         return resultado;
     }
 
-    public boolean aprovarTodosClientes(int estado) {
-        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+    public ResultadoOperacao alterarEstadoUtilizadores(String email, int novoEstado, boolean alterarTodos, int idTipoUtilizador) throws MessagingException, IOException {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
-        boolean aprovouAlguem = false;
+        ResultadoOperacao resultado = new ResultadoOperacao();
 
         for (Utilizador u : Tools.utilizadores) {
-            boolean deveAprovar = (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
-                    ? u.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo()
-                    : u.getEstado() != Tools.estadoUtilizador.INATIVO.getCodigo();
+            if (u.getTipoUtilizador() != idTipoUtilizador) {
+                continue;
+            }
 
-            if (deveAprovar) {
-                utilizadorBLL.aprovarTodosClientes(u, estado);
-                aprovouAlguem = true;
+            boolean deveAlterar = alterarTodos
+                    ? u.getEstado() != novoEstado
+                    : u.getEmail().equalsIgnoreCase(email);
+
+            if (deveAlterar) {
+                resultado = utilizadorBLL.alterarEstadoUtilizador(u, novoEstado);
+                if (!alterarTodos) break;
             }
         }
+        return resultado;
+    }
 
-        // Verifica se todos os utilizadores estão no estado esperado após a aprovação
-        for (Utilizador u : Tools.utilizadores) {
-            boolean estadoIncorreto = (estado == Tools.estadoUtilizador.ATIVO.getCodigo())
-                    ? u.getEstado() == Tools.estadoUtilizador.PENDENTE.getCodigo()
-                    : u.getEstado() != Tools.estadoUtilizador.INATIVO.getCodigo();
-            if (estadoIncorreto) return false;
+    public boolean validarDominioEmail(String email) {
+        try {
+            String dominio = email.substring(email.indexOf("@") + 1);
+
+            Hashtable<String, String> env = new Hashtable<>();
+            env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
+
+            DirContext dirContext = new InitialDirContext(env);
+            Attributes attrs = dirContext.getAttributes(dominio, new String[]{"MX"});
+
+            Attribute attr = attrs.get("MX");
+
+            return attr != null && attr.size() > 0;
+
+        } catch (Exception e) {
+            return false;
         }
-        if (aprovouAlguem) utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
-        return true;
     }
 
     private boolean validaDataNascimento(LocalDate nascimento) {
@@ -87,17 +107,6 @@ public class UtilizadorController {
     public boolean isValidEmail(String email) {
         if (email == null) return false; // Evita erro de NullPointerException
         return Pattern.matches(EMAIL_REGEX, email);
-    }
-
-    public boolean aprovarCliente(String email, int estado) {
-        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
-        for (Utilizador u : Tools.utilizadores) {
-            if (u.getEmail().equalsIgnoreCase(email)) {
-                boolean respFormularioAprovarClienteBLL = utilizadorBLL.aprovarCliente(u, estado);
-                if (respFormularioAprovarClienteBLL) return true;
-            }
-        }
-        return false;
     }
 
     public boolean verificarPassword(String passwordFirst, String passwordSecound) {
