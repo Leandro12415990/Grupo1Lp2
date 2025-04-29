@@ -172,7 +172,7 @@ public class UtilizadorView {
         for (Utilizador utilizador : utilizadores) {
             String estadoStr = Tools.estadoUtilizador.fromCodigo(utilizador.getEstado()).name();
             String tipoUtilizadorStr = Tools.tipoUtilizador.fromCodigo(utilizador.getTipoUtilizador()).name();
-            System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %-10s\n",
+            System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-25s %-10s %-10.2f€\n",
                     utilizador.getId(),
                     utilizador.getNomeUtilizador(),
                     utilizador.getEmail(),

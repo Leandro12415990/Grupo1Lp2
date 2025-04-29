@@ -5,27 +5,26 @@ import Model.Utilizador;
 import Utils.Tools;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UtilizadorBLL {
     public List<Utilizador> listarUtilizador(int estado, int tipo) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
-        List<Utilizador> utilizadoresList = utilizadorDAL.carregarUtilizadores();
-        if (estado != 0) {
-            for (Utilizador utilizador : Tools.utilizadores) {
-                if (utilizador.getEstado() == estado && utilizador.getTipoUtilizador() == tipo) {
-                    utilizadoresList.add(utilizador);
-                }
-            }
-        } else {
-            for (Utilizador utilizador : Tools.utilizadores) {
-                if (utilizador.getTipoUtilizador() == tipo) {
-                    utilizadoresList.add(utilizador);
-                }
+        List<Utilizador> todosUtilizadores = utilizadorDAL.carregarUtilizadores();
+
+        List<Utilizador> filtrados = new ArrayList<>();
+        for (Utilizador u : todosUtilizadores) {
+            boolean estadoOK = (estado == 0 || u.getEstado() == estado);
+            boolean tipoOK = (tipo == 0 || u.getTipoUtilizador() == tipo);
+            if (estadoOK && tipoOK) {
+                filtrados.add(u);
             }
         }
-        return utilizadoresList;
+
+        return filtrados;
     }
+
 
     public boolean criarCliente(String nome, String email, LocalDate nascimento, String morada, String password) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();

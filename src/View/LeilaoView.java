@@ -246,7 +246,7 @@ public class LeilaoView {
                             Tools.FORMATTER.format(leilao.getDataFim())) : "N/A",
                     leilao.getValorMinimo(),
                     leilao.getValorMaximo() != null && leilao.getValorMaximo() != 0.0 ? leilao.getValorMaximo() : "N/A",
-                    leilao.getMultiploLance() != null && leilao.getMultiploLance() != 0 ? leilao.getMultiploLance() : "N/A",
+                    leilao.getValorAtualLanceEletronico() != null && leilao.getValorAtualLanceEletronico() != 0 ? leilao.getValorAtualLanceEletronico() : "N/A",
                     estadoStr);
         }
     }
@@ -279,7 +279,7 @@ public class LeilaoView {
         System.out.println("Data Fim: " + (leilao.getDataFim() != null ? Tools.FORMATTER.format(leilao.getDataFim()) : "N/A"));
         System.out.println("Valor Minimo: " + leilao.getValorMinimo());
         System.out.println("Valor Máximo: " + (leilao.getValorMaximo() != null && leilao.getValorMaximo() != -1.0 ? leilao.getValorMaximo() : "N/A"));
-        System.out.println("Múltiplo de Lance: " + (leilao.getMultiploLance() != null && leilao.getMultiploLance() != 0 ? leilao.getMultiploLance() : "N/A"));
+        System.out.println("Múltiplo de Lance: " + (leilao.getValorAtualLanceEletronico() != null && leilao.getValorAtualLanceEletronico() != 0 ? leilao.getValorAtualLanceEletronico() : "N/A"));
         System.out.println("Estado: " + estadoStr);
     }
 
@@ -539,7 +539,7 @@ public class LeilaoView {
                 }
             }
 
-            double multiploLance = leilao.getMultiploLance();
+            double multiploLance = leilao.getValorAtualLanceEletronico();
             if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
                 while (true) {
                     System.out.print("Novo múltiplo de lance ou pressione ENTER para não alterar " + Tools.alertaCancelar());
