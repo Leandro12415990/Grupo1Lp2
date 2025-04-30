@@ -20,6 +20,7 @@ public class MenuGestorView {
 
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         List<Utilizador> lista = utilizadorBLL.listarUtilizador(0, 0);
+
         utilizadorView.verificarLoginsUtilizadores();
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU GESTOR DA LEILOEIRA " + "=".repeat(5));

@@ -1,10 +1,9 @@
 package View;
 
-import Model.Transacao;
-import Model.ResultadoOperacao;
-import Model.ClienteSessao;
-import Model.Utilizador;
 import Controller.TransacaoController;
+import Model.ResultadoOperacao;
+import Model.Transacao;
+import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
 
@@ -77,9 +76,9 @@ public class TransacaoView {
         TransacaoController transacaoController = new TransacaoController();
         List<Transacao> transacoesList = transacaoController.listarDepositos(apenasPendentes, idTipoTransacao, idCliente);
         if (idCliente != 0) {
-            exibirTransacoes(transacoesList,true);
+            exibirTransacoes(transacoesList, true);
         } else {
-            exibirTransacoes(transacoesList,false);
+            exibirTransacoes(transacoesList, false);
         }
 
     }

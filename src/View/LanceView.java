@@ -1,10 +1,13 @@
 package View;
 
-import Controller.ProdutoController;
 import Controller.LanceController;
 import Controller.LeilaoController;
+import Controller.ProdutoController;
 import DAL.UtilizadorDAL;
-import Model.*;
+import Model.Lance;
+import Model.Leilao;
+import Model.ResultadoOperacao;
+import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
 

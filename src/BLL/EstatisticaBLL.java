@@ -1,7 +1,7 @@
 package BLL;
 
-import Model.Lance;
 import DAL.UtilizadorDAL;
+import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
 import Utils.Constantes;

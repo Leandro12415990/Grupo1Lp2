@@ -2,7 +2,6 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
-import DAL.LanceDAL;
 import Model.ClienteSessao;
 import Model.Lance;
 import Model.Leilao;

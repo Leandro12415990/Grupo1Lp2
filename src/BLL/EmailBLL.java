@@ -3,15 +3,17 @@ package BLL;
 import DAL.EmailDAL;
 import DAL.TemplateDAL;
 import Model.Email;
-import Model.Produto;
 import Model.Template;
 import jakarta.mail.*;
-import jakarta.mail.internet.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import static Utils.Constantes.configEmail;
 
@@ -63,7 +65,7 @@ public class EmailBLL {
 
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
         message.setSubject(assunto);
-        message.setContent(corpo, "text/html; charset=UTF-8");
+        message.setText(corpo);
 
         String corpoTexto = removerTagsHtml(corpo);
         Email email = new Email(
@@ -111,5 +113,19 @@ public class EmailBLL {
             if (email.getIdEmail() > ultimoId) ultimoId = email.getIdEmail();
         }
         return ultimoId;
+    }
+
+    public boolean foiEmailAvisoEnviado(int idUtilizador, String tipoAviso) {
+        return existeEnvioAnterior(idUtilizador, tipoAviso);
+    }
+
+    public boolean existeEnvioAnterior(int idUtilizador, String tipoAviso) {
+        List<Email> emails = new EmailDAL().carregarEmails();
+        for (Email email : emails) {
+            if (email.getIdCliente() == idUtilizador && email.getIdTipoEmail().equals(tipoAviso)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

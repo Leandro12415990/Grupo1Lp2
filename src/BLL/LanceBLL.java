@@ -133,7 +133,7 @@ public class LanceBLL {
         for (Lance lance : lances) {
             if (idLeilao == 0) {
                 lancesByLeilao.add(lance);
-            } else if(lance.getIdLeilao() == idLeilao){
+            } else if (lance.getIdLeilao() == idLeilao) {
                 lancesByLeilao.add(lance);
             }
         }

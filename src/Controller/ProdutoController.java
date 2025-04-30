@@ -3,7 +3,6 @@ package Controller;
 import BLL.ProdutoBLL;
 import Model.Produto;
 import Model.ResultadoOperacao;
-import View.ProdutoView;
 
 import java.util.List;
 

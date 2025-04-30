@@ -1,6 +1,5 @@
 package View;
 
-import Model.ClienteSessao;
 import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;

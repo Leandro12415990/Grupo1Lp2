@@ -8,9 +8,10 @@ public class Constantes {
         public static final String keyPassword = "zwgz xnzn kznc iieo";
         public static final String host = "smtp.gmail.com";
         public static final int port = 587;
+        public static final String equipa = "Equipa Valor em Alta Leilões";
     }
 
-    public static class caminhosFicheiros{
+    public static class caminhosFicheiros {
         public static final String CSV_FILE_LEILAO = "data\\Leilao.csv";
         public static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
         public static final String CSV_FILE_LANCE = "data\\Lance.csv";
@@ -19,7 +20,7 @@ public class Constantes {
         public static final String CSV_FILE_TEMPLATE = "data\\Template.csv";
         public static final String CSV_FILE_EMAIL = "data\\Email.csv";
     }
-    
+
     // Secção: Estados Leilões
     public static class estadosLeilao {
         public static final int ATIVO = 1;

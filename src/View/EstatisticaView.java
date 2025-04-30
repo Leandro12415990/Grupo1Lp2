@@ -289,7 +289,7 @@ public class EstatisticaView {
         EstatisticaController estatisticaController = new EstatisticaController();
         System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
 
-            int total = estatisticaController.contarLeilaoGlobal();
+        int total = estatisticaController.contarLeilaoGlobal();
 
         if (total == 0) {
             System.out.println("Não existem leilões com estado 'Fechado'.");
@@ -297,7 +297,7 @@ public class EstatisticaView {
             System.out.println("A quantidade de leilões terminados é: " + total);
             System.out.println("\n Lista de leilões fechados:\n");
 
-                List<String> linhas = estatisticaController.listarLeiloesFechadosFormatados();
+            List<String> linhas = estatisticaController.listarLeiloesFechadosFormatados();
             for (String linha : linhas) {
                 System.out.println(linha);
             }
@@ -488,7 +488,7 @@ public class EstatisticaView {
 
         leilaoView.exibirLeiloes(leiloes);
 
-        int id = Tools.pedirOpcaoMenu("Insira o ID do leilão que deseja analisar "+ Tools.alertaCancelar());
+        int id = Tools.pedirOpcaoMenu("Insira o ID do leilão que deseja analisar " + Tools.alertaCancelar());
 
         if (Tools.verificarSaida(String.valueOf(id))) return;
 

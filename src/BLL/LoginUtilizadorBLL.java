@@ -1,7 +1,7 @@
 package BLL;
 
-import Model.Utilizador;
 import DAL.UtilizadorDAL;
+import Model.Utilizador;
 import Utils.Tools;
 
 import java.time.LocalDate;
@@ -20,7 +20,8 @@ public class LoginUtilizadorBLL {
                 if (u.getTipoUtilizador() == Tools.tipoUtilizador.GESTOR.getCodigo() || u.getTipoUtilizador() == Tools.tipoUtilizador.CLIENTE.getCodigo())
                     return u;
             }
-        } return null;
+        }
+        return null;
     }
 
     public boolean lerDados() {

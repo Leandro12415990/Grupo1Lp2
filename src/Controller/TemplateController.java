@@ -3,10 +3,8 @@ package Controller;
 import BLL.EmailBLL;
 import DAL.TemplateDAL;
 import Model.Template;
-import jakarta.mail.MessagingException;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class TemplateController {
 

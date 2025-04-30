@@ -2,18 +2,23 @@ package DAL;
 
 import Model.ResultadoOperacao;
 import Model.Template;
-import Utils.Tools;
 import Utils.Constantes.caminhosFicheiros;
+import Utils.Tools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TemplateDAL {
     private Map<String, Template> templatesCache = null;
     private final String CABECALHO = "\"ID\"" + Tools.separador() +
-                                    "\"Assunto\"" + Tools.separador() + "\"Corpo\"";
+            "\"Assunto\"" + Tools.separador() + "\"Corpo\"";
 
     private ResultadoOperacao carregarTodosTemplates() throws IOException {
         templatesCache = new HashMap<>();

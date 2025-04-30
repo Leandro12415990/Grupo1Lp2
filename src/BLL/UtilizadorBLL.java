@@ -5,17 +5,15 @@ import DAL.UtilizadorDAL;
 import Model.ResultadoOperacao;
 import Model.Template;
 import Model.Utilizador;
+import Utils.Constantes.templateIds;
 import Utils.Tools;
-import View.UtilizadorView;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class UtilizadorBLL {
     public List<Utilizador> carregarUtilizadores() {
@@ -74,11 +72,9 @@ public class UtilizadorBLL {
         } else {
             u.setEstado(estado);
             if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
-                Template template = templateDAL.carregarTemplatePorId("1");
+                Template template = templateDAL.carregarTemplatePorId(templateIds.EMAIL_REGISTO);
                 if (template != null) {
-                    Map<String, String> variaveis = new HashMap<>();
-                    variaveis.put("NOME", u.getNomeUtilizador());
-                    emailBLL.enviarEmail(template, u.getEmail(), variaveis, u.getId());
+                    emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u), u.getId());
                 } else {
                     resultado.msgErro = "O Template não foi encontrado";
                 }
@@ -137,15 +133,14 @@ public class UtilizadorBLL {
                 LocalDateTime ultimoLogin = u.getUltimoLogin().atStartOfDay();
 
                 if (ultimoLogin.isBefore(tresMesesAtras)) {
-                    Template template = templateDAL.carregarTemplatePorId("4");
-                    if (template != null) {
-                        Map<String, String> variaveis = new HashMap<>();
-                        variaveis.put("NOME", u.getNomeUtilizador());
-                        emailBLL.enviarEmail(template, u.getEmail(), variaveis, u.getId());
+                    if (!emailBLL.foiEmailAvisoEnviado(u.getId(), templateIds.EMAIL_CLIENTE_OFFLINE)) {
+                        Template template = templateDAL.carregarTemplatePorId(templateIds.EMAIL_CLIENTE_OFFLINE);
+                        if (template != null) {
+                            emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u), u.getId());
+                        }
                     }
                 }
             }
         }
     }
-
 }

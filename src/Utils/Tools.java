@@ -8,10 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Tools {
     public static Scanner scanner = new Scanner(System.in);
@@ -147,8 +144,13 @@ public class Tools {
 
         private final int idTipoLeilao;
 
-        tipoLeilao(int idTipoLeilao) { this.idTipoLeilao = idTipoLeilao; }
-        public int getIdTipoLeilao() { return idTipoLeilao; }
+        tipoLeilao(int idTipoLeilao) {
+            this.idTipoLeilao = idTipoLeilao;
+        }
+
+        public int getIdTipoLeilao() {
+            return idTipoLeilao;
+        }
 
         public static tipoLeilao fromCodigo(int idTipoLeilao) {
             for (tipoLeilao tipo : tipoLeilao.values()) {
@@ -215,18 +217,19 @@ public class Tools {
         return false;
     }
 
-    public static String alertaCancelar(){
+    public static String alertaCancelar() {
         return "(-1 para cancelar): ";
     }
 
-    public static ResultadoOperacao verificarDatasAnteriores (LocalDateTime dataInicial, LocalDateTime dataFinal) {
+    public static ResultadoOperacao verificarDatasAnteriores(LocalDateTime dataInicial, LocalDateTime dataFinal) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        if (dataFinal.isBefore(dataInicial)) resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
-            else {
-                resultado.Objeto = resultado;
-                resultado.Sucesso = true;
-            }
-            return resultado;
+        if (dataFinal.isBefore(dataInicial))
+            resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
+        else {
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+        }
+        return resultado;
     }
 
     public static LocalDateTime parseDateTimeByDate(String dateStr) {
@@ -304,5 +307,16 @@ public class Tools {
             }
             throw new IllegalArgumentException("Tipo inválido: " + idTipoEmail);
         }
+    }
+
+    public static Map<String, String> substituirTags(Utilizador u) {
+        Map<String, String> variaveis = new HashMap<>();
+        variaveis.put("NOME", u.getNomeUtilizador());
+        variaveis.put("EQUIPA", Constantes.configEmail.equipa);
+        variaveis.put("EMAIL", u.getEmail());
+        variaveis.put("DATA", LocalDateTime.now().toString());
+        variaveis.put("SALDO", u.getSaldo().toString());
+
+        return variaveis;
     }
 }

@@ -22,7 +22,6 @@ public class TemplateView {
 
         int escolha = sc.nextInt();
         sc.nextLine();
-
         String idTemplate = obterIdTemplatePorEscolha(escolha);
         if (idTemplate == null) {
             System.out.println("Escolha inválida!");

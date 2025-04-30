@@ -1,11 +1,10 @@
 package Controller;
 
 import BLL.TransacaoBLL;
-import Model.Transacao;
 import Model.ResultadoOperacao;
+import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
-import View.TransacaoView;
 
 import java.time.LocalDateTime;
 import java.util.List;
