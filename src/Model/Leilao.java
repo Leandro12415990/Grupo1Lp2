@@ -11,11 +11,11 @@ public class Leilao {
     private LocalDateTime dataFim;
     private Double valorMinimo;
     private Double valorMaximo;
-    private Double valorAtualLanceEletronico;
+    private Double multiploLance;
     private int idEstado;
 
     public Leilao(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio,
-                  LocalDateTime dataFim, Double valorMinimo, Double valorMaximo, Double valorAtualLanceEletronico, int idEstado) {
+                  LocalDateTime dataFim, Double valorMinimo, Double valorMaximo, Double multiploLance, int idEstado) {
         this.id = id;
         this.idProduto = idProduto;
         this.descricao = descricao;
@@ -24,7 +24,7 @@ public class Leilao {
         this.dataFim = dataFim;
         this.valorMinimo = valorMinimo;
         this.valorMaximo = valorMaximo;
-        this.valorAtualLanceEletronico = valorAtualLanceEletronico;
+        this.multiploLance = multiploLance;
         this.idEstado = idEstado;
     }
 
@@ -92,12 +92,12 @@ public class Leilao {
         this.valorMinimo = valorMinimo;
     }
 
-    public Double getValorAtualLanceEletronico() {
-        return valorAtualLanceEletronico;
+    public Double getMultiploLance() {
+        return multiploLance;
     }
 
-    public void setValorAtualLanceEletronico(Double valorAtualLanceEletronico) {
-        this.valorAtualLanceEletronico = valorAtualLanceEletronico;
+    public void setMultiploLance(Double multiploLance) {
+        this.multiploLance = multiploLance;
     }
 
     public int getEstado() {

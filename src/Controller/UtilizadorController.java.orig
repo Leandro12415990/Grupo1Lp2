@@ -1,6 +1,6 @@
 package Controller;
 
-import BLL.*;
+import BLL.UtilizadorBLL;
 import DAL.UtilizadorDAL;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
@@ -115,6 +115,7 @@ public class UtilizadorController {
         else return true;
     }
 
+<<<<<<< HEAD
     public void verificarLoginsUtilizadores() throws MessagingException, IOException {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         utilizadorBLL.verificarLoginsUtilizadores(utilizadorBLL.carregarUtilizadores());
@@ -124,7 +125,7 @@ public class UtilizadorController {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         return utilizadorBLL.procurarUtilizadorPorEmail(email);
     }
-
+=======
     public double obterSaldoCliente(int idCliente) {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
@@ -134,4 +135,5 @@ public class UtilizadorController {
         return -1.0;
     }
 
+>>>>>>> quality
 }

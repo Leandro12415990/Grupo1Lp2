@@ -1,11 +1,17 @@
 package View;
 
-import BLL.UtilizadorBLL;
+<<<<<<< HEAD
 import Controller.LanceController;
 import Controller.LeilaoController;
 import Controller.ProdutoController;
+=======
+import BLL.UtilizadorBLL;
+import Controller.ProdutoController;
+import Controller.LanceController;
+import Controller.LeilaoController;
 import Controller.UtilizadorController;
 import DAL.LeilaoDAL;
+>>>>>>> quality
 import DAL.UtilizadorDAL;
 import Model.Lance;
 import Model.Leilao;
@@ -205,7 +211,12 @@ public class LanceView {
         }
     }
 
+<<<<<<< HEAD
+
     public void listarMeuLance() throws MessagingException, IOException {
+=======
+    public void listarMeuLance() {
+>>>>>>> quality
         LanceController lanceController = new LanceController();
         ProdutoController produtoController = new ProdutoController();
         List<Lance> meusLances = lanceController.listarLancesDoCliente();

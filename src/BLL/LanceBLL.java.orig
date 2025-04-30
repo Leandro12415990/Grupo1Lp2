@@ -148,10 +148,18 @@ public class LanceBLL {
     }
 
     public List<Lance> obterLancesPorLeilao(int idLeilao) {
+<<<<<<< HEAD
+        List<Lance> lancesByLeilao = carregarLances();
+        for (Lance lance : lances) {
+            if (idLeilao == 0) {
+                lancesByLeilao.add(lance);
+            } else if (lance.getIdLeilao() == idLeilao) {
+=======
         carregarLances();
-	List<Lance> lancesByLeilao = new ArrayList<>();
+        List<Lance> lancesByLeilao = new ArrayList<>();
         for (Lance lance : lances) {
             if (idLeilao == 0 || lance.getIdLeilao() == idLeilao) {
+>>>>>>> quality
                 lancesByLeilao.add(lance);
             }
         }
@@ -248,6 +256,10 @@ public class LanceBLL {
         List<Lance> lancesCarregados = lanceDAL.carregarLances();
         lances.clear();
         lances.addAll(lancesCarregados);
+<<<<<<< HEAD
+        return lancesCarregados;
+=======
+>>>>>>> quality
     }
 
 

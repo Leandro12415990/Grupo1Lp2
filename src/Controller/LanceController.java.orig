@@ -2,6 +2,10 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
+<<<<<<< HEAD
+import Model.ClienteSessao;
+=======
+>>>>>>> quality
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;

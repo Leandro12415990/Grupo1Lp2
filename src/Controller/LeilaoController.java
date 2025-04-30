@@ -22,8 +22,8 @@ public class LeilaoController {
             resultado.msgErro = "A data de inicio não pode ser nula.";
         } else if (valorMin < 0) {
             resultado.msgErro = "O valor minimo não pode ser negativo.";
-        } else if (valorMax != 0.0 && valorMax >= 0 && valorMax < valorMin) {
-            resultado.msgErro = "O valor máximo deve ser maior do que o valor minimo.";
+        } else if (valorMax != 0.0 && valorMax > valorMin) {
+            resultado.msgErro = "O valor do lance tem de ser menor do que o valor minimo.";
         } else if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO && multiploLance < 0) {
             resultado.msgErro = "O múltiplo de lance deve ser positivo.";
         } else if (dataFim != null && dataFim.isBefore(dataInicio)) {

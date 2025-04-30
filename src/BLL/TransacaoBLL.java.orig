@@ -1,12 +1,18 @@
 package BLL;
 
+<<<<<<< HEAD
 import DAL.TemplateDAL;
-import DAL.LanceDAL;
 import DAL.TransacaoDAL;
 import DAL.UtilizadorDAL;
 import Model.Lance;
 import Model.Template;
+=======
+import DAL.LanceDAL;
+import DAL.TransacaoDAL;
+import DAL.UtilizadorDAL;
+import Model.Lance;
 import Model.Leilao;
+>>>>>>> quality
 import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
