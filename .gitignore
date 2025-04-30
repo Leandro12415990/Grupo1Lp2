@@ -3,6 +3,9 @@
 /out/
 **/out/
 /target/
+*.class
+bin/
+out/
 /out/production/Leilao/BLL/UtilizadorBLL.class
 /out/production/Leilao/BLL/EmailBLL.class
 /out/production/Leilao/BLL/UtilizadorBLL.class
