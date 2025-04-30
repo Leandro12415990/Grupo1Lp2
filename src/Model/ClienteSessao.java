@@ -15,7 +15,6 @@ public class ClienteSessao {
         return idCliente != -1;
     }
 
-    public void logout() {
-        idCliente = -1;  // Limpar o id do cliente
+    public void logout() { idCliente = -1;
     }
 }

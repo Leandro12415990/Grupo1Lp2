@@ -2,8 +2,6 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
-import DAL.LanceDAL;
-import Model.ClienteSessao;
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
@@ -97,6 +95,25 @@ public class LanceController {
     public int selecionarLanceVencedor(int idLeilao) {
         LanceBLL lanceBLL = new LanceBLL();
         return lanceBLL.selecionarLanceVencedor(idLeilao);
+    }
+
+    public double obterUltimoLanceDoLeilao(int idLeilao, List<Leilao> leilaos) {
+        Leilao leilaoEncontrado = null;
+
+        for (Leilao leilao : leilaos) {
+            if (leilao.getId() == idLeilao) {
+                leilaoEncontrado = leilao;
+                break;
+            }
+        }
+        LanceBLL lanceBLL = new LanceBLL();
+        List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);
+
+        if (lances.isEmpty()) {
+            return leilaoEncontrado.getValorMinimo();
+        }
+
+        return lances.get(lances.size() - 1).getValorLance();
     }
 
 }
