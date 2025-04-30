@@ -1,8 +1,10 @@
 package View;
 
+import BLL.UtilizadorBLL;
 import Controller.ProdutoController;
 import Controller.LanceController;
 import Controller.LeilaoController;
+import Controller.UtilizadorController;
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
 import Model.*;
@@ -73,8 +75,11 @@ public class LanceView {
             if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
             boolean verificarID = lanceController.verificarDisponibilidadeLeilao(leiloesLanceDireto, idLeilao);
             Leilao leilao = leilaoController.procurarLeilaoPorId(idLeilao);
-
+            int idCliente = Tools.clienteSessao.getIdCliente();
+            UtilizadorController utilizadorController = new UtilizadorController();
+            double saldo = utilizadorController.obterSaldoCliente(idCliente);
             if (verificarID) {
+                System.out.println("O seu saldo atual: " + saldo);
                 System.out.print("Tem a certeza que quer dar um Lance? (S/N)" + Tools.alertaCancelar());
                 String imput1 = Tools.scanner.nextLine().trim();
                 if (Tools.verificarSaida(imput1)) return;
@@ -117,8 +122,12 @@ public class LanceView {
             int idLeilao = Tools.scanner.nextInt();
             if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
             boolean verificarID = lanceController.verificarDisponibilidadeLeilao(leilaoCartaFechada, idLeilao);
+            int idCliente = Tools.clienteSessao.getIdCliente();
+            UtilizadorController utilizadorController = new UtilizadorController();
+            double saldo = utilizadorController.obterSaldoCliente(idCliente);
 
             if (verificarID) {
+                System.out.println("O seu saldo atual: " + saldo);
                 System.out.print("Insira o valor do lance " + Tools.alertaCancelar());
                 double valorLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(valorLance))) return;
@@ -164,9 +173,13 @@ public class LanceView {
 
                 double ultimoLance = lanceController.obterUltimoLanceDoLeilao(idLeilao, leilaoEletronico);
                 double proximoLanceEsperado = ultimoLance + multiploLanceIncremento;
+                int idCliente = Tools.clienteSessao.getIdCliente();
+                UtilizadorController utilizadorController = new UtilizadorController();
+                double saldo = utilizadorController.obterSaldoCliente(idCliente);
 
                 System.out.printf("O valor atual do último lance é: %.2f\n", ultimoLance);
                 System.out.printf("Seu novo lance deve ser exatamente: %.2f\n", proximoLanceEsperado);
+                System.out.println("O seu saldo atual: " + saldo);
                 System.out.print("Deseja dar este Lance? (S/N)" + Tools.alertaCancelar());
                 String resposta = Tools.scanner.next().trim().toLowerCase();
                 if (resposta.equals("s")) {
@@ -186,8 +199,6 @@ public class LanceView {
             System.out.println("Não existem leilões disponíveis do tipo Eletrônico.\n");
         }
     }
-
-
 
     public void listarMeuLance() {
         LanceController lanceController = new LanceController();
