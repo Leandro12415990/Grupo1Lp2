@@ -1,6 +1,7 @@
 package Controller;
 
 import BLL.UtilizadorBLL;
+import DAL.UtilizadorDAL;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Tools;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class UtilizadorController {
@@ -116,5 +118,10 @@ public class UtilizadorController {
     public void verificarLoginsUtilizadores() throws MessagingException, IOException {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         utilizadorBLL.verificarLoginsUtilizadores(utilizadorBLL.carregarUtilizadores());
+    }
+
+    public Utilizador procurarUtilizadorPorEmail(String email) {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        return utilizadorBLL.procurarUtilizadorPorEmail(email);
     }
 }

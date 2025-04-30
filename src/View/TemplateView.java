@@ -18,6 +18,7 @@ public class TemplateView {
         System.out.println("2 - " + Tools.tipoEmail.fromCodigo(2).name());
         System.out.println("3 - " + Tools.tipoEmail.fromCodigo(3).name());
         System.out.println("4 - " + Tools.tipoEmail.fromCodigo(4).name());
+        System.out.println("5 - " + Tools.tipoEmail.fromCodigo(5).name());
         System.out.print("Digite o número do template: ");
 
         int escolha = sc.nextInt();
@@ -71,10 +72,12 @@ public class TemplateView {
             case 1:
                 return Constantes.templateIds.EMAIL_REGISTO;
             case 2:
-                return Constantes.templateIds.EMAIL_VENCEDOR_LEILAO;
+                return Constantes.templateIds.EMAIL_APROVADO;
             case 3:
-                return Constantes.templateIds.EMAIL_CLIENTE_OFFLINE;
+                return Constantes.templateIds.EMAIL_VENCEDOR_LEILAO;
             case 4:
+                return Constantes.templateIds.EMAIL_CLIENTE_OFFLINE;
+            case 5:
                 return Constantes.templateIds.EMAIL_SEM_CREDITOS;
             default:
                 return null;

@@ -1,8 +1,13 @@
 package View;
 
+import BLL.EmailBLL;
+import BLL.UtilizadorBLL;
 import Controller.UtilizadorController;
+import DAL.TemplateDAL;
 import Model.ResultadoOperacao;
+import Model.Template;
 import Model.Utilizador;
+import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
@@ -13,8 +18,10 @@ import java.util.List;
 
 public class UtilizadorView {
 
-    public void registarCliente() {
+    public void registarCliente() throws IOException, MessagingException {
         UtilizadorController utilizadorController = new UtilizadorController();
+        TemplateDAL templateDAL = new TemplateDAL();
+        EmailBLL emailBLL = new EmailBLL();
         String passwordFirst, passwordSecound;
 
         System.out.println("\n" + "-".repeat(7) + " REGISTO " + "-".repeat(7));
@@ -60,7 +67,15 @@ public class UtilizadorView {
         } while (!respVerificarPassword);
 
         ResultadoOperacao resultado = utilizadorController.verificarDados(null, nome, email, nascimento, morada, passwordFirst, passwordSecound);
-        if (resultado.Sucesso) System.out.println("Cliente registado com sucesso");
+
+        if (resultado.Sucesso) {
+            System.out.println("Cliente registado com sucesso");
+            Utilizador u = procurarUtilizadorPorEmail(email);
+            Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_REGISTO);
+            if (template != null) {
+                emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u,null,null), u.getId());
+            }
+        }
         else System.out.println(resultado.msgErro);
     }
 
@@ -237,6 +252,11 @@ public class UtilizadorView {
     public void verificarLoginsUtilizadores() throws MessagingException, IOException {
         UtilizadorController utilizadorController = new UtilizadorController();
         utilizadorController.verificarLoginsUtilizadores();
+    }
+
+    public Utilizador procurarUtilizadorPorEmail(String email) {
+        UtilizadorController utilizadorController = new UtilizadorController();
+        return utilizadorController.procurarUtilizadorPorEmail(email);
     }
 
 }

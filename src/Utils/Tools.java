@@ -1,8 +1,6 @@
 package Utils;
 
-import Model.ClienteSessao;
-import Model.ResultadoOperacao;
-import Model.Utilizador;
+import Model.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -285,9 +283,10 @@ public class Tools {
 
     public enum tipoEmail {
         EMAIL_REGISTO(1),
-        EMAIL_VENCEDOR_LEILAO(2),
-        EMAIL_CLIENTE_OFFLINE(3),
-        EMAIL_SEM_CREDITOS(4);
+        EMAIL_APROVADO(2),
+        EMAIL_VENCEDOR_LEILAO(3),
+        EMAIL_CLIENTE_OFFLINE(4),
+        EMAIL_SEM_CREDITOS(5);
 
         private final int idTipoEmail;
 
@@ -309,13 +308,20 @@ public class Tools {
         }
     }
 
-    public static Map<String, String> substituirTags(Utilizador u) {
+    public static Map<String, String> substituirTags(Utilizador u, Produto produto, Leilao leilao) {
         Map<String, String> variaveis = new HashMap<>();
         variaveis.put("NOME", u.getNomeUtilizador());
         variaveis.put("EQUIPA", Constantes.configEmail.equipa);
         variaveis.put("EMAIL", u.getEmail());
         variaveis.put("DATA", LocalDateTime.now().toString());
         variaveis.put("SALDO", u.getSaldo().toString());
+        if (produto != null) {
+            variaveis.put("NOME_PRODUTO", produto.getNome());
+        }
+        if (leilao != null) {
+            variaveis.put("TIPO_LEILAO", leilao.getTipoLeilao() == 1 ? "ELETRONICO" : leilao.getTipoLeilao() == 2 ? "CARTA FECHADA" : "VENDA DIRETA");
+            variaveis.put("NOME_lEILAO", leilao.getDescricao());
+        }
 
         return variaveis;
     }

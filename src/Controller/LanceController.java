@@ -93,7 +93,7 @@ public class LanceController {
 
     public String obterNomeVencedor(int idLance) {
         LanceBLL lanceBLL = new LanceBLL();
-        return lanceBLL.obterNomeVencedor(idLance);
+        return lanceBLL.obterVencedor(idLance).getNomeUtilizador();
     }
 
     public int selecionarLanceVencedor(int idLeilao) {

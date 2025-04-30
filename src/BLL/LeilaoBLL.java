@@ -4,7 +4,9 @@ import Controller.LeilaoController;
 import DAL.LeilaoDAL;
 import Model.Leilao;
 import Utils.Constantes;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
 public class LeilaoBLL {
     private static List<Leilao> leiloes = new ArrayList<>();
 
-    public List<Leilao> carregarLeiloes() {
+    public List<Leilao> carregarLeiloes() throws MessagingException, IOException {
         LeilaoDAL leilaoDAL = new LeilaoDAL();
         LeilaoController leilaoController = new LeilaoController();
         leiloes = leilaoDAL.carregaLeiloes();
@@ -55,7 +57,7 @@ public class LeilaoBLL {
         return ultimoId;
     }
 
-    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
+    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) throws MessagingException, IOException {
         if (!apenasDisponiveis) return carregarLeiloes();
 
         List<Leilao> ativos = new ArrayList<>();

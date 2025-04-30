@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UtilizadorBLL {
     public List<Utilizador> carregarUtilizadores() {
@@ -72,9 +73,9 @@ public class UtilizadorBLL {
         } else {
             u.setEstado(estado);
             if (estado == Tools.estadoUtilizador.ATIVO.getCodigo()) {
-                Template template = templateDAL.carregarTemplatePorId(templateIds.EMAIL_REGISTO);
+                Template template = templateDAL.carregarTemplatePorId(templateIds.EMAIL_APROVADO);
                 if (template != null) {
-                    emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u), u.getId());
+                    emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u,null,null), u.getId());
                 } else {
                     resultado.msgErro = "O Template não foi encontrado";
                 }
@@ -116,6 +117,17 @@ public class UtilizadorBLL {
         return null;
     }
 
+    public Utilizador procurarUtilizadorPorEmail(String email) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
+        for (Utilizador u : utilizadores) {
+            if (Objects.equals(u.getEmail(), email)) {
+                return u;
+            }
+        }
+        return null;
+    }
+
     public void gravarUtilizadores(List<Utilizador> utilizadores) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         utilizadorDAL.gravarUtilizadores(utilizadores);
@@ -136,7 +148,7 @@ public class UtilizadorBLL {
                     if (!emailBLL.foiEmailAvisoEnviado(u.getId(), templateIds.EMAIL_CLIENTE_OFFLINE)) {
                         Template template = templateDAL.carregarTemplatePorId(templateIds.EMAIL_CLIENTE_OFFLINE);
                         if (template != null) {
-                            emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u), u.getId());
+                            emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u,null,null), u.getId());
                         }
                     }
                 }

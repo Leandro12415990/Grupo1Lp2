@@ -129,7 +129,7 @@ public class LanceBLL {
     }
 
     public List<Lance> obterLancesPorLeilao(int idLeilao) {
-        List<Lance> lancesByLeilao = new ArrayList<>();
+        List<Lance> lancesByLeilao = carregarLances();
         for (Lance lance : lances) {
             if (idLeilao == 0) {
                 lancesByLeilao.add(lance);
@@ -212,23 +212,22 @@ public class LanceBLL {
         return lanceVencedor.getIdLance();
     }
 
-    public String obterNomeVencedor(int idLance) {
+    public Utilizador obterVencedor(int idLance) {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         for (Lance lance : lances) {
             if (lance.getIdLance() == idLance) {
-                Utilizador utilizadorVencedor = utilizadorBLL.procurarUtilizadorPorId(lance.getIdCliente());
-                return utilizadorVencedor.getNomeUtilizador();
+                return utilizadorBLL.procurarUtilizadorPorId(lance.getIdCliente());
             }
         }
         return null;
     }
 
-    public void carregarLances() {
+    public List<Lance> carregarLances() {
         LanceDAL lanceDAL = new LanceDAL();
         List<Lance> lancesCarregados = lanceDAL.carregarLances();
         lances.clear();
         lances.addAll(lancesCarregados);
-        System.out.println("Lances carregados: " + lances.size());
+        return lancesCarregados;
     }
 
 

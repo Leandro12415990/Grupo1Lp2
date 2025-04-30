@@ -7,7 +7,9 @@ import Model.Leilao;
 import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.Period;
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class EstatisticaView {
     /**
      * Exibição dos menus
      */
-    public void exibirMenuListagem() {
+    public void exibirMenuListagem() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LISTAGEM " + "=".repeat(5));
@@ -48,7 +50,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public void exibirMenuGlobal() {
+    public void exibirMenuGlobal() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LISTAGEM " + "=".repeat(5));
@@ -85,7 +87,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public void exibirMenuPorTipo() {
+    public void exibirMenuPorTipo() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n=== ESCOLHA O TIPO DE LEILÃO ===");
@@ -145,7 +147,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public void menuAcoesEletronico() {
+    public void menuAcoesEletronico() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n=== AÇÕES - LEILÕES ELETRÓNICOS ===");
@@ -185,7 +187,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public void menuAcoesCartaFechada() {
+    public void menuAcoesCartaFechada() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n=== AÇÕES - LEILÕES CARTA FECHADA ===");
@@ -224,7 +226,7 @@ public class EstatisticaView {
         } while (opc != 0);
     }
 
-    public void menuAcoesVendaDireta() {
+    public void menuAcoesVendaDireta() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n=== AÇÕES - LEILÕES VENDA DIRETA ===");
@@ -267,7 +269,7 @@ public class EstatisticaView {
      * metodos da view
      */
 
-    public void exibirContagemPorTipo(int idTipo) {
+    public void exibirContagemPorTipo(int idTipo) throws MessagingException, IOException {
         EstatisticaController estatisticaController = new EstatisticaController();
         System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
 
@@ -285,7 +287,7 @@ public class EstatisticaView {
         }
     }
 
-    public void exibirLeiloesFinalizados() {
+    public void exibirLeiloesFinalizados() throws MessagingException, IOException {
         EstatisticaController estatisticaController = new EstatisticaController();
         System.out.println("\n" + "=".repeat(5) + " LEILÕES FECHADOS " + "=".repeat(5));
 
@@ -304,7 +306,7 @@ public class EstatisticaView {
         }
     }
 
-    public void mostrarLeilaoMaisTempoAtivo() {
+    public void mostrarLeilaoMaisTempoAtivo() throws MessagingException, IOException {
         EstatisticaController estatisticaController = new EstatisticaController();
         Leilao leilao = estatisticaController.getLeilaoMaisTempoAtivo();
 
@@ -323,7 +325,7 @@ public class EstatisticaView {
                 tempo.getDays() + " dias");
     }
 
-    public void mostrarLeilaoMaisTempoPorTipo(int idTipo) {
+    public void mostrarLeilaoMaisTempoPorTipo(int idTipo) throws MessagingException, IOException {
         EstatisticaController estatisticaController = new EstatisticaController();
         Leilao leilao = estatisticaController.getLeilaoTipoMaisTempoAtivo(idTipo);
 
@@ -356,7 +358,7 @@ public class EstatisticaView {
         System.out.println("Total de lances: " + dados[2]);
     }
 
-    public void mostrarLeilaoComMaisLancesPorTipo(int idTipo) {
+    public void mostrarLeilaoComMaisLancesPorTipo(int idTipo) throws MessagingException, IOException {
         EstatisticaController estatisticaController = new EstatisticaController();
         String[] dados = estatisticaController.getDadosLeilaoComMaisLancesPorTipo(idTipo);
 
@@ -386,7 +388,7 @@ public class EstatisticaView {
         System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutosESegundos(media));
     }
 
-    public void mostrarMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
+    public void mostrarMediaTempoEntreLancesPorTipo(int idTipoLeilao) throws MessagingException, IOException {
         EstatisticaController estatisticaController = new EstatisticaController();
         double media = estatisticaController.calcularMediaTempoEntreLancesPorTipo(idTipoLeilao);
 
@@ -401,7 +403,7 @@ public class EstatisticaView {
         System.out.println("Tempo médio: " + Tools.formatarMinutosParaHorasEMinutosESegundos(media));
     }
 
-    public void mostrarLeiloesSemLances() {
+    public void mostrarLeiloesSemLances() throws MessagingException, IOException {
         EstatisticaController estatisticaController = new EstatisticaController();
         List<Leilao> semLances = estatisticaController.getLeiloesSemLances();
 
@@ -422,7 +424,7 @@ public class EstatisticaView {
         }
     }
 
-    public void mostrarLeiloesSemLancesPorTipo(int idTipoLeilao) {
+    public void mostrarLeiloesSemLancesPorTipo(int idTipoLeilao) throws MessagingException, IOException {
         EstatisticaController estatisticaController = new EstatisticaController();
         List<Leilao> semLances = estatisticaController.getLeiloesSemLancesPorTipo(idTipoLeilao);
 
@@ -475,7 +477,7 @@ public class EstatisticaView {
         System.out.println("Percentagem de clientes: " + resultado[1] + "%");
     }
 
-    public static void estatisticasPorLeilao() {
+    public static void estatisticasPorLeilao() throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         LeilaoView leilaoView = new LeilaoView();
         EstatisticaController estatisticaController = new EstatisticaController();

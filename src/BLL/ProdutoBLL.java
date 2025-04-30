@@ -4,12 +4,14 @@ import DAL.ProdutoDAL;
 import Model.Leilao;
 import Model.Produto;
 import Utils.Constantes;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoBLL {
-    public List<Produto> carregarProdutos() {
+    public List<Produto> carregarProdutos() throws MessagingException, IOException {
         ProdutoDAL produtoDal = new ProdutoDAL();
         List<Produto> produtos = produtoDal.carregarProdutos();
         int idEstado;
@@ -21,7 +23,7 @@ public class ProdutoBLL {
         return produtos;
     }
 
-    public void adicionarProduto(Produto produto) {
+    public void adicionarProduto(Produto produto) throws MessagingException, IOException {
         ProdutoDAL produtoDal = new ProdutoDAL();
         List<Produto> produtos = carregarProdutos();
         produto.setIdProduto(verificarUltimoId(produtos) + 1);
@@ -34,7 +36,7 @@ public class ProdutoBLL {
         return produtoDal.carregarProdutos();
     }
 
-    public List<Produto> listarProdutos(boolean apenasDisponiveis) {
+    public List<Produto> listarProdutos(boolean apenasDisponiveis) throws MessagingException, IOException {
         List<Produto> produtos = carregarProdutos();
         if (!apenasDisponiveis) return produtos;
         List<Produto> produtosAtivos = new ArrayList<>();
@@ -89,7 +91,7 @@ public class ProdutoBLL {
         return produtoRemovido;
     }
 
-    public String getNomeProdutoById(int idProduto) {
+    public String getNomeProdutoById(int idProduto) throws MessagingException, IOException {
         List<Produto> produtos = carregarProdutos();
         for (Produto produto : produtos) {
             if (produto.getIdProduto() == idProduto) return produto.getNome().toUpperCase();
@@ -109,7 +111,7 @@ public class ProdutoBLL {
         return false;
     }
 
-    public void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
+    public void atualizarEstadoProduto(int idProduto, int novoIdEstado) throws MessagingException, IOException {
         ProdutoDAL produtoDal = new ProdutoDAL();
         List<Produto> produtos = carregarProdutos();
         for (Produto produto : produtos) {
@@ -118,7 +120,7 @@ public class ProdutoBLL {
         produtoDal.gravarProdutos(produtos);
     }
 
-    public int determinarEstadoProduto(Produto produto) {
+    public int determinarEstadoProduto(Produto produto) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         if (produto.getEstado() != Constantes.estadosProduto.INATIVO) {
             for (Leilao leilao : leilaoBLL.listarLeiloes(false)) {
@@ -128,7 +130,7 @@ public class ProdutoBLL {
         return Constantes.estadosProduto.ATIVO;
     }
 
-    public boolean verificarProdutoEmLeilao(int idProduto) {
+    public boolean verificarProdutoEmLeilao(int idProduto) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         for (Leilao leilao : leilaoBLL.listarLeiloes(false)) {
             if (leilao.getIdProduto() == idProduto) return false;

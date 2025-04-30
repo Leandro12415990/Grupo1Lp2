@@ -2,11 +2,14 @@ package View;
 
 import Model.Utilizador;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
+
+import java.io.IOException;
 
 import static Utils.Tools.scanner;
 
 public class MenuClienteView {
-    public void exibirMenu(Utilizador utilizador) {
+    public void exibirMenu(Utilizador utilizador) throws MessagingException, IOException {
         //
         UtilizadorView utilizadorView = new UtilizadorView();
         TransacaoView transacaoView = new TransacaoView();

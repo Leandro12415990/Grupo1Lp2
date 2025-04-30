@@ -63,8 +63,9 @@ public class Constantes {
     // Secção: Tipos Email's
     public static class templateIds {
         public static final String EMAIL_REGISTO = "1";
-        public static final String EMAIL_VENCEDOR_LEILAO = "2";
-        public static final String EMAIL_CLIENTE_OFFLINE = "3";
-        public static final String EMAIL_SEM_CREDITOS = "4";
+        public static final String EMAIL_APROVADO = "2";
+        public static final String EMAIL_VENCEDOR_LEILAO = "3";
+        public static final String EMAIL_CLIENTE_OFFLINE = "4";
+        public static final String EMAIL_SEM_CREDITOS = "5";
     }
 }

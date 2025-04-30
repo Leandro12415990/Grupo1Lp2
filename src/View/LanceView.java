@@ -10,12 +10,14 @@ import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 
 public class LanceView {
-    public void exibirMenuLance() {
+    public void exibirMenuLance() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LANCES " + "=".repeat(5));
@@ -54,7 +56,7 @@ public class LanceView {
 
     }
 
-    public void lanceDireto() {
+    public void lanceDireto() throws MessagingException, IOException {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
@@ -103,7 +105,7 @@ public class LanceView {
         }
     }
 
-    public void lanceCartaFechada() {
+    public void lanceCartaFechada() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\n===== LEILÕES CARTA FECHADA =====");
@@ -140,7 +142,7 @@ public class LanceView {
         }
     }
 
-    public void lanceEletronico() {
+    public void lanceEletronico() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\n===== LEILÕES ELETRÔNICOS =====");
@@ -189,7 +191,7 @@ public class LanceView {
     }
 
 
-    public void listarMeuLance() {
+    public void listarMeuLance() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         ProdutoController produtoController = new ProdutoController();
         List<Lance> meusLances = lanceController.listarLancesDoCliente();
@@ -209,7 +211,7 @@ public class LanceView {
         }
     }
 
-    public void listarLancesPorLeilao() {
+    public void listarLancesPorLeilao() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();// PARA SER USADO PELO GESTOR
         List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
