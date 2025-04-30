@@ -104,4 +104,14 @@ public class UtilizadorController {
         if (!passwordFirst.equals(passwordSecound)) return false;
         else return true;
     }
+
+    public double obterSaldoCliente(int idCliente) {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
+        if (utilizador != null) {
+            return utilizador.getSaldo();
+        }
+        return -1.0;
+    }
+
 }
