@@ -1,8 +1,10 @@
 package BLL;
 
+import DAL.LanceDAL;
 import DAL.TransacaoDAL;
 import DAL.UtilizadorDAL;
 import Model.Lance;
+import Model.Leilao;
 import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
@@ -134,4 +136,43 @@ public class TransacaoBLL {
             }
         }
     }
+
+    public void reembolsarUltimoLanceEletronico(int idLeilao) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
+
+        if (leilao.getTipoLeilao() != Constantes.tiposLeilao.ELETRONICO) {
+            return;
+        }
+
+        LanceBLL lanceBLL = new LanceBLL();
+        List<Lance> lancesDoLeilao = lanceBLL.obterLancesPorLeilao(idLeilao);
+
+        Lance ultimoLance = null;
+        for (Lance lance : lancesDoLeilao) {
+            if (ultimoLance == null || lance.getDataLance().isAfter(ultimoLance.getDataLance())) {
+                ultimoLance = lance;
+            }
+        }
+
+        if (ultimoLance != null) {
+            double valorReembolsado = ultimoLance.getValorLance();
+            int idClienteAnterior = ultimoLance.getIdCliente();
+
+            double saldoAtualizado = atualizarSaldo(idClienteAnterior, valorReembolsado);
+
+            Transacao reembolso = new Transacao(
+                    0,
+                    idClienteAnterior,
+                    saldoAtualizado,
+                    valorReembolsado,
+                    LocalDateTime.now(),
+                    Constantes.tiposTransacao.LANCE_REEMBOLSO,
+                    Constantes.estadosTransacao.ACEITE
+            );
+            criarTransacao(reembolso);
+        }
+    }
+
+
 }

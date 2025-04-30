@@ -41,19 +41,26 @@ public class LeilaoBLL {
 
     public void adicionarLeilao(Leilao leilao) {
         LeilaoDAL leilaoDAL = new LeilaoDAL();
+        leiloes = leilaoDAL.carregaLeiloes();
+        int novoId = gerarProximoId();
+        leilao.setId(novoId);
         leiloes.add(leilao);
         leilaoDAL.gravarLeiloes(leiloes);
     }
 
-    private int verificarUltimoId() {
+
+
+
+    private int gerarProximoId() {
         int ultimoId = 0;
         for (Leilao leilao : leiloes) {
             if (leilao.getId() > ultimoId) {
                 ultimoId = leilao.getId();
             }
         }
-        return ultimoId;
+        return ultimoId + 1;
     }
+
 
     public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
         if (!apenasDisponiveis) return new ArrayList<>(leiloes);
@@ -93,7 +100,7 @@ public class LeilaoBLL {
             leilao.setDataFim(dataFim);
             leilao.setValorMinimo(valorMin);
             leilao.setValorMaximo(valorMax);
-            leilao.setValorAtualLanceEletronico(multiploLance);
+            leilao.setMultiploLance(multiploLance);
             leilao.setEstado(idEstado);
             leilaoDAL.gravarLeiloes(leiloes);
             return true;

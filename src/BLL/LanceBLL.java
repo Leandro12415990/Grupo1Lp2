@@ -73,40 +73,57 @@ public class LanceBLL {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         LanceDAL lanceDAL = new LanceDAL();
         ResultadoOperacao resultado = new ResultadoOperacao();
+        TransacaoBLL transacaoBLL = new TransacaoBLL();
 
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
-        double valorAtual = leilao.getValorAtualLanceEletronico();
+        double multiploLanceIncremento = leilao.getValorMaximo();
+        double valorMinimo = leilao.getValorMinimo();
 
-        // Validar se o novo lance cobre o lance atual
-        if (novoValorLance <= valorAtual) {
+        carregarLances();
+
+        List<Lance> lancesDoLeilao = obterLancesPorLeilao(idLeilao);
+        double ultimoLance;
+
+        if (lancesDoLeilao.isEmpty()) {
+            ultimoLance = valorMinimo;
+        } else {
+            ultimoLance = lancesDoLeilao.get(lancesDoLeilao.size() -1).getValorLance();
+        }
+
+        double valorEsperado = ultimoLance + multiploLanceIncremento;
+
+        if (Double.compare(novoValorLance, valorEsperado) != 0) {
             resultado.Sucesso = false;
-            resultado.msgErro = "O novo lance deve ser maior que o lance atual.";
+            resultado.msgErro = String.format("O valor do lance deve ser exatamente %.2f (Último lance + Múltiplo)", valorEsperado);
             return resultado;
         }
 
-        // Verificar saldo do cliente
         ResultadoOperacao saldoVerificado = verificarSaldoEAtualizar(idCliente, novoValorLance, idTipoLeilao);
         if (!saldoVerificado.Sucesso) {
             return saldoVerificado;
         }
 
-        // Criar e registrar o novo lance
+        transacaoBLL.reembolsarUltimoLanceEletronico(idLeilao);
+
+        carregarLances();
         int idLance = verUltimoId() + 1;
+
         LocalDateTime dataLance = LocalDateTime.now();
         int pontosUtilizados = 0;
 
-        Lance novoLance = new Lance(idLance, idLeilao, idCliente, novoValorLance, 1, pontosUtilizados, dataLance);
+        Lance novoLance = new Lance(idLance, idLeilao, idCliente, novoValorLance, lancesDoLeilao.size() + 1, pontosUtilizados, dataLance);
+
         lances.add(novoLance);
         lanceDAL.gravarLances(lances);
 
-        // Atualizar o valor atual do lance no leilão
-        leilao.setValorAtualLanceEletronico(novoValorLance);
         leilaoBLL.atualizarLeilao(leilao);
 
         resultado.Sucesso = true;
         resultado.Objeto = novoLance;
         return resultado;
     }
+
+
 
     public int verUltimoId() {
         int ultimoId = 0;
@@ -129,16 +146,16 @@ public class LanceBLL {
     }
 
     public List<Lance> obterLancesPorLeilao(int idLeilao) {
+        carregarLances();
         List<Lance> lancesByLeilao = new ArrayList<>();
         for (Lance lance : lances) {
-            if (idLeilao == 0) {
-                lancesByLeilao.add(lance);
-            } else if(lance.getIdLeilao() == idLeilao){
+            if (idLeilao == 0 || lance.getIdLeilao() == idLeilao) {
                 lancesByLeilao.add(lance);
             }
         }
         return lancesByLeilao;
     }
+
 
     public void fimLeilao(int idLeilao, LocalDateTime dataFim) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
@@ -228,7 +245,6 @@ public class LanceBLL {
         List<Lance> lancesCarregados = lanceDAL.carregarLances();
         lances.clear();
         lances.addAll(lancesCarregados);
-        System.out.println("Lances carregados: " + lances.size());
     }
 
 

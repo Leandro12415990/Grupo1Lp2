@@ -3,6 +3,7 @@ package View;
 import Controller.ProdutoController;
 import Controller.LanceController;
 import Controller.LeilaoController;
+import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
 import Model.*;
 import Utils.Constantes;
@@ -148,7 +149,7 @@ public class LanceView {
         if (!leilaoEletronico.isEmpty()) {
             for (Leilao leilao : leilaoEletronico) {
                 System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getDescricao() +
-                        " | Valor Atual do Lance: " + leilao.getValorAtualLanceEletronico());
+                        " | Valor do Múltiplo de Lance: " + leilao.getValorMaximo());
             }
 
             System.out.print("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
@@ -159,23 +160,24 @@ public class LanceView {
 
             if (verificarID) {
                 Leilao leilaoSelecionado = leilaoController.procurarLeilaoPorId(idLeilao);
-                double valorAtual = leilaoSelecionado.getValorAtualLanceEletronico();
+                double multiploLanceIncremento = leilaoSelecionado.getValorMaximo();
 
-                System.out.printf("O valor atual do lance é: %.2f\n", valorAtual);
-                System.out.print("Digite o novo valor do seu lance (deve ser maior que o atual)" + Tools.alertaCancelar());
-                double novoValorLance = Tools.scanner.nextDouble();
-                if (Tools.verificarSaida(String.valueOf(novoValorLance))) return;
+                double ultimoLance = lanceController.obterUltimoLanceDoLeilao(idLeilao, leilaoEletronico);
+                double proximoLanceEsperado = ultimoLance + multiploLanceIncremento;
 
-                if (novoValorLance > valorAtual) {
-                    ResultadoOperacao resultado = lanceController.adicionarLanceEletronico(idLeilao, novoValorLance);
-
+                System.out.printf("O valor atual do último lance é: %.2f\n", ultimoLance);
+                System.out.printf("Seu novo lance deve ser exatamente: %.2f\n", proximoLanceEsperado);
+                System.out.print("Deseja dar este Lance? (S/N)" + Tools.alertaCancelar());
+                String resposta = Tools.scanner.next().trim().toLowerCase();
+                if (resposta.equals("s")) {
+                    ResultadoOperacao resultado = lanceController.adicionarLanceEletronico(idLeilao, proximoLanceEsperado);
                     if (resultado.Sucesso) {
-                        System.out.println("Seu lance foi aceito!");
+                        System.out.println("Seu lance foi aceite!");
                     } else {
                         System.out.println("Erro ao registrar o lance: " + resultado.msgErro);
                     }
                 } else {
-                    System.out.println("Erro: O novo lance deve ser maior que o lance atual!");
+                    System.out.println("Lance não registado ");
                 }
             } else {
                 System.out.println("Leilão indisponível!");
@@ -184,6 +186,7 @@ public class LanceView {
             System.out.println("Não existem leilões disponíveis do tipo Eletrônico.\n");
         }
     }
+
 
 
     public void listarMeuLance() {

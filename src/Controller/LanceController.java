@@ -2,8 +2,6 @@ package Controller;
 
 import BLL.LanceBLL;
 import BLL.LeilaoBLL;
-import DAL.LanceDAL;
-import Model.ClienteSessao;
 import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
@@ -17,9 +15,8 @@ public class LanceController {
     public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double novoValorLance) {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        ClienteSessao clienteSessao = new ClienteSessao();
 
-        int idCliente = clienteSessao.getIdCliente();
+        int idCliente = Tools.clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         int tipoLeilao = leilao.getTipoLeilao();
 
@@ -32,9 +29,8 @@ public class LanceController {
     public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance) {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        ClienteSessao clienteSessao = new ClienteSessao();
 
-        int idCliente = clienteSessao.getIdCliente();
+        int idCliente = Tools.clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         valorLance = leilao.getValorMinimo();
         int tipoLeilao = leilao.getTipoLeilao();
@@ -46,9 +42,8 @@ public class LanceController {
     public ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance) {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        ClienteSessao clienteSessao = new ClienteSessao();
 
-        int idCliente = clienteSessao.getIdCliente();
+        int idCliente = Tools.clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
 
         int tipoLeilao = leilao.getTipoLeilao();
@@ -100,6 +95,25 @@ public class LanceController {
     public int selecionarLanceVencedor(int idLeilao) {
         LanceBLL lanceBLL = new LanceBLL();
         return lanceBLL.selecionarLanceVencedor(idLeilao);
+    }
+
+    public double obterUltimoLanceDoLeilao(int idLeilao, List<Leilao> leilaos) {
+        Leilao leilaoEncontrado = null;
+
+        for (Leilao leilao : leilaos) {
+            if (leilao.getId() == idLeilao) {
+                leilaoEncontrado = leilao;
+                break;
+            }
+        }
+        LanceBLL lanceBLL = new LanceBLL();
+        List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);
+
+        if (lances.isEmpty()) {
+            return leilaoEncontrado.getValorMinimo();
+        }
+
+        return lances.get(lances.size() - 1).getValorLance();
     }
 
 }
