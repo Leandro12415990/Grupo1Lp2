@@ -365,18 +365,18 @@ public class LeilaoView {
             // No caso de ser um Leilão Eletronico, pede DateTime
             if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
                 while (true) {
-                    System.out.print("\nNova data de início (dd/MM/yyyy) ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    System.out.print("\nNova data de início (dd/MM/yyyy HH:mm:SS) ou pressione ENTER para não alterar " + Tools.alertaCancelar());
                     String dataInicioStr = Tools.scanner.nextLine().trim();
                     if (Tools.verificarSaida(dataInicioStr)) return;
                     if (dataInicioStr.isEmpty()) break;
                     dataInicio = Tools.parseDateTime(dataInicioStr);
 
                     if (dataInicio != null) break;
-                    else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm.");
+                    else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy HH:mm.SS.");
                 }
                 while (true) {
                     ResultadoOperacao isCorrect;
-                    System.out.print("Nova data de fim (dd/MM/yyyy hh:mm) ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    System.out.print("Nova data de fim (dd/MM/yyyy HH:mm:SS) ou pressione ENTER para não alterar " + Tools.alertaCancelar());
                     String dataFimStr = Tools.scanner.nextLine().trim();
                     if (Tools.verificarSaida(dataFimStr)) return;
                     if (!dataFimStr.isEmpty()) {
@@ -387,7 +387,7 @@ public class LeilaoView {
                             if (isCorrect.Sucesso) break;
                             else System.out.println(isCorrect.msgErro);
                         } else {
-                            System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm.\n");
+                            System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy HH:mm.SS.\n");
                         }
                     } else {
                         if (dataFim != null) {
@@ -400,7 +400,7 @@ public class LeilaoView {
                 }
             } else {
                 while (true) {
-                    System.out.print("\nNova data de início (dd/MM/yyyy hh:mm) ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    System.out.print("\nNova data de início (dd/MM/yyyy HH:mm:SS) ou pressione ENTER para não alterar " + Tools.alertaCancelar());
                     String dataInicioStr = Tools.scanner.nextLine().trim();
                     if (Tools.verificarSaida(dataInicioStr)) return;
                     if (dataInicioStr.isEmpty()) break;
@@ -409,12 +409,12 @@ public class LeilaoView {
                     if (dataInicio != null) {
                         dataInicio = dataInicio.withHour(0).withMinute(0).withSecond(0).withNano(0);
                         break;
-                    } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm.");
+                    } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy HH:mm.SS");
                 }
 
                 while (true) {
                     ResultadoOperacao isCorrect;
-                    System.out.print("Nova data de fim (dd/MM/yyyy) ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    System.out.print("Nova data de fim (dd/MM/yyyy HH:mm:SS) ou pressione ENTER para não alterar " + Tools.alertaCancelar());
                     String dataFimStr = Tools.scanner.nextLine().trim();
                     if (Tools.verificarSaida(dataFimStr)) return;
                     if (!dataFimStr.isEmpty()) {
@@ -425,7 +425,7 @@ public class LeilaoView {
                             isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
                             if (isCorrect.Sucesso) break;
                             else System.out.println(isCorrect.msgErro);
-                        } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.\n");
+                        } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy HH:mm:SS.\n");
                     } else {
                         if (dataFim != null) {
                             isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
@@ -437,7 +437,9 @@ public class LeilaoView {
                 }
             }
             double valorMin = leilao.getValorMinimo();
-            double valorMax = leilao.getValorMaximo();
+            Double valorMaxObj = leilao.getValorMaximo();
+            double valorMax = valorMaxObj != null ? valorMaxObj : 0.0;
+
             // No caso de ser um Leilão Venda Direta, apenas pede um valor (estou a armazenar na variável valorMin)
             if (idTipoLeilao == Constantes.tiposLeilao.VENDA_DIRETA) {
                 while (true) {
@@ -479,57 +481,20 @@ public class LeilaoView {
                     }
                 }
 
-                valorMax = leilao.getValorMaximo();
-                while (true) {
-                    ResultadoOperacao resultadoValores;
-                    System.out.print("Novo valor máximo ou pressione ENTER para não alterar " + Tools.alertaCancelar());
-                    String valorMaxStr = Tools.scanner.nextLine().trim();
-
-                    if (Tools.verificarSaida(valorMaxStr)) return;
-                    if (!valorMaxStr.isEmpty()) {
-                        try {
-                            valorMax = Double.parseDouble(valorMaxStr);
-                            if (valorMax != 0.0) {
-                                resultadoValores = leilaoController.verificarValorMax(valorMin, valorMax);
-                                if (resultadoValores.Sucesso) {
-                                    break;
-                                } else {
-                                    System.out.println(resultadoValores.msgErro);
-                                    valorMax = 0.0;
-                                }
-                            } else {
-                                System.out.println("Entrada inválida. Por favor, insira um valor válido.\n");
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Entrada inválida. Por favor, insira um valor numérico.\n");
-                        }
-                    } else {
-                        if (valorMax != 0.0) {
-                            resultadoValores = leilaoController.verificarValorMax(valorMin, valorMax);
-                            if (resultadoValores.Sucesso) {
-                                break;
-                            } else {
-                                System.out.println(resultadoValores.msgErro);
-                                valorMax = 0.0;
-                            }
-                        }
-                    }
-                    break;
-                }
             }
 
-            double multiploLance = leilao.getMultiploLance();
+            double multiploLance = 0.0;
             if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO) {
                 while (true) {
-                    System.out.print("Novo múltiplo de lance ou pressione ENTER para não alterar " + Tools.alertaCancelar());
-                    String multiploLanceStr = Tools.scanner.nextLine().trim();
-                    if (Tools.verificarSaida(multiploLanceStr)) return;
-                    if (multiploLanceStr.isEmpty()) break;
+                    System.out.print("Novo valor do lance ou pressione ENTER para não alterar " + Tools.alertaCancelar());
+                    String novoValorLance = Tools.scanner.nextLine().trim();
+                    if (Tools.verificarSaida(novoValorLance)) return;
+                    if (novoValorLance.isEmpty()) break;
 
                     try {
-                        multiploLance = Double.parseDouble(multiploLanceStr);
-                        if (multiploLance <= 0) {
-                            System.out.println("O múltiplo de lance deve ser maior que zero. Tente novamente.");
+                        valorMax = Double.parseDouble(novoValorLance);
+                        if (valorMax <= 0) {
+                            System.out.println("O valor do lance deve ser maior que zero. Tente novamente.");
                             continue;
                         }
                         break;
