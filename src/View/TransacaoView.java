@@ -6,7 +6,9 @@ import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TransacaoView {
@@ -83,7 +85,7 @@ public class TransacaoView {
 
     }
 
-    public void aprovarDepositos() {
+    public void aprovarDepositos() throws MessagingException, IOException {
         TransacaoController transacaoController = new TransacaoController();
         List<Transacao> pendentes = transacaoController.listarDepositos(true, Constantes.tiposTransacao.DEPOSITO, 0);
 
@@ -116,11 +118,11 @@ public class TransacaoView {
                     if (Tools.verificarSaida(input)) return;
 
                     char opc = Character.toUpperCase(input.charAt(0));
-
+                    char operador = '+';
                     switch (opc) {
                         case 'A':
                             System.out.println("O depósito " + deposito.getIdTransacao() + " foi aprovado com sucesso!");
-                            transacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao());
+                            transacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao(), operador);
                             transacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.ACEITE);
                             break;
                         case 'N':

@@ -5,7 +5,9 @@ import DAL.UtilizadorDAL;
 import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.List;
 public class LanceBLL {
     private static final List<Lance> lances = new ArrayList<>();
 
-    public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance, int idCliente, int idTipoLeilao) {
+    public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance, int idCliente, int idTipoLeilao) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         LanceDAL lanceDAL = new LanceDAL();
         ResultadoOperacao resultado = new ResultadoOperacao();
@@ -43,7 +45,7 @@ public class LanceBLL {
         return resultado;
     }
 
-    public ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance, int idCliente, int idTipoLeilao) {
+    public ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance, int idCliente, int idTipoLeilao) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         LanceDAL lanceDAL = new LanceDAL();
         ResultadoOperacao resultado = new ResultadoOperacao();
@@ -69,7 +71,7 @@ public class LanceBLL {
         return resultado;
     }
 
-    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double novoValorLance, int idCliente, int idTipoLeilao) {
+    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double novoValorLance, int idCliente, int idTipoLeilao) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         LanceDAL lanceDAL = new LanceDAL();
         ResultadoOperacao resultado = new ResultadoOperacao();
@@ -84,7 +86,6 @@ public class LanceBLL {
             return resultado;
         }
 
-        // Verificar saldo do cliente
         ResultadoOperacao saldoVerificado = verificarSaldoEAtualizar(idCliente, novoValorLance, idTipoLeilao);
         if (!saldoVerificado.Sucesso) {
             return saldoVerificado;
@@ -145,21 +146,23 @@ public class LanceBLL {
         leilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
     }
 
-    private ResultadoOperacao verificarSaldoEAtualizar(int idCliente, double valor, int idTipoLeilao) {
+    private ResultadoOperacao verificarSaldoEAtualizar(int idCliente, double valor, int idTipoLeilao) throws MessagingException, IOException {
         ResultadoOperacao resultado = new ResultadoOperacao();
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         TransacaoBLL transacaoBLL = new TransacaoBLL();
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
 
+        double novoSaldo;
+
+        char operador = '-';
         if (utilizador.getSaldo() < valor) {
             resultado.Sucesso = false;
             resultado.msgErro = "Saldo insuficiente.";
             return resultado;
+        } else {
+            novoSaldo = transacaoBLL.atualizarSaldo(idCliente,valor,operador);
         }
-
-        double novoSaldo = utilizador.getSaldo() - valor;
-        utilizador.setSaldo(novoSaldo);
 
         List<Utilizador> utilizadores = Tools.utilizadores;
         for (int i = 0; i < utilizadores.size(); i++) {

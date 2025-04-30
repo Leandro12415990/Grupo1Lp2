@@ -1,6 +1,7 @@
 /shelf/
 /workspace.xml
 /out/
+**/out/
 /target/
 /out/production/Leilao/BLL/UtilizadorBLL.class
 /out/production/Leilao/BLL/EmailBLL.class

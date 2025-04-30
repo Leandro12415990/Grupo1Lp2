@@ -1,13 +1,17 @@
 package BLL;
 
+import DAL.TemplateDAL;
 import DAL.TransacaoDAL;
 import DAL.UtilizadorDAL;
 import Model.Lance;
+import Model.Template;
 import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +50,29 @@ public class TransacaoBLL {
         return 0.0;
     }
 
-    public double atualizarSaldo(int idCliente, double creditos) {
+    public double atualizarSaldo(int idCliente, double creditos, char operador) throws IOException, MessagingException {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
-        for (Utilizador utilizador : Tools.utilizadores) {
+        TemplateDAL templateDAL = new TemplateDAL();
+        EmailBLL emailBLL = new EmailBLL();
+
+        for (Utilizador utilizador : utilizadorDAL.carregarUtilizadores()) {
             if (utilizador.getId() == idCliente) {
                 double saldoAtual = utilizador.getSaldo();
-                saldoAtual += creditos;
+                switch (operador) {
+                    case '+':
+                        saldoAtual = saldoAtual + creditos;
+                        break;
+                    case '-':
+                        saldoAtual = saldoAtual - creditos;
+                        break;
+                }
                 utilizador.setSaldo(saldoAtual);
+                if (saldoAtual < 0 || saldoAtual == 0.0) {
+                    Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_SEM_CREDITOS);
+                    if (template != null) {
+                        emailBLL.enviarEmail(template, utilizador.getEmail(), Tools.substituirTags(utilizador,null,null), utilizador.getId());
+                    }
+                }
                 utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
                 return saldoAtual;
             }
@@ -120,13 +140,13 @@ public class TransacaoBLL {
         transacaoDAL.gravarTransacoes(transacaoList);
     }
 
-    public void devolverSaldo(int idLeilao, int idLanceVencedor) {
+    public void devolverSaldo(int idLeilao, int idLanceVencedor) throws MessagingException, IOException {
         LanceBLL lanceBLL = new LanceBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);
-
+        char operador = '-';
         for (Lance lance : lances) {
             if (lance.getIdLance() != idLanceVencedor) {
-                double saldoAtual = atualizarSaldo(lance.getIdCliente(), lance.getValorLance());
+                double saldoAtual = atualizarSaldo(lance.getIdCliente(), lance.getValorLance(), operador);
                 if (saldoAtual != 0.0) {
                     Transacao transacao = new Transacao(0, lance.getIdCliente(), saldoAtual, lance.getValorLance(), LocalDateTime.now(), Constantes.tiposTransacao.LANCE_REEMBOLSO, Constantes.estadosTransacao.ACEITE);
                     criarTransacao(transacao);
