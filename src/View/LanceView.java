@@ -61,7 +61,7 @@ public class LanceView {
 
         ResultadoOperacao resultado;
         System.out.println("\n===== LEILÕES VENDA DIRETA =====");
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
         List<Utilizador> cliente = utilizadorDAL.carregarUtilizadores();
         List<Leilao> leiloesLanceDireto = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
         if (!leiloesLanceDireto.isEmpty()) {
@@ -111,7 +111,7 @@ public class LanceView {
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\n===== LEILÕES CARTA FECHADA =====");
 
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
         List<Leilao> leilaoCartaFechada = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.CARTA_FECHADA);
         if (!leilaoCartaFechada.isEmpty()) {
             for (Leilao leilao : leilaoCartaFechada) {
@@ -152,7 +152,7 @@ public class LanceView {
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\n===== LEILÕES ELETRÔNICOS =====");
 
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
         List<Leilao> leilaoEletronico = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.ELETRONICO);
 
         if (!leilaoEletronico.isEmpty()) {
@@ -223,7 +223,7 @@ public class LanceView {
     public void listarLancesPorLeilao() {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();// PARA SER USADO PELO GESTOR
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
         List<Leilao> leilaoEletronicoAtivo = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.ELETRONICO);
         //LeilaoView.exibirLeiloes(leilaoEletronicoAtivo);
         System.out.print("\nInsira o ID do leilão para visualizar os lances: ");

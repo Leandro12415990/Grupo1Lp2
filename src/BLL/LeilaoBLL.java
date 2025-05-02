@@ -4,6 +4,7 @@ import Controller.LeilaoController;
 import DAL.LeilaoDAL;
 import Model.Leilao;
 import Utils.Constantes;
+import Utils.Tools;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,16 +63,37 @@ public class LeilaoBLL {
     }
 
 
-    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
-        if (!apenasDisponiveis) return new ArrayList<>(leiloes);
-
-        List<Leilao> ativos = new ArrayList<>();
-        for (Leilao leilao : leiloes) {
-            if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
-                ativos.add(leilao);
+    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
+    List<Leilao> leilaosEmpty = new ArrayList<>();
+    if(estado != Tools.estadoLeilao.DEFAULT){
+        if(estado == Tools.estadoLeilao.ATIVO){
+            List<Leilao> ativos = new ArrayList<>();
+            for (Leilao leilao : leiloes) {
+                if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
+                    ativos.add(leilao);
+                }
             }
+            return ativos;
         }
-        return ativos;
+
+        else if(estado == Tools.estadoLeilao.FECHADO){
+            List<Leilao> fechados = new ArrayList<>();
+            for (Leilao leilao : leiloes) {
+                if (leilao.getEstado() == Constantes.estadosLeilao.FECHADO) {
+                    fechados.add(leilao);
+                }
+            }
+            return fechados;
+        }
+
+    }else{
+        List<Leilao> todos = new ArrayList<>();
+        for (Leilao leilao : leiloes) {
+                todos.add(leilao);
+        }
+        return todos;
+        }
+    return leilaosEmpty;
     }
 
     public Leilao procurarLeilaoPorId(int id) {

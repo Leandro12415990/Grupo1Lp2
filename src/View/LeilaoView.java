@@ -42,7 +42,7 @@ public class LeilaoView {
                     eliminarLeilao();
                     break;
                 case 5:
-                    listaLeiloes(false);
+                    listaLeiloes(Tools.estadoLeilao.DEFAULT);
                     break;
                 case 6:
                     fecharLeilaoManual();
@@ -196,9 +196,9 @@ public class LeilaoView {
         } else System.out.println(resultadoProdutos.msgErro);
     }
 
-    public List<Leilao> listaLeiloes(boolean apenasDisponiveis) {
+    public List<Leilao> listaLeiloes(Tools.estadoLeilao estado) {
         LeilaoController leilaoController = new LeilaoController();
-        List<Leilao> leiloesList = leilaoController.listarLeiloes(apenasDisponiveis);
+        List<Leilao> leiloesList = leilaoController.listarLeiloes(estado);
         exibirLeiloes(leiloesList);
         return leiloesList;
     }
@@ -233,7 +233,7 @@ public class LeilaoView {
     private void procurarLeilao() {
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\nPROCURAR UM LEILÃO");
-        listaLeiloes(false);
+        listaLeiloes(Tools.estadoLeilao.DEFAULT);
         System.out.print("\nIntroduza o ID do Leilão que pretende consultar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
         if (Tools.verificarSaida(String.valueOf(id))) return;
@@ -265,7 +265,7 @@ public class LeilaoView {
     private void eliminarLeilao() {
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\nELIMINAÇÃO DE UM LEILÃO");
-        listaLeiloes(false);
+        listaLeiloes(Tools.estadoLeilao.DEFAULT);
         System.out.print("\nIntroduza o ID do Leilão que pretende eliminar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
         if (Tools.verificarSaida(String.valueOf(id))) return;
@@ -294,7 +294,7 @@ public class LeilaoView {
         LeilaoController leilaoController = new LeilaoController();
         ProdutoController produtoController = new ProdutoController();
         System.out.println("\nEDIÇÃO DE UM LEILÃO");
-        listaLeiloes(false);
+        listaLeiloes(Tools.estadoLeilao.DEFAULT);
         System.out.print("\nIntroduza o ID do Leilão que pretende editar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
@@ -532,7 +532,7 @@ public class LeilaoView {
         LanceController lanceController = new LanceController();
         System.out.println("\n===== LEILÕES ATIVOS =====");
 
-        listaLeiloes(true);
+        listaLeiloes(Tools.estadoLeilao.ATIVO);
         System.out.print("\nInsira o ID do leilão que deseja fechar: " + Tools.alertaCancelar());
         int idLeilao = Tools.scanner.nextInt();
         Tools.scanner.nextLine();

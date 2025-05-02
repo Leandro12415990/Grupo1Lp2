@@ -21,7 +21,7 @@ public class EstatisticaBLL {
      */
     private List<Leilao> filtrarLeiloesFechados() {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        List<Leilao> todos = leilaoBLL.listarLeiloes(false);
+        List<Leilao> todos = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
         List<Leilao> fechados = new ArrayList<>();
 
         for (Leilao l : todos) {
@@ -93,7 +93,7 @@ public class EstatisticaBLL {
 
     public Leilao obterLeilaoTipoMaisTempoAtivo(int idTipoLeilao) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
+        List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
         if (leiloes == null || leiloes.isEmpty()) return null;
 
         Leilao leilaoMaisTempo = null;
@@ -117,7 +117,7 @@ public class EstatisticaBLL {
 
     public Leilao obterLeilaoMaisTempoAtivo() {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
+        List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
         if (leiloes == null || leiloes.isEmpty()) return null;
 
         Leilao leilaoMaisTempo = null;
@@ -191,7 +191,7 @@ public class EstatisticaBLL {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
-        List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
+        List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
 
         if (lances == null || lances.isEmpty() || leiloes == null || leiloes.isEmpty()) {
             return null;
@@ -292,7 +292,7 @@ public class EstatisticaBLL {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
-        List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
+        List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
 
         if (lances == null || lances.isEmpty() || leiloes == null || leiloes.isEmpty()) return -1;
 
@@ -353,7 +353,7 @@ public class EstatisticaBLL {
     public List<Leilao> obterLeiloesSemLances() {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
+        List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
 
         if (leiloes == null || leiloes.isEmpty()) return new ArrayList<>();
@@ -381,7 +381,7 @@ public class EstatisticaBLL {
     public List<Leilao> obterLeiloesSemLancesPorTipo(int idTipoLeilao) {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        List<Leilao> leiloes = leilaoBLL.listarLeiloes(false);
+        List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
 
         if (leiloes == null || leiloes.isEmpty()) return new ArrayList<>();
