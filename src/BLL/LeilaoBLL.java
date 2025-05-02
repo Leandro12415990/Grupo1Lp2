@@ -4,6 +4,7 @@ import Controller.LeilaoController;
 import DAL.LeilaoDAL;
 import Model.Leilao;
 import Utils.Constantes;
+import Utils.Tools;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public class LeilaoBLL {
 
     public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
         if (!apenasDisponiveis) return new ArrayList<>(leiloes);
+
+
 
         List<Leilao> ativos = new ArrayList<>();
         for (Leilao leilao : leiloes) {
