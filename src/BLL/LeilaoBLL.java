@@ -59,8 +59,6 @@ public class LeilaoBLL {
     public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
         if (!apenasDisponiveis) return new ArrayList<>(leiloes);
 
-
-
         List<Leilao> ativos = new ArrayList<>();
         for (Leilao leilao : leiloes) {
             if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {

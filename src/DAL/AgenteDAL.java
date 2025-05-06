@@ -9,21 +9,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class AgenteDAL {
-    public List<Utilizador> carregarAgente() {
+    public List<Agente> carregarAgentes() {
         ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(Constantes.caminhosFicheiros.CSV_FILE_UTILIZADOR, 11, dados -> {
-            int id = Integer.parseInt(dados[0]);
-            String nomeUtilizador = dados[1];
-            String email = dados[2];
-            LocalDate dataNascimento = Tools.parseDate(dados[3]);
-            String morada = dados[4];
-            String password = dados[5];
+            int idAgente = Integer.parseInt(dados[0]);
+            int idCliente = Integer.parseInt(dados[1]);
+            int idLeilao = Integer.parseInt(dados[2]);
             LocalDate dataRegisto = Tools.parseDate(dados[6]);
-            LocalDate ultimoLogin = dados[7].isEmpty() ? null : Tools.parseDate(dados[7]);
-            int tipoUtilizador = Integer.parseInt(dados[8]);
-            int estado = Integer.parseInt(dados[9]);
-            Double saldo = Double.parseDouble(dados[10]);
-            return new Utilizador(id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto, ultimoLogin, tipoUtilizador, estado, saldo);
+            return new Agente(idAgente, idCliente, idLeilao, dataRegisto);
         });
     }
 
@@ -33,7 +26,8 @@ public class AgenteDAL {
         importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_UTILIZADOR, cabecalho, agentes, agente ->
                 agente.getIdAgente() + Tools.separador() +
                         agente.getIdCliente() + Tools.separador() +
-                        agente.getIdLeilao()
+                        agente.getIdLeilao() + Tools.separador() +
+                        agente.getDataRegisto()
         );
     }
 }

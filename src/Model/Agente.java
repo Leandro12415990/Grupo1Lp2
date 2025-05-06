@@ -1,9 +1,19 @@
 package Model;
 
+import java.time.LocalDate;
+
 public class Agente {
     private int idAgente;
     private int idCliente;
     private int idLeilao;
+    private LocalDate dataRegisto;
+
+    public Agente(int idAgente, int idCliente, int idLeilao, LocalDate dataRegisto) {
+        this.idAgente = idAgente;
+        this.idCliente = idCliente;
+        this.idLeilao = idLeilao;
+        this.dataRegisto = dataRegisto;
+    }
 
     public int getIdAgente() {
         return idAgente;
@@ -27,5 +37,13 @@ public class Agente {
 
     public void setIdLeilao(int idLeilao) {
         this.idLeilao = idLeilao;
+    }
+
+    public LocalDate getDataRegisto() {
+        return dataRegisto;
+    }
+
+    public void setDataRegisto(LocalDate dataRegisto) {
+        this.dataRegisto = dataRegisto;
     }
 }

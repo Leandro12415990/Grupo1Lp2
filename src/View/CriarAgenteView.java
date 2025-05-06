@@ -4,7 +4,7 @@ import Controller.CriarAgenteController;
 import Utils.Tools;
 
 public class CriarAgenteView {
-    public boolean menu() {
+    public boolean formulario() {
         CriarAgenteController criarAgenteController = new CriarAgenteController();
         while (true) {
             System.out.print("Leilão: " + Tools.alertaCancelar());

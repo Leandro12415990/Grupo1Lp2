@@ -7,10 +7,11 @@ import static Utils.Tools.scanner;
 
 public class MenuClienteView {
     public void exibirMenu(Utilizador utilizador) {
-        
+
         UtilizadorView utilizadorView = new UtilizadorView();
         TransacaoView transacaoView = new TransacaoView();
         LanceView lanceView = new LanceView();
+        CriarAgenteView criarAgenteView = new CriarAgenteView();
 
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));
@@ -18,6 +19,7 @@ public class MenuClienteView {
             System.out.println("2. Editar Ficha de Cliente");
             System.out.println("3. Carteira");
             System.out.println("4. Menu Lances");
+            System.out.println("5. Criar Agente");
             System.out.println("0. Sair...");
 
             int opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
@@ -35,6 +37,9 @@ public class MenuClienteView {
                     break;
                 case 4:
                     lanceView.exibirMenuLance();
+                    break;
+                case 5:
+                    criarAgenteView.formulario();
                     break;
                 case 0:
                     System.out.println("A sair...");
