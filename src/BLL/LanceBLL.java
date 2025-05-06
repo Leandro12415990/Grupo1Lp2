@@ -123,8 +123,6 @@ public class LanceBLL {
         return resultado;
     }
 
-
-
     public int verUltimoId() {
         int ultimoId = 0;
         for (Lance lance : lances) {
@@ -155,7 +153,6 @@ public class LanceBLL {
         }
         return lancesByLeilao;
     }
-
 
     public void fimLeilao(int idLeilao, LocalDateTime dataFim) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
@@ -246,7 +243,6 @@ public class LanceBLL {
         lances.clear();
         lances.addAll(lancesCarregados);
     }
-
 
 }
 

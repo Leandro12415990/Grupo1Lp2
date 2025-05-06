@@ -8,6 +8,7 @@ import Model.Leilao;
 import Model.Produto;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
+import Utils.Tools;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,10 +40,10 @@ public class LeilaoController {
         return resultado;
     }
 
-    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
+    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         leilaoBLL.carregarLeiloes();
-        return leilaoBLL.listarLeiloes(apenasDisponiveis);
+        return leilaoBLL.listarLeiloes(estado);
     }
 
     public Leilao procurarLeilaoPorId(int Id) {
@@ -116,6 +117,11 @@ public class LeilaoController {
         transacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
 
         return true;
+    }
+
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        return leilaoBLL.listarLeiloesTerminadosComLancesDoCliente(idCliente);
     }
 
 

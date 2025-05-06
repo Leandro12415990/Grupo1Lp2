@@ -15,17 +15,10 @@ public class ClassificacaoController {
     }
 
     public void processarClassificacao(int idLeilao, int idUtilizador) {
-        if (bll.classificacaoJaExiste(idLeilao, idUtilizador)) {
-            System.out.println("Já classificou este leilão.");
-            return;
-        }
-
         int nota = view.pedirClassificacao();
         String comentario = view.pedirComentario();
 
         Classificacao c = new Classificacao(idLeilao, idUtilizador, nota, comentario);
         bll.registarClassificacao(c);
-
-        System.out.println("Classificação registada com sucesso!");
     }
 }

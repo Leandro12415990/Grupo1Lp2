@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class ClassificacaoDAL {
     private static final Logger logger = Logger.getLogger(ClassificacaoDAL.class.getName());
     private final String ficheiro = "data/Classificacao.csv";
-    private final String cabecalho = "idLeilao,idUtilizador,classificacao,comentario";
+    private final String cabecalho = "idLeilao;idUtilizador;classificacao;comentario";
 
     public List<Classificacao> carregarClassificacoes() {
         List<Classificacao> lista = new ArrayList<>();
@@ -28,41 +28,45 @@ public class ClassificacaoDAL {
                 }
 
                 String[] dados = linha.split(Tools.separador(), -1);
-                if (dados.length < 4) continue;
+                if (dados.length < 4) {
+                    logger.log(Level.WARNING, "Linha inválida no CSV: {0}", linha);
+                    continue;
+                }
 
-                int idLeilao = Integer.parseInt(dados[0]);
-                int idUtilizador = Integer.parseInt(dados[1]);
-                int classificacao = Integer.parseInt(dados[2]);
-                String comentario = dados[3];
+                try {
+                    int idLeilao = Integer.parseInt(dados[0]);
+                    int idUtilizador = Integer.parseInt(dados[1]);
+                    int classificacao = Integer.parseInt(dados[2]);
+                    String comentario = dados[3];
 
-                lista.add(new Classificacao(idLeilao, idUtilizador, classificacao, comentario));
+                    Classificacao c = new Classificacao(idLeilao, idUtilizador, classificacao, comentario);
+                    lista.add(c);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Erro ao processar linha do CSV: " + linha, e);
+                }
             }
-
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao ler classificações: " + ficheiro, e);
+            logger.log(Level.SEVERE, "Erro ao ler o ficheiro: " + ficheiro, e);
         }
 
         return lista;
     }
 
     public void gravarClassificacoes(List<Classificacao> lista) {
-        File pasta = new File("data");
-        if (!pasta.exists()) pasta.mkdirs();
-
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ficheiro))) {
             bw.write(cabecalho);
             bw.newLine();
 
             for (Classificacao c : lista) {
                 String linha = c.getIdLeilao() + Tools.separador()
-                        + c.getIdCLiente() + Tools.separador()
+                        + c.getIdUtilizador() + Tools.separador()
                         + c.getClassificacao() + Tools.separador()
                         + c.getComentario().replace(Tools.separador(), " ");
                 bw.write(linha);
                 bw.newLine();
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao gravar classificações", e);
+            logger.log(Level.SEVERE, "Erro ao gravar o ficheiro CSV: " + ficheiro, e);
         }
     }
 

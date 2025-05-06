@@ -11,12 +11,7 @@ public class ClassificacaoBLL {
         this.dal = dal;
     }
 
-    public void registarClassificacao(Classificacao classificacao) {
-        dal.adicionarClassificacao(classificacao);
-    }
-
-    public boolean classificacaoJaExiste(int idLeilao, int idUtilizador) {
-        return dal.carregarClassificacoes().stream()
-                .anyMatch(c -> c.getIdLeilao() == idLeilao && c.getIdCLiente() == idUtilizador);
+    public void registarClassificacao(Classificacao c) {
+        dal.adicionarClassificacao(c);
     }
 }

@@ -2,13 +2,13 @@ package Model;
 
 public class Classificacao {
     private int idLeilao;
-    private int idCLiente;
+    private int idUtilizador;
     private int classificacao;
     private String comentario;
 
-    public Classificacao(int idLeilao, int idCLiente, int classificacao, String comentario) {
+    public Classificacao(int idLeilao, int idUtilizador,int classificacao, String comentario) {
         this.idLeilao = idLeilao;
-        this.idCLiente = idCLiente;
+        this.idUtilizador = idUtilizador;
         this.classificacao = classificacao;
         this.comentario = comentario;
     }
@@ -21,20 +21,12 @@ public class Classificacao {
         this.idLeilao = idLeilao;
     }
 
-    public int getIdCLiente() {
-        return idCLiente;
+    public int getIdUtilizador() {
+        return idUtilizador;
     }
 
-    public void setIdCLiente(int idCLiente) {
-        this.idCLiente = idCLiente;
-    }
-
-    public int getClassificacao() {
-        return classificacao;
-    }
-
-    public void setClassificacao(int classificacao) {
-        this.classificacao = classificacao;
+    public void setIdUtilizador(int idUtilizador) {
+        this.idUtilizador = idUtilizador;
     }
 
     public String getComentario() {
@@ -45,11 +37,19 @@ public class Classificacao {
         this.comentario = comentario;
     }
 
+    public int getClassificacao() {
+        return classificacao;
+    }
+
+    public void setClassificacao(int classificacao) {
+        this.classificacao = classificacao;
+    }
+
     @Override
     public String toString() {
         return "Classificacao{" +
                 "idLeilao=" + idLeilao +
-                ", idCLiente=" + idCLiente +
+                ", idUtilizador=" + idUtilizador +
                 ", classificacao=" + classificacao +
                 ", comentario='" + comentario + '\'' +
                 '}';
