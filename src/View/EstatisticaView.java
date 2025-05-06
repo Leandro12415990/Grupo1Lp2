@@ -446,6 +446,16 @@ public class EstatisticaView {
     public void mostrarTodosClientes() {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         List<Utilizador> clientes = utilizadorDAL.carregarUtilizadores();
+        for(Utilizador utilizador: clientes){
+            System.out.println("ID: " + utilizador.getId()
+                    + " ; " + "Nome: " + utilizador.getNomeUtilizador()
+                    + " ; " + "Email: " + utilizador.getEmail()
+                    + " ; " + "Telefone: " + utilizador.getMorada()
+                    + " ; " + "Morada: " + utilizador.getMorada()
+                    );
+        }
+
+        System.out.println("\nTotal de clientes registados: " + clientes.size());
     }
 
     public void mostrarMediaIdadeUtilizadores() {

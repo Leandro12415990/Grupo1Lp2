@@ -8,6 +8,7 @@ import Model.Leilao;
 import Model.Produto;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
+import Utils.Tools;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,8 +24,8 @@ public class LeilaoController {
             resultado.msgErro = "A data de inicio não pode ser nula.";
         } else if (valorMin < 0) {
             resultado.msgErro = "O valor minimo não pode ser negativo.";
-        } else if (valorMax != 0.0 && valorMax >= 0 && valorMax < valorMin) {
-            resultado.msgErro = "O valor máximo deve ser maior do que o valor minimo.";
+        } else if (valorMax != 0.0 && valorMax > valorMin) {
+            resultado.msgErro = "O valor do lance tem de ser menor do que o valor minimo.";
         } else if (idTipoLeilao == Constantes.tiposLeilao.ELETRONICO && multiploLance < 0) {
             resultado.msgErro = "O múltiplo de lance deve ser positivo.";
         } else if (dataFim != null && dataFim.isBefore(dataInicio)) {
@@ -39,10 +40,10 @@ public class LeilaoController {
         return resultado;
     }
 
-    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
+    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         leilaoBLL.carregarLeiloes();
-        return leilaoBLL.listarLeiloes(apenasDisponiveis);
+        return leilaoBLL.listarLeiloes(estado);
     }
 
     public Leilao procurarLeilaoPorId(int Id) {
@@ -116,6 +117,11 @@ public class LeilaoController {
         transacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
 
         return true;
+    }
+
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        return leilaoBLL.listarLeiloesTerminadosComLancesDoCliente(idCliente);
     }
 
 

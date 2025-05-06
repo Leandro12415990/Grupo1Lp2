@@ -1,7 +1,9 @@
 package BLL;
 
 import Controller.LeilaoController;
+import DAL.LanceDAL;
 import DAL.LeilaoDAL;
+import Model.Lance;
 import Model.Leilao;
 import Utils.Constantes;
 import Utils.Tools;
@@ -42,30 +44,59 @@ public class LeilaoBLL {
 
     public void adicionarLeilao(Leilao leilao) {
         LeilaoDAL leilaoDAL = new LeilaoDAL();
+        leiloes = leilaoDAL.carregaLeiloes();
+        int novoId = gerarProximoId();
+        leilao.setId(novoId);
         leiloes.add(leilao);
         leilaoDAL.gravarLeiloes(leiloes);
     }
 
-    private int verificarUltimoId() {
+
+
+
+    private int gerarProximoId() {
         int ultimoId = 0;
         for (Leilao leilao : leiloes) {
             if (leilao.getId() > ultimoId) {
                 ultimoId = leilao.getId();
             }
         }
-        return ultimoId;
+        return ultimoId + 1;
     }
 
-    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
-        if (!apenasDisponiveis) return new ArrayList<>(leiloes);
 
-        List<Leilao> ativos = new ArrayList<>();
-        for (Leilao leilao : leiloes) {
-            if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
-                ativos.add(leilao);
+    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
+
+    List<Leilao> leilaosEmpty = new ArrayList<>();
+    if(estado != Tools.estadoLeilao.DEFAULT){
+        if(estado == Tools.estadoLeilao.ATIVO){
+            List<Leilao> ativos = new ArrayList<>();
+            for (Leilao leilao : leiloes) {
+                if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
+                    ativos.add(leilao);
+                }
             }
+            return ativos;
         }
-        return ativos;
+
+        else if(estado == Tools.estadoLeilao.FECHADO){
+            List<Leilao> fechados = new ArrayList<>();
+            for (Leilao leilao : leiloes) {
+                if (leilao.getEstado() == Constantes.estadosLeilao.FECHADO) {
+                    fechados.add(leilao);
+                }
+            }
+            return fechados;
+        }
+
+    }else{
+        List<Leilao> todos = new ArrayList<>();
+        for (Leilao leilao : leiloes) {
+                todos.add(leilao);
+        }
+        return todos;
+        }
+    return leilaosEmpty;
     }
 
     public Leilao procurarLeilaoPorId(int id) {
@@ -94,7 +125,7 @@ public class LeilaoBLL {
             leilao.setDataFim(dataFim);
             leilao.setValorMinimo(valorMin);
             leilao.setValorMaximo(valorMax);
-            leilao.setValorAtualLanceEletronico(multiploLance);
+            leilao.setMultiploLance(multiploLance);
             leilao.setEstado(idEstado);
             leilaoDAL.gravarLeiloes(leiloes);
             return true;
@@ -148,5 +179,32 @@ public class LeilaoBLL {
 
         return atualizado;
     }
+
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+        carregarLeiloes();
+        List<Leilao> leiloesFechados = listarLeiloes(Tools.estadoLeilao.FECHADO);
+        LanceDAL lanceDAL = new LanceDAL();
+        List<Lance> todosLances = lanceDAL.carregarLances();
+
+        List<Leilao> resultado = new ArrayList<>();
+
+        for (Leilao leilao : leiloesFechados) {
+            boolean clienteParticipou = false;
+
+            for (Lance lance : todosLances) {
+                if (lance.getIdCliente() == idCliente && lance.getIdLeilao() == leilao.getId()) {
+                    clienteParticipou = true;
+                    break;
+                }
+            }
+
+            if (clienteParticipou) {
+                resultado.add(leilao);
+            }
+        }
+
+        return resultado;
+    }
+
 
 }

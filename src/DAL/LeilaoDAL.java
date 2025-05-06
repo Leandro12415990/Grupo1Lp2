@@ -5,7 +5,6 @@ import Utils.Constantes.caminhosFicheiros;
 import Utils.Tools;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -41,7 +40,7 @@ public class LeilaoDAL {
                         (leilao.getDataFim() != null ? Tools.formatDateTime(leilao.getDataFim()) : "") + Tools.separador() +
                         leilao.getValorMinimo() + Tools.separador() +
                         (leilao.getValorMaximo() != null ? leilao.getValorMaximo() : "") + Tools.separador() +
-                        (leilao.getValorAtualLanceEletronico() != null ? leilao.getValorAtualLanceEletronico() : "") + Tools.separador() +
+                        (leilao.getMultiploLance() != null ? leilao.getMultiploLance() : "") + Tools.separador() +
                         leilao.getEstado()
         );
     }

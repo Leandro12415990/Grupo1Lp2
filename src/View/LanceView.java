@@ -1,8 +1,12 @@
 package View;
 
+import BLL.UtilizadorBLL;
 import Controller.ProdutoController;
 import Controller.LanceController;
 import Controller.LeilaoController;
+import Controller.UtilizadorController;
+import DAL.LanceDAL;
+import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
 import Model.*;
 import Utils.Constantes;
@@ -30,7 +34,7 @@ public class LanceView {
                     listarMeuLance();
                     break;
                 case 2:
-                    System.out.println("Em desenvolvimento...");
+                    listarLeiloesTerminados();
                     break;
                 case 3:
                     lanceDireto();
@@ -58,7 +62,7 @@ public class LanceView {
 
         ResultadoOperacao resultado;
         System.out.println("\n===== LEILÕES VENDA DIRETA =====");
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
         List<Utilizador> cliente = utilizadorDAL.carregarUtilizadores();
         List<Leilao> leiloesLanceDireto = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
         if (!leiloesLanceDireto.isEmpty()) {
@@ -72,8 +76,11 @@ public class LanceView {
             if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
             boolean verificarID = lanceController.verificarDisponibilidadeLeilao(leiloesLanceDireto, idLeilao);
             Leilao leilao = leilaoController.procurarLeilaoPorId(idLeilao);
-
+            int idCliente = Tools.clienteSessao.getIdCliente();
+            UtilizadorController utilizadorController = new UtilizadorController();
+            double saldo = utilizadorController.obterSaldoCliente(idCliente);
             if (verificarID) {
+                System.out.println("O seu saldo atual: " + saldo);
                 System.out.print("Tem a certeza que quer dar um Lance? (S/N)" + Tools.alertaCancelar());
                 String imput1 = Tools.scanner.nextLine().trim();
                 if (Tools.verificarSaida(imput1)) return;
@@ -105,7 +112,7 @@ public class LanceView {
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\n===== LEILÕES CARTA FECHADA =====");
 
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
         List<Leilao> leilaoCartaFechada = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.CARTA_FECHADA);
         if (!leilaoCartaFechada.isEmpty()) {
             for (Leilao leilao : leilaoCartaFechada) {
@@ -116,8 +123,12 @@ public class LanceView {
             int idLeilao = Tools.scanner.nextInt();
             if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
             boolean verificarID = lanceController.verificarDisponibilidadeLeilao(leilaoCartaFechada, idLeilao);
+            int idCliente = Tools.clienteSessao.getIdCliente();
+            UtilizadorController utilizadorController = new UtilizadorController();
+            double saldo = utilizadorController.obterSaldoCliente(idCliente);
 
             if (verificarID) {
+                System.out.println("O seu saldo atual: " + saldo);
                 System.out.print("Insira o valor do lance " + Tools.alertaCancelar());
                 double valorLance = Tools.scanner.nextDouble();
                 if (Tools.verificarSaida(String.valueOf(valorLance))) return;
@@ -142,13 +153,13 @@ public class LanceView {
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\n===== LEILÕES ELETRÔNICOS =====");
 
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
         List<Leilao> leilaoEletronico = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.ELETRONICO);
 
         if (!leilaoEletronico.isEmpty()) {
             for (Leilao leilao : leilaoEletronico) {
                 System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getDescricao() +
-                        " | Valor Atual do Lance: " + leilao.getValorAtualLanceEletronico());
+                        " | Valor do Múltiplo de Lance: " + leilao.getValorMaximo());
             }
 
             System.out.print("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
@@ -159,23 +170,28 @@ public class LanceView {
 
             if (verificarID) {
                 Leilao leilaoSelecionado = leilaoController.procurarLeilaoPorId(idLeilao);
-                double valorAtual = leilaoSelecionado.getValorAtualLanceEletronico();
+                double multiploLanceIncremento = leilaoSelecionado.getValorMaximo();
 
-                System.out.printf("O valor atual do lance é: %.2f\n", valorAtual);
-                System.out.print("Digite o novo valor do seu lance (deve ser maior que o atual)" + Tools.alertaCancelar());
-                double novoValorLance = Tools.scanner.nextDouble();
-                if (Tools.verificarSaida(String.valueOf(novoValorLance))) return;
+                double ultimoLance = lanceController.obterUltimoLanceDoLeilao(idLeilao, leilaoEletronico);
+                double proximoLanceEsperado = ultimoLance + multiploLanceIncremento;
+                int idCliente = Tools.clienteSessao.getIdCliente();
+                UtilizadorController utilizadorController = new UtilizadorController();
+                double saldo = utilizadorController.obterSaldoCliente(idCliente);
 
-                if (novoValorLance > valorAtual) {
-                    ResultadoOperacao resultado = lanceController.adicionarLanceEletronico(idLeilao, novoValorLance);
-
+                System.out.printf("O valor atual do último lance é: %.2f\n", ultimoLance);
+                System.out.printf("Seu novo lance deve ser exatamente: %.2f\n", proximoLanceEsperado);
+                System.out.println("O seu saldo atual: " + saldo);
+                System.out.print("Deseja dar este Lance? (S/N)" + Tools.alertaCancelar());
+                String resposta = Tools.scanner.next().trim().toLowerCase();
+                if (resposta.equals("s")) {
+                    ResultadoOperacao resultado = lanceController.adicionarLanceEletronico(idLeilao, proximoLanceEsperado);
                     if (resultado.Sucesso) {
-                        System.out.println("Seu lance foi aceito!");
+                        System.out.println("Seu lance foi aceite!");
                     } else {
                         System.out.println("Erro ao registrar o lance: " + resultado.msgErro);
                     }
                 } else {
-                    System.out.println("Erro: O novo lance deve ser maior que o lance atual!");
+                    System.out.println("Lance não registado ");
                 }
             } else {
                 System.out.println("Leilão indisponível!");
@@ -184,7 +200,6 @@ public class LanceView {
             System.out.println("Não existem leilões disponíveis do tipo Eletrônico.\n");
         }
     }
-
 
     public void listarMeuLance() {
         LanceController lanceController = new LanceController();
@@ -209,7 +224,7 @@ public class LanceView {
     public void listarLancesPorLeilao() {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();// PARA SER USADO PELO GESTOR
-        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(true);
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
         List<Leilao> leilaoEletronicoAtivo = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.ELETRONICO);
         //LeilaoView.exibirLeiloes(leilaoEletronicoAtivo);
         System.out.print("\nInsira o ID do leilão para visualizar os lances: ");
@@ -231,5 +246,24 @@ public class LanceView {
             }
         }
     }
+
+    public void listarLeiloesTerminados() {
+        int idCliente = Tools.clienteSessao.getIdCliente();
+
+        LeilaoController leilaoController = new LeilaoController();
+
+        List<Leilao> leiloes = leilaoController.listarLeiloesTerminadosComLancesDoCliente(idCliente);
+
+        if (leiloes.isEmpty()) {
+            System.out.println("Não participaste em nenhum leilão terminado.");
+        } else {
+            System.out.println("\nLeilões terminados em que participaste:");
+            for (Leilao l : leiloes) {
+                System.out.println("ID: " + l.getId() + " | Descrição: " + l.getDescricao());
+            }
+        }
+    }
+
+
 
 }

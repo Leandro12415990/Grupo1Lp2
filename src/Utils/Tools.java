@@ -120,7 +120,7 @@ public class Tools {
     }
 
     public enum estadoLeilao {
-        ATIVO(1), PENDENTE(2), CANCELADO(3), FECHADO(4), INATIVO(5);
+        DEFAULT(0), ATIVO(1), PENDENTE(2), CANCELADO(3), FECHADO(4), INATIVO(5);
 
         private final int idEstado;
 
@@ -139,6 +139,9 @@ public class Tools {
                 }
             }
             throw new IllegalArgumentException("Estado inválido: " + idEstado);
+        }
+        public static estadoLeilao getDefault() {
+            return DEFAULT;
         }
     }
 
