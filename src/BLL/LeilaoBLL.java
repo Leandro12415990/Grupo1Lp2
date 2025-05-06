@@ -1,7 +1,9 @@
 package BLL;
 
 import Controller.LeilaoController;
+import DAL.LanceDAL;
 import DAL.LeilaoDAL;
+import Model.Lance;
 import Model.Leilao;
 import Utils.Constantes;
 import Utils.Tools;
@@ -64,6 +66,7 @@ public class LeilaoBLL {
 
 
     public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
+
     List<Leilao> leilaosEmpty = new ArrayList<>();
     if(estado != Tools.estadoLeilao.DEFAULT){
         if(estado == Tools.estadoLeilao.ATIVO){
@@ -176,5 +179,32 @@ public class LeilaoBLL {
 
         return atualizado;
     }
+
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+        carregarLeiloes();
+        List<Leilao> leiloesFechados = listarLeiloes(Tools.estadoLeilao.FECHADO);
+        LanceDAL lanceDAL = new LanceDAL();
+        List<Lance> todosLances = lanceDAL.carregarLances();
+
+        List<Leilao> resultado = new ArrayList<>();
+
+        for (Leilao leilao : leiloesFechados) {
+            boolean clienteParticipou = false;
+
+            for (Lance lance : todosLances) {
+                if (lance.getIdCliente() == idCliente && lance.getIdLeilao() == leilao.getId()) {
+                    clienteParticipou = true;
+                    break;
+                }
+            }
+
+            if (clienteParticipou) {
+                resultado.add(leilao);
+            }
+        }
+
+        return resultado;
+    }
+
 
 }

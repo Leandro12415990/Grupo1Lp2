@@ -119,6 +119,11 @@ public class LeilaoController {
         return true;
     }
 
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+        return leilaoBLL.listarLeiloesTerminadosComLancesDoCliente(idCliente);
+    }
+
 
 }
 

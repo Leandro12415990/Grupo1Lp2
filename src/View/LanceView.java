@@ -5,6 +5,7 @@ import Controller.ProdutoController;
 import Controller.LanceController;
 import Controller.LeilaoController;
 import Controller.UtilizadorController;
+import DAL.LanceDAL;
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
 import Model.*;
@@ -33,7 +34,7 @@ public class LanceView {
                     listarMeuLance();
                     break;
                 case 2:
-                    System.out.println("Em desenvolvimento...");
+                    listarLeiloesTerminados();
                     break;
                 case 3:
                     lanceDireto();
@@ -245,5 +246,24 @@ public class LanceView {
             }
         }
     }
+
+    public void listarLeiloesTerminados() {
+        int idCliente = Tools.clienteSessao.getIdCliente();
+
+        LeilaoController leilaoController = new LeilaoController();
+
+        List<Leilao> leiloes = leilaoController.listarLeiloesTerminadosComLancesDoCliente(idCliente);
+
+        if (leiloes.isEmpty()) {
+            System.out.println("Não participaste em nenhum leilão terminado.");
+        } else {
+            System.out.println("\nLeilões terminados em que participaste:");
+            for (Leilao l : leiloes) {
+                System.out.println("ID: " + l.getId() + " | Descrição: " + l.getDescricao());
+            }
+        }
+    }
+
+
 
 }
