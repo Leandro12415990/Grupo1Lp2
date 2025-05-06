@@ -4,6 +4,7 @@ import DAL.ProdutoDAL;
 import Model.Leilao;
 import Model.Produto;
 import Utils.Constantes;
+import Utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +122,7 @@ public class ProdutoBLL {
     public int determinarEstadoProduto(Produto produto) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         if (produto.getEstado() != Constantes.estadosProduto.INATIVO) {
-            for (Leilao leilao : leilaoBLL.listarLeiloes(false)) {
+            for (Leilao leilao : leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT)) {
                 if (leilao.getIdProduto() == produto.getIdProduto()) return Constantes.estadosProduto.RESERVADO;
             }
         }
@@ -130,7 +131,7 @@ public class ProdutoBLL {
 
     public boolean verificarProdutoEmLeilao(int idProduto) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        for (Leilao leilao : leilaoBLL.listarLeiloes(false)) {
+        for (Leilao leilao : leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT)) {
             if (leilao.getIdProduto() == idProduto) return false;
         }
         return true;

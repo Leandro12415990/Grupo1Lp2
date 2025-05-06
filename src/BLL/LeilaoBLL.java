@@ -1,9 +1,12 @@
 package BLL;
 
 import Controller.LeilaoController;
+import DAL.LanceDAL;
 import DAL.LeilaoDAL;
+import Model.Lance;
 import Model.Leilao;
 import Utils.Constantes;
+import Utils.Tools;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,16 +65,38 @@ public class LeilaoBLL {
     }
 
 
-    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
-        if (!apenasDisponiveis) return new ArrayList<>(leiloes);
+    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
 
-        List<Leilao> ativos = new ArrayList<>();
-        for (Leilao leilao : leiloes) {
-            if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
-                ativos.add(leilao);
+    List<Leilao> leilaosEmpty = new ArrayList<>();
+    if(estado != Tools.estadoLeilao.DEFAULT){
+        if(estado == Tools.estadoLeilao.ATIVO){
+            List<Leilao> ativos = new ArrayList<>();
+            for (Leilao leilao : leiloes) {
+                if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
+                    ativos.add(leilao);
+                }
             }
+            return ativos;
         }
-        return ativos;
+
+        else if(estado == Tools.estadoLeilao.FECHADO){
+            List<Leilao> fechados = new ArrayList<>();
+            for (Leilao leilao : leiloes) {
+                if (leilao.getEstado() == Constantes.estadosLeilao.FECHADO) {
+                    fechados.add(leilao);
+                }
+            }
+            return fechados;
+        }
+
+    }else{
+        List<Leilao> todos = new ArrayList<>();
+        for (Leilao leilao : leiloes) {
+                todos.add(leilao);
+        }
+        return todos;
+        }
+    return leilaosEmpty;
     }
 
     public Leilao procurarLeilaoPorId(int id) {
@@ -154,5 +179,32 @@ public class LeilaoBLL {
 
         return atualizado;
     }
+
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+        carregarLeiloes();
+        List<Leilao> leiloesFechados = listarLeiloes(Tools.estadoLeilao.FECHADO);
+        LanceDAL lanceDAL = new LanceDAL();
+        List<Lance> todosLances = lanceDAL.carregarLances();
+
+        List<Leilao> resultado = new ArrayList<>();
+
+        for (Leilao leilao : leiloesFechados) {
+            boolean clienteParticipou = false;
+
+            for (Lance lance : todosLances) {
+                if (lance.getIdCliente() == idCliente && lance.getIdLeilao() == leilao.getId()) {
+                    clienteParticipou = true;
+                    break;
+                }
+            }
+
+            if (clienteParticipou) {
+                resultado.add(leilao);
+            }
+        }
+
+        return resultado;
+    }
+
 
 }
