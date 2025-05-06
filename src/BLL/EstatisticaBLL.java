@@ -1,6 +1,8 @@
 package BLL;
 
+import DAL.LeilaoDAL;
 import Model.Lance;
+import BLL.LeilaoBLL;
 import DAL.UtilizadorDAL;
 import Model.Leilao;
 import Model.Utilizador;
@@ -21,6 +23,7 @@ public class EstatisticaBLL {
      */
     private List<Leilao> filtrarLeiloesFechados() {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
+        leilaoBLL.carregarLeiloes();
         List<Leilao> todos = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
         List<Leilao> fechados = new ArrayList<>();
 
