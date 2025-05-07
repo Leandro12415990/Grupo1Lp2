@@ -1,9 +1,15 @@
 package View;
 
 import BLL.UtilizadorBLL;
+<<<<<<< HEAD
+import Controller.LanceController;
+import Controller.LeilaoController;
+import Controller.ProdutoController;
+import Controller.UtilizadorController;
+=======
 import Controller.*;
 import DAL.LanceDAL;
-import Controller.ProdutoController;
+>>>>>>> quality
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
 import Model.Lance;

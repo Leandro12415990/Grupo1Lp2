@@ -156,7 +156,6 @@ public class LanceBLL {
         return lancesByLeilao;
     }
 
-
     public void fimLeilao(int idLeilao, LocalDateTime dataFim) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         leilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
@@ -212,7 +211,6 @@ public class LanceBLL {
         lances.clear();
         lances.addAll(lancesCarregados);
     }
-
 
 }
 

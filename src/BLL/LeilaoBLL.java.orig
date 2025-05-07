@@ -6,8 +6,11 @@ import DAL.LeilaoDAL;
 import Model.Lance;
 import Model.Leilao;
 import Utils.Constantes;
-import Utils.Tools;
+<<<<<<< HEAD
 import jakarta.mail.MessagingException;
+=======
+import Utils.Tools;
+>>>>>>> quality
 
 import java.io.IOException;
 import java.time.LocalDateTime;

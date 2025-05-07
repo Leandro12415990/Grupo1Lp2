@@ -5,7 +5,10 @@ import DAL.TemplateDAL;
 import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
+<<<<<<< HEAD
 import jakarta.mail.MessagingException;
+=======
+>>>>>>> quality
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -38,7 +41,11 @@ public class LeilaoController {
         return resultado;
     }
 
+<<<<<<< HEAD
+    public List<Leilao> listarLeiloes(boolean apenasDisponiveis) throws MessagingException, IOException {
+=======
     public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
+>>>>>>> quality
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         leilaoBLL.carregarLeiloes();
         return leilaoBLL.listarLeiloes(estado);

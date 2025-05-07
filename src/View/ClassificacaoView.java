@@ -1,33 +1,38 @@
 package View;
 
+import Controller.ClassificacaoController;
+import Model.Leilao;
 import Utils.Tools;
 
 public class ClassificacaoView {
 
-    public int pedirClassificacao() {
-        int avaliacao = 0;
-        System.out.println("\nGostou do leilão? Deixe a sua avaliação.");
+    public void pedirClassificacao(Leilao leilao) {
+        int nota = 0;
+        System.out.println("\nGostou do leilão: " + leilao.getDescricao() + "? Deixe a sua avaliação.");
 
         do {
-            System.out.print("Classificação (1 a 5): ");
-            if (Tools.scanner.hasNextInt()) {
-                avaliacao = Tools.scanner.nextInt();
-                Tools.scanner.nextLine();
-                if (avaliacao < 1 || avaliacao > 5) {
-                    Tools.pedirOpcaoMenu("Por favor, insira um número válido entre 1 e 5.");
+            nota = Tools.pedirOpcaoMenu("Insira uma classificação (1 a 5)" + Tools.alertaCancelar());
+
+
+                if (nota == -1) {
+                    System.out.println("Classificação cancelada.");
+                    return;
                 }
-            } else {
-                System.out.println("Entrada inválida. Insira um número.");
-                Tools.scanner.nextLine();
-            }
-        } while (avaliacao < 1 || avaliacao > 5);
 
-        return avaliacao;
+                if (nota < 1 || nota > 5) {
+                   nota = Tools.pedirOpcaoMenu("Por favor, insira um número válido entre 1 e 5." + Tools.alertaCancelar());
+                }
+        } while (nota < 1 || nota > 5);
+
+        ClassificacaoController controller = new ClassificacaoController();
+        int idCliente = Tools.clienteSessao.getIdCliente();
+
+        System.out.print("Insira um comentário: ");
+        Tools.scanner.nextLine();
+        String comentario = Tools.scanner.nextLine().trim();
+
+
+        controller.registarAvaliacao(idCliente, leilao.getId(), nota, comentario);
+        System.out.println("Obrigado pela sua avaliação!");
     }
-
-    public String pedirComentario() {
-        System.out.print("Comentário (pressione Enter para ignorar): ");
-        return Tools.scanner.nextLine().trim();
-    }
-
 }

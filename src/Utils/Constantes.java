@@ -23,6 +23,7 @@ public class Constantes {
 
     // Secção: Estados Leilões
     public static class estadosLeilao {
+        public static final int DEFAULT = 0;
         public static final int ATIVO = 1;
         public static final int PENDENTE = 2;
         public static final int CANCELADO = 3;

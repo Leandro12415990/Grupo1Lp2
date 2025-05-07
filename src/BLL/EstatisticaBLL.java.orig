@@ -1,7 +1,11 @@
 package BLL;
 
+<<<<<<< HEAD
+=======
 import DAL.LeilaoDAL;
+import Model.Lance;
 import BLL.LeilaoBLL;
+>>>>>>> quality
 import DAL.UtilizadorDAL;
 import Model.Lance;
 import Model.Leilao;
