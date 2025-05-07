@@ -1,24 +1,15 @@
 package Controller;
 
 import BLL.ClassificacaoBLL;
-import Model.Classificacao;
-import View.ClassificacaoView;
 
 public class ClassificacaoController {
+    private final ClassificacaoBLL bll = new ClassificacaoBLL();
 
-    private final ClassificacaoView view;
-    private final ClassificacaoBLL bll;
-
-    public ClassificacaoController(ClassificacaoView view, ClassificacaoBLL bll) {
-        this.view = view;
-        this.bll = bll;
+    public boolean jaFoiAvaliado(int idUtilizador, int idLeilao) {
+        return bll.jaFoiAvaliado(idUtilizador, idLeilao);
     }
 
-    public void processarClassificacao(int idLeilao, int idUtilizador) {
-        int nota = view.pedirClassificacao();
-        String comentario = view.pedirComentario();
-
-        Classificacao c = new Classificacao(idLeilao, idUtilizador, nota, comentario);
-        bll.registarClassificacao(c);
+    public void registarAvaliacao(int idUtilizador, int idLeilao, int classificacao, String comentario) {
+        bll.adicionarClassificacao(idLeilao, idUtilizador, classificacao, comentario);
     }
 }
