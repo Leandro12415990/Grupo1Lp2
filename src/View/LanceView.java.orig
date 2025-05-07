@@ -16,7 +16,11 @@ import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
+<<<<<<< HEAD
 import java.io.IOException;
+=======
+import java.sql.SQLOutput;
+>>>>>>> quality
 import java.util.List;
 
 
