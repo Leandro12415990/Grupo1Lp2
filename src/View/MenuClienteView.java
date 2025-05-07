@@ -3,6 +3,8 @@ package View;
 import Model.Utilizador;
 import Utils.Tools;
 
+import java.sql.SQLOutput;
+
 import static Utils.Tools.scanner;
 
 public class MenuClienteView {
@@ -18,6 +20,7 @@ public class MenuClienteView {
             System.out.println("2. Editar Ficha de Cliente");
             System.out.println("3. Carteira");
             System.out.println("4. Menu Lances");
+            System.out.println("5. As Minhas Avaliações");
             System.out.println("0. Sair...");
 
             int opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
@@ -35,6 +38,10 @@ public class MenuClienteView {
                     break;
                 case 4:
                     lanceView.exibirMenuLance();
+                    break;
+                case 5:
+                    ClassificacaoView classificacaoView = new ClassificacaoView();
+                    classificacaoView.exibirMenuClassificacao();
                     break;
                 case 0:
                     System.out.println("A sair...");
