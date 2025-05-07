@@ -1,5 +1,7 @@
 package View;
 
+import BLL.LanceBLL;
+import BLL.LeilaoBLL;
 import BLL.UtilizadorBLL;
 import Controller.*;
 import DAL.LanceDAL;
@@ -9,6 +11,7 @@ import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 
@@ -31,7 +34,7 @@ public class LanceView {
                     listarMeuLance();
                     break;
                 case 2:
-                    listarLeiloesTerminados();
+                    verDetalhesLeilaoTerminados();
                     break;
                 case 3:
                     lanceDireto();
@@ -259,35 +262,64 @@ public class LanceView {
             System.out.println("ID: " + l.getId() + " | Descrição: " + l.getDescricao());
         }
 
-        while (true) {
-            int idSelecionado = Tools.pedirOpcaoMenu("\nEscolhe o ID de um leilão para avaliar " + Tools.alertaCancelar());
 
-            if (idSelecionado == -1) {
-                System.out.println("Operação cancelada.");
-                return;
-            }
+        }
 
-            Leilao leilaoSelecionado = null;
-            for (Leilao l : leiloes) {
-                if (l.getId() == idSelecionado) {
-                    leilaoSelecionado = l;
-                    break;
-                }
-            }
+    public void verDetalhesLeilaoTerminados() {
+        LeilaoController leilaoController = new LeilaoController();
+        int idCliente = Tools.clienteSessao.getIdCliente();
+        List<Leilao> leiloes = leilaoController.listarLeiloesTerminadosComLancesDoCliente(idCliente);
 
-            if (leilaoSelecionado == null) {
-                System.out.println("ID inválido. Certifica-te que escolheste um leilão da lista.");
-            } else {
-                ClassificacaoController controller = new ClassificacaoController();
-                if (controller.jaFoiAvaliado(idCliente, leilaoSelecionado.getId())) {
-                    System.out.println("Já avaliou este leilão anteriormente.");
-                } else {
-                    ClassificacaoView classificacaoView = new ClassificacaoView();
-                    classificacaoView.pedirClassificacao(leilaoSelecionado);
-                }
-                return;
+        listarLeiloesTerminados();
+
+        int idSelecionado = Tools.pedirOpcaoMenu("\nEscolhe o ID de um leilão para ver os detalhes " + Tools.alertaCancelar());
+        if (idSelecionado == -1) {
+            System.out.println("Operação cancelada.");
+            return;
+        }
+
+        Leilao leilaoSelecionado = null;
+        for (Leilao l : leiloes) {
+            if (l.getId() == idSelecionado) {
+                leilaoSelecionado = l;
+                break;
             }
         }
-    }
 
+        if (leilaoSelecionado == null) {
+            System.out.println("ID inválido. Certifica-te que escolheste um leilão da lista.");
+            return;
+        }
+
+        LanceBLL lanceBLL = new LanceBLL();
+        lanceBLL.carregarLances();
+
+        int idLanceVencedor = lanceBLL.selecionarLanceVencedor(leilaoSelecionado.getId());
+
+        if (idLanceVencedor == 0) {
+            System.out.println("Este leilão não teve lances, logo não há vencedor.");
+            return;
+        }
+
+        String nomeVencedor = lanceBLL.obterNomeVencedor(idLanceVencedor);
+        List<Lance> lancesDoLeilao = lanceBLL.obterLancesPorLeilao(leilaoSelecionado.getId());
+
+        Lance lanceVencedor = null;
+        for (Lance l : lancesDoLeilao) {
+            if (l.getIdLance() == idLanceVencedor) {
+                lanceVencedor = l;
+                break;
+            }
+        }
+
+        if (lanceVencedor == null) {
+            System.out.println("Erro ao obter o lance vencedor.");
+            return;
+        }
+
+        System.out.println("\n===== DETALHES DO LEILÃO =====");
+        System.out.println("Leilão: " + leilaoSelecionado.getDescricao());
+        System.out.println("Vencedor: " + nomeVencedor);
+        System.out.printf("Lance vencedor: %.2f€\n", lanceVencedor.getValorLance());
+    }
 }
