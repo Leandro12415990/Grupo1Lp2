@@ -4,12 +4,14 @@ import Controller.ClassificacaoController;
 import Model.Classificacao;
 import Model.Leilao;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ClassificacaoView {
 
-    public void exibirMenuClassificacao() {
+    public void exibirMenuClassificacao() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU CLASSIFICACOES " + "=".repeat(5));
@@ -80,7 +82,7 @@ public class ClassificacaoView {
         }
     }
 
-    public void listarLeiloesPorAvaliar() {
+    public void listarLeiloesPorAvaliar() throws MessagingException, IOException {
         int idCliente = Tools.clienteSessao.getIdCliente();
         ClassificacaoController controller = new ClassificacaoController();
 
@@ -96,7 +98,7 @@ public class ClassificacaoView {
         }
     }
 
-    public void avaliarLeiloesPorAvaliar() {
+    public void avaliarLeiloesPorAvaliar() throws MessagingException, IOException {
         int idCliente = Tools.clienteSessao.getIdCliente();
         ClassificacaoController controller = new ClassificacaoController();
         List<Leilao> leiloes = controller.listarLeiloesPorAvaliar(idCliente);

@@ -270,11 +270,11 @@ public class LanceView {
 
         }
 
-    public void verDetalhesLeilaoTerminados() {
+    public void verDetalhesLeilaoTerminados() throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         int idCliente = Tools.clienteSessao.getIdCliente();
         List<Leilao> leiloes = leilaoController.listarLeiloesTerminadosComLancesDoCliente(idCliente);
-
+        LanceBLL lanceBLL = new LanceBLL();
         listarLeiloesTerminados();
 
         int idSelecionado = Tools.pedirOpcaoMenu("\nEscolhe o ID de um leilão para ver os detalhes " + Tools.alertaCancelar());
@@ -296,7 +296,6 @@ public class LanceView {
             return;
         }
 
-        LanceBLL lanceBLL = new LanceBLL();
         lanceBLL.carregarLances();
 
         int idLanceVencedor = lanceBLL.selecionarLanceVencedor(leilaoSelecionado.getId());
@@ -306,7 +305,7 @@ public class LanceView {
             return;
         }
 
-        String nomeVencedor = lanceBLL.obterNomeVencedor(idLanceVencedor);
+        String nomeVencedor = lanceBLL.obterVencedor(idLanceVencedor).getNomeUtilizador();
         List<Lance> lancesDoLeilao = lanceBLL.obterLancesPorLeilao(leilaoSelecionado.getId());
 
         Lance lanceVencedor = null;

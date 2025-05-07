@@ -4,7 +4,9 @@ import Controller.LeilaoController;
 import DAL.ClassificacaoDAL;
 import Model.Classificacao;
 import Model.Leilao;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +59,7 @@ public class ClassificacaoBLL {
         return resultado;
     }
 
-    public List<Leilao> listarLeiloesPorAvaliar(int idCliente) {
+    public List<Leilao> listarLeiloesPorAvaliar(int idCliente) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> terminados = leilaoBLL.listarLeiloesTerminadosComLancesDoCliente(idCliente);
 
