@@ -250,7 +250,7 @@ public class LanceView {
         }
     }
 
-    public void listarLeiloesTerminados() {
+    public void listarLeiloesTerminados() throws MessagingException, IOException {
         int idCliente = Tools.clienteSessao.getIdCliente();
         LeilaoController leilaoController = new LeilaoController();
         List<Leilao> leiloes = leilaoController.listarLeiloesTerminadosComLancesDoCliente(idCliente);

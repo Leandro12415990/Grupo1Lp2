@@ -182,7 +182,7 @@ public class LeilaoBLL {
         return atualizado;
     }
 
-    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) throws MessagingException, IOException {
         carregarLeiloes();
         List<Leilao> leiloesFechados = listarLeiloes(Tools.estadoLeilao.FECHADO);
         LanceDAL lanceDAL = new LanceDAL();

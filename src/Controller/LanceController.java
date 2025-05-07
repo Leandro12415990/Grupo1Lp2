@@ -34,7 +34,6 @@ public class LanceController {
 
         int idCliente = Tools.clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
-        valorLance = leilao.getValorMinimo();
         int tipoLeilao = leilao.getTipoLeilao();
 
         ResultadoOperacao resultado = lanceBLL.adicionarLanceDireto(idLeilao, valorLance, idCliente, tipoLeilao);

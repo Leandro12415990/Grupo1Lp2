@@ -1,5 +1,6 @@
 package BLL;
 
+import Controller.LeilaoController;
 import DAL.LanceDAL;
 import DAL.UtilizadorDAL;
 import Model.*;
@@ -17,6 +18,7 @@ public class LanceBLL {
 
     public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance, int idCliente, int idTipoLeilao) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
+        LeilaoController leilaoController = new LeilaoController();
         LanceDAL lanceDAL = new LanceDAL();
         TransacaoBLL transacaoBLL = new TransacaoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
@@ -39,7 +41,7 @@ public class LanceBLL {
         lanceDAL.gravarLances(lances);
 
         if (valorLance == leilao.getValorMinimo()) {
-            fimLeilao(idLeilao, dataLance);
+            leilaoController.fecharLeilao(idLeilao, dataLance);
         }
 
         resultado.Sucesso = true;

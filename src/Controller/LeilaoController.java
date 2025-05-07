@@ -38,7 +38,7 @@ public class LeilaoController {
         return resultado;
     }
 
-    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
+    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         leilaoBLL.carregarLeiloes();
         return leilaoBLL.listarLeiloes(estado);
@@ -127,7 +127,7 @@ public class LeilaoController {
         return true;
     }
 
-    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         return leilaoBLL.listarLeiloesTerminadosComLancesDoCliente(idCliente);
     }

@@ -197,7 +197,7 @@ public class LeilaoView {
         } else System.out.println(resultadoProdutos.msgErro);
     }
 
-    public List<Leilao> listaLeiloes(boolean apenasDisponiveis) throws MessagingException, IOException {
+    public List<Leilao> listaLeiloes(Tools.estadoLeilao estado) throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         List<Leilao> leiloesList = leilaoController.listarLeiloes(estado);
         exibirLeiloes(leiloesList);
