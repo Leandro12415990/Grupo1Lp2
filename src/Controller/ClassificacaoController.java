@@ -3,7 +3,9 @@ package Controller;
 import BLL.ClassificacaoBLL;
 import Model.Classificacao;
 import Model.Leilao;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ClassificacaoController {
@@ -21,7 +23,7 @@ public class ClassificacaoController {
         return bll.listarLeiloesAvaliadosPeloCliente(idCliente);
     }
 
-    public List<Leilao> listarLeiloesPorAvaliar(int idCliente) {
+    public List<Leilao> listarLeiloesPorAvaliar(int idCliente) throws MessagingException, IOException {
         ClassificacaoBLL bll = new ClassificacaoBLL();
         return bll.listarLeiloesPorAvaliar(idCliente);
     }

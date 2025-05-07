@@ -8,14 +8,16 @@ import Model.Produto;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
 public class LeilaoView {
-    public void exibirMenuLeiloes() {
+    public void exibirMenuLeiloes() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LEILÕES " + "=".repeat(5));
@@ -55,8 +57,7 @@ public class LeilaoView {
             }
         } while (opc != 0);
     }
-
-    private void criarLeilao() {
+    private void criarLeilao() throws MessagingException, IOException {
         ProdutoView produtoView = new ProdutoView();
         ProdutoController produtoController = new ProdutoController();
         LeilaoController leilaoController = new LeilaoController();
@@ -196,14 +197,14 @@ public class LeilaoView {
         } else System.out.println(resultadoProdutos.msgErro);
     }
 
-    public List<Leilao> listaLeiloes(Tools.estadoLeilao estado) {
+    public List<Leilao> listaLeiloes(Tools.estadoLeilao estado) throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         List<Leilao> leiloesList = leilaoController.listarLeiloes(estado);
         exibirLeiloes(leiloesList);
         return leiloesList;
     }
 
-    public void exibirLeiloes(List<Leilao> leiloes) {
+    public void exibirLeiloes(List<Leilao> leiloes) throws MessagingException, IOException {
         System.out.println("\n" + "=".repeat(5) + " LISTAGEM DE LEILÕES " + "=".repeat(5));
         System.out.println("No caso dos leilões de Venda Direta apenas existe um valor!");
         System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s\n",
@@ -230,7 +231,7 @@ public class LeilaoView {
         }
     }
 
-    private void procurarLeilao() {
+    private void procurarLeilao() throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\nPROCURAR UM LEILÃO");
         listaLeiloes(Tools.estadoLeilao.DEFAULT);
@@ -247,7 +248,7 @@ public class LeilaoView {
         }
     }
 
-    private void exibirLeilaoDetalhado(Leilao leilao) {
+    private void exibirLeilaoDetalhado(Leilao leilao) throws MessagingException, IOException {
         String estadoStr = Tools.estadoLeilao.fromCodigo(leilao.getEstado()).name();
         String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()).name();
         System.out.println("\n- DETALHES DO LEILÃO COM O ID " + leilao.getId() + " -");
@@ -262,7 +263,7 @@ public class LeilaoView {
         System.out.println("Estado: " + estadoStr);
     }
 
-    private void eliminarLeilao() {
+    private void eliminarLeilao() throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\nELIMINAÇÃO DE UM LEILÃO");
         listaLeiloes(Tools.estadoLeilao.DEFAULT);
@@ -290,7 +291,7 @@ public class LeilaoView {
         } else System.out.println("Leilão não encontrado.");
     }
 
-    private void editarLeilao() {
+    private void editarLeilao() throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         ProdutoController produtoController = new ProdutoController();
         System.out.println("\nEDIÇÃO DE UM LEILÃO");
@@ -522,12 +523,12 @@ public class LeilaoView {
         }
     }
 
-    private String nomeProduto(int idProduto) {
+    private String nomeProduto(int idProduto) throws MessagingException, IOException {
         ProdutoController produtoController = new ProdutoController();
         return produtoController.getNomeProdutoById(idProduto);
     }
 
-    public void fecharLeilaoManual() {
+    public void fecharLeilaoManual() throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         LanceController lanceController = new LanceController();
         System.out.println("\n===== LEILÕES ATIVOS =====");

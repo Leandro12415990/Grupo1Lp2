@@ -6,13 +6,15 @@ import Model.Lance;
 import Model.Leilao;
 import Model.ResultadoOperacao;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LanceController {
 
-    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double novoValorLance) {
+    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double novoValorLance) throws MessagingException, IOException {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
 
@@ -26,20 +28,19 @@ public class LanceController {
     }
 
 
-    public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance) {
+    public ResultadoOperacao adicionarLanceDireto(int idLeilao, double valorLance) throws MessagingException, IOException {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
 
         int idCliente = Tools.clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
-        valorLance = leilao.getValorMinimo();
         int tipoLeilao = leilao.getTipoLeilao();
 
         ResultadoOperacao resultado = lanceBLL.adicionarLanceDireto(idLeilao, valorLance, idCliente, tipoLeilao);
         return resultado;
     }
 
-    public ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance) {
+    public ResultadoOperacao adicionarLanceCartaFechada(int idLeilao, double valorLance) throws MessagingException, IOException {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
 
@@ -89,7 +90,7 @@ public class LanceController {
 
     public String obterNomeVencedor(int idLance) {
         LanceBLL lanceBLL = new LanceBLL();
-        return lanceBLL.obterNomeVencedor(idLance);
+        return lanceBLL.obterVencedor(idLance).getNomeUtilizador();
     }
 
     public int selecionarLanceVencedor(int idLeilao) {

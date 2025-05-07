@@ -1,17 +1,12 @@
 package Utils;
 
-import Model.ClienteSessao;
-import Model.ResultadoOperacao;
-import Model.Utilizador;
+import Model.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Tools {
     public static Scanner scanner = new Scanner(System.in);
@@ -150,8 +145,13 @@ public class Tools {
 
         private final int idTipoLeilao;
 
-        tipoLeilao(int idTipoLeilao) { this.idTipoLeilao = idTipoLeilao; }
-        public int getIdTipoLeilao() { return idTipoLeilao; }
+        tipoLeilao(int idTipoLeilao) {
+            this.idTipoLeilao = idTipoLeilao;
+        }
+
+        public int getIdTipoLeilao() {
+            return idTipoLeilao;
+        }
 
         public static tipoLeilao fromCodigo(int idTipoLeilao) {
             for (tipoLeilao tipo : tipoLeilao.values()) {
@@ -218,18 +218,19 @@ public class Tools {
         return false;
     }
 
-    public static String alertaCancelar(){
+    public static String alertaCancelar() {
         return "(-1 para cancelar): ";
     }
 
-    public static ResultadoOperacao verificarDatasAnteriores (LocalDateTime dataInicial, LocalDateTime dataFinal) {
+    public static ResultadoOperacao verificarDatasAnteriores(LocalDateTime dataInicial, LocalDateTime dataFinal) {
         ResultadoOperacao resultado = new ResultadoOperacao();
-        if (dataFinal.isBefore(dataInicial)) resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
-            else {
-                resultado.Objeto = resultado;
-                resultado.Sucesso = true;
-            }
-            return resultado;
+        if (dataFinal.isBefore(dataInicial))
+            resultado.msgErro = "A data final não pode ser anterior à data inicial...\n";
+        else {
+            resultado.Objeto = resultado;
+            resultado.Sucesso = true;
+        }
+        return resultado;
     }
 
     public static LocalDateTime parseDateTimeByDate(String dateStr) {
@@ -285,9 +286,10 @@ public class Tools {
 
     public enum tipoEmail {
         EMAIL_REGISTO(1),
-        EMAIL_VENCEDOR_LEILAO(2),
-        EMAIL_CLIENTE_OFFLINE(3),
-        EMAIL_SEM_CREDITOS(4);
+        EMAIL_APROVADO(2),
+        EMAIL_VENCEDOR_LEILAO(3),
+        EMAIL_CLIENTE_OFFLINE(4),
+        EMAIL_SEM_CREDITOS(5);
 
         private final int idTipoEmail;
 
@@ -307,5 +309,23 @@ public class Tools {
             }
             throw new IllegalArgumentException("Tipo inválido: " + idTipoEmail);
         }
+    }
+
+    public static Map<String, String> substituirTags(Utilizador u, Produto produto, Leilao leilao) {
+        Map<String, String> variaveis = new HashMap<>();
+        variaveis.put("NOME", u.getNomeUtilizador());
+        variaveis.put("EQUIPA", Constantes.configEmail.equipa);
+        variaveis.put("EMAIL", u.getEmail());
+        variaveis.put("DATA", LocalDateTime.now().toString());
+        variaveis.put("SALDO", u.getSaldo().toString());
+        if (produto != null) {
+            variaveis.put("NOME_PRODUTO", produto.getNome());
+        }
+        if (leilao != null) {
+            variaveis.put("TIPO_LEILAO", leilao.getTipoLeilao() == 1 ? "ELETRONICO" : leilao.getTipoLeilao() == 2 ? "CARTA FECHADA" : "VENDA DIRETA");
+            variaveis.put("NOME_lEILAO", leilao.getDescricao());
+        }
+
+        return variaveis;
     }
 }

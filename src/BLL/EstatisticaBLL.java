@@ -1,14 +1,16 @@
 package BLL;
 
 import DAL.LeilaoDAL;
-import Model.Lance;
 import BLL.LeilaoBLL;
 import DAL.UtilizadorDAL;
+import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +23,7 @@ public class EstatisticaBLL {
     /**
      * Filtragem dos Leilões
      */
-    private List<Leilao> filtrarLeiloesFechados() {
+    private List<Leilao> filtrarLeiloesFechados() throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         leilaoBLL.carregarLeiloes();
         List<Leilao> todos = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
@@ -36,7 +38,7 @@ public class EstatisticaBLL {
         return fechados;
     }
 
-    private List<Leilao> filtrarLeiloesFechadosPorTipo(int idTipoLeilao) {
+    private List<Leilao> filtrarLeiloesFechadosPorTipo(int idTipoLeilao) throws MessagingException, IOException {
         List<Leilao> fechados = filtrarLeiloesFechados();
         List<Leilao> resultado = new ArrayList<>();
 
@@ -51,11 +53,11 @@ public class EstatisticaBLL {
     /**
      * Contagem dos leilões fechados
      */
-    public int contarLeilaoFechados() {
+    public int contarLeilaoFechados() throws MessagingException, IOException {
         return filtrarLeiloesFechados().size();
     }
 
-    public int contarLeiloesFechadosPorTipo(int idTipoLeilao) {
+    public int contarLeiloesFechadosPorTipo(int idTipoLeilao) throws MessagingException, IOException {
         return filtrarLeiloesFechadosPorTipo(idTipoLeilao).size();
     }
 
@@ -63,7 +65,7 @@ public class EstatisticaBLL {
      * Listagem de leilões por tipo
      */
 
-    public List<String> obterLeiloesFechadosFormatados() {
+    public List<String> obterLeiloesFechadosFormatados() throws MessagingException, IOException {
         List<Leilao> fechados = filtrarLeiloesFechados();
         List<String> resultado = new ArrayList<>();
 
@@ -75,7 +77,7 @@ public class EstatisticaBLL {
         return resultado;
     }
 
-    public List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipoLeilao) {
+    public List<String> listarLeiloesFechadosFormatadosPorTipo(int idTipoLeilao) throws MessagingException, IOException {
         List<Leilao> leiloes = filtrarLeiloesFechadosPorTipo(idTipoLeilao);
         List<String> resultado = new ArrayList<>();
 
@@ -94,7 +96,7 @@ public class EstatisticaBLL {
      * Obter o leilão mais tempo ativo
      */
 
-    public Leilao obterLeilaoTipoMaisTempoAtivo(int idTipoLeilao) {
+    public Leilao obterLeilaoTipoMaisTempoAtivo(int idTipoLeilao) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
         if (leiloes == null || leiloes.isEmpty()) return null;
@@ -118,7 +120,7 @@ public class EstatisticaBLL {
         return leilaoMaisTempo;
     }
 
-    public Leilao obterLeilaoMaisTempoAtivo() {
+    public Leilao obterLeilaoMaisTempoAtivo() throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
         if (leiloes == null || leiloes.isEmpty()) return null;
@@ -190,7 +192,7 @@ public class EstatisticaBLL {
         };
     }
 
-    public String[] getDadosLeilaoComMaisLancesPorTipo(int idTipoLeilao) {
+    public String[] getDadosLeilaoComMaisLancesPorTipo(int idTipoLeilao) throws MessagingException, IOException {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
@@ -291,7 +293,7 @@ public class EstatisticaBLL {
         return mediaMinutos;
     }
 
-    public double calcularMediaTempoEntreLancesPorTipo(int idTipoLeilao) {
+    public double calcularMediaTempoEntreLancesPorTipo(int idTipoLeilao) throws MessagingException, IOException {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
@@ -353,7 +355,7 @@ public class EstatisticaBLL {
      * Calcular a quantidade de leiloes sem lance
      */
 
-    public List<Leilao> obterLeiloesSemLances() {
+    public List<Leilao> obterLeiloesSemLances() throws MessagingException, IOException {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);
@@ -381,7 +383,7 @@ public class EstatisticaBLL {
         return semLances;
     }
 
-    public List<Leilao> obterLeiloesSemLancesPorTipo(int idTipoLeilao) {
+    public List<Leilao> obterLeiloesSemLancesPorTipo(int idTipoLeilao) throws MessagingException, IOException {
         LanceBLL lanceBLL = new LanceBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.DEFAULT);

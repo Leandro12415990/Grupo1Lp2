@@ -7,7 +7,9 @@ import Model.Lance;
 import Model.Leilao;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
 public class LeilaoBLL {
     private static List<Leilao> leiloes = new ArrayList<>();
 
-    public List<Leilao> carregarLeiloes() {
+    public List<Leilao> carregarLeiloes() throws MessagingException, IOException {
         LeilaoDAL leilaoDAL = new LeilaoDAL();
         LeilaoController leilaoController = new LeilaoController();
         leiloes = leilaoDAL.carregaLeiloes();
@@ -180,7 +182,7 @@ public class LeilaoBLL {
         return atualizado;
     }
 
-    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) throws MessagingException, IOException {
         carregarLeiloes();
         List<Leilao> leiloesFechados = listarLeiloes(Tools.estadoLeilao.FECHADO);
         LanceDAL lanceDAL = new LanceDAL();

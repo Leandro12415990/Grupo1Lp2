@@ -1,12 +1,13 @@
 package Controller;
 
 import BLL.TransacaoBLL;
-import Model.Transacao;
 import Model.ResultadoOperacao;
+import Model.Transacao;
 import Model.Utilizador;
 import Utils.Constantes;
-import View.TransacaoView;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -65,9 +66,9 @@ public class TransacaoController {
         return resultado;
     }
 
-    public void atualizarSaldo(int idCliente, Double valorTransacao) {
+    public void atualizarSaldo(int idCliente, Double valorTransacao, char operador, boolean criarTransacao) throws MessagingException, IOException {
         TransacaoBLL transacaoBLL = new TransacaoBLL();
-        transacaoBLL.atualizarSaldo(idCliente, valorTransacao);
+        transacaoBLL.atualizarSaldo(idCliente, valorTransacao,operador,false, criarTransacao);
     }
 
     public Transacao buscarTransacao(int idTransacao) {

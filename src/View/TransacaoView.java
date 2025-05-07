@@ -1,13 +1,14 @@
 package View;
 
-import Model.Transacao;
-import Model.ResultadoOperacao;
-import Model.ClienteSessao;
-import Model.Utilizador;
 import Controller.TransacaoController;
+import Model.ResultadoOperacao;
+import Model.Transacao;
+import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TransacaoView {
@@ -20,8 +21,7 @@ public class TransacaoView {
             System.out.println("3. Ver Depósitos");
             System.out.println("4. Ver Movimentos");
             System.out.println("0. Voltar ao menu principal...");
-            System.out.print("Escolha uma opção " + Tools.alertaCancelar());
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             if (Tools.verificarSaida(String.valueOf(opc))) return;
 
             switch (opc) {
@@ -77,14 +77,14 @@ public class TransacaoView {
         TransacaoController transacaoController = new TransacaoController();
         List<Transacao> transacoesList = transacaoController.listarDepositos(apenasPendentes, idTipoTransacao, idCliente);
         if (idCliente != 0) {
-            exibirTransacoes(transacoesList,true);
+            exibirTransacoes(transacoesList, true);
         } else {
-            exibirTransacoes(transacoesList,false);
+            exibirTransacoes(transacoesList, false);
         }
 
     }
 
-    public void aprovarDepositos() {
+    public void aprovarDepositos() throws MessagingException, IOException {
         TransacaoController transacaoController = new TransacaoController();
         List<Transacao> pendentes = transacaoController.listarDepositos(true, Constantes.tiposTransacao.DEPOSITO, 0);
 
@@ -115,16 +115,14 @@ public class TransacaoView {
                     System.out.printf("Pretende aprovar(A) ou negar(N)? " + Tools.alertaCancelar());
                     String input = Tools.scanner.nextLine().trim();
                     if (Tools.verificarSaida(input)) return;
-
-                    char opc = Character.toUpperCase(input.charAt(0));
-
-                    switch (opc) {
-                        case 'A':
+                    char operador = '+';
+                    switch (input.toUpperCase()) {
+                        case "A":
                             System.out.println("O depósito " + deposito.getIdTransacao() + " foi aprovado com sucesso!");
-                            transacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao());
+                            transacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao(), operador, false);
                             transacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.ACEITE);
                             break;
-                        case 'N':
+                        case "N":
                             System.out.println("O depósito " + deposito.getIdTransacao() + " foi negado!");
                             transacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.NEGADO);
                             break;

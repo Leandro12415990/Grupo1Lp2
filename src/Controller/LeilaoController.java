@@ -1,15 +1,13 @@
 package Controller;
 
-import BLL.LanceBLL;
-import BLL.LeilaoBLL;
-import BLL.ProdutoBLL;
-import BLL.TransacaoBLL;
-import Model.Leilao;
-import Model.Produto;
-import Model.ResultadoOperacao;
+import BLL.*;
+import DAL.TemplateDAL;
+import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,7 +38,7 @@ public class LeilaoController {
         return resultado;
     }
 
-    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
+    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         leilaoBLL.carregarLeiloes();
         return leilaoBLL.listarLeiloes(estado);
@@ -105,21 +103,31 @@ public class LeilaoController {
         return leilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
     }
 
-    public boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) {
+    public boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) throws IOException, MessagingException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         LanceBLL lanceBLL = new LanceBLL();
         TransacaoBLL transacaoBLL = new TransacaoBLL();
+        EmailBLL emailBLL = new EmailBLL();
+        ProdutoBLL produtoBLL = new ProdutoBLL();
+        TemplateDAL templateDAL = new TemplateDAL();
+
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         if (leilao == null) return false;
 
         leilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
         int idLanceVencedor = lanceBLL.selecionarLanceVencedor(idLeilao);
+        Produto produto = produtoBLL.procurarProduto(leilao.getIdProduto());
+        Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_VENCEDOR_LEILAO);
+        Utilizador u = lanceBLL.obterVencedor(idLanceVencedor);
+        if (template != null) {
+            emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u,produto,null), u.getId());
+        }
         transacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
 
         return true;
     }
 
-    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) {
+    public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         return leilaoBLL.listarLeiloesTerminadosComLancesDoCliente(idCliente);
     }

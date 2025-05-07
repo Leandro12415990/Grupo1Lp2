@@ -1,8 +1,8 @@
 package Controller;
 
 import BLL.LoginUtilizadorBLL;
+import Model.ClienteSessao;
 import Model.Utilizador;
-import Model.ClienteSessao; // Importando a classe ClienteSessao
 import Utils.Tools;
 
 public class LoginController {

@@ -1,15 +1,26 @@
 package Utils;
 
 public class Constantes {
-    public static class caminhosFicheiros{
+    // Secção: Configurações Email
+    public static class configEmail {
+        public static final String fromEmail = "valoraltaleiloes@gmail.com";
+        public static final String fromName = "Valor em Alta - Leiloeira";
+        public static final String keyPassword = "zwgz xnzn kznc iieo";
+        public static final String host = "smtp.gmail.com";
+        public static final int port = 587;
+        public static final String equipa = "Equipa Valor em Alta Leilões";
+    }
+
+    public static class caminhosFicheiros {
         public static final String CSV_FILE_LEILAO = "data\\Leilao.csv";
         public static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
         public static final String CSV_FILE_LANCE = "data\\Lance.csv";
         public static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
         public static final String CSV_FILE_PRODUTO = "data\\Produto.csv";
-        public static final String CSV_FILE_EMAIL = "data\\EmailRegisto";
+        public static final String CSV_FILE_TEMPLATE = "data\\Template.csv";
+        public static final String CSV_FILE_EMAIL = "data\\Email.csv";
     }
-    
+
     // Secção: Estados Leilões
     public static class estadosLeilao {
         public static final int DEFAULT = 0;
@@ -53,8 +64,9 @@ public class Constantes {
     // Secção: Tipos Email's
     public static class templateIds {
         public static final String EMAIL_REGISTO = "1";
-        public static final String EMAIL_VENCEDOR_LEILAO = "2";
-        public static final String EMAIL_CLIENTE_OFFLINE = "3";
-        public static final String EMAIL_SEM_CREDITOS = "4";
+        public static final String EMAIL_APROVADO = "2";
+        public static final String EMAIL_VENCEDOR_LEILAO = "3";
+        public static final String EMAIL_CLIENTE_OFFLINE = "4";
+        public static final String EMAIL_SEM_CREDITOS = "5";
     }
 }

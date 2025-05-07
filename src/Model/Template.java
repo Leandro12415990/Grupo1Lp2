@@ -1,11 +1,11 @@
 package Model;
 
-public class TemplateModel {
+public class Template {
     private String id;
     private String assunto;
     private String corpo;
 
-    public TemplateModel(String id, String assunto, String corpo) {
+    public Template(String id, String assunto, String corpo) {
         this.id = id;
         this.assunto = assunto;
         this.corpo = corpo;

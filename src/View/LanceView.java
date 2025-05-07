@@ -5,18 +5,23 @@ import BLL.LeilaoBLL;
 import BLL.UtilizadorBLL;
 import Controller.*;
 import DAL.LanceDAL;
+import Controller.ProdutoController;
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
-import Model.*;
+import Model.Lance;
+import Model.Leilao;
+import Model.ResultadoOperacao;
+import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
-import java.sql.SQLOutput;
+import java.io.IOException;
 import java.util.List;
 
 
 public class LanceView {
-    public void exibirMenuLance() {
+    public void exibirMenuLance() throws MessagingException, IOException {
         int opc;
         do {
             System.out.println("\n" + "=".repeat(5) + " MENU LANCES " + "=".repeat(5));
@@ -55,7 +60,7 @@ public class LanceView {
 
     }
 
-    public void lanceDireto() {
+    public void lanceDireto() throws MessagingException, IOException {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
@@ -107,7 +112,7 @@ public class LanceView {
         }
     }
 
-    public void lanceCartaFechada() {
+    public void lanceCartaFechada() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\n===== LEILÕES CARTA FECHADA =====");
@@ -148,7 +153,7 @@ public class LanceView {
         }
     }
 
-    public void lanceEletronico() {
+    public void lanceEletronico() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
         System.out.println("\n===== LEILÕES ELETRÔNICOS =====");
@@ -201,7 +206,7 @@ public class LanceView {
         }
     }
 
-    public void listarMeuLance() {
+    public void listarMeuLance() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         ProdutoController produtoController = new ProdutoController();
         List<Lance> meusLances = lanceController.listarLancesDoCliente();
@@ -221,7 +226,7 @@ public class LanceView {
         }
     }
 
-    public void listarLancesPorLeilao() {
+    public void listarLancesPorLeilao() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();// PARA SER USADO PELO GESTOR
         List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
@@ -247,7 +252,7 @@ public class LanceView {
         }
     }
 
-    public void listarLeiloesTerminados() {
+    public void listarLeiloesTerminados() throws MessagingException, IOException {
         int idCliente = Tools.clienteSessao.getIdCliente();
         LeilaoController leilaoController = new LeilaoController();
         List<Leilao> leiloes = leilaoController.listarLeiloesTerminadosComLancesDoCliente(idCliente);
@@ -265,11 +270,11 @@ public class LanceView {
 
         }
 
-    public void verDetalhesLeilaoTerminados() {
+    public void verDetalhesLeilaoTerminados() throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         int idCliente = Tools.clienteSessao.getIdCliente();
         List<Leilao> leiloes = leilaoController.listarLeiloesTerminadosComLancesDoCliente(idCliente);
-
+        LanceBLL lanceBLL = new LanceBLL();
         listarLeiloesTerminados();
 
         int idSelecionado = Tools.pedirOpcaoMenu("\nEscolhe o ID de um leilão para ver os detalhes " + Tools.alertaCancelar());
@@ -291,7 +296,6 @@ public class LanceView {
             return;
         }
 
-        LanceBLL lanceBLL = new LanceBLL();
         lanceBLL.carregarLances();
 
         int idLanceVencedor = lanceBLL.selecionarLanceVencedor(leilaoSelecionado.getId());
@@ -301,7 +305,7 @@ public class LanceView {
             return;
         }
 
-        String nomeVencedor = lanceBLL.obterNomeVencedor(idLanceVencedor);
+        String nomeVencedor = lanceBLL.obterVencedor(idLanceVencedor).getNomeUtilizador();
         List<Lance> lancesDoLeilao = lanceBLL.obterLancesPorLeilao(leilaoSelecionado.getId());
 
         Lance lanceVencedor = null;
