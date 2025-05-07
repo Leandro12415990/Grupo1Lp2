@@ -3,15 +3,25 @@ package BLL;
 import DAL.ClassificacaoDAL;
 import Model.Classificacao;
 
+import java.util.List;
+
 public class ClassificacaoBLL {
+    private final ClassificacaoDAL dal = new ClassificacaoDAL();
 
-    private final ClassificacaoDAL dal;
+    public boolean jaFoiAvaliado(int idUtilizador, int idLeilao) {
+        List<Classificacao> lista = dal.carregarClassificacoes();
 
-    public ClassificacaoBLL(ClassificacaoDAL dal) {
-        this.dal = dal;
+        for (Classificacao c : lista) {
+            if (c.getIdUtilizador() == idUtilizador && c.getIdLeilao() == idLeilao) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public void registarClassificacao(Classificacao c) {
-        dal.adicionarClassificacao(c);
+    public void adicionarClassificacao(int idLeilao, int idUtilizador, int classificacao, String comentario) {
+        Classificacao nova = new Classificacao(idLeilao, idUtilizador, classificacao, comentario);
+        dal.adicionarClassificacao(nova);
     }
 }

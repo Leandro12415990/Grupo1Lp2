@@ -1,10 +1,7 @@
 package View;
 
 import BLL.UtilizadorBLL;
-import Controller.ProdutoController;
-import Controller.LanceController;
-import Controller.LeilaoController;
-import Controller.UtilizadorController;
+import Controller.*;
 import DAL.LanceDAL;
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
@@ -249,21 +246,48 @@ public class LanceView {
 
     public void listarLeiloesTerminados() {
         int idCliente = Tools.clienteSessao.getIdCliente();
-
         LeilaoController leilaoController = new LeilaoController();
-
         List<Leilao> leiloes = leilaoController.listarLeiloesTerminadosComLancesDoCliente(idCliente);
 
         if (leiloes.isEmpty()) {
             System.out.println("Não participaste em nenhum leilão terminado.");
-        } else {
-            System.out.println("\nLeilões terminados em que participaste:");
+            return;
+        }
+
+        System.out.println("\nLeilões terminados em que participaste:");
+        for (Leilao l : leiloes) {
+            System.out.println("ID: " + l.getId() + " | Descrição: " + l.getDescricao());
+        }
+
+        while (true) {
+            int idSelecionado = Tools.pedirOpcaoMenu("\nEscolhe o ID de um leilão para avaliar " + Tools.alertaCancelar());
+
+            if (idSelecionado == -1) {
+                System.out.println("Operação cancelada.");
+                return;
+            }
+
+            Leilao leilaoSelecionado = null;
             for (Leilao l : leiloes) {
-                System.out.println("ID: " + l.getId() + " | Descrição: " + l.getDescricao());
+                if (l.getId() == idSelecionado) {
+                    leilaoSelecionado = l;
+                    break;
+                }
+            }
+
+            if (leilaoSelecionado == null) {
+                System.out.println("ID inválido. Certifica-te que escolheste um leilão da lista.");
+            } else {
+                ClassificacaoController controller = new ClassificacaoController();
+                if (controller.jaFoiAvaliado(idCliente, leilaoSelecionado.getId())) {
+                    System.out.println("Já avaliou este leilão anteriormente.");
+                } else {
+                    ClassificacaoView classificacaoView = new ClassificacaoView();
+                    classificacaoView.pedirClassificacao(leilaoSelecionado);
+                }
+                return;
             }
         }
     }
-
-
 
 }
