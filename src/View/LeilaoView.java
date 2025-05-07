@@ -57,7 +57,6 @@ public class LeilaoView {
             }
         } while (opc != 0);
     }
-
     private void criarLeilao() throws MessagingException, IOException {
         ProdutoView produtoView = new ProdutoView();
         ProdutoController produtoController = new ProdutoController();

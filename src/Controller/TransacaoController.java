@@ -66,9 +66,9 @@ public class TransacaoController {
         return resultado;
     }
 
-    public void atualizarSaldo(int idCliente, Double valorTransacao, char operador) throws MessagingException, IOException {
+    public void atualizarSaldo(int idCliente, Double valorTransacao, char operador, boolean criarTransacao) throws MessagingException, IOException {
         TransacaoBLL transacaoBLL = new TransacaoBLL();
-        transacaoBLL.atualizarSaldo(idCliente, valorTransacao,operador);
+        transacaoBLL.atualizarSaldo(idCliente, valorTransacao,operador,false, criarTransacao);
     }
 
     public Transacao buscarTransacao(int idTransacao) {

@@ -454,7 +454,7 @@ public class EstatisticaView {
                     + " ; " + "Email: " + utilizador.getEmail()
                     + " ; " + "Telefone: " + utilizador.getMorada()
                     + " ; " + "Morada: " + utilizador.getMorada()
-                    );
+            );
         }
 
         System.out.println("\nTotal de clientes registados: " + clientes.size());

@@ -21,8 +21,7 @@ public class TransacaoView {
             System.out.println("3. Ver Depósitos");
             System.out.println("4. Ver Movimentos");
             System.out.println("0. Voltar ao menu principal...");
-            System.out.print("Escolha uma opção " + Tools.alertaCancelar());
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             if (Tools.verificarSaida(String.valueOf(opc))) return;
 
             switch (opc) {
@@ -116,16 +115,14 @@ public class TransacaoView {
                     System.out.printf("Pretende aprovar(A) ou negar(N)? " + Tools.alertaCancelar());
                     String input = Tools.scanner.nextLine().trim();
                     if (Tools.verificarSaida(input)) return;
-
-                    char opc = Character.toUpperCase(input.charAt(0));
                     char operador = '+';
-                    switch (opc) {
-                        case 'A':
+                    switch (input.toUpperCase()) {
+                        case "A":
                             System.out.println("O depósito " + deposito.getIdTransacao() + " foi aprovado com sucesso!");
-                            transacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao(), operador);
+                            transacaoController.atualizarSaldo(deposito.getIdCliente(), deposito.getValorTransacao(), operador, false);
                             transacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.ACEITE);
                             break;
-                        case 'N':
+                        case "N":
                             System.out.println("O depósito " + deposito.getIdTransacao() + " foi negado!");
                             transacaoController.atualizarEstadosTransacao(deposito.getIdTransacao(), Constantes.estadosTransacao.NEGADO);
                             break;

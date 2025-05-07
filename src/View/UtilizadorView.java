@@ -1,7 +1,6 @@
 package View;
 
 import BLL.EmailBLL;
-import BLL.UtilizadorBLL;
 import Controller.UtilizadorController;
 import DAL.TemplateDAL;
 import Model.ResultadoOperacao;
