@@ -133,6 +133,7 @@ public class Tools {
             }
             throw new IllegalArgumentException("Estado inválido: " + idEstado);
         }
+
         public static estadoLeilao getDefault() {
             return DEFAULT;
         }
