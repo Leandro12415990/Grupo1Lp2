@@ -1,5 +1,6 @@
 package Controller;
 
+import BLL.ClassificacaoBLL;
 import BLL.EstatisticaBLL;
 import BLL.LeilaoBLL;
 import Model.Leilao;
@@ -91,4 +92,10 @@ public class EstatisticaController {
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         return estatisticaBLL.calcularTempoAtivoLeilao(leilao);
     }
+
+    public List<String> obterEstatisticasLeiloesFechados() throws MessagingException, IOException {
+        EstatisticaBLL estatisticaBLL = new EstatisticaBLL();
+        return estatisticaBLL.calcularMediaClassificacoesPorLeilao();
+    }
+
 }
