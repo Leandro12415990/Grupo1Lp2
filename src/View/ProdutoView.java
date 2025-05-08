@@ -162,12 +162,11 @@ public class ProdutoView {
 
     public void listarProduto(boolean apenasDisponiveis) throws MessagingException, IOException {
         ProdutoController produtoController = new ProdutoController();
-        ResultadoOperacao resultado = produtoController.listarProduto(apenasDisponiveis);
-        if (resultado.Sucesso) {
-            List<Produto> produtos = (List<Produto>) resultado.Objeto;
+        List<Produto> produtos = produtoController.listarProduto(apenasDisponiveis);
+        if (produtos.isEmpty()) {
             exibirProduto(produtos);
         } else {
-            System.out.println(resultado.msgErro);
+            System.out.println("Não existem produtos.");
         }
     }
 

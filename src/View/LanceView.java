@@ -1,12 +1,10 @@
 package View;
 
 import BLL.LanceBLL;
-import BLL.LeilaoBLL;
-import BLL.UtilizadorBLL;
-import Controller.*;
-import DAL.LanceDAL;
+import Controller.LanceController;
+import Controller.LeilaoController;
 import Controller.ProdutoController;
-import DAL.LeilaoDAL;
+import Controller.UtilizadorController;
 import DAL.UtilizadorDAL;
 import Model.Lance;
 import Model.Leilao;

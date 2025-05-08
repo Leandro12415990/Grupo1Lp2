@@ -57,15 +57,17 @@ public class LeilaoView {
             }
         } while (opc != 0);
     }
+
     private void criarLeilao() throws MessagingException, IOException {
         ProdutoView produtoView = new ProdutoView();
         ProdutoController produtoController = new ProdutoController();
         LeilaoController leilaoController = new LeilaoController();
 
         System.out.println("\nCRIAÇÃO DE UM LEILÃO\n");
-        ResultadoOperacao resultadoProdutos = produtoController.listarProduto(true);
-        if (resultadoProdutos.Sucesso) {
-            List<Produto> produtosDisponiveis = (List<Produto>) resultadoProdutos.Objeto;
+        List<Produto> produtosDisponiveis = produtoController.listarProduto(true);
+        if (produtosDisponiveis.isEmpty()) {
+            System.out.println("Não existem produtos disponiveis.");
+        } else {
             produtoView.exibirProduto(produtosDisponiveis);
 
             System.out.print("\nIntroduza o ID do produto que pretende leiloar " + Tools.alertaCancelar());
@@ -155,7 +157,7 @@ public class LeilaoView {
                 // No caso de ser um Leilão Venda Direta, apenas pede um valor (estou a armazenar na variável valorMin)
                 if (idTipoLeilao == Constantes.tiposLeilao.VENDA_DIRETA) {
                     while (true) {
-                        System.out.print("Insira o valor pretendido." + Tools.alertaCancelar());
+                        System.out.print("Insira o valor pretendido:" + Tools.alertaCancelar());
                         String valorMinStr = Tools.scanner.nextLine().trim();
                         if (Tools.verificarSaida(valorMinStr)) return;
                         if (valorMinStr.isEmpty()) break;
@@ -194,7 +196,7 @@ public class LeilaoView {
                     System.out.println("Leilão criado com sucesso!");
                 } else System.out.println(resultado.msgErro);
             } else System.out.println("\n" + isAvailable.msgErro);
-        } else System.out.println(resultadoProdutos.msgErro);
+        }
     }
 
     public List<Leilao> listaLeiloes(Tools.estadoLeilao estado) throws MessagingException, IOException {
@@ -294,6 +296,7 @@ public class LeilaoView {
     private void editarLeilao() throws MessagingException, IOException {
         LeilaoController leilaoController = new LeilaoController();
         ProdutoController produtoController = new ProdutoController();
+
         System.out.println("\nEDIÇÃO DE UM LEILÃO");
         listaLeiloes(Tools.estadoLeilao.DEFAULT);
         System.out.print("\nIntroduza o ID do Leilão que pretende editar " + Tools.alertaCancelar());
@@ -306,9 +309,11 @@ public class LeilaoView {
         if (leilao != null) {
             exibirLeilaoDetalhado(leilao);
             System.out.println("\nIntroduza os novos dados");
-            ResultadoOperacao resultado = produtoController.listarProduto(true);
+            List<Produto> produtosDisponiveis = produtoController.listarProduto(true);
             int idProduto = leilao.getIdProduto();
-            if (resultado.Sucesso) {
+            if (produtosDisponiveis.isEmpty()) {
+                System.out.println("Não existem produtos disponíveis para leiloar.");
+            } else {
                 System.out.print("\nNovo ID do produto que pretende leiloar ou pressione ENTER para não alterar " + Tools.alertaCancelar());
                 String input;
 
@@ -330,7 +335,7 @@ public class LeilaoView {
                         System.out.print("Tente novamente: ");
                     }
                 }
-            } else System.out.println(resultado.msgErro);
+            }
 
             System.out.print("Nova descrição do leilão ou pressione ENTER para não alterar " + Tools.alertaCancelar());
             String descricao = Tools.scanner.nextLine().trim();
