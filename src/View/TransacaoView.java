@@ -76,12 +76,8 @@ public class TransacaoView {
     private void listarTransacoes(boolean apenasPendentes, int idTipoTransacao, int idCliente) {
         TransacaoController transacaoController = new TransacaoController();
         List<Transacao> transacoesList = transacaoController.listarDepositos(apenasPendentes, idTipoTransacao, idCliente);
-        if (idCliente != 0) {
-            exibirTransacoes(transacoesList, true);
-        } else {
-            exibirTransacoes(transacoesList, false);
-        }
-
+        if (idCliente != 0) exibirTransacoes(transacoesList, true);
+        else exibirTransacoes(transacoesList, false);
     }
 
     public void aprovarDepositos() throws MessagingException, IOException {
@@ -105,7 +101,6 @@ public class TransacaoView {
 
             int idDeposito = Tools.scanner.nextInt();
             Tools.scanner.nextLine();
-
             if (Tools.verificarSaida(String.valueOf(idDeposito))) break;
 
             ResultadoOperacao resultado = transacaoController.verificarTransacao(idDeposito);
