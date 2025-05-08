@@ -35,9 +35,7 @@ public class ProdutoController {
         ProdutoBLL produtoBLL = new ProdutoBLL();
         boolean sucesso = produtoBLL.eliminarProduto(produto);
 
-        if (sucesso) {
-            produtoBLL.obterTodosProdutos();
-        }
+        if (sucesso) produtoBLL.obterTodosProdutos();
         return sucesso;
     }
 
@@ -56,9 +54,7 @@ public class ProdutoController {
 
     public Produto procurarProduto(int id) {
         ProdutoBLL produtoBLL = new ProdutoBLL();
-        if (id > 0) {
-            return produtoBLL.procurarProduto(id);
-        }
+        if (id > 0) return produtoBLL.procurarProduto(id);
         return null;
     }
 

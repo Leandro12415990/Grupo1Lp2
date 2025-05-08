@@ -46,9 +46,7 @@ public class LeilaoController {
 
     public Leilao procurarLeilaoPorId(int Id) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
-        if (Id > 0) {
-            return leilaoBLL.procurarLeilaoPorId(Id);
-        }
+        if (Id > 0) return leilaoBLL.procurarLeilaoPorId(Id);
         return null;
     }
 
@@ -119,9 +117,8 @@ public class LeilaoController {
         Produto produto = produtoBLL.procurarProduto(leilao.getIdProduto());
         Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_VENCEDOR_LEILAO);
         Utilizador u = lanceBLL.obterVencedor(idLanceVencedor);
-        if (template != null) {
-            emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u,produto,null), u.getId());
-        }
+        if (template != null)
+            emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u, produto, null), u.getId());
         transacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
 
         return true;

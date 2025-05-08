@@ -23,7 +23,6 @@ public class LanceController {
         int tipoLeilao = leilao.getTipoLeilao();
 
         ResultadoOperacao resultado = lanceBLL.adicionarLanceEletronico(idLeilao, novoValorLance, idCliente, tipoLeilao);
-
         return resultado;
     }
 
@@ -56,7 +55,6 @@ public class LanceController {
 
     public List<Lance> listarLancesDoCliente() {
         LanceBLL lanceBLL = new LanceBLL();
-
         lanceBLL.carregarLances();
 
         int idCliente = Tools.clienteSessao.getIdCliente();
@@ -72,18 +70,14 @@ public class LanceController {
     public List<Leilao> listarLeiloesByTipo(List<Leilao> leiloes, int idTipoLeilao) {
         List<Leilao> leiloesByTipo = new ArrayList<>();
         for (Leilao leilao : leiloes) {
-            if (leilao.getTipoLeilao() == idTipoLeilao) {
-                leiloesByTipo.add(leilao);
-            }
+            if (leilao.getTipoLeilao() == idTipoLeilao) leiloesByTipo.add(leilao);
         }
         return leiloesByTipo;
     }
 
     public boolean verificarDisponibilidadeLeilao(List<Leilao> leiloes, int idLeilao) {
         for (Leilao leilao : leiloes) {
-            if (leilao.getId() == idLeilao) {
-                return true;
-            }
+            if (leilao.getId() == idLeilao) return true;
         }
         return false;
     }
@@ -110,10 +104,7 @@ public class LanceController {
         LanceBLL lanceBLL = new LanceBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);
 
-        if (lances.isEmpty()) {
-            return leilaoEncontrado.getValorMinimo();
-        }
-
+        if (lances.isEmpty()) return leilaoEncontrado.getValorMinimo();
         return lances.get(lances.size() - 1).getValorLance();
     }
 

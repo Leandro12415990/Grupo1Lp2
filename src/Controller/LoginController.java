@@ -18,7 +18,6 @@ public class LoginController {
             if (email.equalsIgnoreCase(u.getEmail()) && password.equals(u.getPassword())) {
                 if (u.getEstado() == 2) {
                     Utilizador utilizador = loginUtilizadorBLL.login(email, password);
-
                     clienteSessao.setIdCliente(u.getId());
                     return utilizador;
                 } else {

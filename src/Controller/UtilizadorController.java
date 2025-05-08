@@ -1,7 +1,6 @@
 package Controller;
 
-import BLL.*;
-import DAL.UtilizadorDAL;
+import BLL.UtilizadorBLL;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Tools;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class UtilizadorController {
@@ -61,10 +59,7 @@ public class UtilizadorController {
         ResultadoOperacao resultado = new ResultadoOperacao();
 
         for (Utilizador u : Tools.utilizadores) {
-            if (u.getTipoUtilizador() != idTipoUtilizador) {
-                continue;
-            }
-
+            if (u.getTipoUtilizador() != idTipoUtilizador) continue;
             boolean deveAlterar = alterarTodos
                     ? u.getEstado() != novoEstado
                     : u.getEmail().equalsIgnoreCase(email);
@@ -128,9 +123,7 @@ public class UtilizadorController {
     public double obterSaldoCliente(int idCliente) {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
-        if (utilizador != null) {
-            return utilizador.getSaldo();
-        }
+        if (utilizador != null) return utilizador.getSaldo();
         return -1.0;
     }
 
