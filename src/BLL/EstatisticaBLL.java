@@ -1,8 +1,10 @@
 package BLL;
 
+import DAL.ClassificacaoDAL;
 import DAL.LeilaoDAL;
 import BLL.LeilaoBLL;
 import DAL.UtilizadorDAL;
+import Model.Classificacao;
 import Model.Lance;
 import Model.Leilao;
 import Model.Utilizador;
@@ -549,7 +551,6 @@ public class EstatisticaBLL {
         return resultado;
     }
 
-
     private Utilizador procurarUtilizadorPorId(int id) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
@@ -572,6 +573,41 @@ public class EstatisticaBLL {
             dataFim = LocalDateTime.now();
         }
         return Period.between(leilao.getDataInicio().toLocalDate(), dataFim.toLocalDate());
+    }
+
+    public List<String> calcularMediaClassificacoesPorLeilao() throws MessagingException, IOException {
+        ClassificacaoDAL classificacaoDAL = new ClassificacaoDAL();
+        List<Classificacao> todasClassificacoes = classificacaoDAL.carregarClassificacoes();
+        List<Leilao> leiloesFechados = filtrarLeiloesFechados();
+
+        List<String> estatisticas = new ArrayList<>();
+
+        for (Leilao leilao : leiloesFechados) {
+            int total = 0;
+            int soma = 0;
+
+            for (Classificacao c : todasClassificacoes) {
+                if (c.getIdLeilao() == leilao.getId()) {
+                    soma += c.getClassificacao();
+                    total++;
+                }
+            }
+
+            if (total > 0) {
+                double media = (double) soma / total;
+                String linha = String.format(
+                        "ID: %d | %s | Média da Avaliação: %.2f (%d avaliação%s)",
+                        leilao.getId(),
+                        leilao.getDescricao(),
+                        media,
+                        total,
+                        total == 1 ? "" : "s"
+                );
+                estatisticas.add(linha);
+            }
+        }
+
+        return estatisticas;
     }
 
 }

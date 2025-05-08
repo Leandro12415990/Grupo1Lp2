@@ -1,6 +1,7 @@
 package View;
 
 import BLL.LeilaoBLL;
+import Controller.ClassificacaoController;
 import Controller.EstatisticaController;
 import DAL.UtilizadorDAL;
 import Model.Leilao;
@@ -25,6 +26,7 @@ public class EstatisticaView {
             System.out.println("2. Estatisticas Globais");
             System.out.println("3. Estatisticas Por Tipo Leilão");
             System.out.println("4. Estatisticas De Clientes");
+            System.out.println("5. Estatisticas Ver Classificações Dos Leilões");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
             opc = Tools.pedirOpcaoMenu("Escolha uma opção: ");
@@ -40,6 +42,9 @@ public class EstatisticaView {
                     break;
                 case 4:
                     exibirMenuEstatisticaCliente();
+                    break;
+                case 5:
+                    mostrarEstatisticasLeiloesFechados();
                     break;
                 case 0:
                     System.out.println("\nSair...");
@@ -526,5 +531,28 @@ public class EstatisticaView {
             }
         }
     }
+
+    public void mostrarEstatisticasLeiloesFechados() {
+        EstatisticaController estatisticaController = new EstatisticaController();
+        List<String> estatisticas;
+
+        try {
+            estatisticas = estatisticaController.obterEstatisticasLeiloesFechados();
+        } catch (Exception e) {
+            System.out.println("Erro ao obter estatísticas: " + e.getMessage());
+            return;
+        }
+
+        if (estatisticas.isEmpty()) {
+            System.out.println("Nenhum leilão fechado com avaliações.");
+            return;
+        }
+
+        System.out.println("\n===== Estatísticas de Leilões Fechados =====");
+        for (String linha : estatisticas) {
+            System.out.println(linha);
+        }
+    }
+
 
 }
