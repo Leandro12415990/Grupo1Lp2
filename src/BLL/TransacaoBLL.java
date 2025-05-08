@@ -3,11 +3,7 @@ package BLL;
 import DAL.TemplateDAL;
 import DAL.TransacaoDAL;
 import DAL.UtilizadorDAL;
-import Model.Lance;
-import Model.Template;
-import Model.Leilao;
-import Model.Transacao;
-import Model.Utilizador;
+import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
@@ -38,9 +34,7 @@ public class TransacaoBLL {
     private int verificarUltimoIdCarteira(List<Transacao> lista) {
         int ultimoId = 0;
         for (Transacao transacao : lista) {
-            if (transacao.getIdTransacao() > ultimoId) {
-                ultimoId = transacao.getIdTransacao();
-            }
+            if (transacao.getIdTransacao() > ultimoId) ultimoId = transacao.getIdTransacao();
         }
         return ultimoId;
     }
@@ -83,14 +77,11 @@ public class TransacaoBLL {
                         break;
                 }
                 utilizador.setSaldo(saldoAtual);
-                if (criarTransacao && transacao != null) {
-                    criarTransacao(transacao);
-                }
+                if (criarTransacao && transacao != null) criarTransacao(transacao);
                 if (saldoAtual <= 0.0) {
                     Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_SEM_CREDITOS);
-                    if (template != null) {
+                    if (template != null)
                         emailBLL.enviarEmail(template, utilizador.getEmail(), Tools.substituirTags(utilizador, null, null), utilizador.getId());
-                    }
                 }
                 utilizadorDAL.gravarUtilizadores(utilizadorList);
                 return saldoAtual;
@@ -160,9 +151,8 @@ public class TransacaoBLL {
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);
         char operador = '+';
         for (Lance lance : lances) {
-            if (lance.getIdLance() != idLanceVencedor) {
+            if (lance.getIdLance() != idLanceVencedor)
                 atualizarSaldo(lance.getIdCliente(), lance.getValorLance(), operador, true, true);
-            }
         }
     }
 
@@ -175,14 +165,9 @@ public class TransacaoBLL {
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);
         Lance ultimoLance = null;
         for (Lance l : lances) {
-            if (ultimoLance == null || l.getDataLance().isAfter(ultimoLance.getDataLance())) {
-                ultimoLance = l;
-            }
+            if (ultimoLance == null || l.getDataLance().isAfter(ultimoLance.getDataLance())) ultimoLance = l;
         }
-        if (ultimoLance != null) {
+        if (ultimoLance != null)
             atualizarSaldo(ultimoLance.getIdCliente(), ultimoLance.getValorLance(), '+', true, true);
-        }
     }
-
-
 }

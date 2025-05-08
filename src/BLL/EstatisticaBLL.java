@@ -1,7 +1,5 @@
 package BLL;
 
-import DAL.LeilaoDAL;
-import BLL.LeilaoBLL;
 import DAL.UtilizadorDAL;
 import Model.Lance;
 import Model.Leilao;
@@ -30,11 +28,8 @@ public class EstatisticaBLL {
         List<Leilao> fechados = new ArrayList<>();
 
         for (Leilao l : todos) {
-            if (l.getEstado() == Constantes.estadosLeilao.FECHADO) {
-                fechados.add(l);
-            }
+            if (l.getEstado() == Constantes.estadosLeilao.FECHADO) fechados.add(l);
         }
-
         return fechados;
     }
 
@@ -43,9 +38,7 @@ public class EstatisticaBLL {
         List<Leilao> resultado = new ArrayList<>();
 
         for (Leilao l : fechados) {
-            if (l.getTipoLeilao() == idTipoLeilao) {
-                resultado.add(l);
-            }
+            if (l.getTipoLeilao() == idTipoLeilao) resultado.add(l);
         }
         return resultado;
     }
@@ -88,7 +81,6 @@ public class EstatisticaBLL {
                     + " | Data Fim: " + (l.getDataFim() != null ? l.getDataFim() : "N/D");
             resultado.add(linha);
         }
-
         return resultado;
     }
 
@@ -106,7 +98,6 @@ public class EstatisticaBLL {
 
         for (Leilao leilao : leiloes) {
             if (leilao.getTipoLeilao() != idTipoLeilao) continue;
-
             if (leilao.getDataInicio() == null || leilao.getDataFim() == null) continue;
 
             Period periodo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
@@ -116,7 +107,6 @@ public class EstatisticaBLL {
                 leilaoMaisTempo = leilao;
             }
         }
-
         return leilaoMaisTempo;
     }
 
@@ -254,23 +244,16 @@ public class EstatisticaBLL {
         LanceBLL lanceBLL = new LanceBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(0);
 
-        if (lances == null || lances.isEmpty()) {
-            return -1;
-        }
-
+        if (lances == null || lances.isEmpty()) return -1;
         double somaSegundos = 0;
         int totalIntervalos = 0;
 
         List<Lance> lancesValidos = new ArrayList<>();
         for (Lance lance : lances) {
-            if (lance.getDataLance() != null) {
-                lancesValidos.add(lance);
-            }
+            if (lance.getDataLance() != null) lancesValidos.add(lance);
         }
 
-        if (lancesValidos.size() < 2) {
-            return -1;
-        }
+        if (lancesValidos.size() < 2) return -1;
 
         lancesValidos.sort(Comparator.comparing(Lance::getDataLance));
 
@@ -284,12 +267,8 @@ public class EstatisticaBLL {
             totalIntervalos++;
         }
 
-        if (totalIntervalos == 0) {
-            return -1;
-        }
-
+        if (totalIntervalos == 0) return -1;
         double mediaMinutos = (somaSegundos / 60.0) / totalIntervalos;
-
         return mediaMinutos;
     }
 
@@ -323,9 +302,7 @@ public class EstatisticaBLL {
                 List<Lance> lancesDoLeilao = new ArrayList<>();
 
                 for (Lance lance : lances) {
-                    if (lance.getIdLeilao() == idLeilao) {
-                        lancesDoLeilao.add(lance);
-                    }
+                    if (lance.getIdLeilao() == idLeilao) lancesDoLeilao.add(lance);
                 }
 
                 if (lancesDoLeilao.size() < 2) continue;
@@ -343,11 +320,7 @@ public class EstatisticaBLL {
                 }
             }
         }
-
-        if (totalIntervalos == 0) {
-            return -1;
-        }
-
+        if (totalIntervalos == 0) return -1;
         return (somaSegundos / 60.0) / totalIntervalos;
     }
 
@@ -374,12 +347,8 @@ public class EstatisticaBLL {
                     break;
                 }
             }
-
-            if (!temLance) {
-                semLances.add(leilao);
-            }
+            if (!temLance) semLances.add(leilao);
         }
-
         return semLances;
     }
 
@@ -405,11 +374,8 @@ public class EstatisticaBLL {
                 }
             }
 
-            if (!temLance) {
-                semLances.add(leilao);
-            }
+            if (!temLance) semLances.add(leilao);
         }
-
         return semLances;
     }
 
@@ -434,7 +400,6 @@ public class EstatisticaBLL {
         }
 
         if (total == 0) return -1;
-
         return (double) somaIdades / total;
     }
 
@@ -449,11 +414,8 @@ public class EstatisticaBLL {
 
         List<Utilizador> clientes = new ArrayList<>();
         for (Utilizador u : todos) {
-            if (u.getTipoUtilizador() == 2) {
-                clientes.add(u);
-            }
+            if (u.getTipoUtilizador() == 2) clientes.add(u);
         }
-
         if (clientes.isEmpty()) return null;
 
         List<String> dominiosVerificados = new ArrayList<>();
@@ -557,20 +519,14 @@ public class EstatisticaBLL {
         if (utilizadores == null) return null;
 
         for (Utilizador u : utilizadores) {
-            if (u.getId() == id) {
-                return u;
-            }
+            if (u.getId() == id) return u;
         }
-
         return null;
     }
 
     public Period calcularTempoAtivoLeilao(Leilao leilao) {
-
         LocalDateTime dataFim = leilao.getDataFim();
-        if (dataFim == null) {
-            dataFim = LocalDateTime.now();
-        }
+        if (dataFim == null) dataFim = LocalDateTime.now();
         return Period.between(leilao.getDataInicio().toLocalDate(), dataFim.toLocalDate());
     }
 
