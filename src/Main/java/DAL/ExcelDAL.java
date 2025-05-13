@@ -102,7 +102,7 @@ public class ExcelDAL {
         DateTimeFormatter nomeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
         String timestamp = LocalDateTime.now().format(nomeFormatter);
         String nomeFicheiro = "Relatorio Diario - " + timestamp + ".xlsx";
-        String caminhoArquivo = Constantes.caminhosFicheiros.CSV_FILE_FicheiroAnexo + nomeFicheiro;
+        String caminhoArquivo = Constantes.caminhosFicheiros.CSV_FILE_FICHEIRO_EMAIL + nomeFicheiro;
 
         // Escrever o arquivo
         FileOutputStream fileOut = new FileOutputStream(new File(caminhoArquivo));
