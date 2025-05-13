@@ -1,10 +1,10 @@
 package Controller;
 
-import BLL.CriarAgenteBLL;
+import BLL.AgenteBLL;
 
 public class CriarAgenteController {
     public void criarAgente(String leilaoID) {
-        CriarAgenteBLL criarAgenteBLL = new CriarAgenteBLL();
-        criarAgenteBLL.criarAgente(leilaoID);
+        AgenteBLL agenteBLL = new AgenteBLL();
+        agenteBLL.criarAgente(leilaoID);
     }
 }

@@ -69,11 +69,13 @@ public class LanceBLL {
         return resultado;
     }
 
-    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double novoValorLance, int idCliente, int idTipoLeilao) {
+    public ResultadoOperacao adicionarLanceEletronico(int idLeilao, double novoValorLance, int idCliente) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         LanceDAL lanceDAL = new LanceDAL();
         ResultadoOperacao resultado = new ResultadoOperacao();
         TransacaoBLL transacaoBLL = new TransacaoBLL();
+
+        int idTipoLeilao = Constantes.tiposLeilao.ELETRONICO;
 
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         double multiploLanceIncremento = leilao.getValorMaximo();

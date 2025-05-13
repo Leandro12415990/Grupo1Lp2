@@ -20,7 +20,7 @@ public class LanceController {
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         int tipoLeilao = leilao.getTipoLeilao();
 
-        ResultadoOperacao resultado = lanceBLL.adicionarLanceEletronico(idLeilao, novoValorLance, idCliente, tipoLeilao);
+        ResultadoOperacao resultado = lanceBLL.adicionarLanceEletronico(idLeilao, novoValorLance, idCliente);
 
         return resultado;
     }

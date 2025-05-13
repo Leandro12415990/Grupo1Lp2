@@ -1,5 +1,6 @@
 package View;
 
+import Controller.AgenteController;
 import Model.Utilizador;
 import Utils.Tools;
 
@@ -7,7 +8,6 @@ import static Utils.Tools.scanner;
 
 public class MenuClienteView {
     public void exibirMenu(Utilizador utilizador) {
-
         UtilizadorView utilizadorView = new UtilizadorView();
         TransacaoView transacaoView = new TransacaoView();
         LanceView lanceView = new LanceView();

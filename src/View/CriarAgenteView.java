@@ -6,7 +6,9 @@ import Utils.Tools;
 public class CriarAgenteView {
     public boolean formulario() {
         CriarAgenteController criarAgenteController = new CriarAgenteController();
+        LeilaoView leilaoView = new LeilaoView();
         while (true) {
+            leilaoView.listaLeiloes(Tools.estadoLeilao.DEFAULT);
             System.out.print("Leilão: " + Tools.alertaCancelar());
             String leilaoID = Tools.scanner.nextLine();
             if (Tools.verificarSaida(leilaoID)) return false;

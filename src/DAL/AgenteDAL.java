@@ -11,7 +11,7 @@ import java.util.List;
 public class AgenteDAL {
     public List<Agente> carregarAgentes() {
         ImportDAL importDal = new ImportDAL();
-        return importDal.carregarRegistos(Constantes.caminhosFicheiros.CSV_FILE_UTILIZADOR, 11, dados -> {
+        return importDal.carregarRegistos(Constantes.caminhosFicheiros.CSV_FILE_AGENTE, 11, dados -> {
             int idAgente = Integer.parseInt(dados[0]);
             int idCliente = Integer.parseInt(dados[1]);
             int idLeilao = Integer.parseInt(dados[2]);
@@ -22,8 +22,8 @@ public class AgenteDAL {
 
     public void gravarAgente(List<Agente> agentes) {
         ImportDAL importDal = new ImportDAL();
-        String cabecalho = "ID;Cliente;Leilao;";
-        importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_UTILIZADOR, cabecalho, agentes, agente ->
+        String cabecalho = "ID;Cliente;Leilao;Data Registo";
+        importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_AGENTE, cabecalho, agentes, agente ->
                 agente.getIdAgente() + Tools.separador() +
                         agente.getIdCliente() + Tools.separador() +
                         agente.getIdLeilao() + Tools.separador() +

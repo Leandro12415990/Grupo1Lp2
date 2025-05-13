@@ -1,10 +1,7 @@
 package View;
 
 import BLL.UtilizadorBLL;
-import Controller.ProdutoController;
-import Controller.LanceController;
-import Controller.LeilaoController;
-import Controller.UtilizadorController;
+import Controller.*;
 import DAL.LanceDAL;
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
@@ -151,6 +148,7 @@ public class LanceView {
     public void lanceEletronico() {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
+        AgenteController agenteController = new AgenteController();
         System.out.println("\n===== LEILÕES ELETRÔNICOS =====");
 
         List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
