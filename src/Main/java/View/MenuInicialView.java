@@ -1,24 +1,24 @@
 package View;
 
+import BLL.RelatorioFinalBLL;
 import DAL.ExcelDAL;
-import Model.Produto;
 import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalTime;
 
 import static Utils.Tools.scanner;
 
 public class MenuInicialView {
     public void menuInicial() throws IOException, MessagingException {
+        RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
+        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 0)); // Agendar para 02:00 da manhã
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
         MenuGestorView menuGestorView = new MenuGestorView();
         UtilizadorView utilizadorView = new UtilizadorView();
-        ExcelDAL excelDAL = new ExcelDAL();
         int opcao;
         do {
             System.out.println("\nBem-vindo à leiloeira Valor em Alta!\n");
@@ -28,7 +28,7 @@ public class MenuInicialView {
             System.out.println("0. Sair...");
 
             opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
-            scanner.nextLine().trim();
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -45,9 +45,6 @@ public class MenuInicialView {
                 case 2:
                     utilizadorView.registarCliente();
                     break;
-                case 3:
-                    excelDAL.guardarRelatorio();
-                    System.out.println();
                 case 0:
                     System.out.println("A desligar sistema...");
                     scanner.close();
@@ -55,7 +52,7 @@ public class MenuInicialView {
                 default:
                     System.out.println("Opção inválida, tente novamente.");
             }
-        } while (opcao != 0);
+        } while (true);
 
     }
 }

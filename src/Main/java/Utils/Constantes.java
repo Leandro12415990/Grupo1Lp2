@@ -8,6 +8,7 @@ public class Constantes {
         public static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
         public static final String CSV_FILE_PRODUTO = "data\\Produto.csv";
         public static final String CSV_FILE_EMAIL = "data\\EmailRegisto";
+        public static final String CSV_FILE_FicheiroAnexo = "data\\RelatorioDiario\\";
     }
     
     // Secção: Estados Leilões

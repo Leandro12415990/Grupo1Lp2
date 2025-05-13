@@ -1,5 +1,6 @@
 package BLL;
 
+import DAL.ExcelDAL;
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
 import Model.Leilao;
@@ -7,9 +8,14 @@ import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RelatorioFinalBLL {
 
@@ -71,4 +77,34 @@ public class RelatorioFinalBLL {
         }
         return pendentes;
     }
+
+    public void gerarFicheiro() {
+        try {
+            ExcelDAL excelDAL = new ExcelDAL();
+            String caminho = excelDAL.guardarRelatorio();
+        } catch (Exception _) {
+        }
+    }
+
+    public void agendarGeracaoRelatorio(LocalTime horaAgendada) {
+        LocalDateTime agora = LocalDateTime.now();
+        LocalDateTime proximaExecucao = agora.with(horaAgendada);
+
+        if (agora.toLocalTime().isAfter(horaAgendada)) {
+            proximaExecucao = proximaExecucao.plusDays(1);
+        }
+
+        long delayInicial = Duration.between(agora, proximaExecucao).toMillis();
+        long intervalo24h = 24 * 60 * 60 * 1000;
+
+        Timer timer = new Timer(true);
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                gerarFicheiro();
+            }
+        }, delayInicial, intervalo24h);
+    }
 }
+

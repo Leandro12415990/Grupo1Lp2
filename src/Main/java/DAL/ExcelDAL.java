@@ -3,6 +3,7 @@ package DAL;
 import BLL.RelatorioFinalBLL;
 import Model.Leilao;
 import Model.Utilizador;
+import Utils.Constantes;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -101,7 +102,7 @@ public class ExcelDAL {
         DateTimeFormatter nomeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
         String timestamp = LocalDateTime.now().format(nomeFormatter);
         String nomeFicheiro = "Relatorio Diario - " + timestamp + ".xlsx";
-        String caminhoArquivo = "C:/Users/olive/OneDrive/Ambiente de Trabalho/" + nomeFicheiro;
+        String caminhoArquivo = Constantes.caminhosFicheiros.CSV_FILE_FicheiroAnexo + nomeFicheiro;
 
         // Escrever o arquivo
         FileOutputStream fileOut = new FileOutputStream(new File(caminhoArquivo));
