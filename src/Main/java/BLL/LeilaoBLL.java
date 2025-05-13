@@ -48,9 +48,6 @@ public class LeilaoBLL {
         leilaoDAL.gravarLeiloes(leiloes);
     }
 
-
-
-
     private int gerarProximoId() {
         int ultimoId = 0;
         for (Leilao leilao : leiloes) {
@@ -60,7 +57,6 @@ public class LeilaoBLL {
         }
         return ultimoId + 1;
     }
-
 
     public List<Leilao> listarLeiloes(boolean apenasDisponiveis) {
         if (!apenasDisponiveis) return new ArrayList<>(leiloes);

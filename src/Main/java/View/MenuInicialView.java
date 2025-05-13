@@ -1,11 +1,14 @@
 package View;
 
-import Model.ClienteSessao;
+import DAL.ExcelDAL;
+import Model.Produto;
 import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static Utils.Tools.scanner;
 
@@ -15,6 +18,7 @@ public class MenuInicialView {
         MenuClienteView menuClienteView = new MenuClienteView();
         MenuGestorView menuGestorView = new MenuGestorView();
         UtilizadorView utilizadorView = new UtilizadorView();
+        ExcelDAL excelDAL = new ExcelDAL();
         int opcao;
         do {
             System.out.println("\nBem-vindo à leiloeira Valor em Alta!\n");
@@ -41,6 +45,9 @@ public class MenuInicialView {
                 case 2:
                     utilizadorView.registarCliente();
                     break;
+                case 3:
+                    excelDAL.guardarRelatorio();
+                    System.out.println();
                 case 0:
                     System.out.println("A desligar sistema...");
                     scanner.close();
@@ -49,5 +56,6 @@ public class MenuInicialView {
                     System.out.println("Opção inválida, tente novamente.");
             }
         } while (opcao != 0);
+
     }
 }

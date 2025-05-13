@@ -1,6 +1,10 @@
 package BLL;
 
+import Controller.LeilaoController;
+import Controller.UtilizadorController;
+import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
+import Model.Leilao;
 import Model.Utilizador;
 import Utils.Tools;
 
@@ -106,5 +110,10 @@ public class UtilizadorBLL {
     public void gravarUtilizadores(List<Utilizador> utilizadores) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         utilizadorDAL.gravarUtilizadores(utilizadores);
+    }
+
+    public List<Utilizador> carregarUtilizador() {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        return  utilizadorDAL.carregarUtilizadores();
     }
 }
