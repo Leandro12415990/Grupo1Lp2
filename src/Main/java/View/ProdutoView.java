@@ -5,11 +5,13 @@ import Model.Produto;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ProdutoView {
-    public void exibirProduto() {
+    public void exibirProduto() throws MessagingException, IOException {
         int opcao;
         do {
             System.out.println("\nMenu:");
@@ -44,7 +46,7 @@ public class ProdutoView {
         } while (opcao != 0);
     }
 
-    public void criarProduto() {
+    public void criarProduto() throws MessagingException, IOException {
         ProdutoController produtoController = new ProdutoController();
         System.out.println("\nCRIAÇÃO DE UM PRODUTO\n");
 
@@ -63,7 +65,7 @@ public class ProdutoView {
         }
     }
 
-    public void editarProduto() {
+    public void editarProduto() throws MessagingException, IOException {
         ProdutoController produtoController = new ProdutoController();
         listarProduto(false);
 
@@ -121,7 +123,7 @@ public class ProdutoView {
         }
     }
 
-    public void eliminarProduto() {
+    public void eliminarProduto() throws MessagingException, IOException {
         ProdutoController produtoController = new ProdutoController();
         listarProduto(false);
 
@@ -158,7 +160,7 @@ public class ProdutoView {
         }
     }
 
-    public void listarProduto(boolean apenasDisponiveis) {
+    public void listarProduto(boolean apenasDisponiveis) throws MessagingException, IOException {
         ProdutoController produtoController = new ProdutoController();
         ResultadoOperacao resultado = produtoController.listarProduto(apenasDisponiveis);
         if (resultado.Sucesso) {

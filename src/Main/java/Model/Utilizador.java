@@ -42,7 +42,9 @@ public class Utilizador {
         return nomeUtilizador;
     }
 
-    public String getEmail() {return email; }
+    public String getEmail() {
+        return email;
+    }
 
     public void setNomeUtilizador(String nomeUtilizador) {
         this.nomeUtilizador = nomeUtilizador;

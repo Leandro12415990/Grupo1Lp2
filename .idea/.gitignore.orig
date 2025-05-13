@@ -1,6 +1,7 @@
 /shelf/
 /workspace.xml
 /out/
+<<<<<<< HEAD
 **/out/
 /target/
 *.class
@@ -65,23 +66,6 @@ out/
 /out/production/Leilao/View/TemplateView.class
 /out/production/Leilao/View/TransacaoView.class
 /out/production/Leilao/View/UtilizadorView.class
-/out/production/Leilao/BLL/EstatisticaBLL.class
-/out/production/Leilao/BLL/LanceBLL.class
-/out/production/Leilao/BLL/LeilaoBLL.class
-/out/production/Leilao/BLL/ProdutoBLL.class
-/out/production/Leilao/Controller/LanceController.class
-/out/production/Leilao/Controller/LeilaoController.class
-/out/production/Leilao/Utils/Constantes$estadosLeilao.class
-/out/production/Leilao/Utils/Constantes$estadosProduto.class
-/out/production/Leilao/Utils/Constantes$estadosTransacao.class
-/out/production/Leilao/Utils/Constantes$templateIds.class
-/out/production/Leilao/Utils/Constantes$tiposLeilao.class
-/out/production/Leilao/Utils/Constantes$tiposTransacao.class
-/out/production/Leilao/Utils/Tools.class
-/out/production/Leilao/Utils/Tools$estadoLeilao.class
-/out/production/Leilao/Utils/Tools$tipoEmail.class
-/out/production/Leilao/Utils/Tools$tipoLeilao.class
-/out/production/Leilao/View/LanceView.class
-/out/production/Leilao/View/LeilaoView.class
-/out/production/Leilao/View/LanceView.class
-/out/production/Leilao/View/MenuClienteView.class
+=======
+/libraries/
+>>>>>>> quality

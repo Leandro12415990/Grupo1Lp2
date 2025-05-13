@@ -3,12 +3,13 @@ package Controller;
 import BLL.ProdutoBLL;
 import Model.Produto;
 import Model.ResultadoOperacao;
-import View.ProdutoView;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ProdutoController {
-    public ResultadoOperacao criarProduto(int idProduto, int estado, String nome, String descricao) {
+    public ResultadoOperacao criarProduto(int idProduto, int estado, String nome, String descricao) throws MessagingException, IOException {
         ProdutoBLL produtoBLL = new ProdutoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (nome == null || nome.isEmpty()) {
@@ -40,7 +41,7 @@ public class ProdutoController {
         return sucesso;
     }
 
-    public ResultadoOperacao listarProduto(boolean apenasDisponiveis) {
+    public ResultadoOperacao listarProduto(boolean apenasDisponiveis) throws MessagingException, IOException {
         ResultadoOperacao resultado = new ResultadoOperacao();
         ProdutoBLL produtoBLL = new ProdutoBLL();
         List<Produto> produtos = produtoBLL.listarProdutos(apenasDisponiveis);
@@ -61,17 +62,17 @@ public class ProdutoController {
         return null;
     }
 
-    public String getNomeProdutoById(int idProduto) {
+    public String getNomeProdutoById(int idProduto) throws MessagingException, IOException {
         ProdutoBLL produtoBLL = new ProdutoBLL();
         return produtoBLL.getNomeProdutoById(idProduto);
     }
 
-    public void atualizarEstadoProduto(int idProduto, int novoIdEstado) {
+    public void atualizarEstadoProduto(int idProduto, int novoIdEstado) throws MessagingException, IOException {
         ProdutoBLL produtoBLL = new ProdutoBLL();
         produtoBLL.atualizarEstadoProduto(idProduto, novoIdEstado);
     }
 
-    public boolean verificarProdutoEmLeilao(int idProduto) {
+    public boolean verificarProdutoEmLeilao(int idProduto) throws MessagingException, IOException {
         ProdutoBLL produtoBLL = new ProdutoBLL();
         return produtoBLL.verificarProdutoEmLeilao(idProduto);
     }
