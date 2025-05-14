@@ -78,15 +78,16 @@ public class RelatorioFinalBLL {
         return pendentes;
     }
 
-    public void gerarFicheiro() {
+    public String gerarFicheiro() {
         try {
             ExcelDAL excelDAL = new ExcelDAL();
-            String caminho = excelDAL.guardarRelatorio();
+            return excelDAL.guardarRelatorio();
         } catch (Exception _) {
         }
+        return null;
     }
 
-    public void agendarGeracaoRelatorio(LocalTime horaAgendada) {
+    public String agendarGeracaoRelatorio(LocalTime horaAgendada) {
         LocalDateTime agora = LocalDateTime.now();
         LocalDateTime proximaExecucao = agora.with(horaAgendada);
 
@@ -97,14 +98,20 @@ public class RelatorioFinalBLL {
         long delayInicial = Duration.between(agora, proximaExecucao).toMillis();
         long intervalo24h = 24 * 60 * 60 * 1000;
 
-        Timer timer = new Timer(true);
+        // Usar array como wrapper para permitir mutabilidade
+        final String[] caminhoFicheiroCriado = new String[1];
 
+        Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                gerarFicheiro();
+                caminhoFicheiroCriado[0] = gerarFicheiro();
+                // podes usar o valor aqui, por exemplo:
+                System.out.println("Ficheiro criado: " + caminhoFicheiroCriado[0]);
             }
         }, delayInicial, intervalo24h);
+        return caminhoFicheiroCriado[0];
     }
+
 }
 
