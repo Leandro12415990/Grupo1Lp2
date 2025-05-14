@@ -101,7 +101,8 @@ public class LeilaoController {
         return leilaoBLL.determinarEstadoLeilaoByDatas(dataInicio, dataFim, idEstado);
     }
 
-    public boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) throws IOException, MessagingException {
+    public ResultadoOperacao fecharLeilao(int idLeilao, LocalDateTime dataFim) throws IOException, MessagingException {
+        ResultadoOperacao resultadoOperacao = new ResultadoOperacao();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         LanceBLL lanceBLL = new LanceBLL();
         TransacaoBLL transacaoBLL = new TransacaoBLL();
@@ -110,18 +111,23 @@ public class LeilaoController {
         TemplateDAL templateDAL = new TemplateDAL();
 
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
-        if (leilao == null) return false;
-
-        leilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
-        int idLanceVencedor = lanceBLL.selecionarLanceVencedor(idLeilao);
-        Produto produto = produtoBLL.procurarProduto(leilao.getIdProduto());
-        Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_VENCEDOR_LEILAO);
-        Utilizador u = lanceBLL.obterVencedor(idLanceVencedor);
-        if (template != null)
-            emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u, produto, null), u.getId());
-        transacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
-
-        return true;
+        if (leilao != null) {
+            leilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
+            int idLanceVencedor = lanceBLL.selecionarLanceVencedor(idLeilao);
+            if (idLanceVencedor == 0) {
+                resultadoOperacao.msgErro = "Não existe nenhum vencedor do leilão selecionado.";
+            } else {
+                Produto produto = produtoBLL.procurarProduto(leilao.getIdProduto());
+                Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_VENCEDOR_LEILAO);
+                Utilizador u = lanceBLL.obterVencedor(idLanceVencedor);
+                if (template != null)
+                    emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u, produto, null), u.getId());
+                transacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
+                resultadoOperacao.Objeto = resultadoOperacao;
+                resultadoOperacao.Sucesso = true;
+            }
+        }
+        return resultadoOperacao;
     }
 
     public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) throws MessagingException, IOException {
