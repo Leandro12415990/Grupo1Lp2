@@ -35,30 +35,18 @@ public class ProdutoController {
         ProdutoBLL produtoBLL = new ProdutoBLL();
         boolean sucesso = produtoBLL.eliminarProduto(produto);
 
-        if (sucesso) {
-            produtoBLL.obterTodosProdutos();
-        }
+        if (sucesso) produtoBLL.obterTodosProdutos();
         return sucesso;
     }
 
-    public ResultadoOperacao listarProduto(boolean apenasDisponiveis) throws MessagingException, IOException {
-        ResultadoOperacao resultado = new ResultadoOperacao();
+    public List<Produto> listarProduto(boolean apenasDisponiveis) throws MessagingException, IOException {
         ProdutoBLL produtoBLL = new ProdutoBLL();
-        List<Produto> produtos = produtoBLL.listarProdutos(apenasDisponiveis);
-        if (produtos.isEmpty()) {
-            resultado.msgErro = "Não existem produtos disponíveis para leiloar!";
-        } else {
-            resultado.Sucesso = true;
-            resultado.Objeto = produtos;
-        }
-        return resultado;
+        return produtoBLL.listarProdutos(apenasDisponiveis);
     }
 
     public Produto procurarProduto(int id) {
         ProdutoBLL produtoBLL = new ProdutoBLL();
-        if (id > 0) {
-            return produtoBLL.procurarProduto(id);
-        }
+        if (id > 0) return produtoBLL.procurarProduto(id);
         return null;
     }
 

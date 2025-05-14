@@ -133,6 +133,7 @@ public class Tools {
             }
             throw new IllegalArgumentException("Estado inválido: " + idEstado);
         }
+
         public static estadoLeilao getDefault() {
             return DEFAULT;
         }
@@ -237,16 +238,22 @@ public class Tools {
         if (dateStr == null || dateStr.isEmpty()) return null;
 
         dateStr = dateStr.trim();
+
         try {
-            return LocalDateTime.parse(dateStr, DATA_HORA);
-        } catch (DateTimeParseException e) {
+            return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+        } catch (DateTimeParseException e1) {
             try {
-                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atStartOfDay();
-            } catch (DateTimeParseException ex) {
-                return null;
+                return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            } catch (DateTimeParseException e2) {
+                try {
+                    return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+                } catch (DateTimeParseException e3) {
+                    return null;
+                }
             }
         }
     }
+
 
     public static LocalDateTime parseDateTime(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) return null;

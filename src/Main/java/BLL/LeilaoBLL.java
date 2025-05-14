@@ -56,52 +56,39 @@ public class LeilaoBLL {
     private int gerarProximoId() {
         int ultimoId = 0;
         for (Leilao leilao : leiloes) {
-            if (leilao.getId() > ultimoId) {
-                ultimoId = leilao.getId();
-            }
+            if (leilao.getId() > ultimoId) ultimoId = leilao.getId();
         }
         return ultimoId + 1;
     }
 
-    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) {
-
-    List<Leilao> leilaosEmpty = new ArrayList<>();
-    if(estado != Tools.estadoLeilao.DEFAULT){
-        if(estado == Tools.estadoLeilao.ATIVO){
-            List<Leilao> ativos = new ArrayList<>();
-            for (Leilao leilao : leiloes) {
-                if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) {
-                    ativos.add(leilao);
+    public List<Leilao> listarLeiloes(Tools.estadoLeilao estado) throws MessagingException, IOException {
+        carregarLeiloes();
+        List<Leilao> leilaosEmpty = new ArrayList<>();
+        if (estado != Tools.estadoLeilao.DEFAULT) {
+            if (estado == Tools.estadoLeilao.ATIVO) {
+                List<Leilao> ativos = new ArrayList<>();
+                for (Leilao leilao : leiloes) {
+                    if (leilao.getEstado() == Constantes.estadosLeilao.ATIVO) ativos.add(leilao);
                 }
-            }
-            return ativos;
-        }
-
-        else if(estado == Tools.estadoLeilao.FECHADO){
-            List<Leilao> fechados = new ArrayList<>();
-            for (Leilao leilao : leiloes) {
-                if (leilao.getEstado() == Constantes.estadosLeilao.FECHADO) {
-                    fechados.add(leilao);
+                return ativos;
+            } else if (estado == Tools.estadoLeilao.FECHADO) {
+                List<Leilao> fechados = new ArrayList<>();
+                for (Leilao leilao : leiloes) {
+                    if (leilao.getEstado() == Constantes.estadosLeilao.FECHADO) fechados.add(leilao);
                 }
+                return fechados;
             }
-            return fechados;
+        } else {
+            List<Leilao> todos = new ArrayList<>();
+            for (Leilao leilao : leiloes) todos.add(leilao);
+            return todos;
         }
-
-    }else{
-        List<Leilao> todos = new ArrayList<>();
-        for (Leilao leilao : leiloes) {
-                todos.add(leilao);
-        }
-        return todos;
-        }
-    return leilaosEmpty;
+        return leilaosEmpty;
     }
 
     public Leilao procurarLeilaoPorId(int id) {
         for (Leilao leilao : leiloes) {
-            if (leilao.getId() == id) {
-                return leilao;
-            }
+            if (leilao.getId() == id) return leilao;
         }
         return null;
     }
@@ -170,39 +157,28 @@ public class LeilaoBLL {
                 break;
             }
         }
-
-        if (atualizado) {
-            leilaoDAL.gravarLeiloes(leiloes);
-        }
-
+        if (atualizado) leilaoDAL.gravarLeiloes(leiloes);
         return atualizado;
     }
 
     public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) throws MessagingException, IOException {
         carregarLeiloes();
-        List<Leilao> leiloesFechados = listarLeiloes(Tools.estadoLeilao.FECHADO);
         LanceDAL lanceDAL = new LanceDAL();
-        List<Lance> todosLances = lanceDAL.carregarLances();
 
+        List<Leilao> leiloesFechados = listarLeiloes(Tools.estadoLeilao.FECHADO);
+        List<Lance> todosLances = lanceDAL.carregarLances();
         List<Leilao> resultado = new ArrayList<>();
 
         for (Leilao leilao : leiloesFechados) {
             boolean clienteParticipou = false;
-
             for (Lance lance : todosLances) {
                 if (lance.getIdCliente() == idCliente && lance.getIdLeilao() == leilao.getId()) {
                     clienteParticipou = true;
                     break;
                 }
             }
-
-            if (clienteParticipou) {
-                resultado.add(leilao);
-            }
+            if (clienteParticipou) resultado.add(leilao);
         }
-
         return resultado;
     }
-
-
 }

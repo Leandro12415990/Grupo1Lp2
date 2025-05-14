@@ -1,12 +1,10 @@
 package View;
 
 import BLL.LanceBLL;
-import BLL.LeilaoBLL;
-import BLL.UtilizadorBLL;
-import Controller.*;
-import DAL.LanceDAL;
+import Controller.LanceController;
+import Controller.LeilaoController;
 import Controller.ProdutoController;
-import DAL.LeilaoDAL;
+import Controller.UtilizadorController;
 import DAL.UtilizadorDAL;
 import Model.Lance;
 import Model.Leilao;
@@ -164,7 +162,7 @@ public class LanceView {
         if (!leilaoEletronico.isEmpty()) {
             for (Leilao leilao : leilaoEletronico) {
                 System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getDescricao() +
-                        " | Valor do Múltiplo de Lance: " + leilao.getValorMaximo());
+                        " | Valor do Múltiplo de Lance: " + leilao.getMultiploLance());
             }
 
             System.out.print("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
@@ -175,7 +173,7 @@ public class LanceView {
 
             if (verificarID) {
                 Leilao leilaoSelecionado = leilaoController.procurarLeilaoPorId(idLeilao);
-                double multiploLanceIncremento = leilaoSelecionado.getValorMaximo();
+                double multiploLanceIncremento = leilaoSelecionado.getMultiploLance();
 
                 double ultimoLance = lanceController.obterUltimoLanceDoLeilao(idLeilao, leilaoEletronico);
                 double proximoLanceEsperado = ultimoLance + multiploLanceIncremento;

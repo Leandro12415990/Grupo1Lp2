@@ -4,8 +4,8 @@ import DAL.ProdutoDAL;
 import Model.Leilao;
 import Model.Produto;
 import Utils.Constantes;
-import jakarta.mail.MessagingException;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.util.ArrayList;

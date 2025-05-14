@@ -1,6 +1,5 @@
 package BLL;
 
-import Controller.LeilaoController;
 import DAL.ClassificacaoDAL;
 import Model.Classificacao;
 import Model.Leilao;
@@ -17,11 +16,8 @@ public class ClassificacaoBLL {
         List<Classificacao> lista = dal.carregarClassificacoes();
 
         for (Classificacao c : lista) {
-            if (c.getIdUtilizador() == idUtilizador && c.getIdLeilao() == idLeilao) {
-                return true;
-            }
+            if (c.getIdUtilizador() == idUtilizador && c.getIdLeilao() == idLeilao) return true;
         }
-
         return false;
     }
 
@@ -38,11 +34,8 @@ public class ClassificacaoBLL {
 
         for (Classificacao c : todas) {
             Leilao leilao = leilaoBLL.procurarLeilaoPorId(c.getIdLeilao());
-            if (leilao != null) {
-                leiloesAvaliados.add(leilao);
-            }
+            if (leilao != null) leiloesAvaliados.add(leilao);
         }
-
         return leiloesAvaliados;
     }
 
@@ -51,11 +44,8 @@ public class ClassificacaoBLL {
         List<Classificacao> resultado = new ArrayList<>();
 
         for (Classificacao c : todas) {
-            if (c.getIdUtilizador() == idCliente) {
-                resultado.add(c);
-            }
+            if (c.getIdUtilizador() == idCliente) resultado.add(c);
         }
-
         return resultado;
     }
 
@@ -71,11 +61,8 @@ public class ClassificacaoBLL {
 
         List<Leilao> porAvaliar = new ArrayList<>();
         for (Leilao l : terminados) {
-            if (!idsAvaliados.contains(l.getId())) {
-                porAvaliar.add(l);
-            }
+            if (!idsAvaliados.contains(l.getId())) porAvaliar.add(l);
         }
-
         return porAvaliar;
     }
 
@@ -83,20 +70,10 @@ public class ClassificacaoBLL {
         List<Classificacao> todas = dal.carregarClassificacoes();
 
         for (Classificacao c : todas) {
-            if (c.getIdUtilizador() == idCliente && c.getIdLeilao() == idLeilao) {
-                return c;
-            }
+            if (c.getIdUtilizador() == idCliente && c.getIdLeilao() == idLeilao) return c;
         }
-
         return null;
     }
-
-
-
-
-
-
-
 
 
 }

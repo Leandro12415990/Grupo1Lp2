@@ -71,11 +71,9 @@ public class UtilizadorView {
             System.out.println("Cliente registado com sucesso");
             Utilizador u = procurarUtilizadorPorEmail(email);
             Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_REGISTO);
-            if (template != null) {
-                emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u,null,null), u.getId());
-            }
-        }
-        else System.out.println(resultado.msgErro);
+            if (template != null)
+                emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u, null, null), u.getId());
+        } else System.out.println(resultado.msgErro);
     }
 
     public void alterarEstadoClientes(int estado, String acao, int idTipoUtilizador) throws MessagingException, IOException {
@@ -230,7 +228,6 @@ public class UtilizadorView {
 
         }
     }
-
 
     public void verDadosCliente(Utilizador utilizador) {
         System.out.println("\n" + "=".repeat(10) + " FICHA CLIENTE " + "=".repeat(10));
