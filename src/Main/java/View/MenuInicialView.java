@@ -19,15 +19,7 @@ import static Utils.Tools.scanner;
 public class MenuInicialView {
     public void menuInicial() throws IOException, MessagingException {
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
-        String caminhoAnexo = relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(21, 10,45)); // Agendar para 02:00 da manhã
-        EmailBLL emailBLL = new EmailBLL();
-        TemplateDAL templateDAL = new TemplateDAL();
-        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
-        Utilizador u = utilizadorBLL.procurarUtilizadorPorId(17);
-        Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_APROVADO);
-        emailBLL.enviarEmailComAnexo(template, "pedromgp06@gmail.com", Tools.substituirTags(u, null, null), 17, caminhoAnexo);
-
-
+        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 20));
 
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
