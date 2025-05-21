@@ -1,8 +1,13 @@
 package View;
 
+import BLL.EmailBLL;
 import BLL.RelatorioFinalBLL;
+import BLL.UtilizadorBLL;
 import DAL.ExcelDAL;
+import DAL.TemplateDAL;
+import Model.Template;
 import Model.Utilizador;
+import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
@@ -14,7 +19,8 @@ import static Utils.Tools.scanner;
 public class MenuInicialView {
     public void menuInicial() throws IOException, MessagingException {
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
-        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 0)); // Agendar para 02:00 da manhã
+        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 20));
+
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
         MenuGestorView menuGestorView = new MenuGestorView();
