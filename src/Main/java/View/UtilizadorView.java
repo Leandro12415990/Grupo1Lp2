@@ -43,6 +43,12 @@ public class UtilizadorView {
                 else {
                     nascimento = LocalDate.parse(data, Tools.FORMATTER);
                     dataValida = true;
+                    if (dataValida) {
+                        dataValida = utilizadorController.validaDataNascimento(nascimento);
+                    }
+                    if (!dataValida) {
+                        System.out.println("Data de nascimento inválida");
+                    }
                 }
             } catch (Exception e) {
                 System.out.println("Tipo de data inválida, tente novamente...\n");
