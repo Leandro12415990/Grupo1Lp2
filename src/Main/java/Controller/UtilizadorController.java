@@ -91,7 +91,7 @@ public class UtilizadorController {
         }
     }
 
-    private boolean validaDataNascimento(LocalDate nascimento) {
+    public boolean validaDataNascimento(LocalDate nascimento) {
         if (nascimento.isAfter(LocalDate.now()) || calcularIdade(nascimento) < 18) return false;
         else return true;
     }
