@@ -121,7 +121,7 @@ public class LeilaoController {
                 Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_VENCEDOR_LEILAO);
                 Utilizador u = lanceBLL.obterVencedor(idLanceVencedor);
                 if (template != null)
-                    emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u, produto, null), u.getId());
+                    emailBLL.enviarEmail(template, u.getEmail(), Tools.substituirTags(u, produto, leilao), u.getId());
                 transacaoBLL.devolverSaldo(idLeilao, idLanceVencedor);
                 resultadoOperacao.Objeto = resultadoOperacao;
                 resultadoOperacao.Sucesso = true;
