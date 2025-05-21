@@ -2,12 +2,16 @@ package BLL;
 
 import DAL.ExcelDAL;
 import DAL.LeilaoDAL;
+import DAL.TemplateDAL;
 import DAL.UtilizadorDAL;
 import Model.Leilao;
+import Model.Template;
 import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -78,33 +82,50 @@ public class RelatorioFinalBLL {
         return pendentes;
     }
 
-    public void gerarFicheiro() {
+    public String gerarFicheiro() {
         try {
             ExcelDAL excelDAL = new ExcelDAL();
-            String caminho = excelDAL.guardarRelatorio();
+            return excelDAL.guardarRelatorio();
         } catch (Exception _) {
         }
+        return null;
     }
 
     public void agendarGeracaoRelatorio(LocalTime horaAgendada) {
-        LocalDateTime agora = LocalDateTime.now();
-        LocalDateTime proximaExecucao = agora.with(horaAgendada);
+        EmailBLL emailBLL = new EmailBLL();
+        TemplateDAL templateDAL = new TemplateDAL();
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        Utilizador u = utilizadorBLL.procurarUtilizadorPorId(1);
+        LocalDateTime proximaExecucao = LocalDateTime.now().with(horaAgendada);
 
-        if (agora.toLocalTime().isAfter(horaAgendada)) {
+        if (LocalDateTime.now().toLocalTime().isAfter(horaAgendada)) {
             proximaExecucao = proximaExecucao.plusDays(1);
         }
 
-        long delayInicial = Duration.between(agora, proximaExecucao).toMillis();
+        long delayInicial = Duration.between(LocalDateTime.now(), proximaExecucao).toMillis();
         long intervalo24h = 24 * 60 * 60 * 1000;
 
-        Timer timer = new Timer(true);
+        final String[] caminhoFicheiroCriado = new String[1];
 
+        Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                gerarFicheiro();
+                caminhoFicheiroCriado[0] = gerarFicheiro();
+                Template template = null;
+                try {
+                    template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_RELATORIO_DIARIO);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    emailBLL.enviarEmailComAnexo(template, u.getEmail(), Tools.substituirTags(u, null, null), u.getId(), caminhoFicheiroCriado[0]);
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }, delayInicial, intervalo24h);
     }
+
 }
 
