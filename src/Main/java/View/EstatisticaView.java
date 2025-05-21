@@ -11,6 +11,8 @@ import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 
@@ -320,14 +322,22 @@ public class EstatisticaView {
             return;
         }
 
-        Period tempo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
+        LocalDateTime inicio = leilao.getDataInicio();
+        LocalDateTime fim = leilao.getDataFim(); // ou LocalDateTime.now() se ainda estiver ativo
+
+        Period periodo = Period.between(inicio.toLocalDate(), fim.toLocalDate());
+        Duration duracao = Duration.between(inicio, fim);
 
         System.out.println("\n=== Leilão com mais tempo ativo ===");
         System.out.println("ID: " + leilao.getId());
         System.out.println("Descrição: " + leilao.getDescricao());
-        System.out.println("Tempo ativo: " + tempo.getYears() + " anos, " +
-                tempo.getMonths() + " meses, " +
-                tempo.getDays() + " dias");
+        System.out.println("Tempo ativo: " +
+                periodo.getYears() + " anos, " +
+                periodo.getMonths() + " meses, " +
+                periodo.getDays() + " dias, " +
+                duracao.toHours() % 24 + " horas, " +
+                duracao.toMinutes() % 60 + " minutos, " +
+                duracao.getSeconds() % 60 + " segundos");
     }
 
     public void mostrarLeilaoMaisTempoPorTipo(int idTipo) throws MessagingException, IOException {
@@ -339,14 +349,24 @@ public class EstatisticaView {
             return;
         }
 
-        Period tempo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
+        LocalDateTime inicio = leilao.getDataInicio();
+        LocalDateTime fim = leilao.getDataFim(); // ou LocalDateTime.now() se estiver em curso
+
+        Period periodo = Period.between(inicio.toLocalDate(), fim.toLocalDate());
+        Duration duracao = Duration.between(inicio, fim);
 
         System.out.println("\n=== Leilão com mais tempo ativo (por tipo) ===");
         System.out.println("ID: " + leilao.getId());
         System.out.println("Descrição: " + leilao.getDescricao());
-        System.out.println("Tempo ativo: " + tempo.getYears() + " anos, " +
-                tempo.getMonths() + " meses, " + tempo.getDays() + " dias");
+        System.out.println("Tempo ativo: " +
+                periodo.getYears() + " anos, " +
+                periodo.getMonths() + " meses, " +
+                periodo.getDays() + " dias, " +
+                duracao.toHours() % 24 + " horas, " +
+                duracao.toMinutes() % 60 + " minutos, " +
+                duracao.getSeconds() % 60 + " segundos");
     }
+
 
     public void mostrarLeilaoComMaisLances() {
         EstatisticaController estatisticaController = new EstatisticaController();
