@@ -20,6 +20,7 @@ public class Constantes {
         public static final String CSV_FILE_TEMPLATE = "data\\Template.csv";
         public static final String CSV_FILE_EMAIL = "data\\Email.csv";
         public static final String CSV_FILE_FICHEIRO_EMAIL = "data\\RelatorioDiario\\";
+        public static final String CSV_FILE_AGENTE = "data\\Agente.csv";
     }
 
     // Secção: Estados Leilões

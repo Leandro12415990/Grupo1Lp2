@@ -335,4 +335,23 @@ public class Tools {
 
         return variaveis;
     }
+
+    private static int ultimoIdLance = 0;
+    private static final Object lockIdLance = new Object();
+
+    public static void inicializarUltimoIdLance(List<Lance> lances) {
+        synchronized (lockIdLance) {
+            for (Lance lance : lances) {
+                if (lance.getIdLance() > ultimoIdLance) {
+                    ultimoIdLance = lance.getIdLance();
+                }
+            }
+        }
+    }
+
+    public static int gerarNovoIdLance() {
+        synchronized (lockIdLance) {
+            return ++ultimoIdLance;
+        }
+    }
 }

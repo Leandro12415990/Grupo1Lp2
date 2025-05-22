@@ -92,9 +92,7 @@ public class Leilao {
         this.valorMinimo = valorMinimo;
     }
 
-    public Double getMultiploLance() {
-        return multiploLance;
-    }
+    public Double getMultiploLance() {return multiploLance;}
 
     public void setMultiploLance(Double multiploLance) {
         this.multiploLance = multiploLance;

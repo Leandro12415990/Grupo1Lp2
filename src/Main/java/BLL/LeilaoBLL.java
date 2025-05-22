@@ -32,18 +32,6 @@ public class LeilaoBLL {
         return leiloes;
     }
 
-    private void atualizarEstados() {
-        LeilaoDAL leilaoDAL = new LeilaoDAL();
-        for (Leilao leilao : leiloes) {
-            int novoEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
-            if (leilao.getEstado() != novoEstado) {
-                leilao.setEstado(novoEstado);
-                leilaoDAL.gravarLeiloes(leiloes);
-            }
-        }
-        leilaoDAL.gravarLeiloes(leiloes);
-    }
-
     public void adicionarLeilao(Leilao leilao) {
         LeilaoDAL leilaoDAL = new LeilaoDAL();
         leiloes = leilaoDAL.carregaLeiloes();
@@ -131,20 +119,6 @@ public class LeilaoBLL {
         return Constantes.estadosLeilao.PENDENTE;
     }
 
-    public void colocarDataFimLeilao(int idLeilao, LocalDateTime dataFim) {
-        LeilaoDAL leilaoDAL = new LeilaoDAL();
-        List<Leilao> leiloes = leilaoDAL.carregaLeiloes();
-        for (Leilao leilao : leiloes) {
-            if (leilao.getId() == idLeilao) {
-                leilao.setDataFim(dataFim);
-                int novoEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), dataFim, leilao.getEstado());
-                leilao.setEstado(novoEstado);
-                break;
-            }
-        }
-        leilaoDAL.gravarLeiloes(leiloes);
-    }
-
     public boolean atualizarLeilao(Leilao leilaoAtualizado) {
         LeilaoDAL leilaoDAL = new LeilaoDAL();
         List<Leilao> leiloes = leilaoDAL.carregaLeiloes();
@@ -166,12 +140,13 @@ public class LeilaoBLL {
         LanceDAL lanceDAL = new LanceDAL();
 
         List<Leilao> leiloesFechados = listarLeiloes(Tools.estadoLeilao.FECHADO);
-        List<Lance> todosLances = lanceDAL.carregarLances();
+        List<Lance> lances = lanceDAL.carregarLances();
+        Tools.inicializarUltimoIdLance(lances);
         List<Leilao> resultado = new ArrayList<>();
 
         for (Leilao leilao : leiloesFechados) {
             boolean clienteParticipou = false;
-            for (Lance lance : todosLances) {
+            for (Lance lance : lances) {
                 if (lance.getIdCliente() == idCliente && lance.getIdLeilao() == leilao.getId()) {
                     clienteParticipou = true;
                     break;
@@ -181,4 +156,51 @@ public class LeilaoBLL {
         }
         return resultado;
     }
+
+    public boolean estenderFimLeilaoSeNecessario(Leilao leilao, LocalDateTime dataLance) {
+        LocalDateTime fimAtual = leilao.getDataFim();
+
+        if (dataLance.isAfter(fimAtual.minusSeconds(15)) && dataLance.isBefore(fimAtual)) {
+            LocalDateTime novoFim = fimAtual.plusSeconds(15);
+            leilao.setDataFim(novoFim);
+
+            // Corrigido: carrega a lista atualizada antes de gravar
+            LeilaoDAL leilaoDAL = new LeilaoDAL();
+            List<Leilao> leiloesAtualizados = leilaoDAL.carregaLeiloes();
+
+            for (int i = 0; i < leiloesAtualizados.size(); i++) {
+                if (leiloesAtualizados.get(i).getId() == leilao.getId()) {
+                    leiloesAtualizados.set(i, leilao); // atualiza o leilão correto
+                    break;
+                }
+            }
+
+            leilaoDAL.gravarLeiloes(leiloesAtualizados); // grava a lista completa atualizada
+            System.out.println("✅ Estendendo fim do leilão de " + fimAtual + " para " + novoFim);
+            return true;
+        } else {
+            //System.out.println("❌ Lance fora da janela final de 15 segundos. Não estendendo tempo.");
+            return false;
+        }
+    }
+
+
+
+    public boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) throws MessagingException, IOException {
+        LeilaoDAL leilaoDAL = new LeilaoDAL();
+        List<Leilao> todosLeiloes = leilaoDAL.carregaLeiloes();
+
+        for (Leilao leilao : todosLeiloes) {
+            if (leilao.getId() == idLeilao) {
+                leilao.setDataFim(dataFim);
+                leilao.setEstado(Constantes.estadosLeilao.FECHADO); // Atualiza o estado, se necessário
+                leilaoDAL.gravarLeiloes(todosLeiloes); // Grava corretamente a lista
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
+
+

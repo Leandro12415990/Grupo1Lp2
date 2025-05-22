@@ -15,14 +15,18 @@ public class ImportDAL {
     public <T> List<T> carregarRegistos(String caminhoFicheiro, int minimoCampos, Function<String[], T> conversor) {
         List<T> lista = new ArrayList<>();
 
+        String linha = null;
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoFicheiro))) {
-            String linha;
             boolean primeiraLinha = true;
 
             while ((linha = br.readLine()) != null) {
                 if (primeiraLinha) {
                     primeiraLinha = false;
                     continue;
+                }
+
+                if (linha.trim().isEmpty()) {
+                    continue; // Ignora linhas em branco
                 }
 
                 String[] dados = linha.split(Tools.separador(), -1);
@@ -40,7 +44,7 @@ public class ImportDAL {
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao ler o ficheiro: " + caminhoFicheiro, e);
+            logger.log(Level.WARNING, "Linha inválida no CSV" + caminhoFicheiro + linha);
         }
 
         return lista;
@@ -52,7 +56,10 @@ public class ImportDAL {
             bw.write(cabecalho);
             bw.newLine();
 
-            for (T item : lista) {
+            // Cópia defensiva para evitar ConcurrentModificationException
+            List<T> copiaLista = new ArrayList<>(lista);
+
+            for (T item : copiaLista) {
                 bw.write(conversor.apply(item));
                 bw.newLine();
             }
@@ -60,4 +67,5 @@ public class ImportDAL {
             logger.log(Level.SEVERE, "Erro ao gravar o ficheiro CSV: " + caminhoFicheiro, e);
         }
     }
+
 }

@@ -1,24 +1,34 @@
 package View;
 
+import BLL.AgenteBLL;
 import BLL.RelatorioFinalBLL;
-import DAL.ExcelDAL;
+import Controller.AgenteController;
+import DAL.LanceDAL;
+import Model.Lance;
 import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.util.List;
 
 import static Utils.Tools.scanner;
 
 public class MenuInicialView {
     public void menuInicial() throws IOException, MessagingException {
+        LanceDAL lanceDAL = new LanceDAL();
+        List<Lance> lances = lanceDAL.carregarLances();
+        Tools.inicializarUltimoIdLance(lances);
+        AgenteBLL agenteBLL = new AgenteBLL();
+        agenteBLL.iniciarMonitorizacaoDinamica();
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
-        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 0)); // Agendar para 02:00 da manhã
+        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 0));
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
         MenuGestorView menuGestorView = new MenuGestorView();
         UtilizadorView utilizadorView = new UtilizadorView();
+
         int opcao;
         do {
             System.out.println("\nBem-vindo à leiloeira Valor em Alta!\n");

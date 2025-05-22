@@ -112,7 +112,9 @@ public class LeilaoController {
 
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
         if (leilao != null) {
-            leilaoBLL.colocarDataFimLeilao(idLeilao, dataFim);
+            // Fecha o leilão com a nova lógica, usando a data fornecida
+            leilaoBLL.fecharLeilao(idLeilao, dataFim);
+
             int idLanceVencedor = lanceBLL.selecionarLanceVencedor(idLeilao);
             if (idLanceVencedor == 0) {
                 resultadoOperacao.msgErro = "Não existe nenhum vencedor do leilão selecionado.";
@@ -129,6 +131,7 @@ public class LeilaoController {
         }
         return resultadoOperacao;
     }
+
 
     public List<Leilao> listarLeiloesTerminadosComLancesDoCliente(int idCliente) throws MessagingException, IOException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
