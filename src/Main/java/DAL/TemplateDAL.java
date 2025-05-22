@@ -20,54 +20,59 @@ public class TemplateDAL {
     private final String CABECALHO = "\"ID\"" + Tools.separador() +
             "\"Assunto\"" + Tools.separador() + "\"Corpo\"";
 
-    private ResultadoOperacao carregarTodosTemplates() throws IOException {
+    private ResultadoOperacao carregarTodosTemplates() {
         templatesCache = new HashMap<>();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
         Path caminho = Paths.get(caminhosFicheiros.CSV_FILE_TEMPLATE);
         if (!Files.exists(caminho)) {
             resultado.msgErro = "Ficheiro de templates não encontrado: " + caminhosFicheiros.CSV_FILE_TEMPLATE;
+            return resultado;
         }
 
-        BufferedReader reader = Files.newBufferedReader(caminho);
-        String linha;
-        boolean primeiraLinha = true;
+        try (BufferedReader reader = Files.newBufferedReader(caminho)) {
+            String linha;
+            boolean primeiraLinha = true;
 
-        while ((linha = reader.readLine()) != null) {
-            if (primeiraLinha) {
-                primeiraLinha = false;
-                if (!linha.equals(CABECALHO)) {
-                    resultado.msgErro = "Cabeçalho do ficheiro inválido.";
+            while ((linha = reader.readLine()) != null) {
+                if (primeiraLinha) {
+                    primeiraLinha = false;
+                    if (!linha.trim().equalsIgnoreCase("\"ID\";\"Assunto\";\"Corpo\"")) {
+                        resultado.msgErro = "Cabeçalho do ficheiro inválido.";
+                        return resultado;
+                    }
+                    continue;
                 }
-                continue;
+
+                if (linha.isBlank()) continue;
+
+                String[] partes = linha.split(";", 3); // Supondo que seja ";" mesmo
+                if (partes.length < 3) continue;
+
+                String id = partes[0].trim().replaceAll("^\"|\"$", "");
+                String assunto = partes[1].trim().replaceAll("^\"|\"$", "").replace("\"\"", "\"");
+                String corpo = partes[2].trim()
+                        .replaceAll("^\"|\"$", "")
+                        .replace("\"\"", "\"")
+                        .replace("\\n", "\n")
+                        .replace("\\t", "\t");
+
+                templatesCache.put(id, new Template(id, assunto, corpo));
             }
 
-            if (linha.isBlank()) continue;
-
-            String[] partes = linha.split(Tools.separador(), 3);
-            if (partes.length < 3) continue;
-
-            String id = partes[0].trim().replaceAll("^\"|\"$", "");
-            String assunto = partes[1].trim().replaceAll("^\"|\"$", "").replace("\"\"", "\"");
-            String corpo = partes[2].trim()
-                    .replaceAll("^\"|\"$", "")
-                    .replace("\"\"", "\"")
-                    .replace("\\n", "\n")
-                    .replace("\\t", "\t");
-
-            templatesCache.put(id, new Template(id, assunto, corpo));
-        }
-        if (resultado.msgErro == null) {
             resultado.Sucesso = true;
-        }
-        resultado.Objeto = resultado;
+            resultado.Objeto = resultado;
 
-        reader.close();
+        } catch (IOException e) {
+            resultado.msgErro = "Erro ao ler o ficheiro de templates: " + e.getMessage();
+        }
+
         return resultado;
     }
 
     public Template carregarTemplatePorId(String idProcurado) throws IOException {
-        if (templatesCache == null) carregarTodosTemplates();
+        if (templatesCache == null)
+            carregarTodosTemplates();
         return templatesCache.get(idProcurado);
     }
 
@@ -87,7 +92,7 @@ public class TemplateDAL {
                     .replace("\n", "\\n")
                     .replace("\t", "\\t")
                     .replace("\"", "\"\"") + "\"";
-            String linha = "\"" + idAtual + "\"," + assunto + Tools.separador() + corpo;
+            String linha = "\"" + idAtual + "\"" + Tools.separador()  + assunto + Tools.separador() + corpo;
 
             linhasParaGravar.add(linha);
         }

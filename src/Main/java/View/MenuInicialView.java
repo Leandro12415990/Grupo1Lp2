@@ -1,11 +1,16 @@
 package View;
 
 import BLL.AgenteBLL;
+import BLL.EmailBLL;
 import BLL.RelatorioFinalBLL;
 import Controller.AgenteController;
+import BLL.UtilizadorBLL;
 import DAL.LanceDAL;
 import Model.Lance;
+import DAL.TemplateDAL;
+import Model.Template;
 import Model.Utilizador;
+import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
@@ -24,6 +29,7 @@ public class MenuInicialView {
         agenteBLL.iniciarMonitorizacaoDinamica();
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
         relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 0));
+
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
         MenuGestorView menuGestorView = new MenuGestorView();

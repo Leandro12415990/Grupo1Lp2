@@ -103,12 +103,13 @@ public class LeilaoView {
                     String dataInicioStr = Tools.scanner.nextLine().trim();
                     if (Tools.verificarSaida(dataInicioStr)) return;
 
-                    dataInicio = isEletronico ? Tools.parseDateTime(dataInicioStr) : Tools.parseDateTimeByDate(dataInicioStr);
+                    dataInicio = Tools.parseDateTime(dataInicioStr);
 
-                    if (dataInicio != null) {
-                        if (!isEletronico) dataInicio = dataInicio.withHour(0).withMinute(0).withSecond(0).withNano(0);
+                    if (dataInicio == null) {
+                        System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm:ss");
+                    } else {
                         break;
-                    } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm:ss.");
+                    }
                 }
                 //DATA FIM (opcional)
                 while (true) {
@@ -118,10 +119,9 @@ public class LeilaoView {
 
                     if (dataFimStr.isEmpty()) break;
 
-                    dataFim = isEletronico ? Tools.parseDateTime(dataFimStr) : Tools.parseDateTimeByDate(dataFimStr);
+                    dataFim = Tools.parseDateTime(dataFimStr);
 
                     if (dataFim != null) {
-                        if (!isEletronico) dataFim = dataFim.withHour(0).withMinute(0).withSecond(0).withNano(0);
                         ResultadoOperacao isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
                         if (isCorrect.Sucesso) break;
                         else System.out.println(isCorrect.msgErro);
@@ -129,6 +129,7 @@ public class LeilaoView {
                 }
 
                 double valorMin = 0.0;
+                double valorMax = 0.0;
                 // VENDA DIRETA: solicitar apenas valor mínimo
                 if (idTipoLeilao == tiposLeilao.VENDA_DIRETA) {
                     while (true) {
@@ -164,30 +165,27 @@ public class LeilaoView {
                         } catch (NumberFormatException e) {
                             System.out.println("Entrada inválida. Insira um número válido.");
                         }
+                        // VALOR MÁXIMO (opcional)
+                        while (true) {
+                            System.out.print("Insira o valor máximo ou pressione ENTER para não definir " + Tools.alertaCancelar());
+                            String valorMaxStr = Tools.scanner.nextLine().trim();
+
+                            if (Tools.verificarSaida(valorMaxStr)) return;
+                            if (valorMaxStr.isEmpty()) {
+                                valorMax = 0.0;
+                                break;
+                            }
+
+                            try {
+                                valorMax = Double.parseDouble(valorMaxStr);
+                                if (valorMax < valorMin) System.out.printf("O valor máximo não pode ser inferior ao valor mínimo (%.2f).\n", valorMin);
+                                else break;
+                            } catch (NumberFormatException e) {
+                                System.out.println("Valor inválido. Insira um número válido (use ponto como separador decimal, se necessário).");
+                            }
+                        }
                     }
                 }
-
-                // VALOR MÁXIMO (opcional)
-                double valorMax;
-                while (true) {
-                    System.out.print("Insira o valor máximo ou pressione ENTER para não definir " + Tools.alertaCancelar());
-                    String valorMaxStr = Tools.scanner.nextLine().trim();
-
-                    if (Tools.verificarSaida(valorMaxStr)) return;
-                    if (valorMaxStr.isEmpty()) {
-                        valorMax = 0.0;
-                        break;
-                    }
-
-                    try {
-                        valorMax = Double.parseDouble(valorMaxStr);
-                        if (valorMax < valorMin) System.out.printf("O valor máximo não pode ser inferior ao valor mínimo (%.2f).\n", valorMin);
-                        else break;
-                    } catch (NumberFormatException e) {
-                        System.out.println("Valor inválido. Insira um número válido (use ponto como separador decimal, se necessário).");
-                    }
-                }
-
                 // MÚLTIPLO DE LANCE (somente para ELETRÔNICO)
                 double multiploLance = 0.0;
                 if (idTipoLeilao == tiposLeilao.ELETRONICO) {
@@ -377,11 +375,13 @@ public class LeilaoView {
             if (Tools.verificarSaida(dataInicioStr)) return;
             if (dataInicioStr.isEmpty()) break;
 
-            dataInicio = isEletronico ? Tools.parseDateTime(dataInicioStr) : Tools.parseDateTimeByDate(dataInicioStr);
-            if (dataInicio != null) {
-                if (!isEletronico) dataInicio = dataInicio.withHour(0).withMinute(0).withSecond(0).withNano(0);
+            dataInicio = Tools.parseDateTime(dataInicioStr);
+
+            if (dataInicio == null) {
+                System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm:ss");
+            } else {
                 break;
-            } else System.out.println("Formato inválido.");
+            }
         }
 
         // Data Fim
@@ -393,7 +393,6 @@ public class LeilaoView {
 
             dataFim = isEletronico ? Tools.parseDateTime(dataFimStr) : Tools.parseDateTimeByDate(dataFimStr);
             if (dataFim != null) {
-                if (!isEletronico) dataFim = dataFim.withHour(0).withMinute(0).withSecond(0).withNano(0);
                 ResultadoOperacao valid = Tools.verificarDatasAnteriores(dataInicio, dataFim);
                 if (valid.Sucesso) break;
                 else System.out.println(valid.msgErro);

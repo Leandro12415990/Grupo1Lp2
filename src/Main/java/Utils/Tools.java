@@ -323,7 +323,7 @@ public class Tools {
         variaveis.put("NOME", u.getNomeUtilizador());
         variaveis.put("EQUIPA", Constantes.configEmail.equipa);
         variaveis.put("EMAIL", u.getEmail());
-        variaveis.put("DATA", LocalDateTime.now().toString());
+        variaveis.put("DATA", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         variaveis.put("SALDO", u.getSaldo().toString());
         if (produto != null) {
             variaveis.put("NOME_PRODUTO", produto.getNome());

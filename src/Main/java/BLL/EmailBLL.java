@@ -6,7 +6,9 @@ import Model.Email;
 import Model.Template;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -25,6 +27,74 @@ public class EmailBLL {
         Template template = templateDAL.carregarTemplatePorId(templateId);
         enviarEmail(template, toEmail, variaveis, idCliente);
     }
+
+    public void enviarEmailComAnexo(Template template, String toEmail, Map<String, String> variaveis, int idCliente, String caminhoAnexo)
+            throws MessagingException {
+
+        String assunto = substituirTags(template.getAssunto(), variaveis);
+        String corpo = substituirTags(template.getCorpo(), variaveis);
+
+        Session session = criarSessaoEmail();
+        Message message = criarMensagemComAnexo(session, toEmail, assunto, corpo, idCliente, template.getId(), caminhoAnexo);
+
+        Transport.send(message);
+    }
+
+    private Message criarMensagemComAnexo(Session session, String toEmail, String assunto, String corpo, int idCliente, String idTipoEmail, String caminhoAnexo)
+            throws MessagingException {
+
+        Message message = new MimeMessage(session);
+
+        try {
+            message.setFrom(new InternetAddress(configEmail.fromEmail, configEmail.fromName));
+        } catch (UnsupportedEncodingException e) {
+            message.setFrom(new InternetAddress(configEmail.fromEmail));
+        }
+
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+        message.setSubject(assunto);
+
+        // Parte do corpo do e-mail
+        MimeBodyPart corpoParte = new MimeBodyPart();
+        corpoParte.setText(corpo, "utf-8");
+
+        // Parte do anexo
+        MimeBodyPart anexoParte = new MimeBodyPart();
+        try {
+            anexoParte.attachFile(caminhoAnexo); // caminho absoluto ou relativo ao ficheiro
+        } catch (IOException e) {
+            throw new MessagingException("Erro ao anexar ficheiro: " + caminhoAnexo, e);
+        }
+
+        // Juntar tudo num Multipart
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(corpoParte);
+        multipart.addBodyPart(anexoParte);
+
+        message.setContent(multipart);
+
+        // Registo do e-mail enviado
+        String corpoTexto = removerTagsHtml(corpo);
+        Email email = new Email(
+                0,
+                configEmail.fromEmail,
+                idCliente,
+                toEmail,
+                assunto,
+                corpoTexto,
+                LocalDateTime.now(),
+                idTipoEmail
+        );
+
+        EmailDAL emailDAL = new EmailDAL();
+        List<Email> emailsExistentes = emailDAL.carregarEmails();
+        email.setIdEmail(verificarUltimoId(emailsExistentes) + 1);
+        emailsExistentes.add(email);
+        emailDAL.gravarEmails(emailsExistentes);
+
+        return message;
+    }
+
 
     public void enviarEmail(Template template, String toEmail, Map<String, String> variaveis, int idCliente)
             throws MessagingException {

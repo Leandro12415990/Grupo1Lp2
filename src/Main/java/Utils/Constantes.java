@@ -70,5 +70,6 @@ public class Constantes {
         public static final String EMAIL_VENCEDOR_LEILAO = "3";
         public static final String EMAIL_CLIENTE_OFFLINE = "4";
         public static final String EMAIL_SEM_CREDITOS = "5";
+        public static final String EMAIL_RELATORIO_DIARIO = "6";
     }
 }

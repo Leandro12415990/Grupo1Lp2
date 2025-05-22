@@ -20,6 +20,7 @@ public class MenuClienteView {
         AgenteView agenteView = new AgenteView();
         ClassificacaoView classificacaoView = new ClassificacaoView();
 
+        utilizadorView.verificarLoginsUtilizadores();
         while (true) {
             System.out.println("\n" + "=".repeat(5) + " MENU CLIENTE " + "=".repeat(5));
             System.out.println("1. Ver os Meus Dados");
