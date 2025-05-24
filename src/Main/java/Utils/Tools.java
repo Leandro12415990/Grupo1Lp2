@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.sql.*;
 
 public class Tools {
     public static Scanner scanner = new Scanner(System.in);
@@ -353,5 +354,38 @@ public class Tools {
         synchronized (lockIdLance) {
             return ++ultimoIdLance;
         }
+    }
+
+    public static List<Map<String, Object>> executeQuery(String query, List<Object> parameters) {
+        List<Map<String, Object>> results = new ArrayList<>();
+
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            // Atribui os parâmetros dinamicamente
+            if (parameters != null) {
+                for (int i = 0; i < parameters.size(); i++) {
+                    stmt.setObject(i + 1, parameters.get(i));
+                }
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            ResultSetMetaData meta = rs.getMetaData();
+            int columnCount = meta.getColumnCount();
+
+            // Lê os resultados e guarda em listas de mapas
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    row.put(meta.getColumnLabel(i), rs.getObject(i));
+                }
+                results.add(row);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao executar QUERY: " + e.getMessage());
+        }
+
+        return results;
     }
 }
