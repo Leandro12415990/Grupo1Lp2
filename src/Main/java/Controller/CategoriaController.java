@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.util.List;
 
 public class CategoriaController {
-    public ResultadoOperacao criarCategoria(int idCategoria, String descricao) throws MessagingException, IOException {
+    public ResultadoOperacao criarCategoria(int idCategoria, String descricao, int estado) throws MessagingException, IOException {
         CategoriaBLL categoriaBLL = new CategoriaBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
         if (descricao == null || descricao.isEmpty()) {
-            resultado.msgErro = "A descrição do produto é de preenchimento obrigatório!";
+            resultado.msgErro = "A descrição da categoria é de preenchimento obrigatório!";
         } else {
-            Categoria novaCategoria = new Categoria(idCategoria, descricao);
+            Categoria novaCategoria = new Categoria(idCategoria, descricao, estado);
             categoriaBLL.adicionarCategoria(novaCategoria);
 
             resultado.Objeto = resultado;

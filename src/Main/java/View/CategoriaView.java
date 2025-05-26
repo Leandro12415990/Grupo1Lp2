@@ -3,6 +3,7 @@ package View;
 import Controller.CategoriaController;
 import Model.Categoria;
 import Model.ResultadoOperacao;
+import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class CategoriaView {
         String descricao = Tools.scanner.nextLine();
         if (Tools.verificarSaida(descricao)) return;
 
-        ResultadoOperacao resultado = categoriaController.criarCategoria(0, descricao);
+        ResultadoOperacao resultado = categoriaController.criarCategoria(0, descricao, Constantes.estadosCategoria.INATIVO);
         if (resultado.Sucesso) {
             System.out.println("Categoria criada com sucesso!");
         } else {
@@ -72,12 +73,14 @@ public class CategoriaView {
     public void exibirCategoria(List<Categoria> categorias) {
         if (!categorias.isEmpty()) {
             System.out.println("\n" + "=".repeat(5) + " LISTAGEM DAS CATEGORIAS " + "=".repeat(5));
-            System.out.printf("%-8s %-20s\n", "Id", "Descrição");
-            System.out.println("-".repeat(30));
+            System.out.printf("%-8s %-20s %-20s\n", "Id", "Descrição","Estado");
+            System.out.println("-".repeat(50));
             for (Categoria categoria : categorias) {
-                System.out.printf("%-8d %-20s\n",
+                String nomeEstado = Tools.estadoCategoria.fromCodigo(categoria.getEstado()).name();
+                System.out.printf("%-8d %-20s %-20s\n",
                         categoria.getIdCategoria(),
-                        categoria.getDescricao().toUpperCase());
+                        categoria.getDescricao().toUpperCase(),
+                        nomeEstado);
             }
         } else {
             System.out.println("Não existem categorias disponíveis.");
@@ -121,7 +124,6 @@ public class CategoriaView {
         }
     }
 
-
     public void eliminarCategoria() throws MessagingException, IOException {
         CategoriaController categoriaController = new CategoriaController();
         listarCategoria();
@@ -130,10 +132,16 @@ public class CategoriaView {
         System.out.println("Insira o ID da categoria que deseja eliminar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
+
         if (Tools.verificarSaida(String.valueOf(id))) return;
         Categoria categoria = categoriaController.procurarCategoria(id);
 
         if (categoria != null) {
+            if (categoria.getEstado() == 1) {
+                System.out.println("Não é permitido eliminar uma categoria com estado ativo.");
+                return;
+            }
+
             exibirDetalhesCategoria(categoria);
             System.out.println("\nTem a certeza que pretende eliminar a categoria com o Id " + id + "? (S/N)");
             String opcao = Tools.scanner.nextLine().trim().toUpperCase();
@@ -155,8 +163,10 @@ public class CategoriaView {
         }
     }
 
+
     public void exibirDetalhesCategoria(Categoria categoria) {
         System.out.println("\nDETALHES DA CATEGORIA " + categoria.getIdCategoria());
         System.out.println("Descrição: " + categoria.getDescricao());
+        System.out.println("Estado: " + categoria.getEstado());
     }
 }

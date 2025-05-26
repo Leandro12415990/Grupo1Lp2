@@ -73,4 +73,9 @@ public class Constantes {
         public static final String EMAIL_SEM_CREDITOS = "5";
         public static final String EMAIL_RELATORIO_DIARIO = "6";
     }
+
+    public static class estadosCategoria {
+        public static final int INATIVO = 0;
+        public static final int ATIVO = 1;
+    }
 }
