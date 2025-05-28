@@ -1,10 +1,8 @@
 package BLL;
 
-import DAL.ProdutoCategoriaDAL;
 import DAL.ProdutoDAL;
 import Model.Leilao;
 import Model.Produto;
-import Model.ProdutoCategoria;
 import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
