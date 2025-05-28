@@ -21,6 +21,7 @@ public class Constantes {
         public static final String CSV_FILE_EMAIL = "data\\Email.csv";
         public static final String CSV_FILE_FICHEIRO_EMAIL = "data\\RelatorioDiario\\";
         public static final String CSV_FILE_AGENTE = "data\\Agente.csv";
+        public static final String CSV_FILE_NEGOCIACAO = "data\\Negociacao.csv";
     }
 
     // Secção: Estados Leilões
@@ -33,11 +34,18 @@ public class Constantes {
         public static final int INATIVO = 5;
     }
 
+    public static class estadosLance {
+        public static final int DEFAULT = 0;
+        public static final int PROPOSTA = 1;
+        public static final int CONTRAPROPOSTA = 2;
+    }
+
     // Secção: Tipos Leilões
     public static class tiposLeilao {
         public static final int ELETRONICO = 1;
         public static final int CARTA_FECHADA = 2;
         public static final int VENDA_DIRETA = 3;
+        public static final int NEGOCIACAO = 4;
     }
 
     // Secção: Estados Produtos

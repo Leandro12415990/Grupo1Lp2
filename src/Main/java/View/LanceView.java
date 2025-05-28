@@ -1,21 +1,18 @@
 package View;
 
 import BLL.LanceBLL;
-import Controller.LanceController;
-import Controller.LeilaoController;
-import Controller.ProdutoController;
-import Controller.UtilizadorController;
+import Controller.*;
 import DAL.UtilizadorDAL;
-import Model.Lance;
-import Model.Leilao;
-import Model.ResultadoOperacao;
-import Model.Utilizador;
+import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
+import com.sun.mail.imap.protocol.ID;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.util.List;
+
+import static Utils.Tools.scanner;
 
 
 public class LanceView {
@@ -28,6 +25,7 @@ public class LanceView {
             System.out.println("3. Dar Lance Direto");
             System.out.println("4. Dar Lance Carta Fechada");
             System.out.println("5. Dar Lance Eletrónico");
+            System.out.println("6. Leilões Particulares");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
             opc = Tools.scanner.nextInt();
@@ -48,6 +46,8 @@ public class LanceView {
                 case 5:
                     lanceEletronico();
                     break;
+                case 6:
+                    verLeiloesDeOutrosEDarLance();
                 case 0:
                     System.out.println("\nSair...");
                     break;
@@ -224,7 +224,7 @@ public class LanceView {
         }
     }
 
-    public void listarLancesPorLeilao() throws MessagingException, IOException {
+    /*public void listarLancesPorLeilao() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();// PARA SER USADO PELO GESTOR
         List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
@@ -248,7 +248,7 @@ public class LanceView {
                 System.out.println("------------------------------------------------");
             }
         }
-    }
+    }*/
 
     public void listarLeiloesTerminados() throws MessagingException, IOException {
         int idCliente = Tools.clienteSessao.getIdCliente();
@@ -324,4 +324,61 @@ public class LanceView {
         System.out.println("Vencedor: " + nomeVencedor);
         System.out.printf("Lance vencedor: %.2f€\n", lanceVencedor.getValorLance());
     }
+
+    private void verLeiloesDeOutrosEDarLance() throws MessagingException, IOException {
+        System.out.println("\n--- Leilões Ativos de Outros Clientes ---");
+
+        int idCliente = Tools.clienteSessao.getIdCliente();
+        NegociacaoController negociacaoController = new NegociacaoController();
+        List<Negociacao> leiloes = negociacaoController.listarLeiloesAtivosDeOutrosClientes(idCliente);
+
+        if (leiloes.isEmpty()) {
+            System.out.println("Nenhum leilão ativo de outros clientes disponível.");
+            return;
+        }
+
+        for (Negociacao n : leiloes) {
+            System.out.println("ID: " + n.getIdNegociacao());
+            System.out.println("Nome: " + n.getNome());
+            System.out.println("Descrição: " + n.getDescricao());
+            System.out.println("Valor Pedido: " + n.getValor());
+            System.out.println("------------------------------");
+        }
+
+        int idLeilao;
+        while (true) {
+            System.out.print("Digite o ID do leilão que deseja propor: ");
+            if (scanner.hasNextInt()) {
+                idLeilao = scanner.nextInt();
+                scanner.nextLine();
+                break;
+            } else {
+                System.out.println("Entrada inválida! Insira um número inteiro.");
+                scanner.nextLine();
+            }
+        }
+
+        double valor;
+        while (true) {
+            System.out.print("Digite o valor da sua proposta: ");
+            if (scanner.hasNextDouble()) {
+                valor = scanner.nextDouble();
+                scanner.nextLine();
+                break;
+            } else {
+                System.out.println("Entrada inválida! Insira um valor numérico.");
+                scanner.nextLine();
+            }
+        }
+
+        LanceBLL lanceBLL = new LanceBLL();
+        ResultadoOperacao resultado = lanceBLL.fazerProposta(idLeilao, idCliente, valor);
+
+        if (resultado.Sucesso) {
+            System.out.println("Proposta enviada com sucesso: " + resultado.msgErro);
+        } else {
+            System.out.println("Erro: " + resultado.msgErro);
+        }
+    }
+
 }
