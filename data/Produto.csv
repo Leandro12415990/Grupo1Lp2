@@ -30,5 +30,6 @@ ID;ESTADO;NOME;DESCRICAO
 29;2;Microfone Condensador;Ideal para streaming
 30;2;Webcam 4K;Suporte HDR e 60FPS
 31;1;bianca;tot
-32;1;daniel;toto
-33;1;ASD;ASD
+32;2;daniel;toto
+33;2;ASD;ASD
+34;1;1;teste categoria
