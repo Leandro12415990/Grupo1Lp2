@@ -217,12 +217,20 @@ public class LanceView {
             System.out.printf("%-20s %-15s %-25s %-20s %-25s%n", "ID do Lance", "ID do Leilão", "Produto", "Valor (€)", "Data");
             System.out.println("-".repeat(130));
             for (Lance lance : meusLances) {
+                if (lance.getEstado() != Constantes.estadosLance.DEFAULT) continue;
+
                 String dataFormatada = Tools.formatDateTime(lance.getDataLance());
                 String nomeProdutoLance = produtoController.getNomeProdutoById(lance.getIdLeilao());
-                System.out.printf("%-20s %-15s %-25s %-20s %-25s%n", lance.getIdLance(), lance.getIdLeilao(), nomeProdutoLance, lance.getValorLance(), dataFormatada);
+                System.out.printf("%-20s %-15s %-25s %-20s %-25s%n",
+                        lance.getIdLance(),
+                        lance.getIdLeilao(),
+                        nomeProdutoLance,
+                        lance.getValorLance(),
+                        dataFormatada);
             }
         }
     }
+
 
     /*public void listarLancesPorLeilao() throws MessagingException, IOException {
         LanceController lanceController = new LanceController();

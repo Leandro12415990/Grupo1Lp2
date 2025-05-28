@@ -35,7 +35,7 @@ public class LanceBLL {
         int numLance = 0;
         int pontosUtilizados = 0;
         LocalDateTime dataLance = LocalDateTime.now();
-        int estado = 0;
+        int estado = Constantes.estadosLance.DEFAULT;
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance, estado);
         lances.add(lance);
         lanceDAL.gravarLances(lances);
@@ -60,7 +60,7 @@ public class LanceBLL {
         int numLance = 0;
         int pontosUtilizados = 0;
         LocalDateTime dataLance = LocalDateTime.now();
-        int estado = 0;
+        int estado = Constantes.estadosLance.DEFAULT;
 
         Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance, estado);
         lances.add(lance);
@@ -104,7 +104,7 @@ public class LanceBLL {
             int idLance = verUltimoId() + 1;
             LocalDateTime dataLance = LocalDateTime.now();
             int pontosUtilizados = 0;
-            int estado = 0;
+            int estado = Constantes.estadosLance.DEFAULT;
 
             Lance novoLance = new Lance(idLance, idLeilao, idCliente, novoValorLance, lancesDoLeilao.size() + 1, pontosUtilizados, dataLance, estado);
             lances.add(novoLance);
@@ -162,7 +162,7 @@ public class LanceBLL {
         Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
 
         if (utilizador == null) {
-            System.err.printf("⚠️ Utilizador não encontrado para o idCliente %d%n", idCliente);
+            System.err.printf("Utilizador não encontrado para o idCliente %d%n", idCliente);
             resultado.Sucesso = false;
             resultado.msgErro = "Utilizador não encontrado.";
             return resultado;
