@@ -4,13 +4,13 @@ import BLL.UtilizadorBLL;
 import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
-
 import java.io.IOException;
 import java.util.List;
 
 
 public class MenuGestorView {
     public void exibirMenu() throws MessagingException, IOException {
+        CategoriaView categoriaView = new CategoriaView();
         UtilizadorView utilizadorView = new UtilizadorView();
         TransacaoView transacaoView = new TransacaoView();
         EstatisticaView estatisticaView = new EstatisticaView();
@@ -28,10 +28,11 @@ public class MenuGestorView {
             System.out.println("2. Aprovar Clientes");
             System.out.println("3. Inativar Clientes");
             System.out.println("4. Menu Leilões");
-            System.out.println("5. Menu Produtos");
-            System.out.println("6. Listagens");
-            System.out.println("7. Aprovar Despósitos");
-            System.out.println("8. Editar Templates");
+            System.out.println("5. Menu Categoria");
+            System.out.println("6. Menu Produtos");
+            System.out.println("7. Listagens");
+            System.out.println("8. Aprovar Despósitos");
+            System.out.println("9. Editar Templates");
             System.out.println("0. Sair...");
             int opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             switch (opcao) {
@@ -48,15 +49,18 @@ public class MenuGestorView {
                     leilaoView.exibirMenuLeiloes();
                     break;
                 case 5:
-                    produtoView.exibirProduto();
+                    categoriaView.exibirMenuCategoria();
                     break;
                 case 6:
-                    estatisticaView.exibirMenuListagem();
+                    produtoView.exibirProduto();
                     break;
                 case 7:
-                    transacaoView.aprovarDepositos();
+                    estatisticaView.exibirMenuListagem();
                     break;
                 case 8:
+                    transacaoView.aprovarDepositos();
+                    break;
+                case 9:
                     templateView.editarTemplate();
                     break;
                 case 0:

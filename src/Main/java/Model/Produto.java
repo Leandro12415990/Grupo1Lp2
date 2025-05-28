@@ -47,5 +47,13 @@ public class Produto {
         this.descricao = descricao;
     }
 
-
+    @Override
+    public String toString() {
+        return "Produto{" +
+                "idProduto=" + idProduto +
+                ", estado=" + estado +
+                ", nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
+                '}';
+    }
 }

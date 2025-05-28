@@ -21,6 +21,8 @@ public class Constantes {
         public static final String CSV_FILE_EMAIL = "data\\Email.csv";
         public static final String CSV_FILE_FICHEIRO_EMAIL = "data\\RelatorioDiario\\";
         public static final String CSV_FILE_AGENTE = "data\\Agente.csv";
+        public static final String CSV_FILE_CATEGORIA = "data\\Categoria.csv";
+        public static final String CSV_FILE_PRODUTO_CATEGORIA = "data\\ProdutoCategoria.csv";
     }
 
     // Secção: Estados Leilões
@@ -71,5 +73,10 @@ public class Constantes {
         public static final String EMAIL_CLIENTE_OFFLINE = "4";
         public static final String EMAIL_SEM_CREDITOS = "5";
         public static final String EMAIL_RELATORIO_DIARIO = "6";
+    }
+
+    public static class estadosCategoria {
+        public static final int INATIVO = 0;
+        public static final int ATIVO = 1;
     }
 }
