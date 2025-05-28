@@ -99,8 +99,7 @@ public class CategoriaView {
         exibirCategoria(categorias);
 
         System.out.println("\nEDIÇÃO DE UMA CATEGORIA");
-        System.out.println("Insira o ID da categoria que deseja editar " + Tools.alertaCancelar());
-        int id = Tools.scanner.nextInt();
+        int id = Tools.pedirOpcaoMenu("Insira o ID da categoria que deseja editar " + Tools.alertaCancelar());
         Tools.scanner.nextLine();
         if (Tools.verificarSaida(String.valueOf(id))) return;
 
@@ -108,8 +107,8 @@ public class CategoriaView {
         if (categoria != null) {
             exibirDetalhesCategoria(categoria);
 
-            System.out.print("Nova descrição da categoria ou pressione ENTER para não alterar " + Tools.alertaCancelar());
-            String descricao = Tools.scanner.nextLine().trim();
+            System.out.print("Nova descrição da categoria " + Tools.alertaCancelar());
+            String descricao = Tools.scanner.nextLine();
             if (Tools.verificarSaida(descricao)) return;
             if (descricao.isEmpty()) descricao = categoria.getDescricao();
 
@@ -129,8 +128,7 @@ public class CategoriaView {
         listarCategoria();
 
         System.out.println("\nELIMINAÇÃO DE UMA CATEGORIA");
-        System.out.println("Insira o ID da categoria que deseja eliminar " + Tools.alertaCancelar());
-        int id = Tools.scanner.nextInt();
+        int id = Tools.pedirOpcaoMenu("Insira o ID da categoria que deseja eliminar " + Tools.alertaCancelar());
         Tools.scanner.nextLine();
 
         if (Tools.verificarSaida(String.valueOf(id))) return;
@@ -165,8 +163,9 @@ public class CategoriaView {
 
 
     public void exibirDetalhesCategoria(Categoria categoria) {
+        String nomeEstado = Tools.estadoCategoria.fromCodigo(categoria.getEstado()).name();
         System.out.println("\nDETALHES DA CATEGORIA " + categoria.getIdCategoria());
         System.out.println("Descrição: " + categoria.getDescricao());
-        System.out.println("Estado: " + categoria.getEstado());
+        System.out.println("Estado: " + nomeEstado);
     }
 }
