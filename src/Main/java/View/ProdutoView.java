@@ -1,7 +1,11 @@
 package View;
 
+import Controller.CategoriaController;
+import Controller.ProdutoCategoriaController;
 import Controller.ProdutoController;
+import Model.Categoria;
 import Model.Produto;
+import Model.ProdutoCategoria;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
 import Utils.Tools;
@@ -47,7 +51,10 @@ public class ProdutoView {
     }
 
     public void criarProduto() throws MessagingException, IOException {
+        ProdutoCategoriaController produtoCategoriaController = new ProdutoCategoriaController();
         ProdutoController produtoController = new ProdutoController();
+        CategoriaView categoriaView = new CategoriaView();
+
         System.out.println("\nCRIAÇÃO DE UM PRODUTO\n");
 
         System.out.println("Insira o nome do produto " + Tools.alertaCancelar());
@@ -57,19 +64,40 @@ public class ProdutoView {
         System.out.println("Insira uma descrição do produto " + Tools.alertaCancelar());
         String descricao = Tools.scanner.nextLine();
         if (Tools.verificarSaida(descricao)) return;
+
+        categoriaView.listarCategoria();
+        System.out.println("Insira o ID da categoria para associar ao produto " + Tools.alertaCancelar());
+        int idCategoria = Tools.scanner.nextInt();
+        Tools.scanner.nextLine();
+        if (Tools.verificarSaida(String.valueOf(idCategoria))) return;
+
         ResultadoOperacao resultado = produtoController.criarProduto(0, Constantes.estadosProduto.ATIVO, nome, descricao);
+
         if (resultado.Sucesso) {
-            System.out.println("Produto criado com sucesso!");
+            Produto produtoCriado = (Produto) resultado.Objeto;
+            int idProdutoCriado = produtoCriado.getIdProduto();
+
+            boolean associou = produtoCategoriaController.associarCategoriaAoProduto(idProdutoCriado, idCategoria);
+
+            if (associou) {
+                System.out.println("Produto criado e categoria associada com sucesso!");
+            } else {
+                System.out.println("Produto criado mas falhou a associação da categoria.");
+            }
         } else {
             System.out.println(resultado.msgErro);
         }
     }
 
     public void editarProduto() throws MessagingException, IOException {
+        CategoriaController categoriaController = new CategoriaController();
         ProdutoController produtoController = new ProdutoController();
+        ProdutoCategoriaController produtoCategoriaController = new ProdutoCategoriaController();
+        CategoriaView categoriaView = new CategoriaView();
         listarProduto(false);
 
         System.out.println("\nEDIÇÃO DE UM PRODUTO");
+        listarProduto(true);
         System.out.println("Insira o ID do produto que deseja editar " + Tools.alertaCancelar());
         int id = Tools.scanner.nextInt();
         Tools.scanner.nextLine();
@@ -107,14 +135,55 @@ public class ProdutoView {
                             }
                             break;
                         } catch (NumberFormatException e) {
-                            System.out.println("Entrada inválida. Insira um número entre 0 e 3.");
+                            System.out.println("Entrada inválida. Insira um número válido.");
                         }
+                    } else {
+                        break;
                     }
                 }
             }
+
+            System.out.print("Quer alterar a categoria do produto? (S/N): ");
+            String alterarCategoria = Tools.scanner.nextLine().trim().toUpperCase();
+            int idCategoriaNova = -1;
+            if (alterarCategoria.equals("S")) {
+
+                categoriaView.listarCategoria();
+                System.out.print("Insira o ID da nova categoria " + Tools.alertaCancelar());
+                idCategoriaNova = Tools.scanner.nextInt();
+                Tools.scanner.nextLine();
+                if (Tools.verificarSaida(String.valueOf(idCategoriaNova))) return;
+            }
+
             boolean sucesso = produtoController.editarProduto(id, nome, descricao, idEstado);
+
             if (sucesso) {
                 System.out.println("Produto editado com sucesso!");
+
+                if (idCategoriaNova != -1) {
+                    boolean desassociou = produtoCategoriaController.desassociarCategoriaDoProduto(id);
+                    if (desassociou) {
+                        System.out.println("Categoria anterior desassociada com sucesso.");
+                    } else {
+                        System.out.println("Falha ao desassociar a categoria anterior.");
+                    }
+
+                    boolean associou = produtoCategoriaController.associarCategoriaAoProduto(id, idCategoriaNova);
+                    if (associou) {
+                        System.out.println("Categoria atualizada com sucesso!");
+                    } else {
+                        System.out.println("Falha ao atualizar categoria.");
+                    }
+
+                    if (produtoCategoriaController.verificarCategoriaSemProdutoAssociado(idCategoriaNova)) {
+                        boolean estadoAlterado = categoriaController.atualizarCategoriaEstado(idCategoriaNova, Constantes.estadosCategoria.INATIVO);
+                        if (estadoAlterado) {
+                            System.out.println("Categoria anterior desativada com sucesso.");
+                        } else {
+                            System.out.println("Falha ao desativar a categoria anterior.");
+                        }
+                    }
+                }
             } else {
                 System.out.println("Não foi possível editar o produto.");
             }
@@ -163,26 +232,42 @@ public class ProdutoView {
     public void listarProduto(boolean apenasDisponiveis) throws MessagingException, IOException {
         ProdutoController produtoController = new ProdutoController();
         List<Produto> produtos = produtoController.listarProduto(apenasDisponiveis);
-        if (produtos.isEmpty()) {
+
+        if (!produtos.isEmpty()) {
             exibirProduto(produtos);
         } else {
-            System.out.println("Não existem produtos.");
+            System.out.println("Não existem produtos disponíveis para leilão.");
         }
     }
 
-    public void exibirProduto(List<Produto> produtos) {
+    public void exibirProduto(List<Produto> produtos) throws MessagingException, IOException {
+        ProdutoCategoriaController produtoCategoriaController = new ProdutoCategoriaController();
+        CategoriaController categoriaController = new CategoriaController();
+
         if (!produtos.isEmpty()) {
             System.out.println("\n" + "=".repeat(5) + " LISTAGEM DOS PRODUTOS " + "=".repeat(5));
-            System.out.printf("%-8s %-20s %-30s %-40s\n",
-                    "Id", "Estado", "Nome", "Descrição");
-            System.out.println("-".repeat(95));
+            System.out.printf("%-8s %-20s %-30s %-40s %-20s\n",
+                    "Id", "Estado", "Nome", "Descrição", "Categoria");
+            System.out.println("-".repeat(120));
+
             for (Produto produto : produtos) {
+                ProdutoCategoria produtoCategoria = produtoCategoriaController.procurarCategoriaPorProduto(produto.getIdProduto());
+
+                String categoriaDescricao = "Sem Categoria";
+                if (produtoCategoria != null) {
+                    Categoria categoria = categoriaController.procurarCategoria(produtoCategoria.getIdCategoria());
+                    if (categoria != null) {
+                        categoriaDescricao = categoria.getDescricao();
+                    }
+                }
+
                 String nomeEstado = Tools.estadoProduto.fromCodigo(produto.getEstado()).name();
-                System.out.printf("%-8s %-20s %-30s %-40s\n",
+                System.out.printf("%-8s %-20s %-30s %-40s %-20s\n",
                         produto.getIdProduto(),
                         nomeEstado,
                         produto.getNome().toUpperCase(),
-                        produto.getDescricao().toUpperCase());
+                        produto.getDescricao().toUpperCase(),
+                        categoriaDescricao);
             }
         } else {
             System.out.println("Não existem produtos disponíveis para leilão.");

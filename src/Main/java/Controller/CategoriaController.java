@@ -1,6 +1,7 @@
 package Controller;
 
 import BLL.CategoriaBLL;
+import BLL.ProdutoCategoriaBLL;
 import Model.Categoria;
 import Model.ResultadoOperacao;
 import jakarta.mail.MessagingException;
@@ -46,4 +47,11 @@ public class CategoriaController {
         if (id > 0) return categoriaBLL.procurarCategoria(id);
         return null;
     }
+
+    public boolean atualizarCategoriaEstado(int idCategoria, int novoEstado) {
+        CategoriaBLL bll = new CategoriaBLL();
+        return bll.atualizarCategoriaEstado(idCategoria, novoEstado);
+    }
+
+
 }

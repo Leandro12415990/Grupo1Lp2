@@ -77,4 +77,27 @@ public class CategoriaBLL {
         }
         return ultimoId;
     }
+
+    public boolean atualizarCategoriaEstado(int idCategoria, int novoEstado) {
+        CategoriaDAL categoriaDAL = new CategoriaDAL();
+        List<Categoria> categorias = categoriaDAL.carregarCategoria();
+
+        Categoria categoriaParaAtualizar = null;
+        for (Categoria categoria : categorias) {
+            if (categoria.getIdCategoria() == idCategoria) {
+                categoriaParaAtualizar = categoria;
+                break;
+            }
+        }
+
+        if (categoriaParaAtualizar == null) {
+            return false;
+        }
+
+        categoriaParaAtualizar.setEstado(novoEstado);
+        categoriaDAL.gravarCategoria(categorias);
+
+        return true;
+    }
+
 }
