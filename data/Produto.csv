@@ -23,7 +23,7 @@ ID;ESTADO;NOME;DESCRICAO
 22;1;Cooler para CPU;Watercooler 360mm RGB
 23;1;Gabinete Mid Tower;Vidro temperado, RGB
 24;1;Controle Sem Fio;Compatível com PC e Consoles
-25;1;Roteador Wi-Fi 6;Suporte a Mesh e 2.4/5GHz
+25;2;Roteador Wi-Fi 6;Suporte a Mesh e 2.4/5GHz
 26;2;Smart TV 55";OLED, 120Hz, Dolby Vision
 27;2;Soundbar;Sistema 5.1, Dolby Atmos
 28;2;Caixa de Som Bluetooth;Autonomia de 24h
@@ -32,4 +32,4 @@ ID;ESTADO;NOME;DESCRICAO
 31;1;bianca;tot
 32;2;daniel;toto
 33;2;ASD;ASD
-34;1;1;teste categoria
+34;2;1;teste categoria

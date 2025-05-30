@@ -15,6 +15,7 @@ import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.List;
 
 
@@ -28,9 +29,11 @@ public class LanceView {
             System.out.println("3. Dar Lance Direto");
             System.out.println("4. Dar Lance Carta Fechada");
             System.out.println("5. Dar Lance Eletrónico");
+            System.out.println("6. Pesquisar Lance Por Categoria");
             System.out.println("0. Voltar ao menu principal...");
             System.out.print("Escolha uma opção: ");
             opc = Tools.scanner.nextInt();
+            Tools.scanner.nextLine();
 
             switch (opc) {
                 case 1:
@@ -47,6 +50,9 @@ public class LanceView {
                     break;
                 case 5:
                     lanceEletronico();
+                    break;
+                case 6:
+                    pesquisarLeilaoPorCategoria();
                     break;
                 case 0:
                     System.out.println("\nSair...");
@@ -324,4 +330,49 @@ public class LanceView {
         System.out.println("Vencedor: " + nomeVencedor);
         System.out.printf("Lance vencedor: %.2f€\n", lanceVencedor.getValorLance());
     }
+
+    public void pesquisarLeilaoPorCategoria() throws MessagingException, IOException {
+        CategoriaView categoriaView = new CategoriaView();
+        List<Leilao> leiloesFiltrados = categoriaView.filtrarLeiloesPorCategoria();
+        categoriaView.exibirLeiloesPorCategoria(leiloesFiltrados);
+
+        if (leiloesFiltrados.isEmpty()) {
+            System.out.println("Não foram encontrados leilões para a categoria especificada.");
+            return;
+        }
+
+        System.out.print("\nEscolha o ID do leilão no qual deseja dar um lance: ");
+        int idLeilaoEscolhido = Tools.scanner.nextInt();
+        Tools.scanner.nextLine();
+
+        Leilao leilaoEscolhido = null;
+        for (Leilao leilao : leiloesFiltrados) {
+            if (leilao.getId() == idLeilaoEscolhido) {
+                leilaoEscolhido = leilao;
+                break;
+            }
+        }
+
+        if (leilaoEscolhido == null) {
+            System.out.println("Leilão com ID " + idLeilaoEscolhido + " não encontrado.");
+            return;
+        }
+
+        int tipoLeilao = leilaoEscolhido.getTipoLeilao();
+
+        switch (tipoLeilao) {
+            case Constantes.tiposLeilao.VENDA_DIRETA:
+                lanceDireto();
+                break;
+            case Constantes.tiposLeilao.CARTA_FECHADA:
+                lanceCartaFechada();
+                break;
+            case Constantes.tiposLeilao.ELETRONICO:
+                lanceEletronico();
+                break;
+            default:
+                System.out.println("Tipo de lance não identificado para este leilão.");
+        }
+    }
+
 }
