@@ -112,6 +112,30 @@ public class Tools {
         }
     }
 
+    public enum estadoCategoria {
+        INATIVO(0), ATIVO(1);
+
+        private final int codigo;
+        private int estado;
+
+        estadoCategoria(int codigo) {
+            this.codigo = codigo;
+        }
+
+        public int getCodigo() {
+            return codigo;
+        }
+
+        public static estadoCategoria fromCodigo(int codigo) {
+            for (estadoCategoria estado : estadoCategoria.values()) {
+                if (estado.getCodigo() == codigo) {
+                    return estado;
+                }
+            }
+            throw new IllegalArgumentException("Código inválido: " + codigo);
+        }
+    }
+
     public enum estadoLeilao {
         DEFAULT(0), ATIVO(1), PENDENTE(2), CANCELADO(3), FECHADO(4), INATIVO(5);
 

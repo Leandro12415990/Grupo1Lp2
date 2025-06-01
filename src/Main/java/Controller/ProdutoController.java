@@ -12,15 +12,18 @@ public class ProdutoController {
     public ResultadoOperacao criarProduto(int idProduto, int estado, String nome, String descricao) throws MessagingException, IOException {
         ProdutoBLL produtoBLL = new ProdutoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
+
         if (nome == null || nome.isEmpty()) {
             resultado.msgErro = "O nome do produto é de preenchimento obrigatório!";
+            resultado.Sucesso = false;
         } else if (descricao == null || descricao.isEmpty()) {
             resultado.msgErro = "A descrição do produto é de preenchimento obrigatório!";
+            resultado.Sucesso = false;
         } else {
             Produto novoProduto = new Produto(idProduto, estado, nome, descricao);
             produtoBLL.adicionarProduto(novoProduto);
 
-            resultado.Objeto = resultado;
+            resultado.Objeto = novoProduto;  // <<< CORREÇÃO AQUI
             resultado.Sucesso = true;
         }
         return resultado;

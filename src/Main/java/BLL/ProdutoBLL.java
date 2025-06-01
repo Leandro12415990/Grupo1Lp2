@@ -6,7 +6,6 @@ import Model.Produto;
 import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,4 +137,5 @@ public class ProdutoBLL {
         }
         return true;
     }
+
 }
