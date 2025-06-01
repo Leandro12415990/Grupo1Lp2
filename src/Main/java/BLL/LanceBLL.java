@@ -85,7 +85,7 @@ public class LanceBLL {
 
             List<Lance> lancesDoLeilao = obterLancesPorLeilao(idLeilao);
             double ultimoLance = lancesDoLeilao.isEmpty() ? valorMinimo :
-                    lancesDoLeilao.get(lancesDoLeilao.size() - 1).getValorLance();
+                    lancesDoLeilao.get(lancesDoLeilao.size() -1 ).getValorLance();
 
             double valorEsperado = ultimoLance + multiploLanceIncremento;
             if (Double.compare(novoValorLance, valorEsperado) != 0) {
@@ -100,13 +100,12 @@ public class LanceBLL {
             transacaoBLL.reembolsarUltimoLanceEletronico(idLeilao);
             transacaoBLL.atualizarSaldo(idCliente, novoValorLance, '-', false, true);
 
-            // Gera novo ID de forma segura dentro do lock
             int idLance = verUltimoId() + 1;
             LocalDateTime dataLance = LocalDateTime.now();
             int pontosUtilizados = 0;
             int estado = Constantes.estadosLance.DEFAULT;
 
-            Lance novoLance = new Lance(idLance, idLeilao, idCliente, novoValorLance, lancesDoLeilao.size() + 1, pontosUtilizados, dataLance, estado);
+            Lance novoLance = new Lance(idLance, idLeilao, idCliente, novoValorLance, 0, pontosUtilizados, dataLance, estado);
             lances.add(novoLance);
             lanceDAL.gravarLances(lances);
 

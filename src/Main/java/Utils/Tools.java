@@ -365,7 +365,7 @@ public class Tools {
             try {
                 return Double.parseDouble(input);
             } catch (NumberFormatException e) {
-                System.out.println("⚠ Entrada inválida. Por favor insira um número decimal válido.");
+                System.out.println("Entrada inválida. Por favor insira um número decimal válido.");
             }
         }
     }
@@ -380,7 +380,7 @@ public class Tools {
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("⚠ Entrada inválida. Por favor insira um número inteiro válido.");
+                System.out.println("Entrada inválida. Por favor insira um número inteiro válido.");
             }
         }
     }

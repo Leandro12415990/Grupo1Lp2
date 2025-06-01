@@ -108,12 +108,11 @@ public class NegociacaoView {
             System.out.println("Nenhum Leilão encontrado.");
         } else {
             for (Negociacao negociacao : negociacoes) {
-                System.out.println("ID: " + negociacao.getIdNegociacao());
                 System.out.println("Nome: " + negociacao.getNome());
                 System.out.println("Descrição: " + negociacao.getDescricao());
                 System.out.println("Valor: " + negociacao.getValor());
                 System.out.println("Data Início: " + Tools.formatDateTime(negociacao.getDataInicio()));
-                System.out.println("Valor Contraproposta: " + negociacao.getValorContraproposta());
+                System.out.println("Estado: " + negociacao.getEstado());
                 System.out.println("------------------------------");
             }
         }
@@ -206,14 +205,21 @@ public class NegociacaoView {
         LanceController lanceController = new LanceController();
         List<Lance> meusLances = lanceController.listarLancesDoCliente();
 
-        if (meusLances.isEmpty()) {
+        List<Lance> lancesProposta = new ArrayList<>();
+        for (Lance lance : meusLances) {
+            if (lance.getEstado() == Constantes.estadosLance.PROPOSTA || lance.getEstado() == Constantes.estadosLance.CONTRAPROPOSTA) {
+                lancesProposta.add(lance);
+            }
+        }
+
+        if (lancesProposta.isEmpty()) {
             System.out.println("Nenhum lance encontrado para o cliente.");
         } else {
             System.out.println("\nOs Seus Lances:");
             System.out.println("-".repeat(130));
             System.out.printf("%-20s %-15s %-25s %-25s%n", "ID do Lance", "Nome do Leilão", "Valor Proposta (€)", "Data");
             System.out.println("-".repeat(130));
-            for (Lance lance : meusLances) {
+            for (Lance lance : lancesProposta) {
                 String dataFormatada = Tools.formatDateTime(lance.getDataLance());
                 System.out.printf("%-20s %-15s %-25s %-25s%n", lance.getIdLance(), lance.getIdNegociacao(), lance.getValorLance(), dataFormatada);
             }
@@ -236,7 +242,7 @@ public class NegociacaoView {
 
         for (Lance l : todosLances) {
             for (Negociacao n : meusLeiloes) {
-                // Se sou o vendedor e recebi uma proposta (estado PROPOSTA)
+                // Vendedor
                 if (l.getIdNegociacao() == n.getIdNegociacao() &&
                         l.getIdCliente() != idClienteSessao &&
                         l.getEstado() == Constantes.estadosLance.PROPOSTA) {
@@ -246,12 +252,16 @@ public class NegociacaoView {
                 }
             }
 
-            // Se sou o comprador e já existe uma contraproposta do vendedor
+            // Comprador
             if (l.getIdCliente() == idClienteSessao &&
                     l.getEstado() == Constantes.estadosLance.CONTRAPROPOSTA) {
 
-                lancesFiltrados.add(l);
+                Negociacao n = negociacaoController.buscarNegociacaoPorId(l.getIdNegociacao());
+                if (n != null && n.getEstado() == Constantes.estadosLeilao.ATIVO) {
+                    lancesFiltrados.add(l);
+                }
             }
+
         }
 
 
@@ -344,7 +354,7 @@ public class NegociacaoView {
             }
 
         } else if (lanceSelecionado.getIdCliente() == idClienteSessao) {
-            // Ação como comprador
+            // Comprador
             if (lanceSelecionado.getValorContraProposta() <= 0) {
                 System.out.println("Ainda não há contraproposta do vendedor.");
                 return;
@@ -402,7 +412,6 @@ public class NegociacaoView {
             System.out.println("Não tens permissões para gerir este lance.");
         }
     }
-
 
 
 }

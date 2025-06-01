@@ -160,31 +160,29 @@ public class LeilaoBLL {
     public boolean estenderFimLeilaoSeNecessario(Leilao leilao, LocalDateTime dataLance) {
         LocalDateTime fimAtual = leilao.getDataFim();
 
+        if (fimAtual == null) return false;
+
         if (dataLance.isAfter(fimAtual.minusSeconds(15)) && dataLance.isBefore(fimAtual)) {
             LocalDateTime novoFim = fimAtual.plusSeconds(15);
             leilao.setDataFim(novoFim);
 
-            // Corrigido: carrega a lista atualizada antes de gravar
             LeilaoDAL leilaoDAL = new LeilaoDAL();
             List<Leilao> leiloesAtualizados = leilaoDAL.carregaLeiloes();
 
             for (int i = 0; i < leiloesAtualizados.size(); i++) {
                 if (leiloesAtualizados.get(i).getId() == leilao.getId()) {
-                    leiloesAtualizados.set(i, leilao); // atualiza o leilão correto
+                    leiloesAtualizados.set(i, leilao);
                     break;
                 }
             }
 
-            leilaoDAL.gravarLeiloes(leiloesAtualizados); // grava a lista completa atualizada
+            leilaoDAL.gravarLeiloes(leiloesAtualizados);
             System.out.println("✅ Estendendo fim do leilão de " + fimAtual + " para " + novoFim);
             return true;
         } else {
-            //System.out.println("❌ Lance fora da janela final de 15 segundos. Não estendendo tempo.");
             return false;
         }
     }
-
-
 
     public boolean fecharLeilao(int idLeilao, LocalDateTime dataFim) throws MessagingException, IOException {
         LeilaoDAL leilaoDAL = new LeilaoDAL();
@@ -193,8 +191,8 @@ public class LeilaoBLL {
         for (Leilao leilao : todosLeiloes) {
             if (leilao.getId() == idLeilao) {
                 leilao.setDataFim(dataFim);
-                leilao.setEstado(Constantes.estadosLeilao.FECHADO); // Atualiza o estado, se necessário
-                leilaoDAL.gravarLeiloes(todosLeiloes); // Grava corretamente a lista
+                leilao.setEstado(Constantes.estadosLeilao.FECHADO);
+                leilaoDAL.gravarLeiloes(todosLeiloes);
                 return true;
             }
         }
