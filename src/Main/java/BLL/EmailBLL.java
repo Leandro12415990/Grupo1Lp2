@@ -21,13 +21,6 @@ import static Utils.Constantes.configEmail;
 
 public class EmailBLL {
 
-    public void enviarEmail(String templateId, String toEmail, Map<String, String> variaveis, int idCliente)
-            throws IOException, MessagingException {
-        TemplateDAL templateDAL = new TemplateDAL();
-        Template template = templateDAL.carregarTemplatePorId(templateId);
-        enviarEmail(template, toEmail, variaveis, idCliente);
-    }
-
     public void enviarEmailComAnexo(Template template, String toEmail, Map<String, String> variaveis, int idCliente, String caminhoAnexo)
             throws MessagingException {
 
