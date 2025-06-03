@@ -3,6 +3,7 @@ package Controller;
 import BLL.CategoriaBLL;
 import BLL.ProdutoCategoriaBLL;
 import Model.Categoria;
+import Model.Leilao;
 import Model.ResultadoOperacao;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
@@ -49,9 +50,15 @@ public class CategoriaController {
     }
 
     public boolean atualizarCategoriaEstado(int idCategoria, int novoEstado) {
-        CategoriaBLL bll = new CategoriaBLL();
-        return bll.atualizarCategoriaEstado(idCategoria, novoEstado);
+        CategoriaBLL categoriaBLL = new CategoriaBLL();
+        return categoriaBLL.atualizarCategoriaEstado(idCategoria, novoEstado);
     }
+
+    public List<Leilao> filtrarLeiloesPorCategoria(String descricaoCategoria) throws MessagingException, IOException {
+        CategoriaBLL categoriaBLL = new CategoriaBLL();
+        return categoriaBLL.filtrarLeiloesPorCategoria(descricaoCategoria);
+    }
+
 
 
 }
