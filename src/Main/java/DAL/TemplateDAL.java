@@ -2,7 +2,9 @@ package DAL;
 
 import Model.ResultadoOperacao;
 import Model.Template;
+import Model.Transacao;
 import Utils.Constantes.caminhosFicheiros;
+import Utils.DataBaseConnection;
 import Utils.Tools;
 
 import java.io.BufferedReader;
@@ -10,6 +12,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +27,7 @@ public class TemplateDAL {
     private final String CABECALHO = "\"ID\"" + Tools.separador() +
             "\"Assunto\"" + Tools.separador() + "\"Corpo\"";
 
-    private ResultadoOperacao carregarTodosTemplates() {
+    private ResultadoOperacao carregarTodosTemplatesCSV() {
         templatesCache = new HashMap<>();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
@@ -68,6 +75,41 @@ public class TemplateDAL {
         }
 
         return resultado;
+    }
+
+    public List<Transacao> carregarTodosTemplates() {
+        List<Transacao> listaTransacoes = new ArrayList<>();
+
+        String sql = "SELECT * FROM Transacao";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                int id_transacao = rs.getInt("ID_TRANSACAO");
+                int id_cliente = rs.getInt("ID_CLIENTE");
+                double valor_total = rs.getDouble("VALOR_TOTAL");
+                double valor_transacao = rs.getDouble("VALOR_TRANSACAO");
+
+                // Converte java.sql.Date para java.time.LocalDateTime
+                LocalDateTime data_transacao = rs.getTimestamp("DATA_TRANSACAO") != null
+                        ? rs.getTimestamp("DATA_TRANSACAO").toLocalDateTime()
+                        : null;
+
+                int tipo_transacao = rs.getInt("TIPO_TRANSACAO");
+                int estado = rs.getInt("ESTADO");
+
+                Transacao transacao = new Transacao(id_transacao, id_cliente, valor_total, valor_transacao, data_transacao,
+                        tipo_transacao, estado);
+                listaTransacoes.add(transacao);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaTransacoes;
     }
 
     public Template carregarTemplatePorId(String idProcurado) throws IOException {

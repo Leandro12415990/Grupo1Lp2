@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransacaoDAL {
-    public List<Transacao> carregarTransacoes() {
+    public List<Transacao> carregarTransacoesCSV() {
         ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(Constantes.caminhosFicheiros.CSV_FILE_TRANSACAO, 7, dados -> {
             int idTransacao = Integer.parseInt(dados[0]);
@@ -44,7 +44,7 @@ public class TransacaoDAL {
         );
     }
 
-    public List<Transacao> carregarTransacoesTemp() {
+    public List<Transacao> carregarTransacoes() {
         List<Transacao> listaTransacoes = new ArrayList<>();
 
         String sql = "SELECT * FROM Transacao";
