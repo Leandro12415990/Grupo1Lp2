@@ -1,15 +1,22 @@
 package DAL;
 
 import Model.Lance;
+import Model.Produto;
 import Utils.Constantes.caminhosFicheiros;
+import Utils.DataBaseConnection;
 import Utils.Tools;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class LanceDAL {
-    public List<Lance> carregarLances() {
+    public List<Lance> carregarLancesCSV() {
         ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(caminhosFicheiros.CSV_FILE_LANCE, 7, dados -> {
             int idLance = Integer.parseInt(dados[0]);
@@ -37,7 +44,36 @@ public class LanceDAL {
                         Tools.formatDateTime(lance.getDataLance())
                 )
         );
+    }
 
+    public List<Lance> carregarLances() {
+
+        List<Lance> listaLance = new ArrayList<>();
+        String sql = "select * from Lance";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                int idLance = rs.getInt("id_Lance");
+                int idLeilao = rs.getInt("id_Leilao");
+                int idCliente = rs.getInt("id_Cliente");
+                double valorLance = rs.getDouble("Valor_Aposta");
+                int Multiplos_Utilzadores = rs.getInt("Multiplos_Utilzadores");
+                int pontosUtilizados = rs.getInt("Pontos_Utilizados");
+
+                // Converte java.sql.Date para java.time.LocalDate
+                LocalDateTime dataAposta = rs.getTimestamp("DATA_Aposta") != null ? rs.getTimestamp("DATA_Aposta").toLocalDateTime() : null;
+
+                Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, Multiplos_Utilzadores, pontosUtilizados, dataAposta);
+                listaLance.add(lance);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaLance;
     }
 }
 

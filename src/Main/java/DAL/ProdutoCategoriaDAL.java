@@ -1,13 +1,21 @@
 package DAL;
 
+import Model.Produto;
 import Model.ProdutoCategoria;
 import Utils.Constantes;
+import Utils.DataBaseConnection;
 import Utils.Tools;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoCategoriaDAL {
 
-    public List<ProdutoCategoria> carregarProdutoCategoria() {
+    public List<ProdutoCategoria> carregarProdutoCategoriaCSV() {
         ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(Constantes.caminhosFicheiros.CSV_FILE_PRODUTO_CATEGORIA, 2, dados -> {
             int idProduto = Integer.parseInt(dados[0]);
@@ -23,5 +31,28 @@ public class ProdutoCategoriaDAL {
                 produtoCategoria.getIdProduto() + Tools.separador() +
                         produtoCategoria.getIdCategoria()
         );
+    }
+
+    public List<ProdutoCategoria> carregarProdutoCategoria() {
+
+        List<ProdutoCategoria> listaProdutoCategoria = new ArrayList<>();
+        String sql = "select * from Produto_Categoria";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                int id_produto = rs.getInt("id_Produto");
+                int id_categoria = rs.getInt("id_Categoria");
+
+                ProdutoCategoria produtoCategoria = new ProdutoCategoria(id_produto, id_categoria);
+                listaProdutoCategoria.add(produtoCategoria);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaProdutoCategoria;
     }
 }

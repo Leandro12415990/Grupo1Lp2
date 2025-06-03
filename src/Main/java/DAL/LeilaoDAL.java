@@ -1,15 +1,23 @@
 package DAL;
 
 import Model.Leilao;
+import Model.Produto;
 import Utils.Constantes.caminhosFicheiros;
+import Utils.DataBaseConnection;
 import Utils.Tools;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class LeilaoDAL {
-    public List<Leilao> carregaLeiloes() {
+    public List<Leilao> carregaLeiloesCSV() {
         ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(caminhosFicheiros.CSV_FILE_LEILAO, 10, dados -> {
             int id = Integer.parseInt(dados[0]);
@@ -45,4 +53,40 @@ public class LeilaoDAL {
         );
     }
 
+    public List<Leilao> carregaLeiloes() {
+
+        List<Leilao> listaLeilao = new ArrayList<>();
+        String sql = "select * from Leilao";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                int id_Leilao = rs.getInt("id_Leilao");
+                int id_Produto = rs.getInt("id_Produto");
+                String descricao = rs.getString("Descricao");
+                int tipoLeilao = rs.getInt("Tipo_Leilao");
+
+                // Converte java.sql.Date para java.time.LocalDate
+                LocalDateTime Data_Inicio = rs.getTimestamp("DATA_INICIO") != null ? rs.getTimestamp("DATA_INICIO").toLocalDateTime() : null;
+
+                // Converte java.sql.Date para java.time.LocalDate
+                LocalDateTime Data_Fim = rs.getTimestamp("DATA_FIM") != null ? rs.getTimestamp("DATA_FIM").toLocalDateTime() : null;
+
+                double valor_Minimo = rs.getDouble("Valor_Minimo");
+                double valor_Maximo = rs.getDouble("Valor_Maximo");
+                double Multiplo_Lance = rs.getInt("Multiplo_Lance");
+                int Estado_Leilao = rs.getInt("Estado_Leilao");
+
+                Leilao leilao = new Leilao(id_Leilao, id_Produto, descricao, tipoLeilao, Data_Inicio, Data_Fim, valor_Minimo,
+                        valor_Maximo, Multiplo_Lance, Estado_Leilao);
+                listaLeilao.add(leilao);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaLeilao;
+    }
 }

@@ -77,10 +77,10 @@ public class TemplateDAL {
         return resultado;
     }
 
-    public List<Transacao> carregarTodosTemplates() {
-        List<Transacao> listaTransacoes = new ArrayList<>();
+    public List<Template> carregarTodosTemplates() {
+        List<Template> listaTemplate = new ArrayList<>();
 
-        String sql = "SELECT * FROM Transacao";
+        String sql = "SELECT * FROM Template";
 
         try (
                 Connection conn = DataBaseConnection.getConnection();
@@ -88,28 +88,18 @@ public class TemplateDAL {
                 ResultSet rs = stmt.executeQuery();
         ) {
             while (rs.next()) {
-                int id_transacao = rs.getInt("ID_TRANSACAO");
-                int id_cliente = rs.getInt("ID_CLIENTE");
-                double valor_total = rs.getDouble("VALOR_TOTAL");
-                double valor_transacao = rs.getDouble("VALOR_TRANSACAO");
+                String id_template = rs.getString("id_Template");
+                String assunto = rs.getString("Assunto");
+                String corpo = rs.getString("Corpo");
 
-                // Converte java.sql.Date para java.time.LocalDateTime
-                LocalDateTime data_transacao = rs.getTimestamp("DATA_TRANSACAO") != null
-                        ? rs.getTimestamp("DATA_TRANSACAO").toLocalDateTime()
-                        : null;
-
-                int tipo_transacao = rs.getInt("TIPO_TRANSACAO");
-                int estado = rs.getInt("ESTADO");
-
-                Transacao transacao = new Transacao(id_transacao, id_cliente, valor_total, valor_transacao, data_transacao,
-                        tipo_transacao, estado);
-                listaTransacoes.add(transacao);
+                Template template = new Template(id_template, assunto, corpo);
+                listaTemplate.add(template);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return listaTransacoes;
+        return listaTemplate;
     }
 
     public Template carregarTemplatePorId(String idProcurado) throws IOException {

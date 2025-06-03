@@ -1,11 +1,17 @@
 package DAL;
 
 import Model.Agente;
+import Model.Email;
 import Utils.Constantes;
+import Utils.DataBaseConnection;
 import Utils.Tools;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -13,7 +19,7 @@ import java.util.*;
 public class AgenteDAL {
     private static final String FICHEIRO = Constantes.caminhosFicheiros.CSV_FILE_AGENTE;
 
-    public List<Agente> carregarAgentes() {
+    public List<Agente> carregarAgentesCSV() {
         List<Agente> agentes = new ArrayList<>();
         File ficheiro = new File(FICHEIRO);
 
@@ -77,5 +83,56 @@ public class AgenteDAL {
         }
     }
 
+    public List<Agente> carregarAgentes() {
+        List<Agente> agentes = new ArrayList<>();
+        File ficheiro = new File(FICHEIRO);
 
+        if (!ficheiro.exists()) return agentes;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ficheiro))) {
+            String linha;
+            boolean primeiraLinha = true;
+
+            while ((linha = br.readLine()) != null) {
+                if (primeiraLinha) { primeiraLinha = false; continue; }
+
+                String[] partes = linha.split(Tools.separador());
+                if (partes.length != 4) continue;
+
+                int id = Integer.parseInt(partes[0]);
+                int clienteId = Integer.parseInt(partes[1]);
+                int leilaoId = Integer.parseInt(partes[2]);
+                LocalDateTime data = LocalDateTime.parse(partes[3], Tools.DATA_HORA);
+
+                agentes.add(new Agente(id, clienteId, leilaoId, data));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<Agente> listaAgente = new ArrayList<>();
+        String sql = "select * from Agente";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                int id = rs.getInt("Id_Agente");
+                int clienteId = rs.getInt("id_Cliente");
+                int leilaoId = rs.getInt("id_leilao");
+
+                // Converte java.sql.Date para java.time.LocalDate
+                LocalDateTime dataConfiguracao = rs.getTimestamp("Data_Configuracao") != null ? rs.getTimestamp("Data_Configuracao").toLocalDateTime() : null;
+
+                Agente agente = new Agente(id, clienteId, leilaoId, dataConfiguracao);
+                listaAgente.add(agente);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaAgente;
+    }
 }

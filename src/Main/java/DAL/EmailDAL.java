@@ -1,16 +1,23 @@
 package DAL;
 
 import Model.Email;
+import Model.Lance;
 import Utils.Constantes.caminhosFicheiros;
+import Utils.DataBaseConnection;
 import Utils.Tools;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class EmailDAL {
 
-    public List<Email> carregarEmails() {
+    public List<Email> carregarEmailsCSV() {
         ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(caminhosFicheiros.CSV_FILE_EMAIL, 8, dados -> {
             int idEmail = Integer.parseInt(dados[0]);
@@ -42,4 +49,35 @@ public class EmailDAL {
         );
     }
 
+    public List<Email> carregarEmails() {
+
+        List<Email> listaEmail = new ArrayList<>();
+        String sql = "select * from Email";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                int idEmail = rs.getInt("id_Email");
+                String fromEmail = rs.getString("From_Email");
+                int idCliente = rs.getInt("id_Cliente");
+                String toEmail = rs.getString("To_Email");
+                String subject = rs.getString("Subject");
+                String body = rs.getString("Body");
+
+                // Converte java.sql.Date para java.time.LocalDate
+                LocalDateTime dateCreated = rs.getTimestamp("DateCreated") != null ? rs.getTimestamp("DateCreated").toLocalDateTime() : null;
+
+                String idTipoEmail = rs.getString("id_Tipo_Email");
+
+                Email email = new Email(idEmail, fromEmail, idCliente, toEmail, subject, body, dateCreated, idTipoEmail);
+                listaEmail.add(email);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaEmail;
+    }
 }

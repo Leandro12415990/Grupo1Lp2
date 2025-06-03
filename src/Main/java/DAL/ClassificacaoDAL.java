@@ -1,9 +1,16 @@
 package DAL;
 
 import Model.Classificacao;
+import Model.Email;
+import Utils.DataBaseConnection;
 import Utils.Tools;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,7 +21,7 @@ public class ClassificacaoDAL {
     private final String ficheiro = "data/Classificacao.csv";
     private final String cabecalho = "idLeilao;idUtilizador;classificacao;comentario";
 
-    public List<Classificacao> carregarClassificacoes() {
+    public List<Classificacao> carregarClassificacoesCSV() {
         List<Classificacao> lista = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(ficheiro))) {
@@ -74,5 +81,29 @@ public class ClassificacaoDAL {
         List<Classificacao> lista = carregarClassificacoes();
         lista.add(nova);
         gravarClassificacoes(lista);
+    }
+
+    public List<Classificacao> carregarClassificacoes() {
+        List<Classificacao> listaClassificacao = new ArrayList<>();
+        String sql = "select * from Classificacao";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                int idLeilao = rs.getInt("id_Leilao");
+                int idUtilizador = rs.getInt("id_Utilizador");
+                int classificacaoParametro = rs.getInt("Classificacao");
+                String comentario = rs.getString("Comentario");
+
+                Classificacao classificacao = new Classificacao(idLeilao, idUtilizador, classificacaoParametro, comentario);
+                listaClassificacao.add(classificacao);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaClassificacao;
     }
 }

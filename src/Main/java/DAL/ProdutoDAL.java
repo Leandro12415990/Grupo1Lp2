@@ -1,14 +1,21 @@
 package DAL;
 
 import Model.Produto;
+import Model.Template;
 import Utils.Constantes.caminhosFicheiros;
+import Utils.DataBaseConnection;
 import Utils.Tools;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class ProdutoDAL {
-    public List<Produto> carregarProdutos() {
+    public List<Produto> carregarProdutosCSV() {
         ImportDAL importDal = new ImportDAL();
         return importDal.carregarRegistos(caminhosFicheiros.CSV_FILE_PRODUTO, 4, dados -> {
             int id = Integer.parseInt(dados[0]);
@@ -30,4 +37,28 @@ public class ProdutoDAL {
         );
     }
 
+    public List<Produto> carregarProdutos() {
+
+        List<Produto> listaProduto = new ArrayList<>();
+        String sql = "select * from Produto";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                int id = rs.getInt("id_Produto");
+                int estado = rs.getInt("Estado");
+                String nome = rs.getString("Nome");
+                String descricao = rs.getString("Descricao");
+
+                Produto produto = new Produto(id, estado, nome, descricao);
+                listaProduto.add(produto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaProduto;
+    }
 }
