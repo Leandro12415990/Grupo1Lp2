@@ -357,6 +357,7 @@ public class Tools {
             variaveis.put("TIPO_LEILAO", leilao.getTipoLeilao() == 1 ? "ELETRONICO" : leilao.getTipoLeilao() == 2 ? "CARTA FECHADA" : "VENDA DIRETA");
             variaveis.put("NOME_lEILAO", leilao.getDescricao());
         }
+        variaveis.put("PASSWORD_TEMPORARIA", u.getPassword());
 
         return variaveis;
     }

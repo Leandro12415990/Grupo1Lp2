@@ -68,4 +68,39 @@ public class ImportDAL {
         }
     }
 
+    public List<String[]> lerLinhasCSV(String caminhoFicheiro, int minimoCampos) {
+        List<String[]> linhas = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoFicheiro))) {
+            boolean primeiraLinha = true;
+            String linha;
+
+            while ((linha = br.readLine()) != null) {
+                if (primeiraLinha) {
+                    primeiraLinha = false;
+                    continue;
+                }
+
+                if (linha.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] dados = linha.split(Tools.separador(), -1);
+
+                if (dados.length < minimoCampos) {
+                    logger.log(Level.WARNING, "Linha inválida no CSV (campos insuficientes): {0}", linha);
+                    continue;
+                }
+
+                linhas.add(dados);
+            }
+
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erro ao ler o ficheiro CSV: " + caminhoFicheiro, e);
+        }
+
+        return linhas;
+    }
+
+
 }
