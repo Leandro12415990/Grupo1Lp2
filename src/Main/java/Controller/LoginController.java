@@ -1,5 +1,6 @@
 package Controller;
 
+import BLL.AgenteBLL;
 import BLL.LoginUtilizadorBLL;
 import Model.ClienteSessao;
 import Model.Utilizador;
@@ -19,6 +20,7 @@ public class LoginController {
                 if (u.getEstado() == 2) {
                     Utilizador utilizador = loginUtilizadorBLL.login(email, password);
                     clienteSessao.setIdCliente(u.getId());
+                    AgenteBLL.verificarMensagensAgente(u.getId());
                     return utilizador;
                 } else {
                     return null;

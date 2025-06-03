@@ -7,20 +7,30 @@ public class Lance {
     private int idLeilao;
     private int idCliente;
     private double valorLance;
-    private int numLance;
-    private int pontosUtilizados;
+    private int idNegociacao;
+    private double valorContraProposta;
     private LocalDateTime dataLance;
+    private int estado;
 
     public Lance(int idLance, int idLeilao, int idCliente,
-                 double valorLance, int numLance, int pontosUtilizados, LocalDateTime dataLance) {
+                 double valorLance, int idNegociacao, double valorContraProposta, LocalDateTime dataLance, int estado) {
 
         this.idLance = idLance;
         this.idLeilao = idLeilao;
         this.idCliente = idCliente;
         this.valorLance = valorLance;
-        this.numLance = numLance;
-        this.pontosUtilizados = pontosUtilizados;
+        this.idNegociacao = idNegociacao;
+        this.valorContraProposta = valorContraProposta;
         this.dataLance = dataLance;
+        this.estado = estado;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public int getIdLance() {
@@ -55,20 +65,20 @@ public class Lance {
         this.valorLance = valorLance;
     }
 
-    public int getNumLance() {
-        return numLance;
+    public int getIdNegociacao() {
+        return idNegociacao;
     }
 
-    public void setNumLance(int numLance) {
-        this.numLance = numLance;
+    public void setIdNegociacao(int idNegociacao) {
+        this.idNegociacao = idNegociacao;
     }
 
-    public int getPontosUtilizados() {
-        return pontosUtilizados;
+    public double getValorContraProposta() {
+        return valorContraProposta;
     }
 
-    public void setPontosUtilizados(int pontosUtilizados) {
-        this.pontosUtilizados = pontosUtilizados;
+    public void setValorContraProposta(double valorContraProposta) {
+        this.valorContraProposta = valorContraProposta;
     }
 
     public LocalDateTime getDataLance() {
@@ -86,8 +96,9 @@ public class Lance {
                 ", idLeilao=" + idLeilao +
                 ", idCliente=" + idCliente +
                 ", valorLance=" + valorLance +
-                ", numLance=" + numLance +
+                ", numLance=" + idNegociacao +
                 ", dataLance=" + dataLance +
+                ", estado=" + estado +
                 '}';
     }
 }
