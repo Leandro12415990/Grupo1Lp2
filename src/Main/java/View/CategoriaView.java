@@ -1,12 +1,16 @@
 package View;
 
 import Controller.CategoriaController;
+import Controller.LeilaoController;
 import Model.Categoria;
+import Model.Leilao;
 import Model.ResultadoOperacao;
 import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CategoriaView {
@@ -168,4 +172,38 @@ public class CategoriaView {
         System.out.println("Descrição: " + categoria.getDescricao());
         System.out.println("Estado: " + nomeEstado);
     }
+
+    public List<Leilao> filtrarLeiloesPorCategoria() throws MessagingException, IOException {
+        CategoriaController categoriaController = new CategoriaController();
+        List<Leilao> leiloesFiltrados = new ArrayList<>();
+
+        while (true) {
+            System.out.print("Insira a descrição da categoria para filtrar " + Tools.alertaCancelar() + " :");
+            String descricaoCategoria = Tools.scanner.nextLine().trim();
+
+            leiloesFiltrados = categoriaController.filtrarLeiloesPorCategoria(descricaoCategoria);
+
+            if (leiloesFiltrados.isEmpty()) {
+                System.out.println("Não foram encontrados leilões para a categoria especificada. Tente novamente.");
+            } else {
+                return leiloesFiltrados;
+            }
+        }
+    }
+
+
+    public void exibirLeiloesPorCategoria(List<Leilao> leiloesFiltrados) {
+        if (!leiloesFiltrados.isEmpty()) {
+            System.out.println("\n===== LEILÕES FILTRADOS =====");
+            for (Leilao leilao : leiloesFiltrados) {
+                System.out.println("ID: " + leilao.getId() + " | Descrição do Produto: " + leilao.getDescricao());
+            }
+        } else {
+            System.out.println("Nenhum leilão encontrado para a categoria especificada.");
+        }
+    }
+
+
+
+
 }
