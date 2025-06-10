@@ -29,7 +29,7 @@ public class NegociacaoDAL {
         ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID_NEGOCIACAO;ID_CLIENTE;NOME;DESCRICAO;VALOR;DATA_INICIO;VALOR_CONTRAPROPOSTA;ESTADO";
         importDal.gravarRegistos(caminhosFicheiros.CSV_FILE_NEGOCIACAO, cabecalho, negociacoes, negociacao ->
-                negociacao.getIdNegociacao() + Tools.separador() +
+                negociacao.getId() + Tools.separador() +
                         negociacao.getIdCliente() + Tools.separador() +
                         negociacao.getNome() + Tools.separador() +
                         negociacao.getDescricao() + Tools.separador() +

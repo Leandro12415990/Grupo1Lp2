@@ -29,7 +29,7 @@ public class NegociacaoController {
         }
 
         List<Negociacao> negociacoes = negociacaoDAL.carregarNegociacoes();
-        int novoId = negociacoes.stream().mapToInt(Negociacao::getIdNegociacao).max().orElse(0) + 1;
+        int novoId = negociacoes.stream().mapToInt(Negociacao::getId).max().orElse(0) + 1;
 
         Negociacao novaNegociacao = new Negociacao(novoId, idCliente, nome, descricao, valor, LocalDateTime.now(), 0.0, 1);
         negociacoes.add(novaNegociacao);
@@ -60,7 +60,7 @@ public class NegociacaoController {
         boolean encontrado = false;
 
         for (Negociacao negociacao : negociacoes) {
-            if (negociacao.getIdNegociacao() == idNegociacao && negociacao.getIdCliente() == idCliente) {
+            if (negociacao.getId() == idNegociacao && negociacao.getIdCliente() == idCliente) {
                 if (negociacao.getEstado() == 0) {
                     resultado.msgErro = "Não é possível editar um leilão fechado.";
                     return resultado;
@@ -100,7 +100,7 @@ public class NegociacaoController {
         boolean encontrado = false;
 
         for (Negociacao negociacao : negociacoes) {
-            if (negociacao.getIdNegociacao() == idNegociacao && negociacao.getIdCliente() == idCliente) {
+            if (negociacao.getId() == idNegociacao && negociacao.getIdCliente() == idCliente) {
                 if (negociacao.getEstado() == 0) {
                     resultado.msgErro = "O leilão já está fechado.";
                     return resultado;
@@ -138,7 +138,7 @@ public class NegociacaoController {
     public Negociacao buscarNegociacaoPorId(int id) {
 
         for (Negociacao n : negociacaoDAL.carregarNegociacoes()) {
-            if (n.getIdNegociacao() == id) return n;
+            if (n.getId() == id) return n;
         }
         return null;
     }
@@ -146,7 +146,7 @@ public class NegociacaoController {
     public ResultadoOperacao fecharNegociacaoComLanceAceito(int idNegociacao, double valorAceito, int idComprador) {
         List<Negociacao> negociacoes = negociacaoDAL.carregarNegociacoes();
         for (Negociacao n : negociacoes) {
-            if (n.getIdNegociacao() == idNegociacao) {
+            if (n.getId() == idNegociacao) {
                 n.setValor(valorAceito);
                 n.setIdCliente(idComprador);
                 n.setEstado(4);

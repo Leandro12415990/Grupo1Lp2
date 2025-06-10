@@ -24,7 +24,7 @@ public class LeilaoBLL {
         int idEstado;
         for (Leilao leilao : leiloes) {
             idEstado = determinarEstadoLeilaoByDatas(leilao.getDataInicio(), leilao.getDataFim(), leilao.getEstado());
-            if (leilao.getEstado() != idEstado && idEstado == Constantes.estadosLeilao.FECHADO && leilao.getTipoLeilao() == Constantes.tiposLeilao.CARTA_FECHADA)
+            if (leilao.getEstado() != idEstado && idEstado == Constantes.estadosLeilao.FECHADO && leilao.getIdTipoLeilao() == Constantes.tiposLeilao.CARTA_FECHADA)
                 leilaoController.fecharLeilao(leilao.getId(), leilao.getDataFim());
             leilao.setEstado(idEstado);
             leilaoDAL.gravarLeiloes(leiloes);
@@ -93,7 +93,7 @@ public class LeilaoBLL {
         if (leilao != null) {
             leilao.setIdProduto(idProduto);
             leilao.setDescricao(descricao);
-            leilao.setTipoLeilao(idTipoLeilao);
+            leilao.setIdTipoLeilao(idTipoLeilao);
             leilao.setDataInicio(dataInicio);
             leilao.setDataFim(dataFim);
             leilao.setValorMinimo(valorMin);

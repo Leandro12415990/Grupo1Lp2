@@ -40,7 +40,7 @@ public class EstatisticaBLL {
         List<Leilao> resultado = new ArrayList<>();
 
         for (Leilao l : fechados) {
-            if (l.getTipoLeilao() == idTipoLeilao) resultado.add(l);
+            if (l.getIdTipoLeilao() == idTipoLeilao) resultado.add(l);
         }
         return resultado;
     }
@@ -67,7 +67,7 @@ public class EstatisticaBLL {
         for (Leilao l : fechados) {
             resultado.add("ID: " + l.getId() +
                     " | Descrição: " + l.getDescricao() +
-                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(l.getTipoLeilao()));
+                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(l.getIdTipoLeilao()));
         }
         return resultado;
     }
@@ -99,7 +99,7 @@ public class EstatisticaBLL {
         Period maiorPeriodo = Period.ZERO;
 
         for (Leilao leilao : leiloes) {
-            if (leilao.getTipoLeilao() != idTipoLeilao) continue;
+            if (leilao.getIdTipoLeilao() != idTipoLeilao) continue;
             if (leilao.getDataInicio() == null || leilao.getDataFim() == null) continue;
 
             Period periodo = Period.between(leilao.getDataInicio().toLocalDate(), leilao.getDataFim().toLocalDate());
@@ -213,7 +213,7 @@ public class EstatisticaBLL {
                 }
             }
 
-            if (leilao == null || leilao.getTipoLeilao() != idTipoLeilao) continue;
+            if (leilao == null || leilao.getIdTipoLeilao() != idTipoLeilao) continue;
 
             int contador = 0;
             for (Lance outro : lances) {
@@ -300,7 +300,7 @@ public class EstatisticaBLL {
                 }
             }
 
-            if (leilao != null && leilao.getTipoLeilao() == idTipoLeilao) {
+            if (leilao != null && leilao.getIdTipoLeilao() == idTipoLeilao) {
                 List<Lance> lancesDoLeilao = new ArrayList<>();
 
                 for (Lance lance : lances) {
@@ -365,7 +365,7 @@ public class EstatisticaBLL {
         List<Leilao> semLances = new ArrayList<>();
 
         for (Leilao leilao : leiloes) {
-            if (leilao.getTipoLeilao() != idTipoLeilao) continue;
+            if (leilao.getIdTipoLeilao() != idTipoLeilao) continue;
 
             boolean temLance = false;
 

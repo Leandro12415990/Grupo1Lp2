@@ -214,7 +214,7 @@ public class LanceBLL {
         carregarLances();
 
         for (Negociacao n : negociacoes) {
-            if (n.getIdNegociacao() == idNegociacao && n.getEstado() == 1) {
+            if (n.getId() == idNegociacao && n.getEstado() == 1) {
                 if (n.getIdCliente() == idClienteProponente) {
                     resultado.msgErro = "Não podes dar lance no teu próprio leilão.";
                     return resultado;

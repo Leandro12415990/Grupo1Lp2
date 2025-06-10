@@ -128,7 +128,7 @@ public class AgenteBLL {
                         Leilao leilaoAtivo = leilaoBLL.procurarLeilaoPorId(idLeilao);
                         if (leilaoAtivo == null || leilaoAtivo.getEstado() != Constantes.estadosLeilao.ATIVO) break;
 
-                        ativarAgentesParaLeilao(idLeilao, leilaoAtivo.getTipoLeilao());
+                        ativarAgentesParaLeilao(idLeilao, leilaoAtivo.getIdTipoLeilao());
                         Thread.sleep(5000);
                     } catch (Exception e) {
                         break;

@@ -159,7 +159,7 @@ public class TransacaoBLL {
     public void reembolsarUltimoLanceEletronico(int idLeilao) throws IOException, MessagingException {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
-        if (leilao == null || leilao.getTipoLeilao() != Constantes.tiposLeilao.ELETRONICO) return;
+        if (leilao == null || leilao.getIdTipoLeilao() != Constantes.tiposLeilao.ELETRONICO) return;
 
         LanceBLL lanceBLL = new LanceBLL();
         List<Lance> lances = lanceBLL.obterLancesPorLeilao(idLeilao);

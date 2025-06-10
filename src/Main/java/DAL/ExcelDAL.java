@@ -46,7 +46,7 @@ public class ExcelDAL {
             Row row = leiloesSheet.createRow(rowNum++);
             row.createCell(0).setCellValue(leilao.getId());
             row.createCell(1).setCellValue(leilao.getIdProduto());
-            row.createCell(2).setCellValue(leilao.getTipoLeilao());
+            row.createCell(2).setCellValue(leilao.getIdTipoLeilao());
             row.createCell(3).setCellValue(leilao.getDataInicio() != null ? leilao.getDataInicio().format(dataHoraFormatter) : "N/A");
             row.createCell(4).setCellValue(leilao.getDataFim() != null ? leilao.getDataFim().format(dataHoraFormatter) : "N/A");
         }
@@ -65,7 +65,7 @@ public class ExcelDAL {
             Row row = leiloesHojeSheet.createRow(rowHoje++);
             row.createCell(0).setCellValue(leilao.getId());
             row.createCell(1).setCellValue(leilao.getIdProduto());
-            row.createCell(2).setCellValue(leilao.getTipoLeilao());
+            row.createCell(2).setCellValue(leilao.getIdTipoLeilao());
             row.createCell(3).setCellValue(leilao.getDataInicio() != null ? leilao.getDataInicio().format(dataHoraFormatter) : "N/A");
             row.createCell(4).setCellValue(leilao.getDataFim() != null ? leilao.getDataFim().format(dataHoraFormatter) : "N/A");
         }

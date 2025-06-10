@@ -29,7 +29,7 @@ public class LanceController {
 
         int idCliente = Tools.clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
-        int tipoLeilao = leilao.getTipoLeilao();
+        int tipoLeilao = leilao.getIdTipoLeilao();
 
         ResultadoOperacao resultado = lanceBLL.adicionarLanceEletronico(idLeilao, novoValorLance, idCliente, tipoLeilao);
         return resultado;
@@ -41,7 +41,7 @@ public class LanceController {
 
         int idCliente = Tools.clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
-        int tipoLeilao = leilao.getTipoLeilao();
+        int tipoLeilao = leilao.getIdTipoLeilao();
 
         ResultadoOperacao resultado = lanceBLL.adicionarLanceDireto(idLeilao, valorLance, idCliente, tipoLeilao);
         return resultado;
@@ -53,7 +53,7 @@ public class LanceController {
         int idCliente = Tools.clienteSessao.getIdCliente();
         Leilao leilao = leilaoBLL.procurarLeilaoPorId(idLeilao);
 
-        int tipoLeilao = leilao.getTipoLeilao();
+        int tipoLeilao = leilao.getIdTipoLeilao();
 
         ResultadoOperacao resultado = lanceBLL.adicionarLanceCartaFechada(idLeilao, valorLance, idCliente, tipoLeilao);
         return resultado;
@@ -76,7 +76,7 @@ public class LanceController {
     public List<Leilao> listarLeiloesByTipo(List<Leilao> leiloes, int idTipoLeilao) {
         List<Leilao> leiloesByTipo = new ArrayList<>();
         for (Leilao leilao : leiloes) {
-            if (leilao.getTipoLeilao() == idTipoLeilao) leiloesByTipo.add(leilao);
+            if (leilao.getIdTipoLeilao() == idTipoLeilao) leiloesByTipo.add(leilao);
         }
         return leiloesByTipo;
     }

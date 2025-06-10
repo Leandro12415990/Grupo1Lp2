@@ -280,7 +280,7 @@ public class LanceView {
         }
 
         for (Negociacao n : leiloes) {
-            System.out.println("ID: " + n.getIdNegociacao());
+            System.out.println("ID: " + n.getId());
             System.out.println("Nome: " + n.getNome());
             System.out.println("Descrição: " + n.getDescricao());
             System.out.println("Valor Pedido: " + n.getValor());

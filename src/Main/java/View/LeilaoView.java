@@ -2,6 +2,7 @@ package View;
 
 import Controller.LanceController;
 import Controller.LeilaoController;
+import Controller.NegociacaoController;
 import Controller.ProdutoController;
 import Model.Leilao;
 import Model.Produto;
@@ -11,7 +12,6 @@ import Utils.Constantes.tiposLeilao;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
-import javax.tools.Tool;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,188 +30,174 @@ public class LeilaoView {
             System.out.println("5. Listar Leilão");
             System.out.println("6. Fechar Leilão");
             System.out.println("0. Voltar ao menu principal...");
-            System.out.print("Escolha uma opção: ");
-            opc = Tools.scanner.nextInt();
+            opc = Tools.pedirInt("Escolha uma opção: ");
             switch (opc) {
-                case 1:
-                    criarLeilao();
-                    break;
-                case 2:
-                    editarLeilao();
-                    break;
-                case 3:
-                    procurarLeilao();
-                    break;
-                case 4:
-                    eliminarLeilao();
-                    break;
-                case 5:
-                    listaLeiloes(Tools.estadoLeilao.DEFAULT);
-                    break;
-                case 6:
-                    fecharLeilaoManual();
-                    break;
-                case 0:
-                    System.out.println("\nSair...");
-                    break;
-                default:
-                    System.out.println("Opção inválida. Tente novamente...");
+                case 1 -> criarLeilaoOuNegociacao();
+                case 2 -> editarLeilao();
+                case 3 -> procurarLeilao();
+                case 4 -> eliminarLeilao();
+                case 5 -> listaLeiloes(Tools.estadoLeilao.DEFAULT);
+                case 6 -> fecharLeilaoManual();
+                case 0 -> System.out.println("\nSair...");
+                default -> System.out.println("Opção inválida. Tente novamente...");
             }
         } while (opc != 0);
     }
 
-    private void criarLeilao() throws MessagingException, IOException {
+    public void criarLeilaoOuNegociacao() throws MessagingException, IOException {
         ProdutoView produtoView = new ProdutoView();
         ProdutoController produtoController = new ProdutoController();
         LeilaoController leilaoController = new LeilaoController();
+        NegociacaoController negociacaoController = new NegociacaoController();
+        boolean isGestor = Tools.clienteSessao.getIdTipoCliente() == Tools.tipoUtilizador.GESTOR.getCodigo();
+        boolean isCliente = Tools.clienteSessao.getIdTipoCliente() == Tools.tipoUtilizador.CLIENTE.getCodigo();
 
-        System.out.println("\nCRIAÇÃO DE UM LEILÃO\n");
-        List<Produto> produtosDisponiveis = produtoController.listarProduto(true);
-        if (produtosDisponiveis.isEmpty()) {
-            System.out.println("Não existem produtos disponiveis.");
-        } else {
+        if (!isCliente && !isGestor) {
+            System.out.println("Erro: Sessão inválida. Nenhum utilizador autenticado.");
+            return;
+        }
+        System.out.println("\nCRIAÇÃO DE UM " + (isCliente ? "LEILÃO POR NEGOCIAÇÃO" : "LEILÃO") + "\n");
+        int idProduto = 0;
+        if (isGestor) {
+            List<Produto> produtosDisponiveis = produtoController.listarProduto(true);
+            if (produtosDisponiveis.isEmpty()) {
+                System.out.println("Não existem produtos disponíveis.");
+                return;
+            }
+
             produtoView.exibirProduto(produtosDisponiveis);
-            int idProduto = Tools.pedirOpcaoMenu("\nIntroduza o ID do produto que pretende leiloar" + Tools.alertaCancelar());
+            idProduto = Tools.pedirOpcaoMenu("\nIntroduza o ID do produto que pretende leiloar" + Tools.alertaCancelar());
             if (Tools.verificarSaida(String.valueOf(idProduto))) return;
             Tools.scanner.nextLine();
 
             ResultadoOperacao isAvailable = leilaoController.verificarDisponibilidadeProduto(idProduto);
+            if (!isAvailable.Sucesso) {
+                System.out.println("\n" + isAvailable.msgErro);
+                return;
+            }
+        }
+        String nome = null;
+        if (isCliente) {
+            System.out.print("Insira o nome do produto " + Tools.alertaCancelar());
+            nome = Tools.scanner.nextLine().trim();
+            if (Tools.verificarSaida(nome)) return;
+        }
 
-            if (isAvailable.Sucesso) {
-                System.out.print("Insira a descrição do leilão " + Tools.alertaCancelar());
-                String descricao = Tools.scanner.nextLine().trim();
-                if (Tools.verificarSaida(descricao)) return;
+        System.out.print("Insira a descrição do leilão " + Tools.alertaCancelar());
+        String descricao = Tools.scanner.nextLine().trim();
+        if (Tools.verificarSaida(descricao)) return;
 
-                int idTipoLeilao;
-                do {
-                    System.out.println("\n1. Leilão Eletrónico");
-                    System.out.println("2. Leilão Carta Fechada");
-                    System.out.println("3. Leilão Venda Direta");
-                    idTipoLeilao = Tools.pedirOpcaoMenu("Escolha o tipo de leilão " + Tools.alertaCancelar());
-                    if (Tools.verificarSaida(String.valueOf(idTipoLeilao))) return;
-                    if (idTipoLeilao != tiposLeilao.ELETRONICO && idTipoLeilao != tiposLeilao.CARTA_FECHADA && idTipoLeilao != tiposLeilao.VENDA_DIRETA)
-                        System.out.println("Opção inválida. Tente novamente...");
-                } while (idTipoLeilao < 1 || idTipoLeilao > 3);
-                Tools.scanner.nextLine();
+        int idTipoLeilao = -1;
+        if (isGestor) {
+            do {
+                System.out.println("\n1. Leilão Eletrónico");
+                System.out.println("2. Leilão Carta Fechada");
+                System.out.println("3. Leilão Venda Direta");
+                idTipoLeilao = Tools.pedirOpcaoMenu("Escolha o tipo de leilão " + Tools.alertaCancelar());
+                if (Tools.verificarSaida(String.valueOf(idTipoLeilao))) return;
+                if (idTipoLeilao < 1 || idTipoLeilao > 3)
+                    System.out.println("Opção inválida. Tente novamente...");
+            } while (idTipoLeilao < 1 || idTipoLeilao > 3);
+        } else if (isCliente) {
+            idTipoLeilao = tiposLeilao.NEGOCIACAO; // = 4
+        }
 
-                LocalDateTime dataInicio;
-                LocalDateTime dataFim = null;
-                //DATA INICIO
-                boolean isEletronico = idTipoLeilao == tiposLeilao.ELETRONICO;
-                while (true) {
-                    System.out.print("\nInsira a data de início (dd/MM/yyyy hh:mm:ss) " + Tools.alertaCancelar());
-                    String dataInicioStr = Tools.scanner.nextLine().trim();
-                    if (Tools.verificarSaida(dataInicioStr)) return;
+        Tools.scanner.nextLine();
 
-                    dataInicio = Tools.parseDateTime(dataInicioStr);
-
-                    if (dataInicio == null) {
-                        System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm:ss");
-                    } else {
-                        break;
-                    }
+        // CLIENTE: fluxo de negociação
+        if (idTipoLeilao == tiposLeilao.NEGOCIACAO) {
+            double valor = 0.0;
+            while (true) {
+                System.out.print("Valor pretendido: ");
+                String valorStr = Tools.scanner.nextLine().trim();
+                if (Tools.verificarSaida(valorStr)) return;
+                try {
+                    valor = Double.parseDouble(valorStr);
+                    if (valor <= 0) {
+                        System.out.println("O valor deve ser maior que zero.");
+                    } else break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Entrada inválida. Insira um número válido.");
                 }
-                //DATA FIM (opcional)
-                while (true) {
-                    System.out.print("Insira a data de fim do leilão (dd/MM/yyyy hh:mm:ss) ou pressione ENTER para não definir " + Tools.alertaCancelar());
-                    String dataFimStr = Tools.scanner.nextLine().trim();
-                    if (Tools.verificarSaida(dataFimStr)) return;
+            }
 
-                    if (dataFimStr.isEmpty()) break;
+            int idCliente = Tools.clienteSessao.getIdCliente();
+            ResultadoOperacao resultado = negociacaoController.criarNegociacao(idCliente, nome, descricao, valor);
+            if (resultado.Sucesso) {
+                System.out.println("Negociação criada com sucesso!");
+            } else {
+                System.out.println("Erro ao criar negociação: " + resultado.msgErro);
+            }
+            return;
+        }
 
-                    dataFim = Tools.parseDateTime(dataFimStr);
+        // GESTOR: fluxo de leilão comum
+        LocalDateTime dataInicio;
+        LocalDateTime dataFim = null;
 
-                    if (dataFim != null) {
-                        ResultadoOperacao isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
-                        if (isCorrect.Sucesso) break;
-                        else System.out.println(isCorrect.msgErro);
-                    } else System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy hh:mm:ss.");
+        while (true) {
+            System.out.print("\nInsira a data de início (dd/MM/yyyy hh:mm:ss) " + Tools.alertaCancelar());
+            String dataInicioStr = Tools.scanner.nextLine().trim();
+            if (Tools.verificarSaida(dataInicioStr)) return;
+            dataInicio = Tools.parseDateTime(dataInicioStr);
+            if (dataInicio != null) break;
+            System.out.println("Formato de data inválido.");
+        }
+
+        while (true) {
+            System.out.print("Insira a data de fim do leilão (dd/MM/yyyy hh:mm:ss) ou ENTER para não definir " + Tools.alertaCancelar());
+            String dataFimStr = Tools.scanner.nextLine().trim();
+            if (Tools.verificarSaida(dataFimStr)) return;
+            if (dataFimStr.isEmpty()) break;
+
+            dataFim = Tools.parseDateTime(dataFimStr);
+            if (dataFim != null) {
+                ResultadoOperacao isCorrect = Tools.verificarDatasAnteriores(dataInicio, dataFim);
+                if (isCorrect.Sucesso) break;
+                else System.out.println(isCorrect.msgErro);
+            } else System.out.println("Formato inválido.");
+        }
+
+        double valorMin = 0.0, valorMax = 0.0;
+
+        if (idTipoLeilao == tiposLeilao.VENDA_DIRETA) {
+            System.out.print("Insira o valor pretendido: ");
+            valorMin = Tools.scanner.nextDouble();
+        } else {
+            System.out.print("Insira o valor mínimo: ");
+            valorMin = Tools.scanner.nextDouble();
+
+            while (true) {
+                System.out.print("Insira o valor máximo ou ENTER para não definir " + Tools.alertaCancelar());
+                String valorMaxStr = Tools.scanner.nextLine().trim();
+                if (Tools.verificarSaida(valorMaxStr)) return;
+                if (valorMaxStr.isEmpty()) break;
+
+                try {
+                    valorMax = Double.parseDouble(valorMaxStr);
+                    if (valorMax < valorMin) {
+                        System.out.printf("O valor máximo não pode ser inferior ao mínimo (%.2f).\n", valorMin);
+                    } else break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Valor inválido.");
                 }
+            }
+        }
 
-                double valorMin = 0.0;
-                double valorMax = 0.0;
-                // VENDA DIRETA: solicitar apenas valor mínimo
-                if (idTipoLeilao == tiposLeilao.VENDA_DIRETA) {
-                    while (true) {
-                        System.out.print("Insira o valor pretendido " + Tools.alertaCancelar());
-                        String valorMinStr = Tools.scanner.nextLine().trim();
-                        if (Tools.verificarSaida(valorMinStr)) return;
-                        if (valorMinStr.isEmpty()) break;
+        double multiploLance = 0.0;
+        if (idTipoLeilao == tiposLeilao.ELETRONICO) {
+            System.out.print("Insira o valor de cada lance: ");
+            multiploLance = Tools.scanner.nextDouble();
+        }
 
-                        try {
-                            valorMin = Double.parseDouble(valorMinStr);
-                            if (valorMin < 0) {
-                                System.out.println("O valor não pode ser negativo. Tente novamente.");
-                                continue;
-                            }
-                            break;
-                        } catch (NumberFormatException e) {
-                            System.out.println("Entrada inválida. Insira um número válido.");
-                        }
-                    }
-                } else {
-                    while (true) {
-                        System.out.print("Insira o valor mínimo " + Tools.alertaCancelar());
-                        String valorMinStr = Tools.scanner.nextLine().trim();
-                        if (Tools.verificarSaida(valorMinStr)) return;
+        int idEstado = leilaoController.determinarEstadoLeilaoByDatas(dataInicio, dataFim, estadosLeilao.ATIVO);
 
-                        try {
-                            valorMin = Double.parseDouble(valorMinStr);
-                            if (valorMin < 0) {
-                                System.out.println("O valor não pode ser negativo. Tente novamente.");
-                                continue;
-                            }
-                            break;
-                        } catch (NumberFormatException e) {
-                            System.out.println("Entrada inválida. Insira um número válido.");
-                        }
-                        // VALOR MÁXIMO (opcional)
-                        while (true) {
-                            System.out.print("Insira o valor máximo ou pressione ENTER para não definir " + Tools.alertaCancelar());
-                            String valorMaxStr = Tools.scanner.nextLine().trim();
-
-                            if (Tools.verificarSaida(valorMaxStr)) return;
-                            if (valorMaxStr.isEmpty()) {
-                                valorMax = 0.0;
-                                break;
-                            }
-
-                            try {
-                                valorMax = Double.parseDouble(valorMaxStr);
-                                if (valorMax < valorMin) System.out.printf("O valor máximo não pode ser inferior ao valor mínimo (%.2f).\n", valorMin);
-                                else break;
-                            } catch (NumberFormatException e) {
-                                System.out.println("Valor inválido. Insira um número válido (use ponto como separador decimal, se necessário).");
-                            }
-                        }
-                    }
-                }
-                // MÚLTIPLO DE LANCE (somente para ELETRÔNICO)
-                double multiploLance = 0.0;
-                if (idTipoLeilao == tiposLeilao.ELETRONICO) {
-                    while (true) {
-                        System.out.print("Insira o valor de cada lance " + Tools.alertaCancelar());
-                        String lanceStr = Tools.scanner.nextLine().trim();
-                        if (Tools.verificarSaida(lanceStr)) return;
-
-                        try {
-                            multiploLance = Double.parseDouble(lanceStr);
-                            if (multiploLance <= 0) System.out.println("O valor do lance deve ser maior que zero.");
-                            else break;
-                        } catch (NumberFormatException e) {
-                            System.out.println("Valor inválido. Insira um número válido.");
-                        }
-                    }
-                }
-
-                int idEstado = leilaoController.determinarEstadoLeilaoByDatas(dataInicio, dataFim, estadosLeilao.ATIVO);
-                ResultadoOperacao resultado = leilaoController.criarLeiloes(0, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
-
-                if (resultado.Sucesso) {
-                    produtoController.atualizarEstadoProduto(idProduto, 2);
-                    System.out.println("\nLeilão criado com sucesso!");
-                } else System.out.println(resultado.msgErro);
-            } else System.out.println("\n" + isAvailable.msgErro);
+        ResultadoOperacao resultado = leilaoController.criarLeiloes(0, idProduto, descricao, idTipoLeilao, dataInicio, dataFim, valorMin, valorMax, multiploLance, idEstado);
+        if (resultado.Sucesso) {
+            produtoController.atualizarEstadoProduto(idProduto, 2);
+            System.out.println("\nLeilão criado com sucesso!");
+        } else {
+            System.out.println(resultado.msgErro);
         }
     }
 
@@ -229,16 +215,16 @@ public class LeilaoView {
         System.out.println("-".repeat(260));
         for (Leilao leilao : leiloes) {
             String estadoStr = Tools.estadoLeilao.fromCodigo(leilao.getEstado()).name();
-            String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()).name();
+            String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(leilao.getIdTipoLeilao()).name();
             System.out.printf("%-8s %-30s %-30s %-25s %-30s %-30s %-30s %-30s %-25s %-10s\n",
                     leilao.getId(),
                     nomeProduto(leilao.getIdProduto()),
                     leilao.getDescricao(),
                     tipoLeilaoStr,
-                    leilao.getDataInicio() != null ? (leilao.getTipoLeilao() == tiposLeilao.ELETRONICO ?
+                    leilao.getDataInicio() != null ? (leilao.getIdTipoLeilao() == tiposLeilao.ELETRONICO ?
                             Tools.DATA_HORA.format(leilao.getDataInicio()) :
                             Tools.FORMATTER.format(leilao.getDataInicio())) : "N/A",
-                    leilao.getDataFim() != null ? (leilao.getTipoLeilao() == tiposLeilao.ELETRONICO ?
+                    leilao.getDataFim() != null ? (leilao.getIdTipoLeilao() == tiposLeilao.ELETRONICO ?
                             Tools.DATA_HORA.format(leilao.getDataFim()) :
                             Tools.FORMATTER.format(leilao.getDataFim())) : "N/A",
                     leilao.getValorMinimo(),
@@ -263,7 +249,7 @@ public class LeilaoView {
 
     private void exibirLeilaoDetalhado(Leilao leilao) throws MessagingException, IOException {
         String estadoStr = Tools.estadoLeilao.fromCodigo(leilao.getEstado()).name();
-        String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()).name();
+        String tipoLeilaoStr = Tools.tipoLeilao.fromCodigo(leilao.getIdTipoLeilao()).name();
         System.out.println("\n- DETALHES DO LEILÃO COM O ID " + leilao.getId() + " -");
         System.out.println("Produto: " + nomeProduto(leilao.getIdProduto()));
         System.out.println("Descrição: " + leilao.getDescricao());
@@ -348,7 +334,7 @@ public class LeilaoView {
         if (descricao.isEmpty()) descricao = leilao.getDescricao();
 
         // Tipo Leilão
-        int idTipoLeilao = leilao.getTipoLeilao();
+        int idTipoLeilao = leilao.getIdTipoLeilao();
         System.out.println("\n1. Leilão Eletrónico\n2. Carta Fechada\n3. Venda Direta");
         System.out.print("Novo tipo de leilão " + Tools.alertaCancelar());
         String tipoInput = Tools.scanner.nextLine().trim();
@@ -493,7 +479,8 @@ public class LeilaoView {
         // Confirmação de encerramento
         System.out.print("Tem certeza que quer fechar o leilão? (S/N) " + Tools.alertaCancelar());
         String confirmInput = Tools.scanner.nextLine().trim();
-        if (Tools.verificarSaida(confirmInput) || confirmInput.isEmpty() || Character.toUpperCase(confirmInput.charAt(0)) != 'S') return;
+        if (Tools.verificarSaida(confirmInput) || confirmInput.isEmpty() || Character.toUpperCase(confirmInput.charAt(0)) != 'S')
+            return;
 
         LocalDateTime dataFim = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -537,7 +524,6 @@ public class LeilaoView {
             System.out.println("Não existem vencedores.");
         }
     }
-
 
 
 }

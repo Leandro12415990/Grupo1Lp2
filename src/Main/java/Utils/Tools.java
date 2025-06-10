@@ -353,7 +353,7 @@ public class Tools {
             variaveis.put("NOME_PRODUTO", produto.getNome());
         }
         if (leilao != null) {
-            variaveis.put("TIPO_LEILAO", leilao.getTipoLeilao() == 1 ? "ELETRONICO" : leilao.getTipoLeilao() == 2 ? "CARTA FECHADA" : "VENDA DIRETA");
+            variaveis.put("TIPO_LEILAO", leilao.getIdTipoLeilao() == 1 ? "ELETRONICO" : leilao.getIdTipoLeilao() == 2 ? "CARTA FECHADA" : "VENDA DIRETA");
             variaveis.put("NOME_lEILAO", leilao.getDescricao());
         }
 

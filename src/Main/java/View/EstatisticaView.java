@@ -445,7 +445,7 @@ public class EstatisticaView {
         for (Leilao leilao : semLances) {
             System.out.println("ID: " + leilao.getId() +
                     " | Descrição: " + leilao.getDescricao() +
-                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()));
+                    " | Tipo: " + Tools.tipoLeilao.fromCodigo(leilao.getIdTipoLeilao()));
         }
     }
 

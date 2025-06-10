@@ -22,6 +22,7 @@ public class NegociacaoView {
     private final Scanner scanner = new Scanner(System.in);
 
     public void exibirMenu() throws IOException, MessagingException {
+        LeilaoView leilaoView = new LeilaoView();
         while (true) {
             System.out.println("\n===== MENU CLIENTE LEILÃO/NEGOCIAÇÃO =====");
             System.out.println("1. Criar Leilão");
@@ -37,7 +38,7 @@ public class NegociacaoView {
 
             switch (opcao) {
                 case "1":
-                    criarNegociacao();
+                    leilaoView.criarLeilaoOuNegociacao();
                     break;
                 case "2":
                     verNegociacoes();
@@ -182,7 +183,7 @@ public class NegociacaoView {
 
         System.out.println("Leilões Ativos:");
         for (Negociacao negociacao : leiloesAtivos) {
-            System.out.println("ID: " + negociacao.getIdNegociacao());
+            System.out.println("ID: " + negociacao.getId());
             System.out.println("Nome: " + negociacao.getNome());
             System.out.println("Valor: " + negociacao.getValor());
             System.out.println("Data Início: " + Tools.formatDateTime(negociacao.getDataInicio()));
@@ -243,7 +244,7 @@ public class NegociacaoView {
         for (Lance l : todosLances) {
             for (Negociacao n : meusLeiloes) {
                 // Vendedor
-                if (l.getIdNegociacao() == n.getIdNegociacao() &&
+                if (l.getIdNegociacao() == n.getId() &&
                         l.getIdCliente() != idClienteSessao &&
                         l.getEstado() == Constantes.estadosLance.PROPOSTA) {
 
@@ -317,7 +318,7 @@ public class NegociacaoView {
             switch (opcao) {
                 case "1":
                     ResultadoOperacao resAceitar = negociacaoController.fecharNegociacaoComLanceAceito(
-                            negociacao.getIdNegociacao(),
+                            negociacao.getId(),
                             lanceSelecionado.getValorLance(),
                             lanceSelecionado.getIdCliente()
                     );
@@ -370,7 +371,7 @@ public class NegociacaoView {
             switch (opcao) {
                 case "1":
                     ResultadoOperacao aceitar = negociacaoController.fecharNegociacaoComLanceAceito(
-                            negociacao.getIdNegociacao(),
+                            negociacao.getId(),
                             lanceSelecionado.getValorContraProposta(),
                             idClienteSessao
                     );

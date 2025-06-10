@@ -35,7 +35,7 @@ public class LeilaoDAL {
                 leilao.getId() + Tools.separador() +
                         leilao.getIdProduto() + Tools.separador() +
                         leilao.getDescricao() + Tools.separador() +
-                        leilao.getTipoLeilao() + Tools.separador() +
+                        leilao.getIdTipoLeilao() + Tools.separador() +
                         Tools.formatDateTime(leilao.getDataInicio()) + Tools.separador() +
                         (leilao.getDataFim() != null ? Tools.formatDateTime(leilao.getDataFim()) : "") + Tools.separador() +
                         leilao.getValorMinimo() + Tools.separador() +
