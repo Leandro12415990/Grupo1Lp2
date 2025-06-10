@@ -25,7 +25,7 @@ public class MenuInicialView {
         AgenteBLL agenteBLL = new AgenteBLL();
         agenteBLL.iniciarMonitorizacaoDinamica();
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
-        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 0));
+        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 27));
 
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();

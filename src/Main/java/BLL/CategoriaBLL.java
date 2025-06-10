@@ -2,8 +2,12 @@ package BLL;
 
 import DAL.CategoriaDAL;
 import Model.Categoria;
+import Model.Leilao;
+import Model.ProdutoCategoria;
+import Utils.Tools;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriaBLL {
@@ -99,5 +103,32 @@ public class CategoriaBLL {
 
         return true;
     }
+
+    public List<Leilao> filtrarLeiloesPorCategoria(String descricaoCategoria) throws MessagingException, IOException {
+        List<Leilao> resultado = new ArrayList<>();
+        CategoriaBLL categoriaBLL = new CategoriaBLL();
+        ProdutoCategoriaBLL produtoCategoriaBLL = new ProdutoCategoriaBLL();
+        LeilaoBLL leilaoBLL = new LeilaoBLL();
+
+        List<Leilao> leiloes = leilaoBLL.listarLeiloes(Tools.estadoLeilao.ATIVO);
+
+        for (Leilao leilao : leiloes) {
+            int idProduto = leilao.getIdProduto();
+
+            ProdutoCategoria produtoCategoria = produtoCategoriaBLL.procurarCategoriaPorProduto(idProduto);
+            if (produtoCategoria == null) continue;
+
+            Categoria categoria = categoriaBLL.procurarCategoria(produtoCategoria.getIdCategoria());
+            if (categoria == null) continue;
+
+            if (categoria.getDescricao().equalsIgnoreCase(descricaoCategoria)) {
+                resultado.add(leilao);
+            }
+        }
+
+        return resultado;
+    }
+
+
 
 }

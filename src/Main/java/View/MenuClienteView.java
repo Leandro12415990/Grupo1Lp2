@@ -1,13 +1,10 @@
 package View;
 
-import Controller.AgenteController;
 import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
-
-import java.sql.SQLOutput;
 
 import static Utils.Tools.scanner;
 
@@ -19,6 +16,7 @@ public class MenuClienteView {
         LanceView lanceView = new LanceView();
         AgenteView agenteView = new AgenteView();
         ClassificacaoView classificacaoView = new ClassificacaoView();
+        NegociacaoView negociacaoView = new NegociacaoView();
 
         utilizadorView.verificarLoginsUtilizadores();
         while (true) {
@@ -27,8 +25,9 @@ public class MenuClienteView {
             System.out.println("2. Editar Ficha de Cliente");
             System.out.println("3. Carteira");
             System.out.println("4. Menu Lances");
-            System.out.println("5. As Minhas Avaliações");
-            System.out.println("6. Agente");
+            System.out.println("5. Menu Meus Leiloes");
+            System.out.println("6. As Minhas Avaliações");
+            System.out.println("7. Agente");
             System.out.println("0. Sair...");
 
             int opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
@@ -48,9 +47,12 @@ public class MenuClienteView {
                     lanceView.exibirMenuLance();
                     break;
                 case 5:
-                    classificacaoView.exibirMenuClassificacao();
+                    negociacaoView.exibirMenu();
                     break;
                 case 6:
+                    classificacaoView.exibirMenuClassificacao();
+                    break;
+                case 7:
                     agenteView.menuAgente();
                 case 0:
                     System.out.println("A sair...");
