@@ -30,7 +30,7 @@ public class TransacaoDAL {
         });
     }
 
-    public void gravarTransacoes(List<Transacao> transacoes) {
+    public void gravarTransacoesCSV(List<Transacao> transacoes) {
         ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID_TRANSACAO;ID_CLIENTE;VALOR_TOTAL;VALOR_TRANSACAO;DATA_TRANSACAO;ID_TIPO;ID_ESTADO";
         importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_TRANSACAO, cabecalho, transacoes, transacao ->
@@ -77,6 +77,56 @@ public class TransacaoDAL {
         }
 
         return listaTransacoes;
+    }
+
+    public void gravarTransacoes(List<Transacao> transacoes) {
+
+        String sqlInsert = "INSERT INTO Transacao (id_Cliente, Valor_Transacao, Data_Transacao, Tipo_Transacao, Estado) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        String sqlUpdate = "UPDATE Transacao SET id_Cliente = ?, Valor_Transacao = ?, Data_Transacao = ?, Tipo_Transacao = ?, Estado = ? " +
+                "WHERE Id_Transacao = ?";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+                PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ) {
+            for (Transacao u : transacoes) {
+                if (u.getIdTransacao() == 0) {
+                    // INSERT
+                    stmtInsert.setInt(1, u.getIdTransacao());
+                    stmtInsert.setInt(2, u.getIdCliente());
+                    stmtInsert.setDouble(4, u.getValorTotal());
+                    stmtInsert.setDouble(5, u.getValorTransacao());
+                    stmtInsert.setDate(6, u.getDataTransacao() != null
+                            ? java.sql.Date.valueOf(u.getDataTransacao().toLocalDate())
+                            : null);
+                    stmtInsert.setInt(8, u.getIdTipoTransacao());
+                    stmtInsert.setInt(9, u.getIdEstadoTransacao());
+
+                    stmtInsert.addBatch();
+                } else {
+                    // UPDATE
+                    stmtUpdate.setInt(1, u.getIdTransacao());
+                    stmtUpdate.setInt(2, u.getIdCliente());
+                    stmtUpdate.setDouble(4, u.getValorTotal());
+                    stmtUpdate.setDouble(5, u.getValorTransacao());
+                    stmtUpdate.setDate(6, u.getDataTransacao() != null
+                            ? java.sql.Date.valueOf(u.getDataTransacao().toLocalDate())
+                            : null);
+                    stmtUpdate.setInt(8, u.getIdTipoTransacao());
+                    stmtUpdate.setInt(9, u.getIdEstadoTransacao());
+
+                    stmtUpdate.addBatch();
+                }
+            }
+
+            stmtInsert.executeBatch();
+            stmtUpdate.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 

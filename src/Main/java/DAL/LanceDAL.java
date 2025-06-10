@@ -2,6 +2,7 @@ package DAL;
 
 import Model.Lance;
 import Model.Produto;
+import Model.Utilizador;
 import Utils.Constantes.caminhosFicheiros;
 import Utils.DataBaseConnection;
 import Utils.Tools;
@@ -30,7 +31,7 @@ public class LanceDAL {
         });
     }
 
-    public void gravarLances(List<Lance> lances) {
+    public void gravarLancesCSV(List<Lance> lances) {
         ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID APOSTA;ID LEILÃO;ID CLIENTE;VALOR APOSTA;MULTIPLOS UTILIZADOS;PONTOS UTILIZADOS;DATA APOSTA";
         importDal.gravarRegistos(caminhosFicheiros.CSV_FILE_LANCE, cabecalho, lances, lance ->
@@ -61,7 +62,7 @@ public class LanceDAL {
                 int idLeilao = rs.getInt("id_Leilao");
                 int idCliente = rs.getInt("id_Cliente");
                 double valorLance = rs.getDouble("Valor_Aposta");
-                int Multiplos_Utilzadores = rs.getInt("Multiplos_Utilzadores");
+                int Multiplos_Utilzadores = rs.getInt("Multiplos_Utilizados");
                 int pontosUtilizados = rs.getInt("Pontos_Utilizados");
 
                 // Converte java.sql.Date para java.time.LocalDate
@@ -75,69 +76,67 @@ public class LanceDAL {
         }
         return listaLance;
     }
-}
-
-/*package DAL;
-
-import Model.Lance;
-import Utils.Constantes.caminhosFicheiros;
-import Utils.Tools;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-public class LanceDAL {
-
-    public List<Lance> carregarLances() {
-        ImportDAL importDal = new ImportDAL();
-        System.out.println("🔄 A carregar lances do ficheiro: " + caminhosFicheiros.CSV_FILE_LANCE);
-        return importDal.carregarRegistos(caminhosFicheiros.CSV_FILE_LANCE, 7, dados -> {
-            try {
-                if (dados.length != 7) {
-                    System.err.println("⚠️ Linha com número incorreto de campos: " + String.join(";", dados));
-                    return null;
-                }
-
-                int idLance = Integer.parseInt(dados[0]);
-                int idLeilao = Integer.parseInt(dados[1]);
-                int idCliente = Integer.parseInt(dados[2]);
-                double valorLance = Double.parseDouble(dados[3]);
-                int numLance = dados[4].isEmpty() ? 0 : Integer.parseInt(dados[4]);
-                int pontosUtilizados = dados[5].isEmpty() ? 0 : Integer.parseInt(dados[5]);
-                LocalDateTime dataLance = Tools.parseDateTimeByDate(dados[6]);
-
-                System.out.printf("✅ Lance carregado: ID=%d | Leilão=%d | Cliente=%d | Valor=%.2f€ | Multiplos=%d | Pontos=%d | Data=%s%n",
-                        idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dados[6]);
-
-                return new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
-
-            } catch (Exception e) {
-                System.err.println("❌ Erro ao processar linha do CSV: " + String.join(";", dados));
-                e.printStackTrace();
-                return null;
-            }
-        });
-    }
 
     public void gravarLances(List<Lance> lances) {
         ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID APOSTA;ID LEILÃO;ID CLIENTE;VALOR APOSTA;MULTIPLOS UTILIZADOS;PONTOS UTILIZADOS;DATA APOSTA";
+        importDal.gravarRegistos(caminhosFicheiros.CSV_FILE_LANCE, cabecalho, lances, lance ->
+                String.join(Tools.separador(),
+                        String.valueOf(lance.getIdLance()),
+                        String.valueOf(lance.getIdLeilao()),
+                        String.valueOf(lance.getIdCliente()),
+                        String.valueOf(lance.getValorLance()),
+                        String.valueOf(lance.getNumLance()),
+                        String.valueOf(lance.getPontosUtilizados()),
+                        Tools.formatDateTime(lance.getDataLance())
+                )
+        );
 
-        System.out.println("💾 A gravar " + lances.size() + " lances no ficheiro: " + caminhosFicheiros.CSV_FILE_LANCE);
+        String sqlInsert = "INSERT INTO Lance (id_Leilao, id_Cliente, Valor_Aposta, Multiplos_Utilizados, Pontos_Utilizados, Data_Aposta) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
-        importDal.gravarRegistos(caminhosFicheiros.CSV_FILE_LANCE, cabecalho, lances, lance -> {
-            String linha = String.join(Tools.separador(),
-                    String.valueOf(lance.getIdLance()),
-                    String.valueOf(lance.getIdLeilao()),
-                    String.valueOf(lance.getIdCliente()),
-                    String.valueOf(lance.getValorLance()),
-                    String.valueOf(lance.getNumLance()),
-                    String.valueOf(lance.getPontosUtilizados()),
-                    Tools.formatDateTime(lance.getDataLance())
-            );
+        String sqlUpdate = "UPDATE Lance SET id_Leilao = ?, id_Cliente = ?, Valor_Aposta = ?, Multiplos_Utilizados = ?, Pontos_Utilizados = ?, Data_Aposta = ? " +
+                "WHERE id_Lance = ?";
 
-            System.out.println("📝 Linha escrita no CSV: " + linha);
-            return linha;
-        });
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+                PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ) {
+            for (Lance u : lances) {
+                if (u.getIdLance() == 0) {
+                    // INSERT
+                    stmtInsert.setInt(1, u.getIdLance());
+                    stmtInsert.setInt(2, u.getIdLeilao());
+                    stmtInsert.setInt(4, u.getIdCliente());
+                    stmtInsert.setDouble(5, u.getValorLance());
+                    stmtInsert.setDouble(5, u.getNumLance());
+                    stmtInsert.setDouble(5, u.getPontosUtilizados());
+                    stmtInsert.setDate(6, u.getDataLance() != null
+                            ? java.sql.Date.valueOf(u.getDataLance().toLocalDate())
+                            : null);
+
+                    stmtInsert.addBatch();
+                } else {
+                    // UPDATE
+                    stmtUpdate.setInt(1, u.getIdLance());
+                    stmtUpdate.setInt(2, u.getIdLeilao());
+                    stmtUpdate.setInt(4, u.getIdCliente());
+                    stmtUpdate.setDouble(5, u.getValorLance());
+                    stmtUpdate.setDouble(5, u.getNumLance());
+                    stmtUpdate.setDouble(5, u.getPontosUtilizados());
+                    stmtUpdate.setDate(6, u.getDataLance() != null
+                            ? java.sql.Date.valueOf(u.getDataLance().toLocalDate())
+                            : null);
+
+                    stmtUpdate.addBatch();
+                }
+            }
+
+            stmtInsert.executeBatch();
+            stmtUpdate.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}*/
+}

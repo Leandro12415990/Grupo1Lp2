@@ -2,6 +2,7 @@ package DAL;
 
 import Model.Produto;
 import Model.Template;
+import Model.Transacao;
 import Utils.Constantes.caminhosFicheiros;
 import Utils.DataBaseConnection;
 import Utils.Tools;
@@ -26,7 +27,7 @@ public class ProdutoDAL {
         });
     }
 
-    public void gravarProdutos(List<Produto> produtos) {
+    public void gravarProdutosCSV(List<Produto> produtos) {
         ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID;ESTADO;NOME;DESCRICAO";
         importDal.gravarRegistos(caminhosFicheiros.CSV_FILE_PRODUTO, cabecalho, produtos, produto ->
@@ -60,5 +61,44 @@ public class ProdutoDAL {
             e.printStackTrace();
         }
         return listaProduto;
+    }
+
+    public void gravarProdutos(List<Produto> produtos) {
+        String sqlInsert = "INSERT INTO Produto (Estado, Nome, Descricao) " +
+                "VALUES (?, ?, ?)";
+
+        String sqlUpdate = "UPDATE Produto SET Estado = ?, Nome = ?, Descricao = ? " +
+                "WHERE Id_Produto = ?";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+                PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ) {
+            for (Produto u : produtos) {
+                if (u.getIdProduto() == 0) {
+                    // INSERT
+                    stmtInsert.setInt(1, u.getIdProduto());
+                    stmtInsert.setInt(2, u.getEstado());
+                    stmtInsert.setString(4, u.getNome());
+                    stmtInsert.setString(5, u.getDescricao());
+
+                    stmtInsert.addBatch();
+                } else {
+                    // UPDATE
+                    stmtUpdate.setInt(1, u.getIdProduto());
+                    stmtUpdate.setInt(2, u.getEstado());
+                    stmtUpdate.setString(4, u.getNome());
+                    stmtUpdate.setString(5, u.getDescricao());
+
+                    stmtUpdate.addBatch();
+                }
+            }
+
+            stmtInsert.executeBatch();
+            stmtUpdate.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package DAL;
 
 import Model.Categoria;
+import Model.Email;
 import Model.Produto;
 import Utils.Constantes;
 import Utils.DataBaseConnection;
@@ -24,7 +25,7 @@ public class CategoriaDAL {
             });
         }
 
-        public void gravarCategoria(List<Categoria> categoria) {
+        public void gravarCategoriaCSV(List<Categoria> categoria) {
             ImportDAL importDal = new ImportDAL();
             String cabecalho = "ID;DESCRICAO;ESTADO";
             importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_CATEGORIA, cabecalho, categoria, categorias ->
@@ -56,5 +57,41 @@ public class CategoriaDAL {
             e.printStackTrace();
         }
         return listaCategoria;
+    }
+
+    public void gravarCategoria(List<Categoria> categoria) {
+
+        String sqlInsert = "INSERT INTO Categoria (Descricao, Estado) " +
+                "VALUES (?, ?)";
+
+        String sqlUpdate = "UPDATE Categoria SET Descricao = ?, Estado = ? " +
+                "WHERE Id_Transacao = ?";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+                PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ) {
+            for (Categoria u : categoria) {
+                if (u.getIdCategoria() == 0) {
+                    // INSERT
+                    stmtInsert.setString(1, u.getDescricao());
+                    stmtInsert.setInt(2, u.getEstado());
+
+                    stmtInsert.addBatch();
+                } else {
+                    // UPDATE
+                    stmtUpdate.setString(1, u.getDescricao());
+                    stmtUpdate.setInt(2, u.getEstado());
+
+                    stmtUpdate.addBatch();
+                }
+            }
+
+            stmtInsert.executeBatch();
+            stmtUpdate.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

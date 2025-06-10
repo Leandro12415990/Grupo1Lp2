@@ -44,15 +44,13 @@ public class UtilizadorBLL {
         LocalDate data = LocalDate.now();
 
         Tools.utilizadores = utilizadorDAL.carregarUtilizadores();
-        int max = -1;
 
         for (Utilizador u : Tools.utilizadores) {
-            if (u.getId() > max) max = u.getId();
             if (email.equals(u.getEmail())) return false;
         }
 
         try {
-            utilizador = new Utilizador(max + 1, nome, email, nascimento, morada, password, data, data, Tools.tipoUtilizador.CLIENTE.getCodigo(), Tools.estadoUtilizador.PENDENTE.getCodigo(), 0.0);
+            utilizador = new Utilizador(0, nome, email, nascimento, morada, password, data, data, Tools.tipoUtilizador.CLIENTE.getCodigo(), Tools.estadoUtilizador.PENDENTE.getCodigo(), 0.0);
         } catch (Exception e) {
             return false;
         }

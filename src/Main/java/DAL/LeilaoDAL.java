@@ -2,6 +2,7 @@ package DAL;
 
 import Model.Leilao;
 import Model.Produto;
+import Model.Transacao;
 import Utils.Constantes.caminhosFicheiros;
 import Utils.DataBaseConnection;
 import Utils.Tools;
@@ -36,7 +37,7 @@ public class LeilaoDAL {
         });
     }
 
-    public void gravarLeiloes(List<Leilao> leiloes) {
+    public void gravarLeiloesCSV(List<Leilao> leiloes) {
         ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID;ID_PRODUTO;DESCRICAO;ID_TIPO_LEILAO;DATA_INICIO;DATA_FIM;VALOR_MINIMO;VALOR_MAXIMO;MULTIPLO_LANCE;ID_ESTADO";
         importDal.gravarRegistos(caminhosFicheiros.CSV_FILE_LEILAO, cabecalho, leiloes, leilao ->
@@ -88,5 +89,63 @@ public class LeilaoDAL {
             e.printStackTrace();
         }
         return listaLeilao;
+    }
+
+    public void gravarLeiloes(List<Leilao> leiloes) {
+
+        String sqlInsert = "INSERT INTO Transacao (id_Produto, Descricao, Tipo_Leilao, Data_Inicio, Data_Fim, Valor_Minimo, Valor_Maximo, Multiplo_Lance, Estado_Leilao) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        String sqlUpdate = "UPDATE Transacao SET id_Produto = ?, Descricao = ?, Tipo_Leilao = ?, Data_Inicio = ?, Data_Fim = ?, Valor_Minimo = ?, Valor_Maximo = ?, Multiplo_Lance = ?, Estado_Leilao = ? " +
+                "WHERE Id_Leilao = ?";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+                PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ) {
+            for (Leilao u : leiloes) {
+                if (u.getId() == 0) {
+                    // INSERT
+                    stmtInsert.setInt(1, u.getIdProduto());
+                    stmtInsert.setString(2, u.getDescricao());
+                    stmtInsert.setDouble(4, u.getTipoLeilao());
+                    stmtInsert.setDate(6, u.getDataInicio() != null
+                            ? java.sql.Date.valueOf(u.getDataInicio().toLocalDate())
+                            : null);
+                    stmtInsert.setDate(6, u.getDataFim() != null
+                            ? java.sql.Date.valueOf(u.getDataFim().toLocalDate())
+                            : null);
+                    stmtInsert.setDouble(8, u.getValorMinimo());
+                    stmtInsert.setDouble(8, u.getValorMaximo());
+                    stmtInsert.setDouble(8, u.getMultiploLance());
+                    stmtInsert.setInt(9, u.getEstado());
+
+                    stmtInsert.addBatch();
+                } else {
+                    // UPDATE
+                    stmtUpdate.setInt(1, u.getIdProduto());
+                    stmtUpdate.setString(2, u.getDescricao());
+                    stmtUpdate.setDouble(4, u.getTipoLeilao());
+                    stmtUpdate.setDate(6, u.getDataInicio() != null
+                            ? java.sql.Date.valueOf(u.getDataInicio().toLocalDate())
+                            : null);
+                    stmtUpdate.setDate(6, u.getDataFim() != null
+                            ? java.sql.Date.valueOf(u.getDataFim().toLocalDate())
+                            : null);
+                    stmtUpdate.setDouble(8, u.getValorMinimo());
+                    stmtUpdate.setDouble(8, u.getValorMaximo());
+                    stmtUpdate.setDouble(8, u.getMultiploLance());
+                    stmtUpdate.setInt(9, u.getEstado());
+
+                    stmtUpdate.addBatch();
+                }
+            }
+
+            stmtInsert.executeBatch();
+            stmtUpdate.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

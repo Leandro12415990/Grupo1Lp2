@@ -24,7 +24,7 @@ public class ProdutoCategoriaDAL {
         });
     }
 
-    public void gravarProdutoCategoria(List<ProdutoCategoria> categoria) {
+    public void gravarProdutoCategoriaCSV(List<ProdutoCategoria> categoria) {
         ImportDAL importDal = new ImportDAL();
         String cabecalho = "PRODUTO;CATEGORIA";
         importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_PRODUTO_CATEGORIA, cabecalho, categoria, produtoCategoria ->
@@ -54,5 +54,27 @@ public class ProdutoCategoriaDAL {
             e.printStackTrace();
         }
         return listaProdutoCategoria;
+    }
+
+    public void gravarProdutoCategoria(List<ProdutoCategoria> categoria) {
+        String sqlInsert = "INSERT INTO Produto_Categoria (id_Produto, id_Categoria) " +
+                "VALUES (?, ?)";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+        ) {
+            for (ProdutoCategoria u : categoria) {
+                // INSERT
+                stmtInsert.setInt(1, u.getIdProduto());
+                stmtInsert.setInt(2, u.getIdCategoria());
+
+                stmtInsert.addBatch();
+            }
+
+            stmtInsert.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

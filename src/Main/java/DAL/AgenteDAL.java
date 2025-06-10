@@ -61,7 +61,7 @@ public class AgenteDAL {
         return filtrados;
     }
 
-    public boolean guardarAgentes(List<Agente> agentes) {
+    public boolean guardarAgentesCSV(List<Agente> agentes) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FICHEIRO))) {
             bw.write("id;cliente_id;leilao_id;data_configuracao");
             bw.newLine();
@@ -134,5 +134,49 @@ public class AgenteDAL {
             e.printStackTrace();
         }
         return listaAgente;
+    }
+
+    public boolean guardarAgentes(List<Agente> agentes) {
+
+        String sqlInsert = "INSERT INTO Agente (id_Cliente, id_Leilao, Data_Configuracao) " +
+                "VALUES (?, ?, ?)";
+
+        String sqlUpdate = "UPDATE Agente SET id_Cliente = ?, id_Leilao = ?, Data_Configuracao = ? " +
+                "WHERE Id_Agente = ?";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+                PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ) {
+            for (Agente u : agentes) {
+                if (u.getId() == 0) {
+                    // INSERT
+                    stmtInsert.setInt(1, u.getClienteId());
+                    stmtInsert.setInt(2, u.getLeilaoId());
+                    stmtInsert.setDate(6, u.getDataConfiguracao() != null
+                            ? java.sql.Date.valueOf(u.getDataConfiguracao().toLocalDate())
+                            : null);
+
+                    stmtInsert.addBatch();
+                } else {
+                    // UPDATE
+                    stmtUpdate.setInt(1, u.getClienteId());
+                    stmtUpdate.setInt(2, u.getLeilaoId());
+                    stmtUpdate.setDate(6, u.getDataConfiguracao() != null
+                            ? java.sql.Date.valueOf(u.getDataConfiguracao().toLocalDate())
+                            : null);
+
+                    stmtUpdate.addBatch();
+                }
+            }
+
+            stmtInsert.executeBatch();
+            stmtUpdate.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

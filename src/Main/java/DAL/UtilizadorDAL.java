@@ -33,7 +33,7 @@ public class UtilizadorDAL {
         });
     }
 
-    public void gravarUtilizadores(List<Utilizador> utilizadores) {
+    public void gravarUtilizadoresCSV(List<Utilizador> utilizadores) {
         ImportDAL importDal = new ImportDAL();
         String cabecalho = "ID;NOME;EMAIL;DATA NASCIMENTO;MORADA;PASSWORD;DATA REGISTO;ULTIMO LOGIN;TIPO UTILIZADOR;ESTADO;SALDO";
         importDal.gravarRegistos(Constantes.caminhosFicheiros.CSV_FILE_UTILIZADOR, cabecalho, utilizadores, utilizador ->
@@ -49,6 +49,58 @@ public class UtilizadorDAL {
                         utilizador.getEstado() + Tools.separador() +
                         utilizador.getSaldo()
         );
+    }
+
+    public void gravarUtilizadores(List<Utilizador> utilizadores) {
+        String sqlInsert = "INSERT INTO Utilizador (Nome, Email, Data_Nascimento, Morada, Password, Data_Registo, Ultimo_Login, Tipo_Utilizador, Estado, Saldo) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        String sqlUpdate = "UPDATE Utilizador SET Nome = ?, Email = ?, Data_Nascimento = ?, Morada = ?, Password = ?, Data_Registo = ?, Ultimo_Login = ?, Tipo_Utilizador = ?, Estado = ?, Saldo = ? " +
+                "WHERE id_Utilizador = ?";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+                PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ) {
+            for (Utilizador u : utilizadores) {
+                if (u.getId() == 0) {
+                    // INSERT
+                    stmtInsert.setString(1, u.getNomeUtilizador());
+                    stmtInsert.setString(2, u.getEmail());
+                    stmtInsert.setDate(3, u.getDataNascimento() != null ? java.sql.Date.valueOf(u.getDataNascimento()) : null);
+                    stmtInsert.setString(4, u.getMorada());
+                    stmtInsert.setString(5, u.getPassword());
+                    stmtInsert.setDate(6, u.getDataRegisto() != null ? java.sql.Date.valueOf(u.getDataRegisto()) : null);
+                    stmtInsert.setDate(7, u.getUltimoLogin() != null ? java.sql.Date.valueOf(u.getUltimoLogin()) : null);
+                    stmtInsert.setInt(8, u.getTipoUtilizador());
+                    stmtInsert.setInt(9, u.getEstado());
+                    stmtInsert.setDouble(10, u.getSaldo());
+
+                    stmtInsert.addBatch();
+                } else {
+                    // UPDATE
+                    stmtUpdate.setString(1, u.getNomeUtilizador());
+                    stmtUpdate.setString(2, u.getEmail());
+                    stmtUpdate.setDate(3, u.getDataNascimento() != null ? java.sql.Date.valueOf(u.getDataNascimento()) : null);
+                    stmtUpdate.setString(4, u.getMorada());
+                    stmtUpdate.setString(5, u.getPassword());
+                    stmtUpdate.setDate(6, u.getDataRegisto() != null ? java.sql.Date.valueOf(u.getDataRegisto()) : null);
+                    stmtUpdate.setDate(7, u.getUltimoLogin() != null ? java.sql.Date.valueOf(u.getUltimoLogin()) : null);
+                    stmtUpdate.setInt(8, u.getTipoUtilizador());
+                    stmtUpdate.setInt(9, u.getEstado());
+                    stmtUpdate.setDouble(10, u.getSaldo());
+                    stmtUpdate.setInt(11, u.getId());
+
+                    stmtUpdate.addBatch();
+                }
+            }
+
+            stmtInsert.executeBatch();
+            stmtUpdate.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Utilizador> carregarUtilizadores() {
@@ -89,35 +141,4 @@ public class UtilizadorDAL {
 
         return listaUtilizadores;
     }
-
-    /*public void gravarUtilizadores(List<Utilizador> utilizadores) {
-        String sql = "INSERT INTO Utilizador (id, nomeUtilizador, email, dataNascimento, morada, password, dataRegisto," +
-                "ultimoLogin, tipoUtilizador, estado, saldo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = DataBaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            for (Utilizador utilizador : utilizadores) {
-                stmt.setInt(1, utilizador.getId());
-                stmt.setString(2, utilizador.getNomeUtilizador());
-                stmt.setString(3, utilizador.getEmail());
-                stmt.setDate(4, Date.valueOf(utilizador.getDataNascimento()));
-                stmt.setString(5, utilizador.getMorada());
-                stmt.setString(6, utilizador.getPassword());
-                stmt.setDate(7, Date.valueOf(utilizador.getDataRegisto()));
-                stmt.setDate(8, Date.valueOf(utilizador.getUltimoLogin()));
-                stmt.setString(9, utilizador.getTipoUtilizador());
-                stmt.setString(10, utilizador.getEstado());
-                stmt.setDouble(11, utilizador.getSaldo());
-
-                stmt.addBatch(); // Adiciona à batch
-            }
-
-            stmt.executeBatch(); // Executa tudo de uma vez
-            System.out.println("Utilizadores gravados na base de dados com sucesso.");
-
-        } catch (SQLException e) {
-            System.err.println("Erro ao gravar utilizadores na base de dados: " + e.getMessage());
-        }
-    }*/
 }

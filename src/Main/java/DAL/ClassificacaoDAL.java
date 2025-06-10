@@ -59,7 +59,7 @@ public class ClassificacaoDAL {
         return lista;
     }
 
-    public void gravarClassificacoes(List<Classificacao> lista) {
+    public void gravarClassificacoesCSV(List<Classificacao> lista) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ficheiro))) {
             bw.write(cabecalho);
             bw.newLine();
@@ -105,5 +105,30 @@ public class ClassificacaoDAL {
             e.printStackTrace();
         }
         return listaClassificacao;
+    }
+
+    public void gravarClassificacoes(List<Classificacao> lista) {
+
+        String sqlInsert = "INSERT INTO Classificacao (id_Utilizador, Classificacao, Comentario) " +
+                "VALUES (?, ?, ?)";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+        ) {
+            for (Classificacao u : lista) {
+                // INSERT
+                stmtInsert.setInt(1, u.getIdLeilao());
+                stmtInsert.setInt(2, u.getIdUtilizador());
+                stmtInsert.setInt(4, u.getClassificacao());
+                stmtInsert.setString(5, u.getComentario());
+
+                stmtInsert.addBatch();
+            }
+
+            stmtInsert.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
