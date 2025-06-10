@@ -33,6 +33,7 @@ public class MenuGestorView {
             System.out.println("7. Listagens");
             System.out.println("8. Aprovar Despósitos");
             System.out.println("9. Editar Templates");
+            System.out.println("10. Importar Clientes do ficheiro");
             System.out.println("0. Sair...");
             int opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             switch (opcao) {
@@ -62,6 +63,24 @@ public class MenuGestorView {
                     break;
                 case 9:
                     templateView.editarTemplate();
+                    break;
+                case 10:
+                    UtilizadorBLL.ResultadoImportacao resultado = utilizadorView.importar();
+                    System.out.println("Total de clientes importados: " + resultado.totalImportados);
+                    System.out.println("Total de clientes já existentes: " + resultado.totalExistentes);
+
+                    if (!resultado.erros.isEmpty()) {
+                        System.out.println("Erros encontrados durante a importação:");
+                        for (String erro : resultado.erros) {
+                            System.out.println(erro);
+                        }
+                    }
+
+                    /*
+                    for (Utilizador u : resultado.utilizadoresImportados) {
+                        System.out.println("Utilizador importado: " + u.getNomeUtilizador() + " - " + u.getEmail());
+                    }
+                    */
                     break;
                 case 0:
                     System.out.println("A sair...");

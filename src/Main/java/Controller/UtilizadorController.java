@@ -29,7 +29,7 @@ public class UtilizadorController {
     public ResultadoOperacao verificarDados(Utilizador utilizador, String nome, String email, LocalDate nascimento, String morada, String passwordFirst, String passwordSecond) {
         ResultadoOperacao resultado = new ResultadoOperacao();
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
-        boolean respValidaDataNascimento = validaDataNascimento(nascimento);
+        boolean respValidaDataNascimento = utilizadorBLL.validaDataNascimento(nascimento);
 
         if (!respValidaDataNascimento) {
             resultado.msgErro = "Deve ter mais de 18 anos para se registar.";
@@ -92,12 +92,8 @@ public class UtilizadorController {
     }
 
     public boolean validaDataNascimento(LocalDate nascimento) {
-        if (nascimento.isAfter(LocalDate.now()) || calcularIdade(nascimento) < 18) return false;
-        else return true;
-    }
-
-    public int calcularIdade(LocalDate nascimento) {
-        return Period.between(nascimento, LocalDate.now()).getYears();
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        return utilizadorBLL.validaDataNascimento(nascimento);
     }
 
     public boolean isValidEmail(String email) {
@@ -125,6 +121,12 @@ public class UtilizadorController {
         Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
         if (utilizador != null) return utilizador.getSaldo();
         return -1.0;
+    }
+
+    //IMPORTAR UTILIZADORES BY FICHEIRO - PP
+    public UtilizadorBLL.ResultadoImportacao importar() {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        return utilizadorBLL.importarUtilizadores();
     }
 
 }

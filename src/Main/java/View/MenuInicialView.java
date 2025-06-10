@@ -31,7 +31,6 @@ public class MenuInicialView {
         MenuClienteView menuClienteView = new MenuClienteView();
         MenuGestorView menuGestorView = new MenuGestorView();
         UtilizadorView utilizadorView = new UtilizadorView();
-        TESTEpp Testepp = new TESTEpp();
 
         int opcao;
         do {
@@ -58,9 +57,6 @@ public class MenuInicialView {
                     break;
                 case 2:
                     utilizadorView.registarCliente();
-                    break;
-                case 3:
-                    Testepp.importarUtilizadores();
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");

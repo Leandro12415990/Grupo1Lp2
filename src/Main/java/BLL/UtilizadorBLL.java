@@ -1,5 +1,6 @@
 package BLL;
 
+import DAL.ImportDAL;
 import DAL.TemplateDAL;
 import Controller.UtilizadorController;
 import DAL.LeilaoDAL;
@@ -7,6 +8,7 @@ import DAL.UtilizadorDAL;
 import Model.ResultadoOperacao;
 import Model.Template;
 import Model.Utilizador;
+import Utils.Constantes;
 import Utils.Constantes.templateIds;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
@@ -14,9 +16,8 @@ import jakarta.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.time.Period;
+import java.util.*;
 
 public class UtilizadorBLL {
     public List<Utilizador> carregarUtilizadores() {
@@ -148,6 +149,100 @@ public class UtilizadorBLL {
                     }
                 }
             }
+        }
+    }
+    public boolean validaDataNascimento(LocalDate nascimento) {
+        if (nascimento.isAfter(LocalDate.now()) || calcularIdade(nascimento) < 18) return false;
+        else return true;
+    }
+
+    public int calcularIdade(LocalDate nascimento) {
+        return Period.between(nascimento, LocalDate.now()).getYears();
+    }
+
+    //IMPORTAR UTILIZADORES BY FICHEIRO - PP
+    public ResultadoImportacao importarUtilizadores() {
+        ImportDAL importDAL = new ImportDAL();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        int totalImportados = 0;
+        int totalExistentes = 0;
+        List<String> erros = new ArrayList<>();
+        List<Utilizador> utilizadoresImportados = new ArrayList<>();
+
+        List<String[]> linhas = importDAL.lerLinhasCSV(Constantes.caminhosFicheiros.CSV_FILE_IMPORT_CLIENTES, 4);
+
+        for (String[] dados : linhas) {
+            try {
+                String nome = dados[0];
+                String morada = dados[1];
+                LocalDate dataNascimento = parseDate(dados[2]);
+                String email = dados[3];
+                LocalDateTime dataRegisto = LocalDateTime.now();
+
+                if (dataNascimento == null) {
+                    erros.add("Data de nascimento inválida: " + Arrays.toString(dados));
+                    continue;
+                }
+
+                if (!validaDataNascimento(dataNascimento)) {
+                    erros.add("Utilizador com menos de 18 anos: " + Arrays.toString(dados));
+                    continue;
+                }
+                
+                if (utilizadorDAL.utilizadorExiste(email)) {
+                    totalExistentes++;
+                    continue;
+                }
+
+                String password = gerarPasswordTemporaria();
+                int id = utilizadorDAL.inserirUtilizador(nome, email, dataNascimento, morada, password, dataRegisto);
+                enviarEmailNovaPassword(id);
+
+                Utilizador utilizador = new Utilizador(id, nome, email, dataNascimento, morada, password,
+                        LocalDate.now(), null, 2, 2, 0.0);
+
+                utilizadoresImportados.add(utilizador);
+                totalImportados++;
+            } catch (Exception e) {
+                erros.add("Erro ao importar linha: " + Arrays.toString(dados) + " - " + e.getMessage());
+            }
+        }
+
+        return new ResultadoImportacao(utilizadoresImportados, totalImportados, totalExistentes, erros);
+    }
+
+    private String gerarPasswordTemporaria() {
+        return UUID.randomUUID().toString().substring(0, 8);
+    }
+
+    private void enviarEmailNovaPassword(int id) throws MessagingException, IOException {
+        EmailBLL emailBLL = new EmailBLL();
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(id);
+        emailBLL.enviarEmail(Constantes.templateIds.EMAIL_CLIENTES_CRIADO_IMPORT, utilizador.getEmail(),
+                Tools.substituirTags(utilizador, null, null), utilizador.getId());
+    }
+
+    private LocalDate parseDate(String dataTexto) {
+        try {
+            return LocalDate.parse(dataTexto, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    // Classe auxiliar para devolver os dados à View
+    public static class ResultadoImportacao {
+        public final List<Utilizador> utilizadoresImportados;
+        public final int totalImportados;
+        public final int totalExistentes;
+        public final List<String> erros;
+
+        public ResultadoImportacao(List<Utilizador> utilizadoresImportados, int totalImportados, int totalExistentes, List<String> erros) {
+            this.utilizadoresImportados = utilizadoresImportados;
+            this.totalImportados = totalImportados;
+            this.totalExistentes = totalExistentes;
+            this.erros = erros;
         }
     }
 }

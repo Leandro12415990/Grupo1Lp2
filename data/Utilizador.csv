@@ -7,59 +7,61 @@ ID;NOME;EMAIL;DATA NASCIMENTO;MORADA;PASSWORD;DATA REGISTO;ULTIMO LOGIN;TIPO UTI
 6;MATILDE;MATILDE@ISEP.IPP.PT;06/03/2000;RUA DO PESSEGOS;MATILDE;15/10/2024;;2;2;0.0
 7;JOSEFINA;JOSEFINA@OUTLOOK.COM;07/03/2000;RUA DAS AMEIXAS;JOSEFINA;16/10/2024;19/10/2024;2;2;0.0
 8;GERTRUDES;GERTRUDES@GMAIL.COM;08/03/2000;RUA DAS MACAS;GERTRUDES;17/10/2024;;2;2;0.0
-9;BONIFACIA;BONIFACIA@GMAIL.COM;09/03/2000;RUA DA CROATA;BONIFACIA;18/10/2024;28/05/2025;2;2;1000.0
-10;AMELIA;AMELIA@HOTMAIL.COM;10/03/2000;RUA DO INQUILINO;AMELIA;19/10/2024;28/05/2025;2;2;0.0
-11;Leandro;leandrocmonteiro2005@gmail.com;13/05/2005;teste;123;12/03/2025;28/05/2025;1;2;0.0
-12;teste;teste@gmail.com;13/05/2005;teste;123;23/03/2025;28/05/2025;1;2;0.0
+9;BONIFACIA;BONIFACIA@GMAIL.COM;09/03/2000;RUA DA CROATA;BONIFACIA;18/10/2024;30/04/2025;2;2;1000.0
+10;AMELIA;AMELIA@HOTMAIL.COM;10/03/2000;RUA DO INQUILINO;AMELIA;19/10/2024;25/03/2025;2;2;0.0
+11;Leandro;leandrocmonteiro2005@gmail.com;13/05/2005;teste;123;12/03/2025;06/06/2025;1;2;0.0
+12;teste;teste@gmail.com;13/05/2005;teste;123;23/03/2025;10/06/2025;1;2;0.0
 13;Daniel;1241594@isep.ipp.pt;20/01/2000;Rua;1234;25/03/2025;08/05/2025;2;2;0.0
 14;André;1241581@isep.ipp.pt;29/01/2000;rua;123;25/03/2025;25/01/2025;2;2;0.0
-15;Pedro Pereira;pedromgp06@gmail.com;29/05/2006;rua;123;30/04/2025;08/05/2025;2;2;0.0
+15;Pedro Pereira;pedro@email.com;29/05/2006;rua;123;30/04/2025;08/05/2025;2;2;0.0
 16;DANIEL;1241584@ISEP.IPP.PT;10/01/1999;RUA;123;08/05/2025;08/05/2025;2;1;0.0
-65;Alice Silva;alice.silva@email.com;15/03/1985;Rua das Flores;6b6825d7;;;2;2;0.0
-66;Bruno Santos;bruno.santos@email.com;28/11/1992;Avenida Central;23d1ea15;;;2;2;0.0
-67;Carla Pereira;carla.pereira@email.com;04/07/1978;Travessa da Igreja;937baa90;;;2;2;0.0
-68;David Oliveira;david.oliveira@email.com;22/05/1989;Rua do Com�rcio;24eaec26;;;2;2;0.0
-69;Eva Rodrigues;eva.rodrigues@email.com;10/01/1995;Pra�a da Rep�blica;84e76c55;;;2;2;0.0
-70;Fernando Costa;fernando.costa@email.com;18/09/1982;Rua Nova;3e96cdc6;;;2;2;0.0
-71;Gabriela Martins;gabriela.martins@email.com;01/04/1998;Largo do Munic�pio;4fed8c7d;;;2;2;0.0
-72;Hugo Ferreira;hugo.ferreira@email.com;07/12/1975;Rua da Escola;8faf6ec5;;;2;2;0.0
-73;Isabel Gon�alves;isabel.goncalves@email.com;30/06/1991;Avenida da Liberdade;927d8518;;;2;2;0.0
-74;Jo�o Ribeiro;joao.ribeiro@email.com;14/02/1987;Rua Direita;59db0a5c;;;2;2;0.0
-75;Laura Sousa;laura.sousa@email.com;03/08/1994;Rua do Sol;a8413c2b;;;2;2;0.0
-76;Manuel Almeida;manuel.almeida@email.com;26/10/1980;Pra�a do Com�rcio;e672bd61;;;2;2;0.0
-77;N�ria Tavares;nuria.tavares@email.com;09/03/1997;Rua da Alegria;3c096b36;;;2;2;0.0
-78;Oscar Pinto;oscar.pinto@email.com;05/11/1984;Avenida dos Aliados;f5251588;;;2;2;0.0
-79;Patr�cia Castro;patricia.castro@email.com;12/07/1990;Rua da Boavista;fa78fa4c;;;2;2;0.0
-80;Ricardo Fernandes;ricardo.fernandes@email.com;21/01/1977;Rua S� da Bandeira;0cbeb296;;;2;2;0.0
-81;Sofia Barbosa;sofia.barbosa@email.com;29/09/1993;Largo de Camões;554f88d1;;;2;2;0.0
-82;Tiago Marques;tiago.marques@email.com;08/05/1981;Rua 5 de Outubro;c151657b;;;2;2;0.0
-83;Uma Pereira;uma.pereira@email.com;24/12/1996;Avenida da Igreja;18488c30;;;2;2;0.0
-84;Vasco Cunha;vasco.cunha@email.com;17/06/1986;Rua das Carmelitas;dc5a6964;;;2;2;0.0
-85;Xavier Gomes;xavier.gomes@email.com;02/02/1999;Rua de Santa Catarina;a221c867;;;2;2;0.0
-86;Yasmin Sousa;yasmin.sousa@email.com;11/08/1979;Avenida de Roma;a767bf2f;;;2;2;0.0
-87;Zacarias Alves;zacarias.alves@email.com;19/04/1992;Rua da Constitui��o;501619c3;;;2;2;0.0
-88;Ana Vieira;ana.vieira@email.com;01/10/1983;Rua Guerra Junqueiro;617c56e0;;;2;2;0.0
-89;Bernardo Leite;bernardo.leite@email.com;27/05/1995;Rua Formosa;d622e7dc;;;2;2;0.0
-90;Catarina Rocha;catarina.rocha@email.com;14/11/1976;Avenida da República;2341c9dc;;;2;2;0.0
-91;Diogo Macedo;diogo.macedo@email.com;23/03/1988;Rua Alexandre Braga;73e2556d;;;2;2;0.0
-92;Elisa Campos;elisa.campos@email.com;06/09/1991;Rua Gon�alo Cristo;cfe965dc;;;2;2;0.0
-93;F�bio Correia;fabio.correia@email.com;09/02/1984;Rua Passos Manuel;6e0037d3;;;2;2;0.0
-94;Gisela Peixoto;gisela.peixoto@email.com;15/06/1997;Rua Mouzinho da Silveira;146022ac;;;2;2;0.0
-95;Henrique Nunes;henrique.nunes@email.com;03/12/1980;Rua Brito Capelo;a66f3d27;;;2;2;0.0
-96;Íris Teixeira;iris.teixeira@email.com;31/07/1994;Rua Alvares Cabral;3b0ca5db;;;2;2;0.0
-97;Jorge Castro;jorge.castro@email.com;28/04/1973;Rua Jo�o de Deus;7d5c70cc;;;2;2;0.0
-98;Liliana Vilaça;liliana.vilaca@email.com;17/10/1999;Rua da Alf�ndega;2e05b6f3;;;2;2;0.0
-99;M�rio Pinto;mario.pinto@email.com;05/01/1982;Rua Fernandes Tom�s;d2b5a446;;;2;2;0.0
-100;Nat�lia Meireles;natalia.meireles@email.com;25/08/1996;Rua Ant�nio Carneiro;53b5718c;;;2;2;0.0
-101;Oct�vio Costa;octavio.costa@email.com;02/03/1979;Rua 31 de Janeiro;d719ec0b;;;2;2;0.0
-102;Paula Loureiro;paula.loureiro@email.com;19/11/1993;Rua de Ulisses;e0a9973a;;;2;2;0.0
-103;Quintino Barros;quintino.barros@email.com;08/06/1985;Rua Dom Jo�o IV;46260711;;;2;2;0.0
-104;Raquel Freitas;raquel.freitas@email.com;16/02/1990;Rua da Torrinha;7d35b131;;;2;2;0.0
-105;S�rgio Vila;sergio.vila@email.com;24/09/1977;Rua da Restaura��o;0861d1ef;;;2;2;0.0
-106;T�nia Valente;tania.valente@email.com;13/05/1998;Rua da Picaria;085d0b8d;;;2;2;0.0
-107;Ulisses Rocha;ulisses.rocha@email.com;10/07/1981;Rua do Almada;4dab1d9b;;;2;2;0.0
-108;Vera Magalh�es;vera.magalhaes@email.com;30/12/1992;Rua Ceuta;e7336437;;;2;2;0.0
-109;Wagner Pereira;wagner.pereira@email.com;06/08/1987;Rua Avis;870807b9;;;2;2;0.0
-110;Xana Oliveira;xana.oliveira@email.com;04/04/1995;Rua do Bonjardim;6ddc456d;;;2;2;0.0
-111;Yuri Sousa;yuri.sousa@email.com;29/10/1974;Rua Santos Afonso;90999bc3;;;2;2;0.0
-112;Zara Fernandes;zara.fernandes@email.com;12/01/1999;Rua Duque de Loul�;6ae2b383;;;2;2;0.0
+17;insertAlterado;insert@gmail.com;13/05/2005;rrr;123;06/06/2025;06/06/2025;2;2;0.0
+18;Alice Silva;alice.silva@email.com;15/03/1985;Rua das Flores;b6de0a86;10/06/2025;;2;2;0.0
+19;Bruno Santos;bruno.santos@email.com;28/11/1992;Avenida Central;c8a111bc;10/06/2025;;2;2;0.0
+20;Carla Pereira;carla.pereira@email.com;04/07/1978;Travessa da Igreja;742f81ac;10/06/2025;;2;2;0.0
+21;David Oliveira;david.oliveira@email.com;22/05/1989;Rua do Comércio;575a5e46;10/06/2025;;2;2;0.0
+22;Eva Rodrigues;eva.rodrigues@email.com;10/01/1995;Praça da República;b069d11c;10/06/2025;;2;2;0.0
+23;Fernando Costa;fernando.costa@email.com;18/09/1982;Rua Nova;e09bd114;10/06/2025;;2;2;0.0
+24;Gabriela Martins;gabriela.martins@email.com;01/04/1998;Largo do Município;3aeec13f;10/06/2025;;2;2;0.0
+25;Hugo Ferreira;hugo.ferreira@email.com;07/12/1975;Rua da Escola;a0e90555;10/06/2025;;2;2;0.0
+26;Isabel Gonçalves;isabel.goncalves@email.com;30/06/1991;Avenida da Liberdade;bf38b9f0;10/06/2025;;2;2;0.0
+27;João Ribeiro;joao.ribeiro@email.com;14/02/1987;Rua Direita;7c3349e3;10/06/2025;;2;2;0.0
+28;Laura Sousa;laura.sousa@email.com;03/08/1994;Rua do Sol;5db602df;10/06/2025;;2;2;0.0
+29;Manuel Almeida;manuel.almeida@email.com;26/10/1980;Praça do Comércio;839b20fb;10/06/2025;;2;2;0.0
+30;Núria Tavares;nuria.tavares@email.com;09/03/1997;Rua da Alegria;c7261417;10/06/2025;;2;2;0.0
+31;Oscar Pinto;oscar.pinto@email.com;05/11/1984;Avenida dos Aliados;e9717f91;10/06/2025;;2;2;0.0
+32;Patrícia Castro;patricia.castro@email.com;12/07/1990;Rua da Boavista;9c7bd76a;10/06/2025;;2;2;0.0
+33;Ricardo Fernandes;ricardo.fernandes@email.com;21/01/1977;Rua Sá da Bandeira;822f037b;10/06/2025;;2;2;0.0
+34;Sofia Barbosa;sofia.barbosa@email.com;29/09/1993;Largo de CamÃµes;4cd1c447;10/06/2025;;2;2;0.0
+35;Tiago Marques;tiago.marques@email.com;08/05/1981;Rua 5 de Outubro;387d624d;10/06/2025;;2;2;0.0
+36;Uma Pereira;uma.pereira@email.com;24/12/1996;Avenida da Igreja;b93a5706;10/06/2025;;2;2;0.0
+37;Vasco Cunha;vasco.cunha@email.com;17/06/1986;Rua das Carmelitas;eee667e7;10/06/2025;;2;2;0.0
+38;Xavier Gomes;xavier.gomes@email.com;02/02/1999;Rua de Santa Catarina;4e37ce86;10/06/2025;;2;2;0.0
+39;Yasmin Sousa;yasmin.sousa@email.com;11/08/1979;Avenida de Roma;d8258d90;10/06/2025;;2;2;0.0
+40;Zacarias Alves;zacarias.alves@email.com;19/04/1992;Rua da Constituição;7793d7b0;10/06/2025;;2;2;0.0
+41;Ana Vieira;ana.vieira@email.com;01/10/1983;Rua Guerra Junqueiro;a09270a6;10/06/2025;;2;2;0.0
+42;Bernardo Leite;bernardo.leite@email.com;27/05/1995;Rua Formosa;698e7782;10/06/2025;;2;2;0.0
+43;Catarina Rocha;catarina.rocha@email.com;14/11/1976;Avenida da RepÃºblica;6804bb07;10/06/2025;;2;2;0.0
+44;Diogo Macedo;diogo.macedo@email.com;23/03/1988;Rua Alexandre Braga;c0cad541;10/06/2025;;2;2;0.0
+45;Elisa Campos;elisa.campos@email.com;06/09/1991;Rua Gonçalo Cristo;429c20c4;10/06/2025;;2;2;0.0
+46;Fábio Correia;fabio.correia@email.com;09/02/1984;Rua Passos Manuel;fc815fc5;10/06/2025;;2;2;0.0
+47;Gisela Peixoto;gisela.peixoto@email.com;15/06/1997;Rua Mouzinho da Silveira;74855727;10/06/2025;;2;2;0.0
+48;Henrique Nunes;henrique.nunes@email.com;03/12/1980;Rua Brito Capelo;b1abc62f;10/06/2025;;2;2;0.0
+49;Ãris Teixeira;iris.teixeira@email.com;31/07/1994;Rua Alvares Cabral;a5fd0f78;10/06/2025;;2;2;0.0
+50;Jorge Castro;jorge.castro@email.com;28/04/1973;Rua João de Deus;9831bd74;10/06/2025;;2;2;0.0
+51;Liliana VilaÃ§a;liliana.vilaca@email.com;17/10/1999;Rua da Alfândega;2c4a87e2;10/06/2025;;2;2;0.0
+52;Mário Pinto;mario.pinto@email.com;05/01/1982;Rua Fernandes Tomás;66a1bee6;10/06/2025;;2;2;0.0
+53;Natália Meireles;natalia.meireles@email.com;25/08/1996;Rua António Carneiro;1cbf9681;10/06/2025;;2;2;0.0
+54;Octávio Costa;octavio.costa@email.com;02/03/1979;Rua 31 de Janeiro;a0afb29e;10/06/2025;;2;2;0.0
+55;Paula Loureiro;paula.loureiro@email.com;19/11/1993;Rua de Ulisses;8687efdc;10/06/2025;;2;2;0.0
+56;Quintino Barros;quintino.barros@email.com;08/06/1985;Rua Dom João IV;65c1f67a;10/06/2025;;2;2;0.0
+57;Raquel Freitas;raquel.freitas@email.com;16/02/1990;Rua da Torrinha;d5ae6fce;10/06/2025;;2;2;0.0
+58;Sérgio Vila;sergio.vila@email.com;24/09/1977;Rua da Restauração;9dea4a52;10/06/2025;;2;2;0.0
+59;Tânia Valente;tania.valente@email.com;13/05/1998;Rua da Picaria;ccb5d595;10/06/2025;;2;2;0.0
+60;Ulisses Rocha;ulisses.rocha@email.com;10/07/1981;Rua do Almada;0eb34f87;10/06/2025;;2;2;0.0
+61;Vera Magalhães;vera.magalhaes@email.com;30/12/1992;Rua Ceuta;dd3cb88a;10/06/2025;;2;2;0.0
+62;Wagner Pereira;wagner.pereira@email.com;06/08/1987;Rua Avis;3790b9da;10/06/2025;;2;2;0.0
+63;Xana Oliveira;xana.oliveira@email.com;04/04/1995;Rua do Bonjardim;4672481f;10/06/2025;;2;2;0.0
+64;Yuri Sousa;yuri.sousa@email.com;29/10/1974;Rua Santos Afonso;b3ea9530;10/06/2025;;2;2;0.0
+65;Zara Fernandes;zara.fernandes@email.com;12/01/1999;Rua Duque de Loulé;4b405256;10/06/2025;;2;2;0.0
+66;Pedro Pereira;pedromgp06@gmail.com;29/05/2006;Rua do Mato;8812b658;10/06/2025;;2;2;0.0

@@ -2,17 +2,15 @@ package DAL;
 
 import Model.Utilizador;
 import Utils.Constantes;
-import Utils.DataBaseConnection;
 import Utils.Tools;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static Utils.DataBaseConnection.getConnection;
 
 public class UtilizadorDAL {
     public List<Utilizador> carregarUtilizadoresCSV() {
@@ -57,7 +55,7 @@ public class UtilizadorDAL {
         String sql = "SELECT * FROM Utilizador";
 
         try (
-                Connection conn = DataBaseConnection.getConnection();
+                Connection conn = getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery();
         ) {
@@ -120,4 +118,49 @@ public class UtilizadorDAL {
             System.err.println("Erro ao gravar utilizadores na base de dados: " + e.getMessage());
         }
     }*/
+
+    //IMPORTAR UTILIZADORES BY FICHEIRO - PP
+    public boolean utilizadorExiste(String email) throws SQLException {
+        String sql = "SELECT 1 FROM Utilizador WHERE EMAIL = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    public int inserirUtilizador(String nome, String email, LocalDate dataNascimento, String morada, String password, LocalDateTime dataRegisto) throws SQLException {
+        String sql = "INSERT INTO Utilizador (NOME, EMAIL, DATA_NASCIMENTO, MORADA, PASSWORD, DATA_REGISTO, TIPO_UTILIZADOR, ESTADO, SALDO) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0.0)";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, nome);
+            stmt.setString(2, email);
+            stmt.setDate(3, java.sql.Date.valueOf(dataNascimento));
+            stmt.setString(4, morada);
+            stmt.setString(5, password);
+            stmt.setTimestamp(6, java.sql.Timestamp.valueOf(dataRegisto));
+
+            stmt.setInt(7, Tools.tipoUtilizador.CLIENTE.getCodigo()); // TIPO_UTILIZADOR
+            stmt.setInt(8, Tools.estadoUtilizador.ATIVO.getCodigo()); // ESTADO
+
+            int linhasAfetadas = stmt.executeUpdate();
+            if (linhasAfetadas == 0) {
+                throw new SQLException("A inserção do utilizador falhou, nenhuma linha afetada.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("A inserção do utilizador falhou, nenhum ID gerado.");
+                }
+            }
+
+        }
+    }
 }

@@ -23,11 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 public class TemplateDAL {
-    private Map<String, Template> templatesCache = null;
+    //private Map<String, Template> templatesCache = null;
+    private Map<String, Template> templatesCache;
+
     private final String CABECALHO = "\"ID\"" + Tools.separador() +
             "\"Assunto\"" + Tools.separador() + "\"Corpo\"";
 
-    private ResultadoOperacao carregarTodosTemplatesCSV() {
+    private ResultadoOperacao carregarTodosTemplates() {
         templatesCache = new HashMap<>();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
@@ -77,7 +79,7 @@ public class TemplateDAL {
         return resultado;
     }
 
-    public List<Transacao> carregarTodosTemplates() {
+    public List<Transacao> carregarTodosTemplatesSQL() {
         List<Transacao> listaTransacoes = new ArrayList<>();
 
         String sql = "SELECT * FROM Transacao";

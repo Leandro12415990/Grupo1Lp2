@@ -1,6 +1,7 @@
 package View;
 
 import BLL.EmailBLL;
+import BLL.UtilizadorBLL;
 import Controller.UtilizadorController;
 import DAL.TemplateDAL;
 import Model.ResultadoOperacao;
@@ -259,6 +260,12 @@ public class UtilizadorView {
     public Utilizador procurarUtilizadorPorEmail(String email) {
         UtilizadorController utilizadorController = new UtilizadorController();
         return utilizadorController.procurarUtilizadorPorEmail(email);
+    }
+
+    //IMPORTAR UTILIZADORES BY FICHEIRO - PP
+    public UtilizadorBLL.ResultadoImportacao importar() {
+        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        return utilizadorBLL.importarUtilizadores();
     }
 
 }
