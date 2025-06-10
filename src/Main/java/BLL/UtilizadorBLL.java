@@ -188,7 +188,7 @@ public class UtilizadorBLL {
                     erros.add("Utilizador com menos de 18 anos: " + Arrays.toString(dados));
                     continue;
                 }
-                
+
                 if (utilizadorDAL.utilizadorExiste(email)) {
                     totalExistentes++;
                     continue;

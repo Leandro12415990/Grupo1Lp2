@@ -23,13 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 public class TemplateDAL {
-    //private Map<String, Template> templatesCache = null;
-    private Map<String, Template> templatesCache;
+    private Map<String, Template> templatesCache = null;
 
-    private final String CABECALHO = "\"ID\"" + Tools.separador() +
-            "\"Assunto\"" + Tools.separador() + "\"Corpo\"";
-
-    private ResultadoOperacao carregarTodosTemplates() {
+    private ResultadoOperacao carregarTodosTemplatesCSV() {
         templatesCache = new HashMap<>();
         ResultadoOperacao resultado = new ResultadoOperacao();
 
@@ -79,10 +75,10 @@ public class TemplateDAL {
         return resultado;
     }
 
-    public List<Transacao> carregarTodosTemplatesSQL() {
-        List<Transacao> listaTransacoes = new ArrayList<>();
+    public List<Template> carregarTodosTemplates() {
+        List<Template> listaTemplate = new ArrayList<>();
 
-        String sql = "SELECT * FROM Transacao";
+        String sql = "SELECT * FROM Template";
 
         try (
                 Connection conn = DataBaseConnection.getConnection();
@@ -90,42 +86,51 @@ public class TemplateDAL {
                 ResultSet rs = stmt.executeQuery();
         ) {
             while (rs.next()) {
-                int id_transacao = rs.getInt("ID_TRANSACAO");
-                int id_cliente = rs.getInt("ID_CLIENTE");
-                double valor_total = rs.getDouble("VALOR_TOTAL");
-                double valor_transacao = rs.getDouble("VALOR_TRANSACAO");
+                String id_template = rs.getString("id_Template");
+                String assunto = rs.getString("Assunto");
+                String corpo = rs.getString("Corpo");
 
-                // Converte java.sql.Date para java.time.LocalDateTime
-                LocalDateTime data_transacao = rs.getTimestamp("DATA_TRANSACAO") != null
-                        ? rs.getTimestamp("DATA_TRANSACAO").toLocalDateTime()
-                        : null;
-
-                int tipo_transacao = rs.getInt("TIPO_TRANSACAO");
-                int estado = rs.getInt("ESTADO");
-
-                Transacao transacao = new Transacao(id_transacao, id_cliente, valor_total, valor_transacao, data_transacao,
-                        tipo_transacao, estado);
-                listaTransacoes.add(transacao);
+                Template template = new Template(id_template, assunto, corpo);
+                listaTemplate.add(template);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return listaTransacoes;
+        return listaTemplate;
     }
 
     public Template carregarTemplatePorId(String idProcurado) throws IOException {
-        if (templatesCache == null)
-            carregarTodosTemplates();
-        return templatesCache.get(idProcurado);
+        Template templateRetornado = null;
+
+        String sql = "SELECT * FROM Template WHERE id_Template = ?";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+        ) {
+            stmt.setString(1, idProcurado);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String id_template = rs.getString("id_Template");
+                    String assunto = rs.getString("Assunto");
+                    String corpo = rs.getString("Corpo");
+
+                    templateRetornado = new Template(id_template, assunto, corpo);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return templateRetornado;
     }
 
-    public void guardarTemplate(String id, Template template) throws IOException {
+    public void guardarTemplateCSV(String id, Template template) throws IOException {
         if (templatesCache == null) carregarTodosTemplates();
         templatesCache.put(id, template);
 
         List<String> linhasParaGravar = new ArrayList<>();
-        linhasParaGravar.add(CABECALHO);
 
         for (Map.Entry<String, Template> entry : templatesCache.entrySet()) {
             String idAtual = entry.getKey();
@@ -141,5 +146,40 @@ public class TemplateDAL {
             linhasParaGravar.add(linha);
         }
         Files.write(Paths.get(caminhosFicheiros.CSV_FILE_TEMPLATE), linhasParaGravar);
+    }
+
+    public void guardarTemplate(String id, Template template) throws IOException {
+        String sqlInsert = "INSERT INTO Template (Assunto, Corpo) " +
+                "VALUES (?, ?)";
+
+        String sqlUpdate = "UPDATE Template SET Assunto = ?, Corpo = ? " +
+                "WHERE Id_Template = ?";
+
+        try (
+                Connection conn = DataBaseConnection.getConnection();
+                PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+                PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ) {
+            if (template.getId() == "0") {
+                // INSERT
+                stmtInsert.setString(1, template.getId());
+                stmtInsert.setString(2, template.getAssunto());
+                stmtInsert.setString(4, template.getCorpo());
+
+                stmtInsert.addBatch();
+            } else {
+                // UPDATE
+                stmtUpdate.setString(1, template.getId());
+                stmtUpdate.setString(2, template.getAssunto());
+                stmtUpdate.setString(4, template.getCorpo());
+
+                stmtUpdate.addBatch();
+            }
+
+            stmtInsert.executeBatch();
+            stmtUpdate.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

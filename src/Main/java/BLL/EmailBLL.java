@@ -135,9 +135,10 @@ public class EmailBLL {
 
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
         message.setSubject(assunto);
+        corpo = corpo.replace("\\n", "\n");
         message.setText(corpo);
 
-        String corpoTexto = removerTagsHtml(corpo);
+        String corpoTexto = removerTagsHtml(corpo); // apenas para guardar limpo
         Email email = new Email(
                 0,
                 configEmail.fromEmail,
@@ -157,6 +158,7 @@ public class EmailBLL {
 
         return message;
     }
+
 
     private String substituirTags(String texto, Map<String, String> variaveis) {
         for (Map.Entry<String, String> entry : variaveis.entrySet()) {
