@@ -380,6 +380,37 @@ public class Tools {
         }
     }
 
+    public static double pedirDouble(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String input = scanner.nextLine().trim();
+
+            if (verificarSaida(input)) return -1.0;
+
+            try {
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor insira um número decimal válido.");
+            }
+        }
+    }
+
+    public static int pedirInt(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String input = scanner.nextLine().trim();
+
+            if (verificarSaida(input)) return -1;
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor insira um número inteiro válido.");
+            }
+        }
+    }
+
+
     public static List<Map<String, Object>> executeQuery(String query) {
         List<Map<String, Object>> results = new ArrayList<>();
 

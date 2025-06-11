@@ -24,10 +24,11 @@ public class LanceDAL {
             int idLeilao = Integer.parseInt(dados[1]);
             int idCliente = Integer.parseInt(dados[2]);
             double valorLance = Double.parseDouble(dados[3]);
-            int numLance = dados[4].isEmpty() ? 0 : Integer.parseInt(dados[4]);
-            int pontosUtilizados = dados[5].isEmpty() ? 0 : Integer.parseInt(dados[5]);
+            int idNegociacao = dados[4].isEmpty() ? 0 : Integer.parseInt(dados[4]);
+            double valorContraProposta = Double.parseDouble(dados[5]);
             LocalDateTime dataLance = Tools.parseDateTimeByDate(dados[6]);
-            return new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
+            int estado = Integer.parseInt(dados[7]);
+            return new Lance(idLance, idLeilao, idCliente, valorLance, idNegociacao, valorContraProposta, dataLance, estado);
         });
     }
 
@@ -79,16 +80,17 @@ public class LanceDAL {
 
     public void gravarLances(List<Lance> lances) {
         ImportDAL importDal = new ImportDAL();
-        String cabecalho = "ID APOSTA;ID LEILÃO;ID CLIENTE;VALOR APOSTA;MULTIPLOS UTILIZADOS;PONTOS UTILIZADOS;DATA APOSTA";
+        String cabecalho = "ID APOSTA;ID LEILÃO;ID CLIENTE;VALOR APOSTA;ID NEGOCIACAO;VALOR CONTRAPROPOSTA;DATA APOSTA;ESTADO";
         importDal.gravarRegistos(caminhosFicheiros.CSV_FILE_LANCE, cabecalho, lances, lance ->
                 String.join(Tools.separador(),
                         String.valueOf(lance.getIdLance()),
                         String.valueOf(lance.getIdLeilao()),
                         String.valueOf(lance.getIdCliente()),
                         String.valueOf(lance.getValorLance()),
-                        String.valueOf(lance.getNumLance()),
-                        String.valueOf(lance.getPontosUtilizados()),
-                        Tools.formatDateTime(lance.getDataLance())
+                        String.valueOf(lance.getIdNegociacao()),
+                        String.valueOf(lance.getValorContraProposta()),
+                        Tools.formatDateTime(lance.getDataLance()),
+                        String.valueOf(lance.getEstado())
                 )
         );
 
