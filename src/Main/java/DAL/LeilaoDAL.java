@@ -65,7 +65,7 @@ public class LeilaoDAL {
                 ResultSet rs = stmt.executeQuery();
         ) {
             while (rs.next()) {
-                int id_Leilao = rs.getInt("id_Leilao");
+                int id_Leilao = rs.getInt("Id_Leilao");
                 int id_Produto = rs.getInt("id_Produto");
                 String descricao = rs.getString("Descricao");
                 int tipoLeilao = rs.getInt("Tipo_Leilao");
@@ -93,10 +93,10 @@ public class LeilaoDAL {
 
     public void gravarLeiloes(List<Leilao> leiloes) {
 
-        String sqlInsert = "INSERT INTO Transacao (id_Produto, Descricao, Tipo_Leilao, Data_Inicio, Data_Fim, Valor_Minimo, Valor_Maximo, Multiplo_Lance, Estado_Leilao) " +
+        String sqlInsert = "INSERT INTO Leilao (id_Produto, Descricao, Tipo_Leilao, Data_Inicio, Data_Fim, Valor_Minimo, Valor_Maximo, Multiplo_Lance, Estado_Leilao) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        String sqlUpdate = "UPDATE Transacao SET id_Produto = ?, Descricao = ?, Tipo_Leilao = ?, Data_Inicio = ?, Data_Fim = ?, Valor_Minimo = ?, Valor_Maximo = ?, Multiplo_Lance = ?, Estado_Leilao = ? " +
+        String sqlUpdate = "UPDATE Leilao SET id_Produto = ?, Descricao = ?, Tipo_Leilao = ?, Data_Inicio = ?, Data_Fim = ?, Valor_Minimo = ?, Valor_Maximo = ?, Multiplo_Lance = ?, Estado_Leilao = ? " +
                 "WHERE Id_Leilao = ?";
 
         try (
@@ -109,15 +109,15 @@ public class LeilaoDAL {
                     // INSERT
                     stmtInsert.setInt(1, u.getIdProduto());
                     stmtInsert.setString(2, u.getDescricao());
-                    stmtInsert.setDouble(4, u.getTipoLeilao());
-                    stmtInsert.setDate(6, u.getDataInicio() != null
+                    stmtInsert.setDouble(3, u.getTipoLeilao());
+                    stmtInsert.setDate(4, u.getDataInicio() != null
                             ? java.sql.Date.valueOf(u.getDataInicio().toLocalDate())
                             : null);
-                    stmtInsert.setDate(6, u.getDataFim() != null
+                    stmtInsert.setDate(5, u.getDataFim() != null
                             ? java.sql.Date.valueOf(u.getDataFim().toLocalDate())
                             : null);
-                    stmtInsert.setDouble(8, u.getValorMinimo());
-                    stmtInsert.setDouble(8, u.getValorMaximo());
+                    stmtInsert.setDouble(6, u.getValorMinimo());
+                    stmtInsert.setDouble(7, u.getValorMaximo());
                     stmtInsert.setDouble(8, u.getMultiploLance());
                     stmtInsert.setInt(9, u.getEstado());
 
@@ -126,17 +126,18 @@ public class LeilaoDAL {
                     // UPDATE
                     stmtUpdate.setInt(1, u.getIdProduto());
                     stmtUpdate.setString(2, u.getDescricao());
-                    stmtUpdate.setDouble(4, u.getTipoLeilao());
-                    stmtUpdate.setDate(6, u.getDataInicio() != null
+                    stmtUpdate.setDouble(3, u.getTipoLeilao());
+                    stmtUpdate.setDate(4, u.getDataInicio() != null
                             ? java.sql.Date.valueOf(u.getDataInicio().toLocalDate())
                             : null);
-                    stmtUpdate.setDate(6, u.getDataFim() != null
+                    stmtUpdate.setDate(5, u.getDataFim() != null
                             ? java.sql.Date.valueOf(u.getDataFim().toLocalDate())
                             : null);
-                    stmtUpdate.setDouble(8, u.getValorMinimo());
-                    stmtUpdate.setDouble(8, u.getValorMaximo());
+                    stmtUpdate.setDouble(6, u.getValorMinimo());
+                    stmtUpdate.setDouble(7, u.getValorMaximo());
                     stmtUpdate.setDouble(8, u.getMultiploLance());
                     stmtUpdate.setInt(9, u.getEstado());
+                    stmtUpdate.setInt(10, u.getId());
 
                     stmtUpdate.addBatch();
                 }

@@ -78,18 +78,17 @@ public class ProdutoDAL {
             for (Produto u : produtos) {
                 if (u.getIdProduto() == 0) {
                     // INSERT
-                    stmtInsert.setInt(1, u.getIdProduto());
-                    stmtInsert.setInt(2, u.getEstado());
-                    stmtInsert.setString(4, u.getNome());
-                    stmtInsert.setString(5, u.getDescricao());
+                    stmtInsert.setInt(1, u.getEstado());
+                    stmtInsert.setString(2, u.getNome());
+                    stmtInsert.setString(3, u.getDescricao());
 
                     stmtInsert.addBatch();
                 } else {
                     // UPDATE
-                    stmtUpdate.setInt(1, u.getIdProduto());
-                    stmtUpdate.setInt(2, u.getEstado());
-                    stmtUpdate.setString(4, u.getNome());
-                    stmtUpdate.setString(5, u.getDescricao());
+                    stmtUpdate.setInt(1, u.getEstado());
+                    stmtUpdate.setString(2, u.getNome());
+                    stmtUpdate.setString(3, u.getDescricao());
+                    stmtUpdate.setInt(4, u.getIdProduto());
 
                     stmtUpdate.addBatch();
                 }

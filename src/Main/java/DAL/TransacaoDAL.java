@@ -97,26 +97,27 @@ public class TransacaoDAL {
                     // INSERT
                     stmtInsert.setInt(1, u.getIdTransacao());
                     stmtInsert.setInt(2, u.getIdCliente());
-                    stmtInsert.setDouble(4, u.getValorTotal());
-                    stmtInsert.setDouble(5, u.getValorTransacao());
-                    stmtInsert.setDate(6, u.getDataTransacao() != null
+                    stmtInsert.setDouble(3, u.getValorTotal());
+                    stmtInsert.setDouble(4, u.getValorTransacao());
+                    stmtInsert.setDate(5, u.getDataTransacao() != null
                             ? java.sql.Date.valueOf(u.getDataTransacao().toLocalDate())
                             : null);
-                    stmtInsert.setInt(8, u.getIdTipoTransacao());
-                    stmtInsert.setInt(9, u.getIdEstadoTransacao());
+                    stmtInsert.setInt(6, u.getIdTipoTransacao());
+                    stmtInsert.setInt(7, u.getIdEstadoTransacao());
 
                     stmtInsert.addBatch();
                 } else {
                     // UPDATE
                     stmtUpdate.setInt(1, u.getIdTransacao());
                     stmtUpdate.setInt(2, u.getIdCliente());
-                    stmtUpdate.setDouble(4, u.getValorTotal());
-                    stmtUpdate.setDouble(5, u.getValorTransacao());
-                    stmtUpdate.setDate(6, u.getDataTransacao() != null
+                    stmtUpdate.setDouble(3, u.getValorTotal());
+                    stmtUpdate.setDouble(4, u.getValorTransacao());
+                    stmtUpdate.setDate(5, u.getDataTransacao() != null
                             ? java.sql.Date.valueOf(u.getDataTransacao().toLocalDate())
                             : null);
-                    stmtUpdate.setInt(8, u.getIdTipoTransacao());
-                    stmtUpdate.setInt(9, u.getIdEstadoTransacao());
+                    stmtUpdate.setInt(6, u.getIdTipoTransacao());
+                    stmtUpdate.setInt(7, u.getIdEstadoTransacao());
+                    stmtUpdate.setInt(8, u.getIdTransacao());
 
                     stmtUpdate.addBatch();
                 }

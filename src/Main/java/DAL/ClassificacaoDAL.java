@@ -109,7 +109,7 @@ public class ClassificacaoDAL {
 
     public void gravarClassificacoes(List<Classificacao> lista) {
 
-        String sqlInsert = "INSERT INTO Classificacao (id_Utilizador, Classificacao, Comentario) " +
+        String sqlInsert = "INSERT INTO Classificacao (id_Leilao, id_Utilizador, Classificacao, Comentario) " +
                 "VALUES (?, ?, ?)";
 
         try (
@@ -120,8 +120,8 @@ public class ClassificacaoDAL {
                 // INSERT
                 stmtInsert.setInt(1, u.getIdLeilao());
                 stmtInsert.setInt(2, u.getIdUtilizador());
-                stmtInsert.setInt(4, u.getClassificacao());
-                stmtInsert.setString(5, u.getComentario());
+                stmtInsert.setInt(3, u.getClassificacao());
+                stmtInsert.setString(4, u.getComentario());
 
                 stmtInsert.addBatch();
             }

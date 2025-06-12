@@ -25,8 +25,8 @@ public class MenuInicialView {
         LanceDAL lanceDAL = new LanceDAL();
         List<Lance> lances = lanceDAL.carregarLances();
         Tools.inicializarUltimoIdLance(lances);
-        AgenteBLL agenteBLL = new AgenteBLL();
-        agenteBLL.iniciarMonitorizacaoDinamica();
+        //AgenteBLL agenteBLL = new AgenteBLL();
+        //agenteBLL.iniciarMonitorizacaoDinamica();
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
         relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 27));
 

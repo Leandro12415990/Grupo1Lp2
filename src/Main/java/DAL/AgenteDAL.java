@@ -120,7 +120,7 @@ public class AgenteDAL {
                 ResultSet rs = stmt.executeQuery();
         ) {
             while (rs.next()) {
-                int id = rs.getInt("Id_Agente");
+                int id = rs.getInt("id_Agente");
                 int clienteId = rs.getInt("id_Cliente");
                 int leilaoId = rs.getInt("id_leilao");
 
@@ -142,7 +142,7 @@ public class AgenteDAL {
                 "VALUES (?, ?, ?)";
 
         String sqlUpdate = "UPDATE Agente SET id_Cliente = ?, id_Leilao = ?, Data_Configuracao = ? " +
-                "WHERE Id_Agente = ?";
+                "WHERE id_Agente = ?";
 
         try (
                 Connection conn = DataBaseConnection.getConnection();
@@ -154,7 +154,7 @@ public class AgenteDAL {
                     // INSERT
                     stmtInsert.setInt(1, u.getClienteId());
                     stmtInsert.setInt(2, u.getLeilaoId());
-                    stmtInsert.setDate(6, u.getDataConfiguracao() != null
+                    stmtInsert.setDate(3, u.getDataConfiguracao() != null
                             ? java.sql.Date.valueOf(u.getDataConfiguracao().toLocalDate())
                             : null);
 
@@ -163,9 +163,10 @@ public class AgenteDAL {
                     // UPDATE
                     stmtUpdate.setInt(1, u.getClienteId());
                     stmtUpdate.setInt(2, u.getLeilaoId());
-                    stmtUpdate.setDate(6, u.getDataConfiguracao() != null
+                    stmtUpdate.setDate(3, u.getDataConfiguracao() != null
                             ? java.sql.Date.valueOf(u.getDataConfiguracao().toLocalDate())
                             : null);
+                    stmtUpdate.setInt(4, u.getId());
 
                     stmtUpdate.addBatch();
                 }

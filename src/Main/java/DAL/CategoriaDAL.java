@@ -83,6 +83,7 @@ public class CategoriaDAL {
                     // UPDATE
                     stmtUpdate.setString(1, u.getDescricao());
                     stmtUpdate.setInt(2, u.getEstado());
+                    stmtUpdate.setInt(3, u.getIdCategoria());
 
                     stmtUpdate.addBatch();
                 }

@@ -84,10 +84,10 @@ public class EmailDAL {
 
     public void gravarEmails(List<Email> emails) {
 
-        String sqlInsert = "INSERT INTO Transacao (From_Email, id_Cliente, To_Email, Subject, Body, DateCreated, id_Tipo_Email) " +
+        String sqlInsert = "INSERT INTO Email (From_Email, id_Cliente, To_Email, Subject, Body, DateCreated, id_Tipo_Email) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        String sqlUpdate = "UPDATE Transacao SET From_Email = ?, id_Cliente = ?, To_Email = ?, Subject = ?, Body = ?, DateCreated = ?, id_Tipo_Email = ? " +
+        String sqlUpdate = "UPDATE Email SET From_Email = ?, id_Cliente = ?, To_Email = ?, Subject = ?, Body = ?, DateCreated = ?, id_Tipo_Email = ? " +
                 "WHERE Id_Email = ?";
 
         try (
@@ -100,26 +100,27 @@ public class EmailDAL {
                     // INSERT
                     stmtInsert.setString(1, u.getFromEmail());
                     stmtInsert.setInt(2, u.getIdCliente());
-                    stmtInsert.setString(4, u.getToEmail());
-                    stmtInsert.setString(5, u.getSubject());
-                    stmtInsert.setString(8, u.getBody());
+                    stmtInsert.setString(3, u.getToEmail());
+                    stmtInsert.setString(4, u.getSubject());
+                    stmtInsert.setString(5, u.getBody());
                     stmtInsert.setDate(6, u.getDateCreated() != null
                             ? java.sql.Date.valueOf(u.getDateCreated().toLocalDate())
                             : null);
-                    stmtInsert.setString(9, u.getIdTipoEmail());
+                    stmtInsert.setString(7, u.getIdTipoEmail());
 
                     stmtInsert.addBatch();
                 } else {
                     // UPDATE
                     stmtUpdate.setString(1, u.getFromEmail());
                     stmtUpdate.setInt(2, u.getIdCliente());
-                    stmtUpdate.setString(4, u.getToEmail());
-                    stmtUpdate.setString(5, u.getSubject());
-                    stmtUpdate.setString(8, u.getBody());
+                    stmtUpdate.setString(3, u.getToEmail());
+                    stmtUpdate.setString(4, u.getSubject());
+                    stmtUpdate.setString(5, u.getBody());
                     stmtUpdate.setDate(6, u.getDateCreated() != null
                             ? java.sql.Date.valueOf(u.getDateCreated().toLocalDate())
                             : null);
-                    stmtUpdate.setString(9, u.getIdTipoEmail());
+                    stmtUpdate.setString(7, u.getIdTipoEmail());
+                    stmtUpdate.setInt(8, u.getIdEmail());
 
                     stmtUpdate.addBatch();
                 }

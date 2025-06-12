@@ -41,8 +41,8 @@ public class LanceDAL {
                         String.valueOf(lance.getIdLeilao()),
                         String.valueOf(lance.getIdCliente()),
                         String.valueOf(lance.getValorLance()),
-                        String.valueOf(lance.getNumLance()),
-                        String.valueOf(lance.getPontosUtilizados()),
+                        String.valueOf(lance.getIdNegociacao()),
+                        String.valueOf(lance.getValorContraProposta()),
                         Tools.formatDateTime(lance.getDataLance())
                 )
         );
@@ -62,14 +62,16 @@ public class LanceDAL {
                 int idLance = rs.getInt("id_Lance");
                 int idLeilao = rs.getInt("id_Leilao");
                 int idCliente = rs.getInt("id_Cliente");
-                double valorLance = rs.getDouble("Valor_Aposta");
-                int Multiplos_Utilzadores = rs.getInt("Multiplos_Utilizados");
-                int pontosUtilizados = rs.getInt("Pontos_Utilizados");
+                double valorAposta = rs.getDouble("Valor_Aposta");
+                int idNegociacao = rs.getInt("id_Negociacao");
+                double valorContraProposta = rs.getDouble("valor_Contra_Proposta");
 
                 // Converte java.sql.Date para java.time.LocalDate
-                LocalDateTime dataAposta = rs.getTimestamp("DATA_Aposta") != null ? rs.getTimestamp("DATA_Aposta").toLocalDateTime() : null;
+                LocalDateTime dataAposta = rs.getTimestamp("Data_Aposta") != null ? rs.getTimestamp("Data_Aposta").toLocalDateTime() : null;
 
-                Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, Multiplos_Utilzadores, pontosUtilizados, dataAposta);
+                int estado = rs.getInt("Estado");
+
+                Lance lance = new Lance(idLance, idLeilao, idCliente, valorAposta, idNegociacao, valorContraProposta, dataAposta, estado);
                 listaLance.add(lance);
             }
         } catch (SQLException e) {
@@ -110,11 +112,11 @@ public class LanceDAL {
                     // INSERT
                     stmtInsert.setInt(1, u.getIdLance());
                     stmtInsert.setInt(2, u.getIdLeilao());
-                    stmtInsert.setInt(4, u.getIdCliente());
-                    stmtInsert.setDouble(5, u.getValorLance());
-                    stmtInsert.setDouble(5, u.getNumLance());
-                    stmtInsert.setDouble(5, u.getPontosUtilizados());
-                    stmtInsert.setDate(6, u.getDataLance() != null
+                    stmtInsert.setInt(3, u.getIdCliente());
+                    stmtInsert.setDouble(4, u.getValorLance());
+                    stmtInsert.setDouble(5, u.getIdNegociacao());
+                    stmtInsert.setDouble(6, u.getValorContraProposta());
+                    stmtInsert.setDate(7, u.getDataLance() != null
                             ? java.sql.Date.valueOf(u.getDataLance().toLocalDate())
                             : null);
 
@@ -123,13 +125,14 @@ public class LanceDAL {
                     // UPDATE
                     stmtUpdate.setInt(1, u.getIdLance());
                     stmtUpdate.setInt(2, u.getIdLeilao());
-                    stmtUpdate.setInt(4, u.getIdCliente());
-                    stmtUpdate.setDouble(5, u.getValorLance());
-                    stmtUpdate.setDouble(5, u.getNumLance());
-                    stmtUpdate.setDouble(5, u.getPontosUtilizados());
-                    stmtUpdate.setDate(6, u.getDataLance() != null
+                    stmtUpdate.setInt(3, u.getIdCliente());
+                    stmtUpdate.setDouble(4, u.getValorLance());
+                    stmtUpdate.setDouble(5, u.getIdNegociacao());
+                    stmtUpdate.setDouble(6, u.getValorContraProposta());
+                    stmtUpdate.setDate(7, u.getDataLance() != null
                             ? java.sql.Date.valueOf(u.getDataLance().toLocalDate())
                             : null);
+                    stmtUpdate.setInt(8, u.getIdLance());
 
                     stmtUpdate.addBatch();
                 }

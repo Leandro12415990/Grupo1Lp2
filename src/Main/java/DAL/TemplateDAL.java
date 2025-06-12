@@ -164,14 +164,15 @@ public class TemplateDAL {
                 // INSERT
                 stmtInsert.setString(1, template.getId());
                 stmtInsert.setString(2, template.getAssunto());
-                stmtInsert.setString(4, template.getCorpo());
+                stmtInsert.setString(3, template.getCorpo());
 
                 stmtInsert.addBatch();
             } else {
                 // UPDATE
                 stmtUpdate.setString(1, template.getId());
                 stmtUpdate.setString(2, template.getAssunto());
-                stmtUpdate.setString(4, template.getCorpo());
+                stmtUpdate.setString(3, template.getCorpo());
+                stmtUpdate.setString(4, template.getId());
 
                 stmtUpdate.addBatch();
             }
