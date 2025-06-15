@@ -381,30 +381,6 @@ public class Tools {
         }
     }
 
-    public static List<Map<String, Object>> executeQuery(String query) {
-        List<Map<String, Object>> results = new ArrayList<>();
-
-        try (Connection conn = DataBaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            ResultSet rs = stmt.executeQuery();
-            ResultSetMetaData meta = rs.getMetaData();
-            int columnCount = meta.getColumnCount();
-
-            while (rs.next()) {
-                Map<String, Object> row = new HashMap<>();
-                for (int i = 1; i <= columnCount; i++) {
-                    row.put(meta.getColumnLabel(i), rs.getObject(i));
-                }
-                results.add(row);
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao executar QUERY: " + e.getMessage());
-        }
-
-        return results;
-    }
-
     public static double pedirDouble(String mensagem) {
         while (true) {
             System.out.print(mensagem);

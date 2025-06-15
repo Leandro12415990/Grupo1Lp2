@@ -39,7 +39,7 @@ public class UtilizadorBLL {
     }
 
 
-    public boolean criarCliente(String nome, String email, LocalDate nascimento, String morada, String password) {
+    public Utilizador criarCliente(String nome, String email, LocalDate nascimento, String morada, String password) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         Utilizador utilizador;
         LocalDate data = LocalDate.now();
@@ -49,18 +49,18 @@ public class UtilizadorBLL {
 
         for (Utilizador u : Tools.utilizadores) {
             if (u.getId() > max) max = u.getId();
-            if (email.equals(u.getEmail())) return false;
+            if (email.equals(u.getEmail())) return null;
         }
 
         try {
             utilizador = new Utilizador(max + 1, nome, email, nascimento, morada, password, data, data, Tools.tipoUtilizador.CLIENTE.getCodigo(), Tools.estadoUtilizador.PENDENTE.getCodigo(), 0.0);
         } catch (Exception e) {
-            return false;
+            return null;
         }
 
         Tools.utilizadores.add(utilizador);
         utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
-        return true;
+        return utilizador;
     }
 
     public ResultadoOperacao alterarEstadoUtilizador(Utilizador u, int estado) throws MessagingException, IOException {
@@ -120,6 +120,15 @@ public class UtilizadorBLL {
         List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
         for (Utilizador u : utilizadores) {
             if (Objects.equals(u.getEmail(), email)) return u;
+        }
+        return null;
+    }
+
+    public Utilizador procurarUtilizadorByNome(String nome) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
+        for (Utilizador u : utilizadores) {
+            if (Objects.equals(u.getNomeUtilizador(), nome)) return u;
         }
         return null;
     }
@@ -188,18 +197,15 @@ public class UtilizadorBLL {
                     erros.add("Utilizador com menos de 18 anos: " + Arrays.toString(dados));
                     continue;
                 }
-
-                if (utilizadorDAL.utilizadorExiste(email)) {
+                Utilizador utilizadorExiste = procurarUtilizadorPorEmail(email);
+                if (utilizadorExiste != null) {
                     totalExistentes++;
                     continue;
                 }
 
                 String password = gerarPasswordTemporaria();
-                int id = utilizadorDAL.inserirUtilizador(nome, email, dataNascimento, morada, password, dataRegisto);
-                enviarEmailNovaPassword(id);
-
-                Utilizador utilizador = new Utilizador(id, nome, email, dataNascimento, morada, password,
-                        LocalDate.now(), null, 2, 2, 0.0);
+                Utilizador utilizador = criarCliente(nome, email, dataNascimento, morada, password);
+                enviarEmailNovaPassword(utilizador.getId());
 
                 utilizadoresImportados.add(utilizador);
                 totalImportados++;

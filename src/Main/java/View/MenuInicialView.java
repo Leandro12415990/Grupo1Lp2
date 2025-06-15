@@ -58,6 +58,10 @@ public class MenuInicialView {
                 case 2:
                     utilizadorView.registarCliente();
                     break;
+                case 3:
+                    importarLeiloes importar = new importarLeiloes();
+                    importar.importarLeiloes();
+                    break;
                 case 0:
                     System.out.println("A desligar sistema...");
                     scanner.close();

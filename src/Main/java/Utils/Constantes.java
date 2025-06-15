@@ -25,6 +25,7 @@ public class Constantes {
         public static final String CSV_FILE_PRODUTO_CATEGORIA = "data\\ProdutoCategoria.csv";
         public static final String CSV_FILE_NEGOCIACAO = "data\\Negociacao.csv";
         public static final String CSV_FILE_IMPORT_CLIENTES = "data\\importar_clientes.csv";
+        public static final String CSV_FILE_IMPORT_LEILOES = "data\\importar_leiloes.csv";
     }
 
     // Secção: Estados Leilões
