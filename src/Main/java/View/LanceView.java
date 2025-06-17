@@ -350,7 +350,7 @@ public class LanceView {
             return;
         }
 
-        System.out.print("\nEscolha o ID do leilão no qual deseja dar um lance " + Tools.alertaCancelar());
+        Tools.pedirOpcaoMenu("\nEscolha o ID do leilão no qual deseja dar um lance " + Tools.alertaCancelar());
         int idLeilaoEscolhido = Tools.scanner.nextInt();
         if (Tools.verificarSaida(String.valueOf(idLeilaoEscolhido))) return;
         Tools.scanner.nextLine();
