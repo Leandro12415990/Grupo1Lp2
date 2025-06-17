@@ -1,5 +1,7 @@
 package Utils;
 
+import DAL.ConfigLoader;
+
 public class Constantes {
     // Secção: Configurações Email
     public static class configEmail {
@@ -11,20 +13,24 @@ public class Constantes {
         public static final String equipa = "Equipa Valor em Alta Leilões";
     }
 
+    //Secção: Caminhos Ficheiros
     public static class caminhosFicheiros {
-        public static final String CSV_FILE_LEILAO = "data\\Leilao.csv";
-        public static final String CSV_FILE_UTILIZADOR = "data\\Utilizador.csv";
-        public static final String CSV_FILE_LANCE = "data\\Lance.csv";
-        public static final String CSV_FILE_TRANSACAO = "data\\Transacao.csv";
-        public static final String CSV_FILE_PRODUTO = "data\\Produto.csv";
-        public static final String CSV_FILE_TEMPLATE = "data\\Template.csv";
-        public static final String CSV_FILE_EMAIL = "data\\Email.csv";
-        public static final String CSV_FILE_FICHEIRO_EMAIL = "data\\RelatorioDiario\\";
-        public static final String CSV_FILE_AGENTE = "data\\Agente.csv";
-        public static final String CSV_FILE_CATEGORIA = "data\\Categoria.csv";
-        public static final String CSV_FILE_PRODUTO_CATEGORIA = "data\\ProdutoCategoria.csv";
-        public static final String CSV_FILE_NEGOCIACAO = "data\\Negociacao.csv";
+        public static final String CSV_FILE_LEILAO = ConfigLoader.getPath("CSV_FILE_LEILAO");
+        public static final String CSV_FILE_UTILIZADOR = ConfigLoader.getPath("CSV_FILE_UTILIZADOR");
+        public static final String CSV_FILE_LANCE = ConfigLoader.getPath("CSV_FILE_LANCE");
+        public static final String CSV_FILE_TRANSACAO = ConfigLoader.getPath("CSV_FILE_TRANSACAO");
+        public static final String CSV_FILE_PRODUTO = ConfigLoader.getPath("CSV_FILE_PRODUTO");
+        public static final String CSV_FILE_TEMPLATE = ConfigLoader.getPath("CSV_FILE_TEMPLATE");
+        public static final String CSV_FILE_EMAIL = ConfigLoader.getPath("CSV_FILE_EMAIL");
+        public static final String CSV_FILE_FICHEIRO_EMAIL = ConfigLoader.getPath("CSV_FILE_FICHEIRO_EMAIL");
+        public static final String CSV_FILE_AGENTE = ConfigLoader.getPath("CSV_FILE_AGENTE");
+        public static final String CSV_FILE_CATEGORIA = ConfigLoader.getPath("CSV_FILE_CATEGORIA");
+        public static final String CSV_FILE_PRODUTO_CATEGORIA = ConfigLoader.getPath("CSV_FILE_PRODUTO_CATEGORIA");
+        public static final String CSV_FILE_NEGOCIACAO = ConfigLoader.getPath("CSV_FILE_NEGOCIACAO");
+        public static final String CSV_FILE_IMPORT_CLIENTES = ConfigLoader.getPath("CSV_FILE_IMPORT_CLIENTES");
+        public static final String CSV_FILE_IMPORT_LEILOES = ConfigLoader.getPath("CSV_FILE_IMPORT_LEILOES");
     }
+
 
     // Secção: Estados Leilões
     public static class estadosLeilao {
@@ -40,6 +46,7 @@ public class Constantes {
         public static final int DEFAULT = 0;
         public static final int PROPOSTA = 1;
         public static final int CONTRAPROPOSTA = 2;
+        public static final int FINALIZADO = 3;
     }
 
     // Secção: Tipos Leilões
@@ -81,6 +88,7 @@ public class Constantes {
         public static final String EMAIL_CLIENTE_OFFLINE = "4";
         public static final String EMAIL_SEM_CREDITOS = "5";
         public static final String EMAIL_RELATORIO_DIARIO = "6";
+        public static final String EMAIL_CLIENTES_CRIADO_IMPORT = "7";
     }
 
     public static class estadosCategoria {

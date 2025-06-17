@@ -1,12 +1,15 @@
 package BLL;
 
+import DAL.ImportDAL;
 import DAL.TemplateDAL;
 import Controller.UtilizadorController;
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
+import Model.ResultadoImportacao;
 import Model.ResultadoOperacao;
 import Model.Template;
 import Model.Utilizador;
+import Utils.Constantes;
 import Utils.Constantes.templateIds;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
@@ -14,9 +17,8 @@ import jakarta.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.time.Period;
+import java.util.*;
 
 public class UtilizadorBLL {
     public List<Utilizador> carregarUtilizadores() {
@@ -38,7 +40,7 @@ public class UtilizadorBLL {
     }
 
 
-    public boolean criarCliente(String nome, String email, LocalDate nascimento, String morada, String password) {
+    public Utilizador criarCliente(String nome, String email, LocalDate nascimento, String morada, String password) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         Utilizador utilizador;
         LocalDate data = LocalDate.now();
@@ -48,18 +50,18 @@ public class UtilizadorBLL {
 
         for (Utilizador u : Tools.utilizadores) {
             if (u.getId() > max) max = u.getId();
-            if (email.equals(u.getEmail())) return false;
+            if (email.equals(u.getEmail())) return null;
         }
 
         try {
-            utilizador = new Utilizador(max + 1, nome, email, nascimento, morada, password, data, data, Tools.tipoUtilizador.CLIENTE.getCodigo(), Tools.estadoUtilizador.PENDENTE.getCodigo(), 0.0);
+            utilizador = new Utilizador(max + 1, nome, email, nascimento, morada, password, data, data, Tools.tipoUtilizador.CLIENTE.getCodigo(), Tools.estadoUtilizador.ATIVO.getCodigo(), 0.0);
         } catch (Exception e) {
-            return false;
+            return null;
         }
 
         Tools.utilizadores.add(utilizador);
         utilizadorDAL.gravarUtilizadores(Tools.utilizadores);
-        return true;
+        return utilizador;
     }
 
     public ResultadoOperacao alterarEstadoUtilizador(Utilizador u, int estado) throws MessagingException, IOException {
@@ -123,6 +125,15 @@ public class UtilizadorBLL {
         return null;
     }
 
+    public Utilizador procurarUtilizadorByNome(String nome) {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<Utilizador> utilizadores = utilizadorDAL.carregarUtilizadores();
+        for (Utilizador u : utilizadores) {
+            if (Objects.equals(u.getNomeUtilizador(), nome)) return u;
+        }
+        return null;
+    }
+
     public void gravarUtilizadores(List<Utilizador> utilizadores) {
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         utilizadorDAL.gravarUtilizadores(utilizadores);
@@ -150,4 +161,124 @@ public class UtilizadorBLL {
             }
         }
     }
+    public boolean validaDataNascimento(LocalDate nascimento) {
+        if (nascimento.isAfter(LocalDate.now()) || calcularIdade(nascimento) < 18) return false;
+        else return true;
+    }
+
+    public int calcularIdade(LocalDate nascimento) {
+        return Period.between(nascimento, LocalDate.now()).getYears();
+    }
+
+    //IMPORTAR UTILIZADORES BY FICHEIRO - PP
+    public ResultadoImportacao importarUtilizadores() {
+        ImportDAL importDAL = new ImportDAL();
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<String[]> linhas = importDAL.lerLinhasCSV(Constantes.caminhosFicheiros.CSV_FILE_IMPORT_CLIENTES, 4);
+
+        int totalImportados = 0;
+        int totalExistentes = 0;
+        List<String> erros = new ArrayList<>();
+        List<Utilizador> utilizadoresImportados = new ArrayList<>();
+
+        for (String[] dados : linhas) {
+            try {
+                if (dados == null) continue;
+                if (dados.length < 4) {
+                    erros.add("Linha incompleta ou mal formatada: " + Arrays.toString(dados));
+                    continue;
+                }
+
+                String nome = dados[0] != null ? dados[0].trim() : "";
+                String morada = dados[1] != null ? dados[1].trim() : "";
+                String dataTexto = dados[2] != null ? dados[2].trim() : "";
+                String email = dados[3] != null ? dados[3].trim() : "";
+
+                if (nome.isEmpty() || morada.isEmpty() || dataTexto.isEmpty() || email.isEmpty()) {
+                    erros.add("Campos obrigatórios vazios: " + Arrays.toString(dados));
+                    continue;
+                }
+
+                LocalDate dataNascimento = parseDate(dataTexto);
+                if (dataNascimento == null) {
+                    erros.add("Data de nascimento inválida: " + Arrays.toString(dados));
+                    continue;
+                }
+
+                if (!validaDataNascimento(dataNascimento)) {
+                    erros.add("Utilizador com menos de 18 anos: " + Arrays.toString(dados));
+                    continue;
+                }
+
+                Utilizador utilizadorExiste = procurarUtilizadorPorEmail(email);
+                if (utilizadorExiste != null) {
+                    totalExistentes++;
+                    continue;
+                }
+
+                String password = gerarPasswordTemporaria();
+                Utilizador utilizador = criarCliente(nome, email, dataNascimento, morada, password);
+                enviarEmailNovaPassword(utilizador.getId());
+
+                utilizadoresImportados.add(utilizador);
+                totalImportados++;
+
+            } catch (Exception e) {
+                erros.add("Erro inesperado: " + Arrays.toString(dados) + " - " + e.getMessage());
+            }
+        }
+
+        return new ResultadoImportacao(utilizadoresImportados, totalImportados, totalExistentes, erros);
+
+    }
+
+    private String gerarPasswordTemporaria() {
+        return UUID.randomUUID().toString().substring(0, 8);
+    }
+
+    private ResultadoOperacao enviarEmailNovaPassword(int id) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        try {
+            EmailBLL emailBLL = new EmailBLL();
+            Utilizador utilizador = procurarUtilizadorPorId(id);
+
+            if (utilizador == null) {
+                resultado.msgErro = "Utilizador não encontrado para enviar email: ID " + id;
+                resultado.Sucesso = false;
+                return resultado;
+            }
+
+            TemplateDAL templateDAL = new TemplateDAL();
+            Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_CLIENTES_CRIADO_IMPORT);
+
+            if (template == null) {
+                resultado.msgErro = "Template EMAIL_CLIENTES_CRIADO_IMPORT não encontrado. Email NÃO enviado para: " + utilizador.getEmail();
+                resultado.Sucesso = false;
+                return resultado;
+            }
+
+            emailBLL.enviarEmail(template,
+                    utilizador.getEmail(),
+                    Tools.substituirTags(utilizador, null, null),
+                    utilizador.getId());
+
+            resultado.Sucesso = true;
+            return resultado;
+
+        } catch (Exception e) {
+            resultado.msgErro = "Falha ao enviar email para ID " + id + ": " + e.getMessage();
+            resultado.Sucesso = false;
+            return resultado;
+        }
+    }
+
+
+    private LocalDate parseDate(String dataTexto) {
+        try {
+            return LocalDate.parse(dataTexto, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

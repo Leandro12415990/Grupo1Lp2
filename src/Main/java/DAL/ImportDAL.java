@@ -26,7 +26,7 @@ public class ImportDAL {
                 }
 
                 if (linha.trim().isEmpty()) {
-                    continue; // Ignora linhas em branco
+                    continue;
                 }
 
                 String[] dados = linha.split(Tools.separador(), -1);
@@ -56,7 +56,6 @@ public class ImportDAL {
             bw.write(cabecalho);
             bw.newLine();
 
-            // Cópia defensiva para evitar ConcurrentModificationException
             List<T> copiaLista = new ArrayList<>(lista);
 
             for (T item : copiaLista) {
@@ -67,5 +66,40 @@ public class ImportDAL {
             logger.log(Level.SEVERE, "Erro ao gravar o ficheiro CSV: " + caminhoFicheiro, e);
         }
     }
+
+    public List<String[]> lerLinhasCSV(String caminhoFicheiro, int minimoCampos) {
+        List<String[]> linhas = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoFicheiro))) {
+            boolean primeiraLinha = true;
+            String linha;
+
+            while ((linha = br.readLine()) != null) {
+                if (primeiraLinha) {
+                    primeiraLinha = false;
+                    continue;
+                }
+
+                if (linha.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] dados = linha.split(Tools.separador(), -1);
+
+                if (dados.length < minimoCampos) {
+                    logger.log(Level.WARNING, "Linha inválida no CSV (campos insuficientes): {0}", linha);
+                    continue;
+                }
+
+                linhas.add(dados);
+            }
+
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erro ao ler o ficheiro CSV: " + caminhoFicheiro, e);
+        }
+
+        return linhas;
+    }
+
 
 }
