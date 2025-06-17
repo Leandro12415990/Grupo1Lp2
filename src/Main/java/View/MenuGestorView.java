@@ -1,6 +1,7 @@
 package View;
 
 import BLL.UtilizadorBLL;
+import BLL.importarLeiloes;
 import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
@@ -34,6 +35,7 @@ public class MenuGestorView {
             System.out.println("8. Aprovar Despósitos");
             System.out.println("9. Editar Templates");
             System.out.println("10. Importar Clientes do ficheiro");
+            System.out.println("11. Importar Leilões do ficheiro");
             System.out.println("0. Sair...");
             int opcao = Tools.pedirOpcaoMenu("Escolha uma opção: ");
             switch (opcao) {
@@ -82,6 +84,9 @@ public class MenuGestorView {
                     }
                     */
                     break;
+                case 11:
+                    importarLeiloes importarLeiloes = new importarLeiloes();
+                    importarLeiloes.importarLeiloes();
                 case 0:
                     System.out.println("A sair...");
                     Tools.clienteSessao.logout();

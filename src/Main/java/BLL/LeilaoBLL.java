@@ -41,7 +41,7 @@ public class LeilaoBLL {
         leilaoDAL.gravarLeiloes(leiloes);
     }
 
-    private int gerarProximoId() {
+    int gerarProximoId() {
         int ultimoId = 0;
         for (Leilao leilao : leiloes) {
             if (leilao.getId() > ultimoId) ultimoId = leilao.getId();

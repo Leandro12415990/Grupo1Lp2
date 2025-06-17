@@ -173,21 +173,36 @@ public class UtilizadorBLL {
     public ResultadoImportacao importarUtilizadores() {
         ImportDAL importDAL = new ImportDAL();
         UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
+        List<String[]> linhas = importDAL.lerLinhasCSV(Constantes.caminhosFicheiros.CSV_FILE_IMPORT_CLIENTES, 4);
+
         int totalImportados = 0;
         int totalExistentes = 0;
         List<String> erros = new ArrayList<>();
         List<Utilizador> utilizadoresImportados = new ArrayList<>();
 
-        List<String[]> linhas = importDAL.lerLinhasCSV(Constantes.caminhosFicheiros.CSV_FILE_IMPORT_CLIENTES, 4);
-
         for (String[] dados : linhas) {
             try {
-                String nome = dados[0];
-                String morada = dados[1];
-                LocalDate dataNascimento = parseDate(dados[2]);
-                String email = dados[3];
-                LocalDateTime dataRegisto = LocalDateTime.now();
+                // ✅ Filtra arrays nulas ou vazias de forma infalível
+                if (dados == null) continue;
+                if (dados.length < 4) {
+                    erros.add("Linha incompleta ou mal formatada: " + Arrays.toString(dados));
+                    continue;
+                }
 
+                // ⚡️ Se existirem, trims robustos e nulos viram string vazia
+                String nome = dados[0] != null ? dados[0].trim() : "";
+                String morada = dados[1] != null ? dados[1].trim() : "";
+                String dataTexto = dados[2] != null ? dados[2].trim() : "";
+                String email = dados[3] != null ? dados[3].trim() : "";
+
+                // ✅ Bloqueia campos vazios
+                if (nome.isEmpty() || morada.isEmpty() || dataTexto.isEmpty() || email.isEmpty()) {
+                    erros.add("Campos obrigatórios vazios: " + Arrays.toString(dados));
+                    continue;
+                }
+
+                // ✅ Valida data sem falhar
+                LocalDate dataNascimento = parseDate(dataTexto);
                 if (dataNascimento == null) {
                     erros.add("Data de nascimento inválida: " + Arrays.toString(dados));
                     continue;
@@ -197,36 +212,63 @@ public class UtilizadorBLL {
                     erros.add("Utilizador com menos de 18 anos: " + Arrays.toString(dados));
                     continue;
                 }
+
+                // ✅ Duplica email?
                 Utilizador utilizadorExiste = procurarUtilizadorPorEmail(email);
                 if (utilizadorExiste != null) {
                     totalExistentes++;
                     continue;
                 }
 
+                // ✅ Regista
                 String password = gerarPasswordTemporaria();
                 Utilizador utilizador = criarCliente(nome, email, dataNascimento, morada, password);
                 enviarEmailNovaPassword(utilizador.getId());
 
                 utilizadoresImportados.add(utilizador);
                 totalImportados++;
+
             } catch (Exception e) {
-                erros.add("Erro ao importar linha: " + Arrays.toString(dados) + " - " + e.getMessage());
+                erros.add("Erro inesperado: " + Arrays.toString(dados) + " - " + e.getMessage());
             }
         }
 
         return new ResultadoImportacao(utilizadoresImportados, totalImportados, totalExistentes, erros);
+
     }
 
     private String gerarPasswordTemporaria() {
         return UUID.randomUUID().toString().substring(0, 8);
     }
 
-    private void enviarEmailNovaPassword(int id) throws MessagingException, IOException {
-        EmailBLL emailBLL = new EmailBLL();
-        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
-        Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(id);
-        emailBLL.enviarEmail(Constantes.templateIds.EMAIL_CLIENTES_CRIADO_IMPORT, utilizador.getEmail(),
-                Tools.substituirTags(utilizador, null, null), utilizador.getId());
+    private void enviarEmailNovaPassword(int id) {
+        try {
+            EmailBLL emailBLL = new EmailBLL();
+            Utilizador utilizador = procurarUtilizadorPorId(id);
+
+            if (utilizador == null) {
+                System.out.println("⚠️ Utilizador não encontrado para enviar email: " + id);
+                return;
+            }
+
+            // Protege: carrega template explicitamente
+            TemplateDAL templateDAL = new TemplateDAL();
+            Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_CLIENTES_CRIADO_IMPORT);
+
+            if (template == null) {
+                System.out.println("⚠️ Template EMAIL_CLIENTES_CRIADO_IMPORT não encontrado. Email NÃO enviado para: " + utilizador.getEmail());
+                return;
+            }
+
+            // Envia só se tudo ok
+            emailBLL.enviarEmail(template,
+                    utilizador.getEmail(),
+                    Tools.substituirTags(utilizador, null, null),
+                    utilizador.getId());
+
+        } catch (Exception e) {
+            System.out.println("⚠️ Falha ao enviar email para ID " + id + ": " + e.getMessage());
+        }
     }
 
     private LocalDate parseDate(String dataTexto) {
