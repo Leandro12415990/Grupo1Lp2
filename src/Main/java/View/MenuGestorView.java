@@ -77,12 +77,6 @@ public class MenuGestorView {
                             System.out.println(erro);
                         }
                     }
-
-                    /*
-                    for (Utilizador u : resultado.utilizadoresImportados) {
-                        System.out.println("Utilizador importado: " + u.getNomeUtilizador() + " - " + u.getEmail());
-                    }
-                    */
                     break;
                 case 11:
                     importarLeiloes importarLeiloes = new importarLeiloes();

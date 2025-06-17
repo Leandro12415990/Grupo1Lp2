@@ -1,6 +1,7 @@
 import View.MenuInicialView;
 import jakarta.mail.MessagingException;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main {

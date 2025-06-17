@@ -26,7 +26,7 @@ public class ImportDAL {
                 }
 
                 if (linha.trim().isEmpty()) {
-                    continue; // Ignora linhas em branco
+                    continue;
                 }
 
                 String[] dados = linha.split(Tools.separador(), -1);
@@ -56,7 +56,6 @@ public class ImportDAL {
             bw.write(cabecalho);
             bw.newLine();
 
-            // Cópia defensiva para evitar ConcurrentModificationException
             List<T> copiaLista = new ArrayList<>(lista);
 
             for (T item : copiaLista) {

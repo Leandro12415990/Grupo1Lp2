@@ -182,26 +182,22 @@ public class UtilizadorBLL {
 
         for (String[] dados : linhas) {
             try {
-                // ✅ Filtra arrays nulas ou vazias de forma infalível
                 if (dados == null) continue;
                 if (dados.length < 4) {
                     erros.add("Linha incompleta ou mal formatada: " + Arrays.toString(dados));
                     continue;
                 }
 
-                // ⚡️ Se existirem, trims robustos e nulos viram string vazia
                 String nome = dados[0] != null ? dados[0].trim() : "";
                 String morada = dados[1] != null ? dados[1].trim() : "";
                 String dataTexto = dados[2] != null ? dados[2].trim() : "";
                 String email = dados[3] != null ? dados[3].trim() : "";
 
-                // ✅ Bloqueia campos vazios
                 if (nome.isEmpty() || morada.isEmpty() || dataTexto.isEmpty() || email.isEmpty()) {
                     erros.add("Campos obrigatórios vazios: " + Arrays.toString(dados));
                     continue;
                 }
 
-                // ✅ Valida data sem falhar
                 LocalDate dataNascimento = parseDate(dataTexto);
                 if (dataNascimento == null) {
                     erros.add("Data de nascimento inválida: " + Arrays.toString(dados));
@@ -213,14 +209,12 @@ public class UtilizadorBLL {
                     continue;
                 }
 
-                // ✅ Duplica email?
                 Utilizador utilizadorExiste = procurarUtilizadorPorEmail(email);
                 if (utilizadorExiste != null) {
                     totalExistentes++;
                     continue;
                 }
 
-                // ✅ Regista
                 String password = gerarPasswordTemporaria();
                 Utilizador utilizador = criarCliente(nome, email, dataNascimento, morada, password);
                 enviarEmailNovaPassword(utilizador.getId());
@@ -241,35 +235,42 @@ public class UtilizadorBLL {
         return UUID.randomUUID().toString().substring(0, 8);
     }
 
-    private void enviarEmailNovaPassword(int id) {
+    private ResultadoOperacao enviarEmailNovaPassword(int id) {
+        ResultadoOperacao resultado = new ResultadoOperacao();
         try {
             EmailBLL emailBLL = new EmailBLL();
             Utilizador utilizador = procurarUtilizadorPorId(id);
 
             if (utilizador == null) {
-                System.out.println("⚠️ Utilizador não encontrado para enviar email: " + id);
-                return;
+                resultado.msgErro = "Utilizador não encontrado para enviar email: ID " + id;
+                resultado.Sucesso = false;
+                return resultado;
             }
 
-            // Protege: carrega template explicitamente
             TemplateDAL templateDAL = new TemplateDAL();
             Template template = templateDAL.carregarTemplatePorId(Constantes.templateIds.EMAIL_CLIENTES_CRIADO_IMPORT);
 
             if (template == null) {
-                System.out.println("⚠️ Template EMAIL_CLIENTES_CRIADO_IMPORT não encontrado. Email NÃO enviado para: " + utilizador.getEmail());
-                return;
+                resultado.msgErro = "Template EMAIL_CLIENTES_CRIADO_IMPORT não encontrado. Email NÃO enviado para: " + utilizador.getEmail();
+                resultado.Sucesso = false;
+                return resultado;
             }
 
-            // Envia só se tudo ok
             emailBLL.enviarEmail(template,
                     utilizador.getEmail(),
                     Tools.substituirTags(utilizador, null, null),
                     utilizador.getId());
 
+            resultado.Sucesso = true;
+            return resultado;
+
         } catch (Exception e) {
-            System.out.println("⚠️ Falha ao enviar email para ID " + id + ": " + e.getMessage());
+            resultado.msgErro = "Falha ao enviar email para ID " + id + ": " + e.getMessage();
+            resultado.Sucesso = false;
+            return resultado;
         }
     }
+
 
     private LocalDate parseDate(String dataTexto) {
         try {

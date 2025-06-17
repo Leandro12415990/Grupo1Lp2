@@ -2,6 +2,7 @@ package View;
 
 import BLL.*;
 import Controller.AgenteController;
+import DAL.ConfigLoader;
 import DAL.LanceDAL;
 import Model.Lance;
 import DAL.TemplateDAL;
@@ -25,7 +26,7 @@ public class MenuInicialView {
         AgenteBLL agenteBLL = new AgenteBLL();
         agenteBLL.iniciarMonitorizacaoDinamica();
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
-        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 27));
+        relatorioBLL.agendarGeracaoRelatorio(Tools.relatorioHora());
 
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
