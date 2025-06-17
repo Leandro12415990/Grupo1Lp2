@@ -21,13 +21,6 @@ import static Utils.Constantes.configEmail;
 
 public class EmailBLL {
 
-    public void enviarEmail(String templateId, String toEmail, Map<String, String> variaveis, int idCliente)
-            throws IOException, MessagingException {
-        TemplateDAL templateDAL = new TemplateDAL();
-        Template template = templateDAL.carregarTemplatePorId(templateId);
-        enviarEmail(template, toEmail, variaveis, idCliente);
-    }
-
     public void enviarEmailComAnexo(Template template, String toEmail, Map<String, String> variaveis, int idCliente, String caminhoAnexo)
             throws MessagingException {
 
@@ -135,9 +128,10 @@ public class EmailBLL {
 
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
         message.setSubject(assunto);
+        corpo = corpo.replace("\\n", "\n");
         message.setText(corpo);
 
-        String corpoTexto = removerTagsHtml(corpo);
+        String corpoTexto = removerTagsHtml(corpo); // apenas para guardar limpo
         Email email = new Email(
                 0,
                 configEmail.fromEmail,
@@ -157,6 +151,7 @@ public class EmailBLL {
 
         return message;
     }
+
 
     private String substituirTags(String texto, Map<String, String> variaveis) {
         for (Map.Entry<String, String> entry : variaveis.entrySet()) {

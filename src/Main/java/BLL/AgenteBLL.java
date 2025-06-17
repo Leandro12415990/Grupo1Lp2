@@ -7,6 +7,7 @@ import Model.*;
 import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -17,6 +18,8 @@ public class AgenteBLL {
     private final LeilaoBLL leilaoBLL = new LeilaoBLL();
     private final LanceBLL lanceBLL = new LanceBLL();
     private final Set<Integer> leiloesMonitorizados = ConcurrentHashMap.newKeySet();
+
+    private static final Map<Integer, Set<String>> mensagensAgentePorCliente = new ConcurrentHashMap<>();
 
     public boolean adicionarAgente(Agente agente) {
         List<Agente> agentes = agenteDAL.carregarAgentes();
@@ -71,8 +74,15 @@ public class AgenteBLL {
                 );
 
                 if (resultado != null && resultado.Sucesso) {
-                    //System.out.printf("Agente [%d] licitou: %.2f€ no leilao [%d]%n", agente.getId(), proximoLanceEsperado, agente.getLeilaoId());
                     leilaoBLL.estenderFimLeilaoSeNecessario(leilao, LocalDateTime.now());
+                }
+
+                if (resultado != null && !resultado.Sucesso &&
+                        resultado.msgErro.toLowerCase().contains("saldo")) {
+
+                    mensagensAgentePorCliente
+                            .computeIfAbsent(agente.getClienteId(), k -> ConcurrentHashMap.newKeySet())
+                            .add("Agente " + agente.getId() + " parou por falta de saldo no leilão " + idLeilao);
                 }
 
                 Thread.sleep(5000);
@@ -113,7 +123,6 @@ public class AgenteBLL {
             }
 
             new Thread(() -> {
-                //System.out.printf("Monitorização iniciada para o leilão ID %d...%n", idLeilao);
                 while (true) {
                     try {
                         Leilao leilaoAtivo = leilaoBLL.procurarLeilaoPorId(idLeilao);
@@ -126,7 +135,6 @@ public class AgenteBLL {
                     }
                 }
                 leiloesMonitorizados.remove(idLeilao);
-                //System.out.printf("Monitorização encerrada para o leilão ID %d%n", idLeilao);
             }).start();
         }
     }
@@ -164,5 +172,14 @@ public class AgenteBLL {
         }
 
         return leiloesDisponiveis;
+    }
+
+    public static void verificarMensagensAgente(int idCliente) {
+        Set<String> mensagens = mensagensAgentePorCliente.remove(idCliente);
+        if (mensagens != null && !mensagens.isEmpty()) {
+            for (String msg : mensagens) {
+                System.out.println(msg);
+            }
+        }
     }
 }

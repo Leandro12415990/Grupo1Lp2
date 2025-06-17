@@ -1,0 +1,17 @@
+CAMPO;CAMINHO
+CSV_FILE_LEILAO;data/Leilao.csv
+CSV_FILE_UTILIZADOR;data/Utilizador.csv
+CSV_FILE_LANCE;data/Lance.csv
+CSV_FILE_TRANSACAO;data/Transacao.csv
+CSV_FILE_PRODUTO;data/Produto.csv
+CSV_FILE_TEMPLATE;data/Template.csv
+CSV_FILE_EMAIL;data/Email.csv
+CSV_FILE_FICHEIRO_EMAIL;data/RelatorioDiario/
+CSV_FILE_AGENTE;data/Agente.csv
+CSV_FILE_CATEGORIA;data/Categoria.csv
+CSV_FILE_PRODUTO_CATEGORIA;data/ProdutoCategoria.csv
+CSV_FILE_NEGOCIACAO;data/Negociacao.csv
+CSV_FILE_IMPORT_CLIENTES;data/importar_clientes.csv
+CSV_FILE_IMPORT_LEILOES;data/importar_leiloes.csv
+Separador;;
+RelatorioHora;22:27

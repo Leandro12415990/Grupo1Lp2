@@ -4,7 +4,10 @@ import Model.Utilizador;
 import Utils.Constantes;
 import Utils.Tools;
 
+import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UtilizadorDAL {
@@ -43,4 +46,5 @@ public class UtilizadorDAL {
                         utilizador.getSaldo()
         );
     }
+
 }

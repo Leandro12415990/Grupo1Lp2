@@ -1,21 +1,15 @@
 package View;
 
 import BLL.AgenteBLL;
-import BLL.EmailBLL;
 import BLL.RelatorioFinalBLL;
-import Controller.AgenteController;
-import BLL.UtilizadorBLL;
+import BLL.importarLeiloes;
 import DAL.LanceDAL;
 import Model.Lance;
-import DAL.TemplateDAL;
-import Model.Template;
 import Model.Utilizador;
-import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.List;
 
 import static Utils.Tools.scanner;
@@ -28,7 +22,7 @@ public class MenuInicialView {
         AgenteBLL agenteBLL = new AgenteBLL();
         agenteBLL.iniciarMonitorizacaoDinamica();
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
-        relatorioBLL.agendarGeracaoRelatorio(LocalTime.of(22, 0));
+        relatorioBLL.agendarGeracaoRelatorio(Tools.relatorioHora());
 
         LoginView loginView = new LoginView();
         MenuClienteView menuClienteView = new MenuClienteView();
@@ -60,6 +54,10 @@ public class MenuInicialView {
                     break;
                 case 2:
                     utilizadorView.registarCliente();
+                    break;
+                case 3:
+                    importarLeiloes importar = new importarLeiloes();
+                    importar.importarLeiloes();
                     break;
                 case 0:
                     System.out.println("A desligar sistema...");

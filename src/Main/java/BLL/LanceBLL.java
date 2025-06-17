@@ -2,11 +2,9 @@ package BLL;
 
 import Controller.LeilaoController;
 import DAL.LanceDAL;
-import Model.Lance;
-import Model.Leilao;
-import Model.ResultadoOperacao;
-import Model.Utilizador;
-import Utils.Tools;
+import DAL.NegociacaoDAL;
+import Model.*;
+import Utils.Constantes;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
@@ -37,8 +35,8 @@ public class LanceBLL {
         int numLance = 0;
         int pontosUtilizados = 0;
         LocalDateTime dataLance = LocalDateTime.now();
-
-        Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
+        int estado = Constantes.estadosLance.DEFAULT;
+        Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance, estado);
         lances.add(lance);
         lanceDAL.gravarLances(lances);
 
@@ -62,8 +60,9 @@ public class LanceBLL {
         int numLance = 0;
         int pontosUtilizados = 0;
         LocalDateTime dataLance = LocalDateTime.now();
+        int estado = Constantes.estadosLance.DEFAULT;
 
-        Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance);
+        Lance lance = new Lance(idLance, idLeilao, idCliente, valorLance, numLance, pontosUtilizados, dataLance, estado);
         lances.add(lance);
         lanceDAL.gravarLances(lances);
 
@@ -86,7 +85,7 @@ public class LanceBLL {
 
             List<Lance> lancesDoLeilao = obterLancesPorLeilao(idLeilao);
             double ultimoLance = lancesDoLeilao.isEmpty() ? valorMinimo :
-                    lancesDoLeilao.get(lancesDoLeilao.size() - 1).getValorLance();
+                    lancesDoLeilao.get(lancesDoLeilao.size() -1 ).getValorLance();
 
             double valorEsperado = ultimoLance + multiploLanceIncremento;
             if (Double.compare(novoValorLance, valorEsperado) != 0) {
@@ -101,12 +100,12 @@ public class LanceBLL {
             transacaoBLL.reembolsarUltimoLanceEletronico(idLeilao);
             transacaoBLL.atualizarSaldo(idCliente, novoValorLance, '-', false, true);
 
-            // Gera novo ID de forma segura dentro do lock
             int idLance = verUltimoId() + 1;
             LocalDateTime dataLance = LocalDateTime.now();
             int pontosUtilizados = 0;
+            int estado = Constantes.estadosLance.DEFAULT;
 
-            Lance novoLance = new Lance(idLance, idLeilao, idCliente, novoValorLance, lancesDoLeilao.size() + 1, pontosUtilizados, dataLance);
+            Lance novoLance = new Lance(idLance, idLeilao, idCliente, novoValorLance, 0, pontosUtilizados, dataLance, estado);
             lances.add(novoLance);
             lanceDAL.gravarLances(lances);
 
@@ -162,7 +161,7 @@ public class LanceBLL {
         Utilizador utilizador = utilizadorBLL.procurarUtilizadorPorId(idCliente);
 
         if (utilizador == null) {
-            System.err.printf("⚠️ Utilizador não encontrado para o idCliente %d%n", idCliente);
+            System.err.printf("Utilizador não encontrado para o idCliente %d%n", idCliente);
             resultado.Sucesso = false;
             resultado.msgErro = "Utilizador não encontrado.";
             return resultado;
@@ -198,15 +197,63 @@ public class LanceBLL {
         return null;
     }
 
-    public void carregarLances() {
+    public List<Lance> carregarLances() {
         LanceDAL lanceDAL = new LanceDAL();
         List<Lance> lancesCarregados = lanceDAL.carregarLances();
         synchronized (lockLances) {
             lances.clear();
             lances.addAll(lancesCarregados);
         }
+        return lancesCarregados;
     }
 
+    public ResultadoOperacao fazerProposta(int idNegociacao, int idClienteProponente, double valorProposta) throws MessagingException, IOException {
+        ResultadoOperacao resultado = new ResultadoOperacao();
+        NegociacaoDAL negociacaoDAL = new NegociacaoDAL();
+        List<Negociacao> negociacoes = negociacaoDAL.carregarNegociacoes();
+        carregarLances();
+
+        for (Negociacao n : negociacoes) {
+            if (n.getIdNegociacao() == idNegociacao && n.getEstado() == 1) {
+                if (n.getIdCliente() == idClienteProponente) {
+                    resultado.msgErro = "Não podes dar lance no teu próprio leilão.";
+                    return resultado;
+                }
+
+                if (valorProposta >= n.getValor()) {
+                    n.setEstado(4);
+                    resultado.Sucesso = true;
+                    resultado.msgErro = "Lance aceito. Leilão fechado.";
+                } else {
+
+                    // Verifica saldo do cliente
+                    ResultadoOperacao saldoVerificado = verificarSaldo(idClienteProponente, valorProposta);
+                    if (!saldoVerificado.Sucesso) {
+                        return saldoVerificado;
+                    }
+
+                    int idLance = verUltimoId() + 1;
+                    LocalDateTime dataLance = LocalDateTime.now();
+                    int estado = Constantes.estadosLance.PROPOSTA;
+
+                    Lance novoLance = new Lance(idLance, 0, idClienteProponente, valorProposta, idNegociacao, 0, dataLance, estado);
+
+                    synchronized (lockLances) {
+                        lances.add(novoLance);
+                        new LanceDAL().gravarLances(lances);
+                    }
+
+                    resultado.Sucesso = true;
+                    resultado.msgErro = "Proposta enviada ao dono do leilão.";
+                    resultado.Objeto = novoLance;
+
+                    return resultado;
+                }
+
+            }
+        } resultado.msgErro = "Leilão não encontrado ou já encerrado.";
+        return resultado;
+    }
 
 }
 

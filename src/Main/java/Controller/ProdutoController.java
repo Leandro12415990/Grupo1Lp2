@@ -1,9 +1,7 @@
 package Controller;
 
 import BLL.ProdutoBLL;
-import DAL.ProdutoCategoriaDAL;
 import Model.Produto;
-import Model.ProdutoCategoria;
 import Model.ResultadoOperacao;
 import jakarta.mail.MessagingException;
 

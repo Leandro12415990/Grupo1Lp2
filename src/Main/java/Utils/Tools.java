@@ -1,9 +1,12 @@
 package Utils;
 
+import DAL.ConfigLoader;
 import Model.*;
 
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -14,7 +17,20 @@ public class Tools {
     public static ClienteSessao clienteSessao = new ClienteSessao();
 
     public static String separador() {
-        return ";";
+        String sep = ConfigLoader.getPath("Separador");
+        if (sep == null || sep.isEmpty()) {
+            return ";";
+        }
+        return sep;
+    }
+
+    public static LocalTime relatorioHora() {
+        String horaStr = ConfigLoader.getPath("RelatorioHora");
+        if (horaStr == null || horaStr.isEmpty()) {
+            return LocalTime.of(0, 1);
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+        return LocalTime.parse(horaStr, formatter);
     }
 
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -309,7 +325,7 @@ public class Tools {
             try {
                 return scanner.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("⚠ Entrada inválida. Por favor insira um número inteiro.");
+                System.out.println("Entrada inválida. Por favor insira um número inteiro.");
                 scanner.nextLine();
             }
         }
@@ -356,6 +372,7 @@ public class Tools {
             variaveis.put("TIPO_LEILAO", leilao.getTipoLeilao() == 1 ? "ELETRONICO" : leilao.getTipoLeilao() == 2 ? "CARTA FECHADA" : "VENDA DIRETA");
             variaveis.put("NOME_lEILAO", leilao.getDescricao());
         }
+        variaveis.put("PASSWORD_TEMPORARIA", u.getPassword());
 
         return variaveis;
     }
@@ -373,9 +390,34 @@ public class Tools {
         }
     }
 
-    public static int gerarNovoIdLance() {
-        synchronized (lockIdLance) {
-            return ++ultimoIdLance;
+    public static double pedirDouble(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String input = scanner.nextLine().trim();
+
+            if (verificarSaida(input)) return -1.0;
+
+            try {
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor insira um número decimal válido.");
+            }
         }
     }
+
+    public static int pedirInt(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String input = scanner.nextLine().trim();
+
+            if (verificarSaida(input)) return -1;
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor insira um número inteiro válido.");
+            }
+        }
+    }
+
 }

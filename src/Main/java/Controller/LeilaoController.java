@@ -16,7 +16,7 @@ public class LeilaoController {
     public ResultadoOperacao criarLeiloes(int id, int idProduto, String descricao, int idTipoLeilao, LocalDateTime dataInicio, LocalDateTime dataFim, double valorMin, Double valorMax, Double multiploLance, int idEstado) {
         LeilaoBLL leilaoBLL = new LeilaoBLL();
         ResultadoOperacao resultado = new ResultadoOperacao();
-        if (descricao == null || descricao.isEmpty()) {
+         if (descricao == null || descricao.isEmpty()) {
             resultado.msgErro = "A descrição não pode ser nula.";
         } else if (dataInicio == null) {
             resultado.msgErro = "A data de inicio não pode ser nula.";

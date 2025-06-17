@@ -1,6 +1,5 @@
 package BLL;
 
-import DAL.CategoriaDAL;
 import DAL.ProdutoCategoriaDAL;
 import Model.Categoria;
 import Model.ProdutoCategoria;
