@@ -2,9 +2,11 @@ package View;
 
 import BLL.UtilizadorBLL;
 import BLL.importarLeiloes;
+import Model.ResultadoImportacao;
 import Model.Utilizador;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class MenuGestorView {
         TemplateView templateView = new TemplateView();
 
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
+        importarLeiloes importarLeiloes = new importarLeiloes();
         List<Utilizador> lista = utilizadorBLL.listarUtilizador(0, 0);
 
         utilizadorView.verificarLoginsUtilizadores();
@@ -67,20 +70,27 @@ public class MenuGestorView {
                     templateView.editarTemplate();
                     break;
                 case 10:
-                    UtilizadorBLL.ResultadoImportacao resultado = utilizadorView.importar();
-                    System.out.println("Total de clientes importados: " + resultado.totalImportados);
-                    System.out.println("Total de clientes já existentes: " + resultado.totalExistentes);
+                    ResultadoImportacao resultadoClientes = utilizadorView.importar();
+                    System.out.println("Total de clientes importados: " + resultadoClientes.totalImportados);
+                    System.out.println("Total de clientes já existentes: " + resultadoClientes.totalExistentes);
 
-                    if (!resultado.erros.isEmpty()) {
+                    if (!resultadoClientes.erros.isEmpty()) {
                         System.out.println("Erros encontrados durante a importação:");
-                        for (String erro : resultado.erros) {
+                        for (String erro : resultadoClientes.erros) {
                             System.out.println(erro);
                         }
                     }
                     break;
                 case 11:
-                    importarLeiloes importarLeiloes = new importarLeiloes();
-                    importarLeiloes.importarLeiloes();
+                    ResultadoImportacao resultadoLeiloes = importarLeiloes.importarLeiloes();
+                    System.out.println("Total de leilões importados: " + resultadoLeiloes.totalImportados);
+                    if (!resultadoLeiloes.erros.isEmpty()) {
+                        System.out.println("Erros encontrados durante a importação:");
+                        for (String erro : resultadoLeiloes.erros) {
+                            System.out.println(erro);
+                        }
+                    }
+                    break;
                 case 0:
                     System.out.println("A sair...");
                     Tools.clienteSessao.logout();

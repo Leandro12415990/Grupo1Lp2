@@ -4,6 +4,7 @@ import BLL.EmailBLL;
 import BLL.UtilizadorBLL;
 import Controller.UtilizadorController;
 import DAL.TemplateDAL;
+import Model.ResultadoImportacao;
 import Model.ResultadoOperacao;
 import Model.Template;
 import Model.Utilizador;
@@ -263,9 +264,9 @@ public class UtilizadorView {
     }
 
     //IMPORTAR UTILIZADORES BY FICHEIRO - PP
-    public UtilizadorBLL.ResultadoImportacao importar() {
-        UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
-        return utilizadorBLL.importarUtilizadores();
+    public ResultadoImportacao importar() {
+        UtilizadorController utilizadorController = new UtilizadorController();
+        return utilizadorController.importar();
     }
 
 }

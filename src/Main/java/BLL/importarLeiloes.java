@@ -20,9 +20,7 @@ import static Utils.Constantes.caminhosFicheiros.CSV_FILE_IMPORT_LEILOES;
 
 public class importarLeiloes {
 
-    public void importarLeiloes() {
-        List<String> erros = new ArrayList<>();
-
+    public ResultadoImportacao importarLeiloes() {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         ProdutoBLL produtoBLL = new ProdutoBLL();
         LeilaoBLL leilaoBLL = new LeilaoBLL();
@@ -31,6 +29,9 @@ public class importarLeiloes {
         LanceDAL lanceDAL = new LanceDAL();
         NegociacaoController negociacaoController = new NegociacaoController();
 
+
+        int totalImportados = 0;
+        List<String> erros = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_IMPORT_LEILOES))) {
 
             String linha;
@@ -97,6 +98,7 @@ public class importarLeiloes {
                                 Constantes.estadosLance.DEFAULT
                         );
                         listaLances.add(lance);
+                        totalImportados ++;
 
                     } else if (idTipoLeilao == Constantes.tiposLeilao.NEGOCIACAO) {
                         ResultadoOperacao resultado = negociacaoController.criarNegociacao(
@@ -119,7 +121,7 @@ public class importarLeiloes {
                                 Constantes.estadosLance.FINALIZADO
                         );
                         listaLances.add(lance);
-
+                        totalImportados ++;
                     } else {
                         erros.add("Tipo de leilão desconhecido: " + idTipoLeilao + " na linha: " + linha);
                     }
@@ -135,13 +137,8 @@ public class importarLeiloes {
         } catch (IOException e) {
             erros.add("Erro ao ler o ficheiro: " + e.getMessage());
         }
+        return new ResultadoImportacao(null, totalImportados, 0, erros);
 
-        if (erros.isEmpty()) {
-            System.out.println();
-        } else {
-            System.out.println("Importação concluída com erros:");
-            erros.forEach(System.out::println);
-        }
     }
 
     private LocalDate parseDate(String dataTexto) {

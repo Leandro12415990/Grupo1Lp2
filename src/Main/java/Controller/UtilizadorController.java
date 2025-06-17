@@ -1,6 +1,7 @@
 package Controller;
 
 import BLL.UtilizadorBLL;
+import Model.ResultadoImportacao;
 import Model.ResultadoOperacao;
 import Model.Utilizador;
 import Utils.Tools;
@@ -124,7 +125,7 @@ public class UtilizadorController {
     }
 
     //IMPORTAR UTILIZADORES BY FICHEIRO - PP
-    public UtilizadorBLL.ResultadoImportacao importar() {
+    public ResultadoImportacao importar() {
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
         return utilizadorBLL.importarUtilizadores();
     }

@@ -5,6 +5,7 @@ import DAL.TemplateDAL;
 import Controller.UtilizadorController;
 import DAL.LeilaoDAL;
 import DAL.UtilizadorDAL;
+import Model.ResultadoImportacao;
 import Model.ResultadoOperacao;
 import Model.Template;
 import Model.Utilizador;
@@ -53,7 +54,7 @@ public class UtilizadorBLL {
         }
 
         try {
-            utilizador = new Utilizador(max + 1, nome, email, nascimento, morada, password, data, data, Tools.tipoUtilizador.CLIENTE.getCodigo(), Tools.estadoUtilizador.PENDENTE.getCodigo(), 0.0);
+            utilizador = new Utilizador(max + 1, nome, email, nascimento, morada, password, data, data, Tools.tipoUtilizador.CLIENTE.getCodigo(), Tools.estadoUtilizador.ATIVO.getCodigo(), 0.0);
         } catch (Exception e) {
             return null;
         }
@@ -280,18 +281,4 @@ public class UtilizadorBLL {
         }
     }
 
-    // Classe auxiliar para devolver os dados à View
-    public static class ResultadoImportacao {
-        public final List<Utilizador> utilizadoresImportados;
-        public final int totalImportados;
-        public final int totalExistentes;
-        public final List<String> erros;
-
-        public ResultadoImportacao(List<Utilizador> utilizadoresImportados, int totalImportados, int totalExistentes, List<String> erros) {
-            this.utilizadoresImportados = utilizadoresImportados;
-            this.totalImportados = totalImportados;
-            this.totalExistentes = totalExistentes;
-            this.erros = erros;
-        }
-    }
 }
