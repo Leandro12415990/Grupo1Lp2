@@ -34,7 +34,7 @@ public class LanceView {
             switch (opc) {
                 case 1 -> listarMeuLance();
                 case 2 -> verDetalhesLeilaoTerminados();
-                case 3 -> lanceDireto(null);
+                case 3 -> lanceDireto();
                 case 4 -> lanceCartaFechada(null);
                 case 5 -> lanceEletronico(null);
                 case 6 -> verLeiloesDeOutrosEDarLance(null);
@@ -45,19 +45,17 @@ public class LanceView {
         } while (opc != 0);
     }
 
-    public void lanceDireto(Leilao leilaoEscolhido) throws MessagingException, IOException {
+    public void lanceDireto() throws MessagingException, IOException {
+        UtilizadorDAL utilizadorDAL = new UtilizadorDAL();
         LanceController lanceController = new LanceController();
         LeilaoController leilaoController = new LeilaoController();
 
-        if (leilaoEscolhido == null) {
-            List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
-            List<Leilao> leiloesLanceDireto = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
-
-            if (leiloesLanceDireto.isEmpty()) {
-                System.out.println("Não existem leilões disponíveis do tipo Venda Direta.");
-                return;
-            }
-
+        ResultadoOperacao resultado;
+        System.out.println("\n===== LEILÕES VENDA DIRETA =====");
+        List<Leilao> leiloesAtivos = leilaoController.listarLeiloes(Tools.estadoLeilao.ATIVO);
+        List<Utilizador> cliente = utilizadorDAL.carregarUtilizadores();
+        List<Leilao> leiloesLanceDireto = lanceController.listarLeiloesByTipo(leiloesAtivos, Constantes.tiposLeilao.VENDA_DIRETA);
+        if (!leiloesLanceDireto.isEmpty()) {
             for (Leilao leilao : leiloesLanceDireto) {
                 System.out.println("ID: " + leilao.getId() + " | Produto: " + leilao.getDescricao() + " | Valor Lance: " + leilao.getValorMinimo());
             }
@@ -65,38 +63,39 @@ public class LanceView {
             int idLeilao = Tools.pedirInt("\nInsira o ID do leilão em que deseja participar " + Tools.alertaCancelar());
             if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
 
-            leilaoEscolhido = leilaoController.procurarLeilaoPorId(idLeilao);
-        }
-
-        if (leilaoEscolhido != null) {
-            int idLeilao = leilaoEscolhido.getId();
+            boolean verificarID = lanceController.verificarDisponibilidadeLeilao(leiloesLanceDireto, idLeilao);
+            Leilao leilao = leilaoController.procurarLeilaoPorId(idLeilao);
             int idCliente = Tools.clienteSessao.getIdCliente();
             UtilizadorController utilizadorController = new UtilizadorController();
             double saldo = utilizadorController.obterSaldoCliente(idCliente);
 
-            System.out.println("\n===== LEILÃO VENDA DIRETA =====");
-            System.out.println("ID: " + leilaoEscolhido.getId() + " | Produto: " + leilaoEscolhido.getDescricao());
-            System.out.println("O seu saldo atual: " + saldo);
-
-            double valorLance = Tools.pedirDouble("Insira o valor do lance: ");
-            if (Tools.verificarSaida(String.valueOf(valorLance))) return;
-
-            boolean verificarID = lanceController.verificarDisponibilidadeLeilao(Collections.singletonList(leilaoEscolhido), idLeilao);
-
             if (verificarID) {
-                ResultadoOperacao resultado = lanceController.adicionarLanceDireto(idLeilao, valorLance);
-                if (resultado.Sucesso) {
-                    System.out.println("PARABÉNS! É O VENCEDOR!");
+                System.out.println("O seu saldo atual: " + saldo);
+                System.out.print("Tem a certeza que quer dar um Lance? (S/N)" + Tools.alertaCancelar());
+                String imput1 = scanner.nextLine().trim();
+                if (Tools.verificarSaida(imput1)) return;
+                char opc = Character.toUpperCase(imput1.charAt(0));
+                if (opc == 'S') {
+                    Double valorLance = leilao.getValorMinimo();
+                    resultado = lanceController.adicionarLanceDireto(idLeilao, valorLance);
+                    if (resultado.Sucesso) {
+                        System.out.println("PARABÉNS! É O VENCEDOR!");
+                    } else {
+                        System.out.println("Créditos Insuficientes " + resultado.msgErro);
+                    }
+                } else if (opc == 'N') {
+                    return;
                 } else {
-                    System.out.println("Créditos Insuficientes " + resultado.msgErro);
+                    System.out.println("Opção inválida!");
                 }
             } else {
                 System.out.println("Leilão não disponível!");
             }
         } else {
-            System.out.println("Leilão não encontrado!");
+            System.out.println("Não existem leilões disponíveis do tipo Venda Direta.");
         }
     }
+
 
     public void lanceCartaFechada(Leilao leilaoEscolhido) throws MessagingException, IOException {
         LanceController lanceController = new LanceController();
