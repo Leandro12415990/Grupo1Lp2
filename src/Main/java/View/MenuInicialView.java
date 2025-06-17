@@ -1,19 +1,15 @@
 package View;
 
-import BLL.*;
-import Controller.AgenteController;
-import DAL.ConfigLoader;
+import BLL.AgenteBLL;
+import BLL.RelatorioFinalBLL;
+import BLL.importarLeiloes;
 import DAL.LanceDAL;
 import Model.Lance;
-import DAL.TemplateDAL;
-import Model.Template;
 import Model.Utilizador;
-import Utils.Constantes;
 import Utils.Tools;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.List;
 
 import static Utils.Tools.scanner;

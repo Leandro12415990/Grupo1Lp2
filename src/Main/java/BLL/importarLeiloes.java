@@ -20,7 +20,7 @@ import static Utils.Constantes.caminhosFicheiros.CSV_FILE_IMPORT_LEILOES;
 
 public class importarLeiloes {
 
-    public void importarLeiloes() throws Exception {
+    public void importarLeiloes() {
         List<String> erros = new ArrayList<>();
 
         UtilizadorBLL utilizadorBLL = new UtilizadorBLL();
@@ -116,7 +116,7 @@ public class importarLeiloes {
                                 negociacao.getIdNegociacao(),
                                 valorFinal,
                                 LocalDateTime.now(),
-                                Constantes.estadosLance.DEFAULT
+                                Constantes.estadosLance.FINALIZADO
                         );
                         listaLances.add(lance);
 
@@ -133,15 +133,14 @@ public class importarLeiloes {
             lanceDAL.gravarLances(listaLances);
 
         } catch (IOException e) {
-            throw new Exception("Erro ao ler o ficheiro: " + e.getMessage(), e);
+            erros.add("Erro ao ler o ficheiro: " + e.getMessage());
         }
 
-        if (!erros.isEmpty()) {
-            String msg = "Importação concluída com erros:\n";
-            for (String erro : erros) {
-                msg += "- " + erro + "\n";
-            }
-            throw new Exception(msg);
+        if (erros.isEmpty()) {
+            System.out.println();
+        } else {
+            System.out.println("Importação concluída com erros:");
+            erros.forEach(System.out::println);
         }
     }
 

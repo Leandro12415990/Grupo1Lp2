@@ -46,6 +46,7 @@ public class Constantes {
         public static final int DEFAULT = 0;
         public static final int PROPOSTA = 1;
         public static final int CONTRAPROPOSTA = 2;
+        public static final int FINALIZADO = 3;
     }
 
     // Secção: Tipos Leilões
