@@ -32,7 +32,7 @@ public class NegociacaoView {
             System.out.println("6. Ver Propostas Recebidas e Renegociar");
             System.out.println("0. Sair");
 
-            System.out.print("Escolha a opção: ");
+            System.out.print("Escolha a opção " + Tools.alertaCancelar());
             String opcao = scanner.nextLine().trim();
 
             switch (opcao) {
@@ -40,7 +40,7 @@ public class NegociacaoView {
                     criarNegociacao();
                     break;
                 case "2":
-                    verNegociacoes();
+                    verNegociacoes(0);
                     break;
                 case "3":
                     listarMeuLanceNegociacao();
@@ -66,16 +66,19 @@ public class NegociacaoView {
     private void criarNegociacao() {
         System.out.println("\n--- Criar Novo Leilão ---");
 
-        System.out.print("Nome do Leilão: ");
+        System.out.print("Nome do Leilão " + Tools.alertaCancelar());
         String nome = scanner.nextLine().trim();
+        if (Tools.verificarSaida(nome)) return;
 
-        System.out.print("Descrição: ");
+        System.out.print("Descrição " + Tools.alertaCancelar());
         String descricao = scanner.nextLine().trim();
+        if (Tools.verificarSaida(descricao)) return;
 
         double valor = 0.0;
         while (true) {
-            System.out.print("Valor: ");
+            System.out.print("Valor " + Tools.alertaCancelar());
             String valorStr = scanner.nextLine().trim();
+            if (Tools.verificarSaida(valorStr)) return;
             try {
                 valor = Double.parseDouble(valorStr);
                 if (valor <= 0) {
@@ -98,11 +101,11 @@ public class NegociacaoView {
         }
     }
 
-    private void verNegociacoes() {
+    private void verNegociacoes(int idEstado) {
         System.out.println("\n--- Meus Leilões ---");
 
         int idCliente = Tools.clienteSessao.getIdCliente();
-        List<Negociacao> negociacoes = negociacaoController.listarNegociacoesPorCliente(idCliente);
+        List<Negociacao> negociacoes = negociacaoController.listarNegociacoesPorCliente(idCliente, idEstado);
 
         if (negociacoes.isEmpty()) {
             System.out.println("Nenhum Leilão encontrado.");
@@ -119,20 +122,23 @@ public class NegociacaoView {
     }
 
     private void editarNegociacao() {
-        verNegociacoes();
+        verNegociacoes(1);
         System.out.println("\n--- Editar Leilão ---");
-        System.out.print("ID do Leilão a editar: ");
-        int idNegociacao = Integer.parseInt(scanner.nextLine().trim());
+        int idNegociacao = Tools.pedirOpcaoMenu("ID do Leilão a editar " + Tools.alertaCancelar());
+        if (Tools.verificarSaida(String.valueOf(idNegociacao))) return;
 
-        System.out.print("Novo Nome (deixe vazio para manter): ");
+        System.out.print("Novo Nome (deixe vazio para manter) " + Tools.alertaCancelar());
         String nome = scanner.nextLine().trim();
+        if (Tools.verificarSaida(nome)) return;
 
-        System.out.print("Nova Descrição (deixe vazio para manter): ");
+        System.out.print("Nova Descrição (deixe vazio para manter) " + Tools.alertaCancelar());
         String descricao = scanner.nextLine().trim();
+        if (Tools.verificarSaida(descricao)) return;
 
         double valor = -1.0;
-        System.out.print("Novo Valor (deixe vazio para manter): ");
+        System.out.print("Novo Valor (deixe vazio para manter) " + Tools.alertaCancelar());
         String valorInput = scanner.nextLine().trim();
+        if (Tools.verificarSaida(valorInput)) return;
         if (!valorInput.isEmpty()) {
             try {
                 valor = Double.parseDouble(valorInput);
@@ -166,7 +172,7 @@ public class NegociacaoView {
         System.out.println("\n--- Fechar Leilão ---");
 
         int idCliente = Tools.clienteSessao.getIdCliente();
-        List<Negociacao> todasNegociacoes = negociacaoController.listarNegociacoesPorCliente(idCliente);
+        List<Negociacao> todasNegociacoes = negociacaoController.listarNegociacoesPorCliente(idCliente,0);
         List<Negociacao> leiloesAtivos = new ArrayList<>();
 
         for (Negociacao negociacao : todasNegociacoes) {
@@ -189,8 +195,8 @@ public class NegociacaoView {
             System.out.println("------------------------------");
         }
 
-        System.out.print("Digite o ID do leilão que queres fechar: ");
-        int idNegociacao = Integer.parseInt(scanner.nextLine().trim());
+        int idNegociacao = Tools.pedirOpcaoMenu("Digite o ID do leilão que queres fechar " + Tools.alertaCancelar());
+        if (Tools.verificarSaida(String.valueOf(idNegociacao))) return;
 
         ResultadoOperacao resultado = negociacaoController.fecharNegociacao(idNegociacao, idCliente);
 
@@ -235,7 +241,7 @@ public class NegociacaoView {
         List<Negociacao> leilao = negociacaoDAL.carregarNegociacoes();
 
         NegociacaoController negociacaoController = new NegociacaoController();
-        List<Negociacao> meusLeiloes = negociacaoController.listarNegociacoesPorCliente(idClienteSessao);
+        List<Negociacao> meusLeiloes = negociacaoController.listarNegociacoesPorCliente(idClienteSessao,0);
 
         List<Lance> lancesFiltrados = new ArrayList<>();
         boolean estouComoVendedor = false;
@@ -264,154 +270,159 @@ public class NegociacaoView {
 
         }
 
+        if (!lancesFiltrados.isEmpty()) {
+            System.out.println(estouComoVendedor ? "\n--- Propostas Recebidas ---" : "\n--- Contrapropostas Recebidas ---");
+            System.out.println("-".repeat(130));
+            System.out.printf("%-15s %-15s %-20s %-20s %-20s %-20s %-25s%n",
+                    "ID Lance", "Leilão", "ID Cliente", "Valor Inicial", "Proposta", "ContraProposta", "Data");
+            System.out.println("-".repeat(130));
 
-        System.out.println(estouComoVendedor ? "\n--- Propostas Recebidas ---" : "\n--- Contrapropostas Recebidas ---");
-        System.out.println("-".repeat(130));
-        System.out.printf("%-15s %-15s %-20s %-20s %-20s %-20s %-25s%n",
-                "ID Lance", "Leilão", "ID Cliente", "Valor Inicial", "Proposta", "ContraProposta", "Data");
-        System.out.println("-".repeat(130));
-
-        for (Lance l : lancesFiltrados) {
-            Negociacao negociacao = negociacaoController.buscarNegociacaoPorId(l.getIdNegociacao());
-            if (negociacao == null) continue;
-            String nomeCliente = negociacaoController.obterNomeClientePorId(l.getIdCliente());
-            System.out.printf("%-15d %-15s %-20s %-20s %-20.2f %-20.2f %-25s%n",
-                    l.getIdLance(), negociacao.getNome(), nomeCliente, negociacao.getValor(),
-                    l.getValorLance(), l.getValorContraProposta(), Tools.formatDateTime(l.getDataLance()));
-        }
-
-        System.out.print("\nDigite o ID do lance que deseja gerir" + Tools.alertaCancelar());
-        int idLanceSelecionado;
-        try {
-            idLanceSelecionado = Integer.parseInt(scanner.nextLine().trim());
-        } catch (NumberFormatException e) {
-            System.out.println("ID inválido.");
-            return;
-        }
-
-        if (idLanceSelecionado == 0) return;
-
-        LanceController lanceController = new LanceController();
-        Lance lanceSelecionado = lanceController.buscarLancePorId(idLanceSelecionado);
-
-        if (lanceSelecionado == null) {
-            System.out.println("Lance não encontrado.");
-            return;
-        }
-
-        Negociacao negociacao = negociacaoController.buscarNegociacaoPorId(lanceSelecionado.getIdNegociacao());
-
-        if (negociacao == null) {
-            System.out.println("Leilão associado não encontrado.");
-            return;
-        }
-
-        if (negociacao.getIdCliente() == idClienteSessao) {
-            System.out.println("1. Aceitar proposta");
-            System.out.println("2. Recusar proposta");
-            System.out.println("3. Fazer contraproposta");
-            System.out.println("0. Voltar");
-
-            String opcao = scanner.nextLine().trim();
-
-            switch (opcao) {
-                case "1":
-                    ResultadoOperacao resAceitar = negociacaoController.fecharNegociacaoComLanceAceito(
-                            negociacao.getIdNegociacao(),
-                            lanceSelecionado.getValorLance(),
-                            lanceSelecionado.getIdCliente()
-                    );
-                    System.out.println(resAceitar.Sucesso ? "Proposta aceite e leilão fechado." : "Erro: " + resAceitar.msgErro);
-                    break;
-
-                case "2":
-                    ResultadoOperacao resRecusar = lanceController.recusarLance(idLanceSelecionado);
-                    System.out.println(resRecusar.Sucesso ? "Proposta recusada." : "Erro: " + resRecusar.msgErro);
-                    break;
-
-                case "3":
-                    System.out.print("Digite o valor da contraproposta: ");
-                    double novoValor;
-                    try {
-                        novoValor = Double.parseDouble(scanner.nextLine().trim());
-                        if (novoValor <= 0) throw new NumberFormatException();
-                    } catch (NumberFormatException e) {
-                        System.out.println("Valor inválido.");
-                        return;
-                    }
-
-                    ResultadoOperacao resultadoContra = lanceController.definirContraproposta(
-                            idLanceSelecionado, novoValor
-                    );
-
-                    System.out.println(resultadoContra.Sucesso ? "Contraproposta enviada." : "Erro: " + resultadoContra.msgErro);
-                    break;
-                case "0":
-                    System.out.println("\nSair...");
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
+            for (Lance l : lancesFiltrados) {
+                Negociacao negociacao = negociacaoController.buscarNegociacaoPorId(l.getIdNegociacao());
+                if (negociacao == null) continue;
+                String nomeCliente = negociacaoController.obterNomeClientePorId(l.getIdCliente());
+                System.out.printf("%-15d %-15s %-20s %-20s %-20.2f %-20.2f %-25s%n",
+                        l.getIdLance(), negociacao.getNome(), nomeCliente, negociacao.getValor(),
+                        l.getValorLance(), l.getValorContraProposta(), Tools.formatDateTime(l.getDataLance()));
             }
 
-        } else if (lanceSelecionado.getIdCliente() == idClienteSessao) {
-            // Comprador
-            if (lanceSelecionado.getValorContraProposta() <= 0) {
-                System.out.println("Ainda não há contraproposta do vendedor.");
+            int idLanceSelecionado;
+            try {
+                idLanceSelecionado = Tools.pedirOpcaoMenu("\nDigite o ID do lance que deseja gerir " + Tools.alertaCancelar());
+                if (Tools.verificarSaida(String.valueOf(idLanceSelecionado))) return;
+            } catch (NumberFormatException e) {
+                System.out.println("ID inválido.");
                 return;
             }
 
-            System.out.println("1. Aceitar contraproposta");
-            System.out.println("2. Recusar contraproposta");
-            System.out.println("3. Fazer nova proposta");
-            System.out.println("0. Voltar");
+            if (idLanceSelecionado == 0) return;
 
-            String opcao = scanner.nextLine().trim();
+            LanceController lanceController = new LanceController();
+            Lance lanceSelecionado = lanceController.buscarLancePorId(idLanceSelecionado);
 
-            switch (opcao) {
-                case "1":
-                    ResultadoOperacao aceitar = negociacaoController.fecharNegociacaoComLanceAceito(
-                            negociacao.getIdNegociacao(),
-                            lanceSelecionado.getValorContraProposta(),
-                            idClienteSessao
-                    );
-                    System.out.println(aceitar.Sucesso ? "Contraproposta aceite. Leilão fechado." : "Erro: " + aceitar.msgErro);
-                    break;
-
-                case "2":
-                    ResultadoOperacao recusar = lanceController.recusarLance(idLanceSelecionado);
-                    System.out.println(recusar.Sucesso ? "Contraproposta recusada." : "Erro: " + recusar.msgErro);
-                    break;
-
-                case "3":
-                    System.out.print("Digite o novo valor da proposta: ");
-                    double novaProposta;
-                    try {
-                        novaProposta = Double.parseDouble(scanner.nextLine().trim());
-                        if (novaProposta <= 0) throw new NumberFormatException();
-                    } catch (NumberFormatException e) {
-                        System.out.println("Valor inválido.");
-                        return;
-                    }
-
-                    ResultadoOperacao resultadoNovaProposta = lanceController.atualizarValorLance(
-                            idLanceSelecionado, novaProposta
-                    );
-
-                    System.out.println(resultadoNovaProposta.Sucesso ?
-                            "Nova proposta enviada." :
-                            "Erro ao enviar nova proposta: " + resultadoNovaProposta.msgErro);
-                    break;
-                case "0":
-                    System.out.println("\nSair...");
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
+            if (lanceSelecionado == null) {
+                System.out.println("Lance não encontrado.");
+                return;
             }
 
+            Negociacao negociacao = negociacaoController.buscarNegociacaoPorId(lanceSelecionado.getIdNegociacao());
+
+            if (negociacao == null) {
+                System.out.println("Leilão associado não encontrado.");
+                return;
+            }
+
+            if (negociacao.getIdCliente() == idClienteSessao) {
+                System.out.println("1. Aceitar proposta");
+                System.out.println("2. Recusar proposta");
+                System.out.println("3. Fazer contraproposta");
+                System.out.println("0. Voltar");
+                System.out.println("Escolha uma opção " + Tools.alertaCancelar());
+                String opcao = scanner.nextLine().trim();
+                if (Tools.verificarSaida(opcao)) return;
+
+                switch (opcao) {
+                    case "1":
+                        ResultadoOperacao resAceitar = negociacaoController.fecharNegociacaoComLanceAceito(
+                                negociacao.getIdNegociacao(),
+                                lanceSelecionado.getValorLance(),
+                                lanceSelecionado.getIdCliente()
+                        );
+                        System.out.println(resAceitar.Sucesso ? "Proposta aceite e leilão fechado." : "Erro: " + resAceitar.msgErro);
+                        break;
+
+                    case "2":
+                        ResultadoOperacao resRecusar = lanceController.recusarLance(idLanceSelecionado);
+                        System.out.println(resRecusar.Sucesso ? "Proposta recusada." : "Erro: " + resRecusar.msgErro);
+                        break;
+
+                    case "3":
+                        System.out.print("Digite o valor da contraproposta " + Tools.alertaCancelar());
+                        double novoValor;
+                        try {
+                            novoValor = Double.parseDouble(scanner.nextLine().trim());
+                            if (Tools.verificarSaida(String.valueOf(novoValor))) return;
+                            if (novoValor <= 0) throw new NumberFormatException();
+                        } catch (NumberFormatException e) {
+                            System.out.println("Valor inválido.");
+                            return;
+                        }
+
+                        ResultadoOperacao resultadoContra = lanceController.definirContraproposta(
+                                idLanceSelecionado, novoValor
+                        );
+
+                        System.out.println(resultadoContra.Sucesso ? "Contraproposta enviada." : "Erro: " + resultadoContra.msgErro);
+                        break;
+                    case "0":
+                        System.out.println("\nSair...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida.");
+                }
+
+            } else if (lanceSelecionado.getIdCliente() == idClienteSessao) {
+                // Comprador
+                if (lanceSelecionado.getValorContraProposta() <= 0) {
+                    System.out.println("Ainda não há contraproposta do vendedor.");
+                    return;
+                }
+
+                System.out.println("1. Aceitar contraproposta");
+                System.out.println("2. Recusar contraproposta");
+                System.out.println("3. Fazer nova proposta");
+                System.out.println("0. Voltar");
+                System.out.println("Escolha uma opção " + Tools.alertaCancelar());
+                String opcao = scanner.nextLine().trim();
+                if (Tools.verificarSaida(opcao)) return;
+
+                switch (opcao) {
+                    case "1":
+                        ResultadoOperacao aceitar = negociacaoController.fecharNegociacaoComLanceAceito(
+                                negociacao.getIdNegociacao(),
+                                lanceSelecionado.getValorContraProposta(),
+                                idClienteSessao
+                        );
+                        System.out.println(aceitar.Sucesso ? "Contraproposta aceite. Leilão fechado." : "Erro: " + aceitar.msgErro);
+                        break;
+
+                    case "2":
+                        ResultadoOperacao recusar = lanceController.recusarLance(idLanceSelecionado);
+                        System.out.println(recusar.Sucesso ? "Contraproposta recusada." : "Erro: " + recusar.msgErro);
+                        break;
+
+                    case "3":
+                        System.out.print("Digite o novo valor da proposta " + Tools.alertaCancelar());
+                        double novaProposta;
+                        try {
+                            novaProposta = Double.parseDouble(scanner.nextLine().trim());
+                            if (Tools.verificarSaida(String.valueOf(novaProposta))) return;
+                            if (novaProposta <= 0) throw new NumberFormatException();
+                        } catch (NumberFormatException e) {
+                            System.out.println("Valor inválido.");
+                            return;
+                        }
+
+                        ResultadoOperacao resultadoNovaProposta = lanceController.atualizarValorLance(
+                                idLanceSelecionado, novaProposta
+                        );
+
+                        System.out.println(resultadoNovaProposta.Sucesso ?
+                                "Nova proposta enviada." :
+                                "Erro ao enviar nova proposta: " + resultadoNovaProposta.msgErro);
+                        break;
+                    case "0":
+                        System.out.println("\nSair...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida.");
+                }
+
+            } else {
+                System.out.println("Não tens permissões para gerir este lance.");
+            }
         } else {
-            System.out.println("Não tens permissões para gerir este lance.");
+            System.out.println("Não existe contraproposta.");
         }
     }
-
-
 }

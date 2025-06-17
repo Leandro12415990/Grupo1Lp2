@@ -318,7 +318,8 @@ public class LanceView {
                 System.out.println("------------------------------");
             }
 
-            int idLeilao = Tools.pedirInt("Digite o ID do leilão que deseja propor: ");
+            int idLeilao = Tools.pedirInt("Digite o ID do leilão que deseja propor " + Tools.alertaCancelar());
+            if (Tools.verificarSaida(String.valueOf(idLeilao))) return;
             leilaoEscolhido = negociacaoController.buscarNegociacaoPorId(idLeilao);
         }
 
@@ -327,8 +328,8 @@ public class LanceView {
             return;
         }
 
-        double valor = Tools.pedirDouble("Digite o valor da sua proposta: ");
-
+        double valor = Tools.pedirDouble("Digite o valor da sua proposta " + Tools.alertaCancelar());
+        if (Tools.verificarSaida(String.valueOf(valor))) return;
         LanceBLL lanceBLL = new LanceBLL();
         ResultadoOperacao resultado = lanceBLL.fazerProposta(leilaoEscolhido.getIdNegociacao(), idCliente, valor);
 
@@ -350,8 +351,9 @@ public class LanceView {
             return;
         }
 
-        System.out.print("\nEscolha o ID do leilão no qual deseja dar um lance: ");
+        System.out.print("\nEscolha o ID do leilão no qual deseja dar um lance " + Tools.alertaCancelar());
         int idLeilaoEscolhido = Tools.scanner.nextInt();
+        if (Tools.verificarSaida(String.valueOf(idLeilaoEscolhido))) return;
         Tools.scanner.nextLine();
 
         Leilao leilaoEscolhido = null;

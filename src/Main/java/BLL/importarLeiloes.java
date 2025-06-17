@@ -48,7 +48,7 @@ public class importarLeiloes {
                 }
 
                 String nomeProduto = campos[0].trim();
-                String descricaoProduto = campos[1].trim();
+                String descricaoLeilao = campos[1].trim();
                 int idTipoLeilao = Integer.parseInt(campos[2].trim());
                 LocalDate dataInicio = parseDate(campos[3].trim());
                 LocalDate dataFim = parseDate(campos[4].trim());
@@ -67,7 +67,7 @@ public class importarLeiloes {
                                 0,
                                 Constantes.estadosProduto.RESERVADO,
                                 nomeProduto,
-                                descricaoProduto
+                                null
                         );
                         produtoBLL.adicionarProduto(produto);
 
@@ -75,13 +75,13 @@ public class importarLeiloes {
                         Leilao leilao = new Leilao(
                                 novoIdLeilao,
                                 produto.getIdProduto(),
-                                null,
+                                descricaoLeilao,
                                 idTipoLeilao,
                                 dataInicio.atStartOfDay(),
                                 dataFim.atStartOfDay(),
                                 0.0,
                                 0.0,
-                                1.0,
+                                0.0,
                                 Constantes.estadosLeilao.FECHADO
                         );
                         listaLeiloes.add(leilao);
@@ -104,7 +104,7 @@ public class importarLeiloes {
                         ResultadoOperacao resultado = negociacaoController.criarNegociacao(
                                 cliente.getId(),
                                 nomeProduto,
-                                descricaoProduto,
+                                null,
                                 valorFinal
                         );
                         Negociacao negociacao = (Negociacao) resultado.Objeto;

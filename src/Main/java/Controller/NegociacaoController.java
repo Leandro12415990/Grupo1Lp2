@@ -40,18 +40,19 @@ public class NegociacaoController {
         return resultado;
     }
 
-    public List<Negociacao> listarNegociacoesPorCliente(int idCliente) {
+    public List<Negociacao> listarNegociacoesPorCliente(int idCliente, int idEstado) {
         List<Negociacao> todasNegociacoes = negociacaoDAL.carregarNegociacoes();
         List<Negociacao> negociacoesCliente = new ArrayList<>();
 
         for (Negociacao negociacao : todasNegociacoes) {
-            if (negociacao.getIdCliente() == idCliente) {
+            if (negociacao.getIdCliente() == idCliente && (idEstado == 0 || negociacao.getEstado() == idEstado)) {
                 negociacoesCliente.add(negociacao);
             }
         }
 
         return negociacoesCliente;
     }
+
 
     public ResultadoOperacao editarNegociacao(int idNegociacao, int idCliente, String novoNome, String novaDescricao, double novoValor) {
         ResultadoOperacao resultado = new ResultadoOperacao();
