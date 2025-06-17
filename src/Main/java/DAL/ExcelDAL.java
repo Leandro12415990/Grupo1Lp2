@@ -1,9 +1,12 @@
 package DAL;
 
+import BLL.ProdutoBLL;
 import BLL.RelatorioFinalBLL;
 import Model.Leilao;
 import Model.Utilizador;
 import Utils.Constantes;
+import Utils.Tools;
+import jakarta.mail.MessagingException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,17 +21,16 @@ import java.util.List;
 
 public class ExcelDAL {
 
-    public String guardarRelatorio() throws IOException {
+    public String guardarRelatorio() throws IOException, MessagingException {
         Workbook workbook = new XSSFWorkbook();
         RelatorioFinalBLL relatorioBLL = new RelatorioFinalBLL();
+        ProdutoBLL produtoBLL = new ProdutoBLL();
 
-        // Obter dados necessários do BLL
         List<Leilao> leiloesTerminados = relatorioBLL.obterLeiloesTerminadosOntem();
         List<Leilao> leiloesHoje = relatorioBLL.obterLeiloesIniciadosHoje();
         List<Utilizador> utilizadoresLogadosOntem = relatorioBLL.clienteLogadoOntem();
         List<Utilizador> utilizadoresPendentes = relatorioBLL.pendenteRegisto();
 
-        // Formatter para datas
         DateTimeFormatter dataHoraFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         DateTimeFormatter dataSimplesFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -36,7 +38,7 @@ public class ExcelDAL {
         Sheet leiloesSheet = workbook.createSheet("Leilões Terminados Ontem");
         Row header = leiloesSheet.createRow(0);
         header.createCell(0).setCellValue("ID");
-        header.createCell(1).setCellValue("ID Produto");
+        header.createCell(1).setCellValue("Nome Produto");
         header.createCell(2).setCellValue("Tipo de Leilão");
         header.createCell(3).setCellValue("Data Início");
         header.createCell(4).setCellValue("Data Fim");
@@ -45,8 +47,9 @@ public class ExcelDAL {
         for (Leilao leilao : leiloesTerminados) {
             Row row = leiloesSheet.createRow(rowNum++);
             row.createCell(0).setCellValue(leilao.getId());
-            row.createCell(1).setCellValue(leilao.getIdProduto());
-            row.createCell(2).setCellValue(leilao.getTipoLeilao());
+            String nomeProduto = produtoBLL.getNomeProdutoById(leilao.getIdProduto());
+            row.createCell(1).setCellValue(nomeProduto != null ? nomeProduto : "N/A");
+            row.createCell(2).setCellValue(Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()).name());
             row.createCell(3).setCellValue(leilao.getDataInicio() != null ? leilao.getDataInicio().format(dataHoraFormatter) : "N/A");
             row.createCell(4).setCellValue(leilao.getDataFim() != null ? leilao.getDataFim().format(dataHoraFormatter) : "N/A");
         }
@@ -55,7 +58,7 @@ public class ExcelDAL {
         Sheet leiloesHojeSheet = workbook.createSheet("Leilões Iniciados Hoje");
         Row header2 = leiloesHojeSheet.createRow(0);
         header2.createCell(0).setCellValue("ID");
-        header2.createCell(1).setCellValue("ID Produto");
+        header2.createCell(1).setCellValue("Nome Produto");
         header2.createCell(2).setCellValue("Tipo de Leilão");
         header2.createCell(3).setCellValue("Data Início");
         header2.createCell(4).setCellValue("Data Fim");
@@ -64,8 +67,9 @@ public class ExcelDAL {
         for (Leilao leilao : leiloesHoje) {
             Row row = leiloesHojeSheet.createRow(rowHoje++);
             row.createCell(0).setCellValue(leilao.getId());
-            row.createCell(1).setCellValue(leilao.getIdProduto());
-            row.createCell(2).setCellValue(leilao.getTipoLeilao());
+            String nomeProduto = produtoBLL.getNomeProdutoById(leilao.getIdProduto());
+            row.createCell(1).setCellValue(nomeProduto != null ? nomeProduto : "N/A");
+            row.createCell(2).setCellValue(Tools.tipoLeilao.fromCodigo(leilao.getTipoLeilao()).name());
             row.createCell(3).setCellValue(leilao.getDataInicio() != null ? leilao.getDataInicio().format(dataHoraFormatter) : "N/A");
             row.createCell(4).setCellValue(leilao.getDataFim() != null ? leilao.getDataFim().format(dataHoraFormatter) : "N/A");
         }
@@ -98,19 +102,17 @@ public class ExcelDAL {
             row.createCell(1).setCellValue(utilizador.getNomeUtilizador());
         }
 
-        // Gerar nome de ficheiro com timestamp
+        // Gerar nome de ficheiro com Data/hora
         DateTimeFormatter nomeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
         String timestamp = LocalDateTime.now().format(nomeFormatter);
         String nomeFicheiro = "Relatorio Diario - " + timestamp + ".xlsx";
         String caminhoArquivo = Constantes.caminhosFicheiros.CSV_FILE_FICHEIRO_EMAIL + nomeFicheiro;
 
-        // Escrever o arquivo
         FileOutputStream fileOut = new FileOutputStream(new File(caminhoArquivo));
         workbook.write(fileOut);
         fileOut.close();
         workbook.close();
 
-        // Retornar o caminho do arquivo gerado
         return caminhoArquivo;
     }
 }
